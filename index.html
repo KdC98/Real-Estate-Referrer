@@ -25,13 +25,14 @@
         
         // Icône helper
         const Icon = ({ name, ...props }) => {
-            const iconElement = document.createElement('i');
-            iconElement.setAttribute('data-lucide', name);
-            setTimeout(() => lucide.createIcons(), 0);
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
             return h('i', { 'data-lucide': name, ...props });
         };
         
         function App() {
+            // TOUS les states au niveau principal (important pour React)
             const [page, setPage] = useState('landing');
             const [user, setUser] = useState(null);
             const [users, setUsers] = useState([]);
@@ -39,10 +40,42 @@
             const [loading, setLoading] = useState(false);
             const [error, setError] = useState('');
             
+            // States pour login
+            const [loginEmail, setLoginEmail] = useState('');
+            const [loginPwd, setLoginPwd] = useState('');
+            
+            // States pour signup
+            const [signupForm, setSignupForm] = useState({ 
+                name: '', 
+                email: '', 
+                phone: '', 
+                password: '', 
+                confirmPassword: '' 
+            });
+            
+            // States pour referrer dashboard
+            const [showAddLead, setShowAddLead] = useState(false);
+            const [newLead, setNewLead] = useState({ 
+                client_name: '', 
+                client_email: '', 
+                client_phone: '', 
+                property_type: 'Appartement', 
+                budget: '' 
+            });
+            
+            // States pour admin dashboard
+            const [selectedLead, setSelectedLead] = useState(null);
+            const [salePrice, setSalePrice] = useState('');
+            
             useEffect(() => {
                 loadUsers();
                 loadLeads();
+                lucide.createIcons();
             }, []);
+            
+            useEffect(() => {
+                lucide.createIcons();
+            }, [page, showAddLead, selectedLead]);
             
             const loadUsers = async () => {
                 const { data } = await sb.from('users').select('*').order('id');
@@ -54,10 +87,10 @@
                 if (data) setLeads(data);
             };
             
-            const login = async (email, password) => {
+            const login = async () => {
                 setLoading(true);
                 setError('');
-                const { data } = await sb.from('users').select('*').eq('email', email).eq('password', password).single();
+                const { data } = await sb.from('users').select('*').eq('email', loginEmail).eq('password', loginPwd).single();
                 setLoading(false);
                 if (!data) {
                     setError('Email ou mot de passe incorrect');
@@ -67,16 +100,26 @@
                 setPage(data.role === 'admin' ? 'admin' : 'referrer');
             };
             
-            const signup = async (name, email, password, phone) => {
+            const signup = async () => {
+                if (signupForm.password !== signupForm.confirmPassword) {
+                    setError('Les mots de passe ne correspondent pas');
+                    return;
+                }
                 setLoading(true);
                 setError('');
-                const { data: existing } = await sb.from('users').select('email').eq('email', email).single();
+                const { data: existing } = await sb.from('users').select('email').eq('email', signupForm.email).single();
                 if (existing) {
                     setError('Email déjà utilisé');
                     setLoading(false);
                     return;
                 }
-                const { data } = await sb.from('users').insert([{ name, email, password, phone, role: 'referrer' }]).select().single();
+                const { data } = await sb.from('users').insert([{ 
+                    name: signupForm.name, 
+                    email: signupForm.email, 
+                    password: signupForm.password, 
+                    phone: signupForm.phone, 
+                    role: 'referrer' 
+                }]).select().single();
                 setLoading(false);
                 if (data) {
                     setUser(data);
@@ -90,9 +133,17 @@
                 setPage('landing');
             };
             
-            const addLead = async (leadData) => {
-                await sb.from('leads').insert([{ ...leadData, referrer_id: user.id, status: 'nouveau' }]);
+            const addLead = async () => {
+                if (!newLead.client_name || !newLead.client_email || !newLead.budget) return;
+                await sb.from('leads').insert([{ 
+                    ...newLead, 
+                    budget: parseFloat(newLead.budget),
+                    referrer_id: user.id, 
+                    status: 'nouveau' 
+                }]);
                 await loadLeads();
+                setNewLead({ client_name: '', client_email: '', client_phone: '', property_type: 'Appartement', budget: '' });
+                setShowAddLead(false);
             };
             
             const updateStatus = async (id, status, saleData = {}) => {
@@ -108,7 +159,7 @@
                 await loadLeads();
             };
             
-            // Pages
+            // Landing Page
             if (page === 'landing') {
                 return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
                     h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
@@ -118,8 +169,14 @@
                                 h('span', { className: 'text-2xl font-bold text-white' }, 'Real Estate Referrer')
                             ),
                             h('div', { className: 'flex gap-4' },
-                                h('button', { onClick: () => setPage('login'), className: 'px-6 py-2 text-white hover:text-yellow-500 transition' }, 'Connexion'),
-                                h('button', { onClick: () => setPage('signup'), className: 'px-6 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition' }, 'Devenir Apporteur')
+                                h('button', { 
+                                    onClick: () => setPage('login'), 
+                                    className: 'px-6 py-2 text-white hover:text-yellow-500 transition' 
+                                }, 'Connexion'),
+                                h('button', { 
+                                    onClick: () => setPage('signup'), 
+                                    className: 'px-6 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition' 
+                                }, 'Devenir Apporteur')
                             )
                         )
                     ),
@@ -131,7 +188,10 @@
                                 ' par vente'
                             ),
                             h('p', { className: 'text-2xl text-gray-300 mb-8' }, 'Devenez apporteur d\'affaires et touchez 20% de commission'),
-                            h('button', { onClick: () => setPage('signup'), className: 'px-8 py-4 bg-yellow-500 text-black text-xl font-bold rounded-lg hover:bg-yellow-400 transition' }, 'Rejoindre le Programme')
+                            h('button', { 
+                                onClick: () => setPage('signup'), 
+                                className: 'px-8 py-4 bg-yellow-500 text-black text-xl font-bold rounded-lg hover:bg-yellow-400 transition' 
+                            }, 'Rejoindre le Programme')
                         ),
                         h('div', { className: 'grid md:grid-cols-3 gap-8' },
                             h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl border border-yellow-500/30' },
@@ -154,62 +214,116 @@
                 );
             }
             
+            // Login Page
             if (page === 'login') {
-                const [email, setEmail] = useState('');
-                const [pwd, setPwd] = useState('');
-                
                 return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6' },
                     h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl border border-yellow-500/30 w-full max-w-md' },
                         h('h2', { className: 'text-3xl font-bold text-white mb-8 text-center' }, 'Connexion'),
                         h('div', { className: 'space-y-6' },
                             h('div', null,
                                 h('label', { className: 'block text-gray-300 mb-2' }, 'Email'),
-                                h('input', { type: 'email', value: email, onChange: (e) => setEmail(e.target.value), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' })
+                                h('input', { 
+                                    type: 'email', 
+                                    value: loginEmail, 
+                                    onChange: (e) => setLoginEmail(e.target.value), 
+                                    className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' 
+                                })
                             ),
                             h('div', null,
                                 h('label', { className: 'block text-gray-300 mb-2' }, 'Mot de passe'),
-                                h('input', { type: 'password', value: pwd, onChange: (e) => setPwd(e.target.value), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' })
+                                h('input', { 
+                                    type: 'password', 
+                                    value: loginPwd, 
+                                    onChange: (e) => setLoginPwd(e.target.value),
+                                    onKeyPress: (e) => e.key === 'Enter' && login(),
+                                    className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' 
+                                })
                             ),
                             error && h('p', { className: 'text-red-400' }, error),
-                            h('button', { onClick: () => login(email, pwd), disabled: loading, className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition' }, loading ? 'Connexion...' : 'Se connecter')
+                            h('button', { 
+                                onClick: login, 
+                                disabled: loading, 
+                                className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition disabled:opacity-50' 
+                            }, loading ? 'Connexion...' : 'Se connecter')
                         ),
                         h('div', { className: 'mt-6 text-center' },
-                            h('button', { onClick: () => setPage('signup'), className: 'text-yellow-500' }, 'S\'inscrire'),
+                            h('button', { 
+                                onClick: () => { setPage('signup'); setError(''); }, 
+                                className: 'text-yellow-500' 
+                            }, 'S\'inscrire'),
                             h('br'),
-                            h('button', { onClick: () => setPage('landing'), className: 'text-gray-400 mt-2' }, 'Retour')
+                            h('button', { 
+                                onClick: () => { setPage('landing'); setError(''); }, 
+                                className: 'text-gray-400 mt-2' 
+                            }, 'Retour')
                         )
                     )
                 );
             }
             
+            // Signup Page
             if (page === 'signup') {
-                const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirmPassword: '' });
-                
-                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6' },
+                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6 py-12' },
                     h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl border border-yellow-500/30 w-full max-w-md' },
                         h('h2', { className: 'text-3xl font-bold text-white mb-8 text-center' }, 'Inscription'),
                         h('div', { className: 'space-y-4' },
-                            h('input', { placeholder: 'Nom', value: form.name, onChange: (e) => setForm({...form, name: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('input', { type: 'email', placeholder: 'Email', value: form.email, onChange: (e) => setForm({...form, email: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('input', { placeholder: 'Téléphone', value: form.phone, onChange: (e) => setForm({...form, phone: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('input', { type: 'password', placeholder: 'Mot de passe', value: form.password, onChange: (e) => setForm({...form, password: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('input', { type: 'password', placeholder: 'Confirmer', value: form.confirmPassword, onChange: (e) => setForm({...form, confirmPassword: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { 
+                                placeholder: 'Nom complet', 
+                                value: signupForm.name, 
+                                onChange: (e) => setSignupForm({...signupForm, name: e.target.value}), 
+                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                            }),
+                            h('input', { 
+                                type: 'email', 
+                                placeholder: 'Email', 
+                                value: signupForm.email, 
+                                onChange: (e) => setSignupForm({...signupForm, email: e.target.value}), 
+                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                            }),
+                            h('input', { 
+                                placeholder: '+971 50 XXX XXXX', 
+                                value: signupForm.phone, 
+                                onChange: (e) => setSignupForm({...signupForm, phone: e.target.value}), 
+                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                            }),
+                            h('input', { 
+                                type: 'password', 
+                                placeholder: 'Mot de passe', 
+                                value: signupForm.password, 
+                                onChange: (e) => setSignupForm({...signupForm, password: e.target.value}), 
+                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                            }),
+                            h('input', { 
+                                type: 'password', 
+                                placeholder: 'Confirmer mot de passe', 
+                                value: signupForm.confirmPassword, 
+                                onChange: (e) => setSignupForm({...signupForm, confirmPassword: e.target.value}), 
+                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                            }),
                             error && h('p', { className: 'text-red-400' }, error),
-                            h('button', { onClick: () => signup(form.name, form.email, form.password, form.phone), disabled: loading, className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition' }, loading ? 'Création...' : 'Créer mon compte')
+                            h('button', { 
+                                onClick: signup, 
+                                disabled: loading, 
+                                className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition disabled:opacity-50' 
+                            }, loading ? 'Création...' : 'Créer mon compte')
                         ),
                         h('div', { className: 'mt-6 text-center' },
-                            h('button', { onClick: () => setPage('login'), className: 'text-yellow-500' }, 'Se connecter'),
+                            h('button', { 
+                                onClick: () => { setPage('login'); setError(''); }, 
+                                className: 'text-yellow-500' 
+                            }, 'Se connecter'),
                             h('br'),
-                            h('button', { onClick: () => setPage('landing'), className: 'text-gray-400 mt-2' }, 'Retour')
+                            h('button', { 
+                                onClick: () => { setPage('landing'); setError(''); }, 
+                                className: 'text-gray-400 mt-2' 
+                            }, 'Retour')
                         )
                     )
                 );
             }
             
-            if (page === 'referrer') {
-                const [showAdd, setShowAdd] = useState(false);
-                const [newLead, setNewLead] = useState({ client_name: '', client_email: '', client_phone: '', property_type: 'Appartement', budget: '' });
-                
+            // Referrer Dashboard
+            if (page === 'referrer' && user) {
                 const myLeads = leads.filter(l => l.referrer_id === user.id);
                 const total = myLeads.reduce((s, l) => s + (l.referrer_commission || 0), 0);
                 const pending = myLeads.filter(l => l.status !== 'vendu' && l.status !== 'perdu').length;
@@ -224,7 +338,10 @@
                             ),
                             h('div', { className: 'flex items-center gap-4' },
                                 h('span', { className: 'text-gray-300' }, `Bienvenue, ${user.name}`),
-                                h('button', { onClick: logout, className: 'flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg' },
+                                h('button', { 
+                                    onClick: logout, 
+                                    className: 'flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600' 
+                                },
                                     h(Icon, { name: 'log-out', size: 18 }),
                                     'Déconnexion'
                                 )
@@ -234,141 +351,277 @@
                     h('div', { className: 'max-w-7xl mx-auto px-6 py-8' },
                         h('div', { className: 'grid md:grid-cols-3 gap-6 mb-8' },
                             h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'text-gray-300 mb-2' }, 'Gains Totaux'),
+                                h('div', { className: 'flex items-center justify-between mb-2' },
+                                    h('span', { className: 'text-gray-300' }, 'Gains Totaux'),
+                                    h(Icon, { name: 'dollar-sign', className: 'text-yellow-500', size: 24 })
+                                ),
                                 h('div', { className: 'text-3xl font-bold text-white' }, `${total.toLocaleString()} AED`)
                             ),
                             h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'text-gray-300 mb-2' }, 'Leads en Cours'),
+                                h('div', { className: 'flex items-center justify-between mb-2' },
+                                    h('span', { className: 'text-gray-300' }, 'Leads en Cours'),
+                                    h(Icon, { name: 'trending-up', className: 'text-blue-400', size: 24 })
+                                ),
                                 h('div', { className: 'text-3xl font-bold text-white' }, pending)
                             ),
                             h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'text-gray-300 mb-2' }, 'Ventes'),
+                                h('div', { className: 'flex items-center justify-between mb-2' },
+                                    h('span', { className: 'text-gray-300' }, 'Ventes'),
+                                    h(Icon, { name: 'check-circle', className: 'text-green-400', size: 24 })
+                                ),
                                 h('div', { className: 'text-3xl font-bold text-white' }, closed)
                             )
                         ),
-                        h('button', { onClick: () => setShowAdd(!showAdd), className: 'mb-6 px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg' }, 'Ajouter un Lead'),
-                        showAdd && h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl mb-8' },
-                            h('input', { placeholder: 'Nom client', value: newLead.client_name, onChange: (e) => setNewLead({...newLead, client_name: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('input', { placeholder: 'Email', value: newLead.client_email, onChange: (e) => setNewLead({...newLead, client_email: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('input', { placeholder: 'Téléphone', value: newLead.client_phone, onChange: (e) => setNewLead({...newLead, client_phone: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('input', { type: 'number', placeholder: 'Budget AED', value: newLead.budget, onChange: (e) => setNewLead({...newLead, budget: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
-                            h('button', { onClick: () => { addLead({...newLead, budget: parseFloat(newLead.budget)}); setShowAdd(false); }, className: 'px-6 py-2 bg-green-500 text-white rounded-lg' }, 'Ajouter')
+                        h('button', { 
+                            onClick: () => setShowAddLead(!showAddLead), 
+                            className: 'mb-6 flex items-center gap-2 px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400' 
+                        },
+                            h(Icon, { name: 'plus', size: 20 }),
+                            'Ajouter un Lead'
                         ),
-                        h('div', { className: 'bg-white bg-opacity-10 rounded-xl overflow-hidden' },
+                        showAddLead && h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30 mb-8' },
+                            h('h3', { className: 'text-2xl font-bold text-white mb-4' }, 'Nouveau Lead'),
+                            h('div', { className: 'grid md:grid-cols-2 gap-4' },
+                                h('input', { 
+                                    placeholder: 'Nom du client', 
+                                    value: newLead.client_name, 
+                                    onChange: (e) => setNewLead({...newLead, client_name: e.target.value}), 
+                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                                }),
+                                h('input', { 
+                                    type: 'email',
+                                    placeholder: 'Email', 
+                                    value: newLead.client_email, 
+                                    onChange: (e) => setNewLead({...newLead, client_email: e.target.value}), 
+                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                                }),
+                                h('input', { 
+                                    placeholder: 'Téléphone', 
+                                    value: newLead.client_phone, 
+                                    onChange: (e) => setNewLead({...newLead, client_phone: e.target.value}), 
+                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                                }),
+                                h('select', {
+                                    value: newLead.property_type,
+                                    onChange: (e) => setNewLead({...newLead, property_type: e.target.value}),
+                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white'
+                                },
+                                    h('option', { value: 'Appartement' }, 'Appartement'),
+                                    h('option', { value: 'Villa' }, 'Villa'),
+                                    h('option', { value: 'Penthouse' }, 'Penthouse'),
+                                    h('option', { value: 'Townhouse' }, 'Townhouse')
+                                ),
+                                h('input', { 
+                                    type: 'number',
+                                    placeholder: 'Budget (AED)', 
+                                    value: newLead.budget, 
+                                    onChange: (e) => setNewLead({...newLead, budget: e.target.value}), 
+                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
+                                }),
+                                h('div', { className: 'flex gap-4' },
+                                    h('button', { 
+                                        onClick: addLead, 
+                                        className: 'px-6 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600' 
+                                    }, 'Ajouter'),
+                                    h('button', { 
+                                        onClick: () => setShowAddLead(false), 
+                                        className: 'px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600' 
+                                    }, 'Annuler')
+                                )
+                            )
+                        ),
+                        h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md rounded-xl border border-yellow-500/30 overflow-hidden' },
                             h('div', { className: 'p-6 border-b border-yellow-500/20' },
                                 h('h3', { className: 'text-2xl font-bold text-white' }, 'Mes Leads')
                             ),
-                            myLeads.length === 0 ? h('p', { className: 'p-8 text-center text-gray-400' }, 'Aucun lead') :
-                            h('div', { className: 'overflow-x-auto' },
-                                h('table', { className: 'w-full' },
-                                    h('thead', { className: 'bg-black bg-opacity-30' },
-                                        h('tr', null,
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Commission')
-                                        )
-                                    ),
-                                    h('tbody', null,
-                                        myLeads.map(lead =>
-                                            h('tr', { key: lead.id, className: 'border-t border-yellow-500/10' },
-                                                h('td', { className: 'px-6 py-4 text-white' }, lead.client_name),
-                                                h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
-                                                h('td', { className: 'px-6 py-4' },
-                                                    h('span', { className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${lead.status === 'vendu' ? 'bg-green-500' : 'bg-blue-500'}` }, lead.status.toUpperCase())
-                                                ),
-                                                h('td', { className: 'px-6 py-4 text-yellow-500 font-bold' }, lead.referrer_commission ? `${lead.referrer_commission.toLocaleString()} AED` : '-')
+                            myLeads.length === 0 ? 
+                                h('p', { className: 'p-8 text-center text-gray-400' }, 'Aucun lead. Ajoutez votre premier lead!') :
+                                h('div', { className: 'overflow-x-auto' },
+                                    h('table', { className: 'w-full' },
+                                        h('thead', { className: 'bg-black bg-opacity-30' },
+                                            h('tr', null,
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Type'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Commission')
+                                            )
+                                        ),
+                                        h('tbody', null,
+                                            myLeads.map(lead =>
+                                                h('tr', { key: lead.id, className: 'border-t border-yellow-500/10 hover:bg-white hover:bg-opacity-5' },
+                                                    h('td', { className: 'px-6 py-4 text-white font-semibold' }, lead.client_name),
+                                                    h('td', { className: 'px-6 py-4 text-gray-300' }, lead.property_type),
+                                                    h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
+                                                    h('td', { className: 'px-6 py-4' },
+                                                        h('span', { 
+                                                            className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${
+                                                                lead.status === 'vendu' ? 'bg-green-500' : 
+                                                                lead.status === 'perdu' ? 'bg-red-500' :
+                                                                lead.status === 'offre' ? 'bg-orange-500' :
+                                                                lead.status === 'visite' ? 'bg-purple-500' : 'bg-blue-500'
+                                                            }` 
+                                                        }, lead.status.toUpperCase())
+                                                    ),
+                                                    h('td', { className: 'px-6 py-4 text-yellow-500 font-bold' }, 
+                                                        lead.referrer_commission ? `${lead.referrer_commission.toLocaleString()} AED` : '-'
+                                                    )
+                                                )
                                             )
                                         )
                                     )
                                 )
-                            )
                         )
                     )
                 );
             }
             
-            if (page === 'admin') {
-                const [selectedLead, setSelectedLead] = useState(null);
-                const [salePrice, setSalePrice] = useState('');
-                
+            // Admin Dashboard
+            if (page === 'admin' && user) {
                 const totalReferrers = users.filter(u => u.role === 'referrer').length;
                 const totalCommissions = leads.reduce((s, l) => s + (l.referrer_commission || 0), 0);
+                const closedDeals = leads.filter(l => l.status === 'vendu').length;
                 
                 return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
                     h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
                         h('div', { className: 'max-w-7xl mx-auto px-6 py-4 flex justify-between items-center' },
-                            h('span', { className: 'text-xl font-bold text-white' }, 'Admin Dashboard'),
-                            h('button', { onClick: logout, className: 'px-4 py-2 bg-red-500 text-white rounded-lg' }, 'Déconnexion')
+                            h('div', { className: 'flex items-center gap-2' },
+                                h(Icon, { name: 'home', className: 'text-yellow-500', size: 28 }),
+                                h('span', { className: 'text-xl font-bold text-white' }, 'Admin Dashboard')
+                            ),
+                            h('button', { 
+                                onClick: logout, 
+                                className: 'flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600' 
+                            },
+                                h(Icon, { name: 'log-out', size: 18 }),
+                                'Déconnexion'
+                            )
                         )
                     ),
                     h('div', { className: 'max-w-7xl mx-auto px-6 py-8' },
                         h('div', { className: 'grid md:grid-cols-4 gap-6 mb-8' },
-                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
-                                h('div', { className: 'text-gray-300 mb-2' }, 'Apporteurs'),
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
+                                h('div', { className: 'flex items-center justify-between mb-2' },
+                                    h('span', { className: 'text-gray-300' }, 'Apporteurs'),
+                                    h(Icon, { name: 'users', className: 'text-blue-400', size: 24 })
+                                ),
                                 h('div', { className: 'text-3xl font-bold text-white' }, totalReferrers)
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
-                                h('div', { className: 'text-gray-300 mb-2' }, 'Total Leads'),
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
+                                h('div', { className: 'flex items-center justify-between mb-2' },
+                                    h('span', { className: 'text-gray-300' }, 'Total Leads'),
+                                    h(Icon, { name: 'trending-up', className: 'text-purple-400', size: 24 })
+                                ),
                                 h('div', { className: 'text-3xl font-bold text-white' }, leads.length)
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
-                                h('div', { className: 'text-gray-300 mb-2' }, 'Ventes'),
-                                h('div', { className: 'text-3xl font-bold text-white' }, leads.filter(l => l.status === 'vendu').length)
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
+                                h('div', { className: 'flex items-center justify-between mb-2' },
+                                    h('span', { className: 'text-gray-300' }, 'Ventes'),
+                                    h(Icon, { name: 'check-circle', className: 'text-green-400', size: 24 })
+                                ),
+                                h('div', { className: 'text-3xl font-bold text-white' }, closedDeals)
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
-                                h('div', { className: 'text-gray-300 mb-2' }, 'Commissions'),
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
+                                h('div', { className: 'flex items-center justify-between mb-2' },
+                                    h('span', { className: 'text-gray-300' }, 'Commissions'),
+                                    h(Icon, { name: 'dollar-sign', className: 'text-yellow-500', size: 24 })
+                                ),
                                 h('div', { className: 'text-3xl font-bold text-white' }, `${totalCommissions.toLocaleString()} AED`)
                             )
                         ),
-                        h('div', { className: 'bg-white bg-opacity-10 rounded-xl overflow-hidden' },
+                        h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md rounded-xl border border-yellow-500/30 overflow-hidden mb-8' },
                             h('div', { className: 'p-6 border-b border-yellow-500/20' },
                                 h('h3', { className: 'text-2xl font-bold text-white' }, 'Tous les Leads')
                             ),
-                            h('div', { className: 'overflow-x-auto' },
-                                h('table', { className: 'w-full' },
-                                    h('thead', { className: 'bg-black bg-opacity-30' },
-                                        h('tr', null,
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Apporteur'),
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
-                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Actions')
-                                        )
-                                    ),
-                                    h('tbody', null,
-                                        leads.map(lead => {
-                                            const ref = users.find(u => u.id === lead.referrer_id);
-                                            return h('tr', { key: lead.id, className: 'border-t border-yellow-500/10' },
-                                                h('td', { className: 'px-6 py-4 text-white' }, ref?.name),
-                                                h('td', { className: 'px-6 py-4 text-white' }, lead.client_name),
-                                                h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
-                                                h('td', { className: 'px-6 py-4' },
-                                                    h('span', { className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${lead.status === 'vendu' ? 'bg-green-500' : 'bg-blue-500'}` }, lead.status.toUpperCase())
-                                                ),
-                                                h('td', { className: 'px-6 py-4' },
-                                                    lead.status !== 'vendu' && lead.status !== 'perdu' &&
-                                                    h('select', { onChange: (e) => { if(e.target.value === 'vendu') setSelectedLead(lead.id); else updateStatus(lead.id, e.target.value); }, className: 'px-3 py-1 bg-white bg-opacity-20 border border-yellow-500/30 rounded text-white text-sm' },
-                                                        h('option', { value: 'nouveau' }, 'Nouveau'),
-                                                        h('option', { value: 'visite' }, 'Visite'),
-                                                        h('option', { value: 'offre' }, 'Offre'),
-                                                        h('option', { value: 'vendu' }, 'Vendu'),
-                                                        h('option', { value: 'perdu' }, 'Perdu')
+                            leads.length === 0 ?
+                                h('p', { className: 'p-8 text-center text-gray-400' }, 'Aucun lead') :
+                                h('div', { className: 'overflow-x-auto' },
+                                    h('table', { className: 'w-full' },
+                                        h('thead', { className: 'bg-black bg-opacity-30' },
+                                            h('tr', null,
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Apporteur'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Commission'),
+                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Actions')
+                                            )
+                                        ),
+                                        h('tbody', null,
+                                            leads.map(lead => {
+                                                const ref = users.find(u => u.id === lead.referrer_id);
+                                                return h('tr', { key: lead.id, className: 'border-t border-yellow-500/10 hover:bg-white hover:bg-opacity-5' },
+                                                    h('td', { className: 'px-6 py-4 text-white font-semibold' }, ref?.name || 'N/A'),
+                                                    h('td', { className: 'px-6 py-4 text-white' }, lead.client_name),
+                                                    h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
+                                                    h('td', { className: 'px-6 py-4' },
+                                                        h('span', { 
+                                                            className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${
+                                                                lead.status === 'vendu' ? 'bg-green-500' : 
+                                                                lead.status === 'perdu' ? 'bg-red-500' :
+                                                                lead.status === 'offre' ? 'bg-orange-500' :
+                                                                lead.status === 'visite' ? 'bg-purple-500' : 'bg-blue-500'
+                                                            }` 
+                                                        }, lead.status.toUpperCase())
+                                                    ),
+                                                    h('td', { className: 'px-6 py-4 text-yellow-500 font-bold' }, 
+                                                        lead.referrer_commission ? `${lead.referrer_commission.toLocaleString()} AED` : '-'
+                                                    ),
+                                                    h('td', { className: 'px-6 py-4' },
+                                                        lead.status !== 'vendu' && lead.status !== 'perdu' &&
+                                                        h('select', { 
+                                                            value: lead.status,
+                                                            onChange: (e) => { 
+                                                                if(e.target.value === 'vendu') {
+                                                                    setSelectedLead(lead.id);
+                                                                } else {
+                                                                    updateStatus(lead.id, e.target.value);
+                                                                }
+                                                            }, 
+                                                            className: 'px-3 py-1 bg-white bg-opacity-20 border border-yellow-500/30 rounded text-white text-sm focus:outline-none focus:border-yellow-500' 
+                                                        },
+                                                            h('option', { value: 'nouveau' }, 'Nouveau'),
+                                                            h('option', { value: 'visite' }, 'Visite'),
+                                                            h('option', { value: 'offre' }, 'Offre'),
+                                                            h('option', { value: 'vendu' }, 'Vendu'),
+                                                            h('option', { value: 'perdu' }, 'Perdu')
+                                                        )
                                                     )
-                                                )
-                                            );
-                                        })
+                                                );
+                                            })
+                                        )
                                     )
                                 )
-                            )
                         ),
                         selectedLead && h('div', { className: 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50' },
                             h('div', { className: 'bg-slate-800 p-8 rounded-xl border border-yellow-500/30 max-w-md w-full mx-4' },
                                 h('h3', { className: 'text-2xl font-bold text-white mb-4' }, 'Prix de vente final'),
-                                h('input', { type: 'number', value: salePrice, onChange: (e) => setSalePrice(e.target.value), placeholder: 'Prix de vente (AED)', className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white mb-4' }),
+                                h('p', { className: 'text-gray-300 mb-4' }, 'Entrez le prix de vente pour calculer la commission'),
+                                h('input', { 
+                                    type: 'number', 
+                                    value: salePrice, 
+                                    onChange: (e) => setSalePrice(e.target.value), 
+                                    placeholder: 'Prix de vente (AED)', 
+                                    className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400 mb-4 focus:outline-none focus:border-yellow-500' 
+                                }),
                                 h('div', { className: 'flex gap-4' },
-                                    h('button', { onClick: () => { updateStatus(selectedLead, 'vendu', { salePrice: parseFloat(salePrice) }); setSelectedLead(null); setSalePrice(''); }, className: 'flex-1 py-2 bg-green-500 text-white font-semibold rounded-lg' }, 'Confirmer'),
-                                    h('button', { onClick: () => { setSelectedLead(null); setSalePrice(''); }, className: 'flex-1 py-2 bg-gray-500 text-white font-semibold rounded-lg' }, 'Annuler')
+                                    h('button', { 
+                                        onClick: () => { 
+                                            if (salePrice) {
+                                                updateStatus(selectedLead, 'vendu', { salePrice: parseFloat(salePrice) }); 
+                                                setSelectedLead(null); 
+                                                setSalePrice('');
+                                            }
+                                        }, 
+                                        className: 'flex-1 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition' 
+                                    }, 'Confirmer'),
+                                    h('button', { 
+                                        onClick: () => { 
+                                            setSelectedLead(null); 
+                                            setSalePrice(''); 
+                                        }, 
+                                        className: 'flex-1 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition' 
+                                    }, 'Annuler')
                                 )
                             )
                         )
@@ -381,9 +634,6 @@
         
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(React.createElement(App));
-        
-        // Initialize Lucide icons
-        setTimeout(() => lucide.createIcons(), 100);
     </script>
 </body>
 </html>
