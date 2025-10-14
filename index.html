@@ -1,51 +1,389 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; -webkit-text-stroke: #000000; min-height: 14.0px}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'}
-    span.s1 {font-kerning: none}
-    span.s2 {font: 12.0px 'Apple Color Emoji'; font-kerning: none}
-    span.s3 {font: 12.0px Helvetica; font-kerning: none; -webkit-text-stroke: 0px #000000}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Referrer - Dubai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
-<p class="p1"><span class="s1">&lt;html lang="fr"&gt;</span></p>
-<p class="p1"><span class="s1">&lt;head&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;title&gt;Real Estate Referrer - Dubai&lt;/title&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
-<p class="p1"><span class="s1">&lt;body&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div id="root"&gt;&lt;/div&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;script type="module"&gt;</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>import React, { useState, useEffect } from 'https://esm.sh/react@18';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>import ReactDOM from 'https://esm.sh/react-dom@18/client';</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// </span><span class="s2">⚠️</span><span class="s1"> REMPLACEZ CES VALEURS PAR VOS VRAIES CLÉS SUPABASE</span></p>
-<p class="p3"><span class="s3"><span class="Apple-converted-space">        </span>const SUPABASE_URL = '</span>https://cgizcgwhwxswvoodqver.supabase.co<span class="s3">';</span></p>
-<p class="p3"><span class="s3"><span class="Apple-converted-space">        </span>const SUPABASE_ANON_KEY = '</span>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDQzNjU0NiwiZXhwIjoyMDc2MDEyNTQ2fQ.qziUFhXcdfeXUsSh3W0j2BCrlpz74qbsun4L_fBotm8<span class="s3">';</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// Copiez ici TOUT le code de l'application à partir de "const RealEstateReferralApp = () =&gt; {"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// jusqu'à "export default RealEstateReferralApp;"</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>// (Je vous le donne juste après)</span></p>
-<p class="p2"><span class="s1"></span><br></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>ReactDOM.createRoot(document.getElementById('root')).render(</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>React.createElement(RealEstateReferralApp)</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>);</span></p>
-<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
-<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+    <div id="root"></div>
+    
+    <script>
+        const { useState, useEffect, createElement: h } = React;
+        const { createClient } = supabase;
+        
+        // REMPLACEZ CES VALEURS PAR VOS VRAIES CLÉS SUPABASE
+        const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ5NTEzMzIsImV4cCI6MjA1MDUyNzMzMn0.qzlUFleyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ5NTEzMzIsImV4cCI6MjA1MDUyNzMzMn0.qzlUFI';
+        
+        const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Icône helper
+        const Icon = ({ name, ...props }) => {
+            const iconElement = document.createElement('i');
+            iconElement.setAttribute('data-lucide', name);
+            setTimeout(() => lucide.createIcons(), 0);
+            return h('i', { 'data-lucide': name, ...props });
+        };
+        
+        function App() {
+            const [page, setPage] = useState('landing');
+            const [user, setUser] = useState(null);
+            const [users, setUsers] = useState([]);
+            const [leads, setLeads] = useState([]);
+            const [loading, setLoading] = useState(false);
+            const [error, setError] = useState('');
+            
+            useEffect(() => {
+                loadUsers();
+                loadLeads();
+            }, []);
+            
+            const loadUsers = async () => {
+                const { data } = await sb.from('users').select('*').order('id');
+                if (data) setUsers(data);
+            };
+            
+            const loadLeads = async () => {
+                const { data } = await sb.from('leads').select('*').order('created_at', { ascending: false });
+                if (data) setLeads(data);
+            };
+            
+            const login = async (email, password) => {
+                setLoading(true);
+                setError('');
+                const { data } = await sb.from('users').select('*').eq('email', email).eq('password', password).single();
+                setLoading(false);
+                if (!data) {
+                    setError('Email ou mot de passe incorrect');
+                    return;
+                }
+                setUser(data);
+                setPage(data.role === 'admin' ? 'admin' : 'referrer');
+            };
+            
+            const signup = async (name, email, password, phone) => {
+                setLoading(true);
+                setError('');
+                const { data: existing } = await sb.from('users').select('email').eq('email', email).single();
+                if (existing) {
+                    setError('Email déjà utilisé');
+                    setLoading(false);
+                    return;
+                }
+                const { data } = await sb.from('users').insert([{ name, email, password, phone, role: 'referrer' }]).select().single();
+                setLoading(false);
+                if (data) {
+                    setUser(data);
+                    await loadUsers();
+                    setPage('referrer');
+                }
+            };
+            
+            const logout = () => {
+                setUser(null);
+                setPage('landing');
+            };
+            
+            const addLead = async (leadData) => {
+                await sb.from('leads').insert([{ ...leadData, referrer_id: user.id, status: 'nouveau' }]);
+                await loadLeads();
+            };
+            
+            const updateStatus = async (id, status, saleData = {}) => {
+                const update = { status };
+                if (status === 'vendu' && saleData.salePrice) {
+                    const total = saleData.salePrice * 0.02;
+                    update.sale_price = saleData.salePrice;
+                    update.agent_commission = total * 0.50;
+                    update.referrer_commission = update.agent_commission * 0.20;
+                    update.closed_at = new Date().toISOString();
+                }
+                await sb.from('leads').update(update).eq('id', id);
+                await loadLeads();
+            };
+            
+            // Pages
+            if (page === 'landing') {
+                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
+                    h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
+                        h('div', { className: 'max-w-7xl mx-auto px-6 py-4 flex justify-between items-center' },
+                            h('div', { className: 'flex items-center gap-2' },
+                                h(Icon, { name: 'home', className: 'text-yellow-500', size: 32 }),
+                                h('span', { className: 'text-2xl font-bold text-white' }, 'Real Estate Referrer')
+                            ),
+                            h('div', { className: 'flex gap-4' },
+                                h('button', { onClick: () => setPage('login'), className: 'px-6 py-2 text-white hover:text-yellow-500 transition' }, 'Connexion'),
+                                h('button', { onClick: () => setPage('signup'), className: 'px-6 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition' }, 'Devenir Apporteur')
+                            )
+                        )
+                    ),
+                    h('div', { className: 'max-w-7xl mx-auto px-6 py-20' },
+                        h('div', { className: 'text-center mb-16' },
+                            h('h1', { className: 'text-6xl font-bold text-white mb-6' },
+                                'Gagnez jusqu\'à ',
+                                h('span', { className: 'text-yellow-500' }, '20,000 AED'),
+                                ' par vente'
+                            ),
+                            h('p', { className: 'text-2xl text-gray-300 mb-8' }, 'Devenez apporteur d\'affaires et touchez 20% de commission'),
+                            h('button', { onClick: () => setPage('signup'), className: 'px-8 py-4 bg-yellow-500 text-black text-xl font-bold rounded-lg hover:bg-yellow-400 transition' }, 'Rejoindre le Programme')
+                        ),
+                        h('div', { className: 'grid md:grid-cols-3 gap-8' },
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl border border-yellow-500/30' },
+                                h(Icon, { name: 'dollar-sign', className: 'text-yellow-500 mb-4', size: 48 }),
+                                h('h3', { className: 'text-2xl font-bold text-white mb-3' }, 'Commissions Attractives'),
+                                h('p', { className: 'text-gray-300' }, '20% de notre commission sur chaque vente')
+                            ),
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl border border-yellow-500/30' },
+                                h(Icon, { name: 'trending-up', className: 'text-yellow-500 mb-4', size: 48 }),
+                                h('h3', { className: 'text-2xl font-bold text-white mb-3' }, 'Suivi en Temps Réel'),
+                                h('p', { className: 'text-gray-300' }, 'Dashboard pour suivre vos gains')
+                            ),
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl border border-yellow-500/30' },
+                                h(Icon, { name: 'users', className: 'text-yellow-500 mb-4', size: 48 }),
+                                h('h3', { className: 'text-2xl font-bold text-white mb-3' }, 'Réseau d\'Excellence'),
+                                h('p', { className: 'text-gray-300' }, 'Propriétés premium à Dubai')
+                            )
+                        )
+                    )
+                );
+            }
+            
+            if (page === 'login') {
+                const [email, setEmail] = useState('');
+                const [pwd, setPwd] = useState('');
+                
+                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6' },
+                    h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl border border-yellow-500/30 w-full max-w-md' },
+                        h('h2', { className: 'text-3xl font-bold text-white mb-8 text-center' }, 'Connexion'),
+                        h('div', { className: 'space-y-6' },
+                            h('div', null,
+                                h('label', { className: 'block text-gray-300 mb-2' }, 'Email'),
+                                h('input', { type: 'email', value: email, onChange: (e) => setEmail(e.target.value), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' })
+                            ),
+                            h('div', null,
+                                h('label', { className: 'block text-gray-300 mb-2' }, 'Mot de passe'),
+                                h('input', { type: 'password', value: pwd, onChange: (e) => setPwd(e.target.value), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' })
+                            ),
+                            error && h('p', { className: 'text-red-400' }, error),
+                            h('button', { onClick: () => login(email, pwd), disabled: loading, className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition' }, loading ? 'Connexion...' : 'Se connecter')
+                        ),
+                        h('div', { className: 'mt-6 text-center' },
+                            h('button', { onClick: () => setPage('signup'), className: 'text-yellow-500' }, 'S\'inscrire'),
+                            h('br'),
+                            h('button', { onClick: () => setPage('landing'), className: 'text-gray-400 mt-2' }, 'Retour')
+                        )
+                    )
+                );
+            }
+            
+            if (page === 'signup') {
+                const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirmPassword: '' });
+                
+                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6' },
+                    h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl border border-yellow-500/30 w-full max-w-md' },
+                        h('h2', { className: 'text-3xl font-bold text-white mb-8 text-center' }, 'Inscription'),
+                        h('div', { className: 'space-y-4' },
+                            h('input', { placeholder: 'Nom', value: form.name, onChange: (e) => setForm({...form, name: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { type: 'email', placeholder: 'Email', value: form.email, onChange: (e) => setForm({...form, email: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { placeholder: 'Téléphone', value: form.phone, onChange: (e) => setForm({...form, phone: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { type: 'password', placeholder: 'Mot de passe', value: form.password, onChange: (e) => setForm({...form, password: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { type: 'password', placeholder: 'Confirmer', value: form.confirmPassword, onChange: (e) => setForm({...form, confirmPassword: e.target.value}), className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            error && h('p', { className: 'text-red-400' }, error),
+                            h('button', { onClick: () => signup(form.name, form.email, form.password, form.phone), disabled: loading, className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition' }, loading ? 'Création...' : 'Créer mon compte')
+                        ),
+                        h('div', { className: 'mt-6 text-center' },
+                            h('button', { onClick: () => setPage('login'), className: 'text-yellow-500' }, 'Se connecter'),
+                            h('br'),
+                            h('button', { onClick: () => setPage('landing'), className: 'text-gray-400 mt-2' }, 'Retour')
+                        )
+                    )
+                );
+            }
+            
+            if (page === 'referrer') {
+                const [showAdd, setShowAdd] = useState(false);
+                const [newLead, setNewLead] = useState({ client_name: '', client_email: '', client_phone: '', property_type: 'Appartement', budget: '' });
+                
+                const myLeads = leads.filter(l => l.referrer_id === user.id);
+                const total = myLeads.reduce((s, l) => s + (l.referrer_commission || 0), 0);
+                const pending = myLeads.filter(l => l.status !== 'vendu' && l.status !== 'perdu').length;
+                const closed = myLeads.filter(l => l.status === 'vendu').length;
+                
+                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
+                    h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
+                        h('div', { className: 'max-w-7xl mx-auto px-6 py-4 flex justify-between items-center' },
+                            h('div', { className: 'flex items-center gap-2' },
+                                h(Icon, { name: 'home', className: 'text-yellow-500', size: 28 }),
+                                h('span', { className: 'text-xl font-bold text-white' }, 'Real Estate Referrer')
+                            ),
+                            h('div', { className: 'flex items-center gap-4' },
+                                h('span', { className: 'text-gray-300' }, `Bienvenue, ${user.name}`),
+                                h('button', { onClick: logout, className: 'flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg' },
+                                    h(Icon, { name: 'log-out', size: 18 }),
+                                    'Déconnexion'
+                                )
+                            )
+                        )
+                    ),
+                    h('div', { className: 'max-w-7xl mx-auto px-6 py-8' },
+                        h('div', { className: 'grid md:grid-cols-3 gap-6 mb-8' },
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
+                                h('div', { className: 'text-gray-300 mb-2' }, 'Gains Totaux'),
+                                h('div', { className: 'text-3xl font-bold text-white' }, `${total.toLocaleString()} AED`)
+                            ),
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
+                                h('div', { className: 'text-gray-300 mb-2' }, 'Leads en Cours'),
+                                h('div', { className: 'text-3xl font-bold text-white' }, pending)
+                            ),
+                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
+                                h('div', { className: 'text-gray-300 mb-2' }, 'Ventes'),
+                                h('div', { className: 'text-3xl font-bold text-white' }, closed)
+                            )
+                        ),
+                        h('button', { onClick: () => setShowAdd(!showAdd), className: 'mb-6 px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg' }, 'Ajouter un Lead'),
+                        showAdd && h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl mb-8' },
+                            h('input', { placeholder: 'Nom client', value: newLead.client_name, onChange: (e) => setNewLead({...newLead, client_name: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { placeholder: 'Email', value: newLead.client_email, onChange: (e) => setNewLead({...newLead, client_email: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { placeholder: 'Téléphone', value: newLead.client_phone, onChange: (e) => setNewLead({...newLead, client_phone: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('input', { type: 'number', placeholder: 'Budget AED', value: newLead.budget, onChange: (e) => setNewLead({...newLead, budget: e.target.value}), className: 'w-full mb-4 px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' }),
+                            h('button', { onClick: () => { addLead({...newLead, budget: parseFloat(newLead.budget)}); setShowAdd(false); }, className: 'px-6 py-2 bg-green-500 text-white rounded-lg' }, 'Ajouter')
+                        ),
+                        h('div', { className: 'bg-white bg-opacity-10 rounded-xl overflow-hidden' },
+                            h('div', { className: 'p-6 border-b border-yellow-500/20' },
+                                h('h3', { className: 'text-2xl font-bold text-white' }, 'Mes Leads')
+                            ),
+                            myLeads.length === 0 ? h('p', { className: 'p-8 text-center text-gray-400' }, 'Aucun lead') :
+                            h('div', { className: 'overflow-x-auto' },
+                                h('table', { className: 'w-full' },
+                                    h('thead', { className: 'bg-black bg-opacity-30' },
+                                        h('tr', null,
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Commission')
+                                        )
+                                    ),
+                                    h('tbody', null,
+                                        myLeads.map(lead =>
+                                            h('tr', { key: lead.id, className: 'border-t border-yellow-500/10' },
+                                                h('td', { className: 'px-6 py-4 text-white' }, lead.client_name),
+                                                h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
+                                                h('td', { className: 'px-6 py-4' },
+                                                    h('span', { className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${lead.status === 'vendu' ? 'bg-green-500' : 'bg-blue-500'}` }, lead.status.toUpperCase())
+                                                ),
+                                                h('td', { className: 'px-6 py-4 text-yellow-500 font-bold' }, lead.referrer_commission ? `${lead.referrer_commission.toLocaleString()} AED` : '-')
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+            }
+            
+            if (page === 'admin') {
+                const [selectedLead, setSelectedLead] = useState(null);
+                const [salePrice, setSalePrice] = useState('');
+                
+                const totalReferrers = users.filter(u => u.role === 'referrer').length;
+                const totalCommissions = leads.reduce((s, l) => s + (l.referrer_commission || 0), 0);
+                
+                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
+                    h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
+                        h('div', { className: 'max-w-7xl mx-auto px-6 py-4 flex justify-between items-center' },
+                            h('span', { className: 'text-xl font-bold text-white' }, 'Admin Dashboard'),
+                            h('button', { onClick: logout, className: 'px-4 py-2 bg-red-500 text-white rounded-lg' }, 'Déconnexion')
+                        )
+                    ),
+                    h('div', { className: 'max-w-7xl mx-auto px-6 py-8' },
+                        h('div', { className: 'grid md:grid-cols-4 gap-6 mb-8' },
+                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
+                                h('div', { className: 'text-gray-300 mb-2' }, 'Apporteurs'),
+                                h('div', { className: 'text-3xl font-bold text-white' }, totalReferrers)
+                            ),
+                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
+                                h('div', { className: 'text-gray-300 mb-2' }, 'Total Leads'),
+                                h('div', { className: 'text-3xl font-bold text-white' }, leads.length)
+                            ),
+                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
+                                h('div', { className: 'text-gray-300 mb-2' }, 'Ventes'),
+                                h('div', { className: 'text-3xl font-bold text-white' }, leads.filter(l => l.status === 'vendu').length)
+                            ),
+                            h('div', { className: 'bg-white bg-opacity-10 p-6 rounded-xl' },
+                                h('div', { className: 'text-gray-300 mb-2' }, 'Commissions'),
+                                h('div', { className: 'text-3xl font-bold text-white' }, `${totalCommissions.toLocaleString()} AED`)
+                            )
+                        ),
+                        h('div', { className: 'bg-white bg-opacity-10 rounded-xl overflow-hidden' },
+                            h('div', { className: 'p-6 border-b border-yellow-500/20' },
+                                h('h3', { className: 'text-2xl font-bold text-white' }, 'Tous les Leads')
+                            ),
+                            h('div', { className: 'overflow-x-auto' },
+                                h('table', { className: 'w-full' },
+                                    h('thead', { className: 'bg-black bg-opacity-30' },
+                                        h('tr', null,
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Apporteur'),
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
+                                            h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Actions')
+                                        )
+                                    ),
+                                    h('tbody', null,
+                                        leads.map(lead => {
+                                            const ref = users.find(u => u.id === lead.referrer_id);
+                                            return h('tr', { key: lead.id, className: 'border-t border-yellow-500/10' },
+                                                h('td', { className: 'px-6 py-4 text-white' }, ref?.name),
+                                                h('td', { className: 'px-6 py-4 text-white' }, lead.client_name),
+                                                h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
+                                                h('td', { className: 'px-6 py-4' },
+                                                    h('span', { className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${lead.status === 'vendu' ? 'bg-green-500' : 'bg-blue-500'}` }, lead.status.toUpperCase())
+                                                ),
+                                                h('td', { className: 'px-6 py-4' },
+                                                    lead.status !== 'vendu' && lead.status !== 'perdu' &&
+                                                    h('select', { onChange: (e) => { if(e.target.value === 'vendu') setSelectedLead(lead.id); else updateStatus(lead.id, e.target.value); }, className: 'px-3 py-1 bg-white bg-opacity-20 border border-yellow-500/30 rounded text-white text-sm' },
+                                                        h('option', { value: 'nouveau' }, 'Nouveau'),
+                                                        h('option', { value: 'visite' }, 'Visite'),
+                                                        h('option', { value: 'offre' }, 'Offre'),
+                                                        h('option', { value: 'vendu' }, 'Vendu'),
+                                                        h('option', { value: 'perdu' }, 'Perdu')
+                                                    )
+                                                )
+                                            );
+                                        })
+                                    )
+                                )
+                            )
+                        ),
+                        selectedLead && h('div', { className: 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50' },
+                            h('div', { className: 'bg-slate-800 p-8 rounded-xl border border-yellow-500/30 max-w-md w-full mx-4' },
+                                h('h3', { className: 'text-2xl font-bold text-white mb-4' }, 'Prix de vente final'),
+                                h('input', { type: 'number', value: salePrice, onChange: (e) => setSalePrice(e.target.value), placeholder: 'Prix de vente (AED)', className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white mb-4' }),
+                                h('div', { className: 'flex gap-4' },
+                                    h('button', { onClick: () => { updateStatus(selectedLead, 'vendu', { salePrice: parseFloat(salePrice) }); setSelectedLead(null); setSalePrice(''); }, className: 'flex-1 py-2 bg-green-500 text-white font-semibold rounded-lg' }, 'Confirmer'),
+                                    h('button', { onClick: () => { setSelectedLead(null); setSalePrice(''); }, className: 'flex-1 py-2 bg-gray-500 text-white font-semibold rounded-lg' }, 'Annuler')
+                                )
+                            )
+                        )
+                    )
+                );
+            }
+            
+            return null;
+        }
+        
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+        
+        // Initialize Lucide icons
+        setTimeout(() => lucide.createIcons(), 100);
+    </script>
 </body>
 </html>
