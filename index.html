@@ -5,635 +5,789 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Real Estate Referrer - Dubai</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <div id="root"></div>
-    
-    <script>
-        const { useState, useEffect, createElement: h } = React;
-        const { createClient } = supabase;
-        
-        // REMPLACEZ CES VALEURS PAR VOS VRAIES CLÉS SUPABASE
+    <script type="module">
+        import React, { useState, useEffect } from 'https://esm.sh/react@18';
+        import ReactDOM from 'https://esm.sh/react-dom@18/client';
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        import { Home, Users, DollarSign, TrendingUp, LogOut, Plus, CheckCircle, Menu, X } from 'https://esm.sh/lucide-react@0.263.1';
+
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ5NTEzMzIsImV4cCI6MjA1MDUyNzMzMn0.qzlUFleyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ5NTEzMzIsImV4cCI6MjA1MDUyNzMzMn0.qzlUFI';
-        
-        const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
-        // Icône helper
-        const Icon = ({ name, ...props }) => {
-            useEffect(() => {
-                lucide.createIcons();
-            }, []);
-            return h('i', { 'data-lucide': name, ...props });
-        };
-        
-        function App() {
-            // TOUS les states au niveau principal (important pour React)
-            const [page, setPage] = useState('landing');
-            const [user, setUser] = useState(null);
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const RealEstateReferralApp = () => {
+            // Tous les states déclarés au début (obligatoire pour React hooks)
+            const [currentPage, setCurrentPage] = useState('landing');
+            const [currentUser, setCurrentUser] = useState(null);
             const [users, setUsers] = useState([]);
             const [leads, setLeads] = useState([]);
-            const [loading, setLoading] = useState(false);
-            const [error, setError] = useState('');
-            
-            // States pour login
-            const [loginEmail, setLoginEmail] = useState('');
-            const [loginPwd, setLoginPwd] = useState('');
-            
-            // States pour signup
-            const [signupForm, setSignupForm] = useState({ 
-                name: '', 
-                email: '', 
-                phone: '', 
-                password: '', 
-                confirmPassword: '' 
-            });
-            
-            // States pour referrer dashboard
             const [showAddLead, setShowAddLead] = useState(false);
-            const [newLead, setNewLead] = useState({ 
-                client_name: '', 
-                client_email: '', 
-                client_phone: '', 
-                property_type: 'Appartement', 
-                budget: '' 
+            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            
+            // Form states
+            const [loginForm, setLoginForm] = useState({ email: '', password: '' });
+            const [signupForm, setSignupForm] = useState({ name: '', email: '', password: '', phone: '' });
+            const [leadForm, setLeadForm] = useState({
+                clientName: '',
+                clientEmail: '',
+                clientPhone: '',
+                propertyType: 'Appartement',
+                budget: ''
             });
-            
-            // States pour admin dashboard
-            const [selectedLead, setSelectedLead] = useState(null);
-            const [salePrice, setSalePrice] = useState('');
-            
+
+            // Charger les données au démarrage
             useEffect(() => {
-                loadUsers();
-                loadLeads();
-                lucide.createIcons();
-            }, []);
-            
-            useEffect(() => {
-                lucide.createIcons();
-            }, [page, showAddLead, selectedLead]);
-            
-            const loadUsers = async () => {
-                const { data } = await sb.from('users').select('*').order('id');
-                if (data) setUsers(data);
-            };
-            
-            const loadLeads = async () => {
-                const { data } = await sb.from('leads').select('*').order('created_at', { ascending: false });
-                if (data) setLeads(data);
-            };
-            
-            const login = async () => {
-                setLoading(true);
-                setError('');
-                const { data } = await sb.from('users').select('*').eq('email', loginEmail).eq('password', loginPwd).single();
-                setLoading(false);
-                if (!data) {
-                    setError('Email ou mot de passe incorrect');
-                    return;
+                if (currentUser) {
+                    loadData();
                 }
-                setUser(data);
-                setPage(data.role === 'admin' ? 'admin' : 'referrer');
-            };
-            
-            const signup = async () => {
-                if (signupForm.password !== signupForm.confirmPassword) {
-                    setError('Les mots de passe ne correspondent pas');
-                    return;
-                }
-                setLoading(true);
-                setError('');
-                const { data: existing } = await sb.from('users').select('email').eq('email', signupForm.email).single();
-                if (existing) {
-                    setError('Email déjà utilisé');
-                    setLoading(false);
-                    return;
-                }
-                const { data } = await sb.from('users').insert([{ 
-                    name: signupForm.name, 
-                    email: signupForm.email, 
-                    password: signupForm.password, 
-                    phone: signupForm.phone, 
-                    role: 'referrer' 
-                }]).select().single();
-                setLoading(false);
-                if (data) {
-                    setUser(data);
-                    await loadUsers();
-                    setPage('referrer');
+            }, [currentUser]);
+
+            const loadData = async () => {
+                try {
+                    // Charger tous les utilisateurs
+                    const { data: usersData, error: usersError } = await supabase
+                        .from('users')
+                        .select('*')
+                        .order('joined_at', { ascending: false });
+                    
+                    if (usersError) throw usersError;
+                    setUsers(usersData || []);
+
+                    // Charger les leads
+                    if (currentUser.role === 'admin') {
+                        const { data: leadsData, error: leadsError } = await supabase
+                            .from('leads')
+                            .select('*')
+                            .order('created_at', { ascending: false });
+                        
+                        if (leadsError) throw leadsError;
+                        setLeads(leadsData || []);
+                    } else {
+                        const { data: leadsData, error: leadsError } = await supabase
+                            .from('leads')
+                            .select('*')
+                            .eq('referrer_id', currentUser.id)
+                            .order('created_at', { ascending: false });
+                        
+                        if (leadsError) throw leadsError;
+                        setLeads(leadsData || []);
+                    }
+                } catch (error) {
+                    console.error('Erreur lors du chargement des données:', error);
+                    alert('Erreur lors du chargement des données: ' + error.message);
                 }
             };
-            
-            const logout = () => {
-                setUser(null);
-                setPage('landing');
-            };
-            
-            const addLead = async () => {
-                if (!newLead.client_name || !newLead.client_email || !newLead.budget) return;
-                await sb.from('leads').insert([{ 
-                    ...newLead, 
-                    budget: parseFloat(newLead.budget),
-                    referrer_id: user.id, 
-                    status: 'nouveau' 
-                }]);
-                await loadLeads();
-                setNewLead({ client_name: '', client_email: '', client_phone: '', property_type: 'Appartement', budget: '' });
-                setShowAddLead(false);
-            };
-            
-            const updateStatus = async (id, status, saleData = {}) => {
-                const update = { status };
-                if (status === 'vendu' && saleData.salePrice) {
-                    const total = saleData.salePrice * 0.02;
-                    update.sale_price = saleData.salePrice;
-                    update.agent_commission = total * 0.50;
-                    update.referrer_commission = update.agent_commission * 0.20;
-                    update.closed_at = new Date().toISOString();
+
+            const handleLogin = async (e) => {
+                e.preventDefault();
+                try {
+                    const { data, error } = await supabase
+                        .from('users')
+                        .select('*')
+                        .eq('email', loginForm.email)
+                        .eq('password', loginForm.password)
+                        .single();
+
+                    if (error) throw error;
+                    
+                    if (data) {
+                        setCurrentUser(data);
+                        setCurrentPage(data.role === 'admin' ? 'admin-dashboard' : 'referrer-dashboard');
+                        setLoginForm({ email: '', password: '' });
+                    } else {
+                        alert('Email ou mot de passe incorrect');
+                    }
+                } catch (error) {
+                    console.error('Erreur de connexion:', error);
+                    alert('Erreur de connexion: ' + error.message);
                 }
-                await sb.from('leads').update(update).eq('id', id);
-                await loadLeads();
             };
-            
-            // Landing Page
-            if (page === 'landing') {
-                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
-                    h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
-                        h('div', { className: 'max-w-7xl mx-auto px-6 py-4 flex justify-between items-center' },
-                            h('div', { className: 'flex items-center gap-2' },
-                                h(Icon, { name: 'home', className: 'text-yellow-500', size: 32 }),
-                                h('span', { className: 'text-2xl font-bold text-white' }, 'Real Estate Referrer')
+
+            const handleSignup = async (e) => {
+                e.preventDefault();
+                try {
+                    const { data, error } = await supabase
+                        .from('users')
+                        .insert([{
+                            name: signupForm.name,
+                            email: signupForm.email,
+                            password: signupForm.password,
+                            phone: signupForm.phone,
+                            role: 'referrer'
+                        }])
+                        .select()
+                        .single();
+
+                    if (error) throw error;
+
+                    alert('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+                    setCurrentPage('login');
+                    setSignupForm({ name: '', email: '', password: '', phone: '' });
+                } catch (error) {
+                    console.error('Erreur lors de l\'inscription:', error);
+                    alert('Erreur lors de l\'inscription: ' + error.message);
+                }
+            };
+
+            const handleAddLead = async (e) => {
+                e.preventDefault();
+                try {
+                    const { data, error } = await supabase
+                        .from('leads')
+                        .insert([{
+                            referrer_id: currentUser.id,
+                            client_name: leadForm.clientName,
+                            client_email: leadForm.clientEmail,
+                            client_phone: leadForm.clientPhone,
+                            property_type: leadForm.propertyType,
+                            budget: parseFloat(leadForm.budget),
+                            status: 'nouveau'
+                        }])
+                        .select()
+                        .single();
+
+                    if (error) throw error;
+
+                    alert('Lead ajouté avec succès !');
+                    setShowAddLead(false);
+                    setLeadForm({
+                        clientName: '',
+                        clientEmail: '',
+                        clientPhone: '',
+                        propertyType: 'Appartement',
+                        budget: ''
+                    });
+                    loadData();
+                } catch (error) {
+                    console.error('Erreur lors de l\'ajout du lead:', error);
+                    alert('Erreur lors de l\'ajout du lead: ' + error.message);
+                }
+            };
+
+            const handleUpdateLeadStatus = async (leadId, newStatus, salePrice = null) => {
+                try {
+                    const updateData = { status: newStatus };
+                    
+                    if (newStatus === 'vendu' && salePrice) {
+                        const price = parseFloat(salePrice);
+                        const totalCommission = price * 0.02; // 2% du prix de vente
+                        const agentCommission = totalCommission * 0.5; // 50% pour l'agent (1% du prix)
+                        const referrerCommission = agentCommission * 0.2; // 20% de la part agent
+                        
+                        updateData.sale_price = price;
+                        updateData.agent_commission = agentCommission;
+                        updateData.referrer_commission = referrerCommission;
+                        updateData.closed_at = new Date().toISOString();
+                    }
+
+                    const { error } = await supabase
+                        .from('leads')
+                        .update(updateData)
+                        .eq('id', leadId);
+
+                    if (error) throw error;
+
+                    alert('Statut mis à jour avec succès !');
+                    loadData();
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour:', error);
+                    alert('Erreur lors de la mise à jour: ' + error.message);
+                }
+            };
+
+            const handleLogout = () => {
+                setCurrentUser(null);
+                setCurrentPage('landing');
+                setLeads([]);
+            };
+
+            const formatCurrency = (amount) => {
+                return new Intl.NumberFormat('fr-FR', {
+                    style: 'currency',
+                    currency: 'AED',
+                    minimumFractionDigits: 0
+                }).format(amount || 0).replace('AED', 'AED');
+            };
+
+            const getStatusColor = (status) => {
+                const colors = {
+                    'nouveau': 'bg-blue-100 text-blue-800',
+                    'visite': 'bg-yellow-100 text-yellow-800',
+                    'offre': 'bg-orange-100 text-orange-800',
+                    'vendu': 'bg-green-100 text-green-800'
+                };
+                return colors[status] || 'bg-gray-100 text-gray-800';
+            };
+
+            // Calculs des statistiques
+            const calculateStats = () => {
+                const userLeads = currentUser?.role === 'admin' 
+                    ? leads 
+                    : leads.filter(l => l.referrer_id === currentUser?.id);
+                
+                const totalEarnings = userLeads
+                    .filter(l => l.status === 'vendu')
+                    .reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
+                
+                const activeLeads = userLeads.filter(l => l.status !== 'vendu').length;
+                const closedSales = userLeads.filter(l => l.status === 'vendu').length;
+                
+                return { totalEarnings, activeLeads, closedSales };
+            };
+
+            // LANDING PAGE
+            if (currentPage === 'landing') {
+                return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
+                    React.createElement('nav', { className: 'bg-slate-900/50 backdrop-blur-sm border-b border-gold-500/20' },
+                        React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center' },
+                            React.createElement('div', { className: 'flex items-center gap-2' },
+                                React.createElement(Home, { className: 'text-yellow-500', size: 28 }),
+                                React.createElement('span', { className: 'text-2xl font-bold text-white' }, 'Real Estate Referrer')
                             ),
-                            h('div', { className: 'flex gap-4' },
-                                h('button', { 
-                                    onClick: () => setPage('login'), 
-                                    className: 'px-6 py-2 text-white hover:text-yellow-500 transition' 
+                            React.createElement('div', { className: 'flex gap-4' },
+                                React.createElement('button', {
+                                    onClick: () => setCurrentPage('login'),
+                                    className: 'px-6 py-2 text-white hover:text-yellow-500 transition'
                                 }, 'Connexion'),
-                                h('button', { 
-                                    onClick: () => setPage('signup'), 
-                                    className: 'px-6 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition' 
+                                React.createElement('button', {
+                                    onClick: () => setCurrentPage('signup'),
+                                    className: 'px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 rounded-lg font-semibold hover:from-yellow-400 hover:to-yellow-500 transition'
                                 }, 'Devenir Apporteur')
                             )
                         )
                     ),
-                    h('div', { className: 'max-w-7xl mx-auto px-6 py-20' },
-                        h('div', { className: 'text-center mb-16' },
-                            h('h1', { className: 'text-6xl font-bold text-white mb-6' },
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20' },
+                        React.createElement('div', { className: 'text-center mb-16' },
+                            React.createElement('h1', { className: 'text-5xl md:text-6xl font-bold text-white mb-6' },
                                 'Gagnez jusqu\'à ',
-                                h('span', { className: 'text-yellow-500' }, '20,000 AED'),
+                                React.createElement('span', { className: 'text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600' }, '20,000 AED'),
                                 ' par vente'
                             ),
-                            h('p', { className: 'text-2xl text-gray-300 mb-8' }, 'Devenez apporteur d\'affaires et touchez 20% de commission'),
-                            h('button', { 
-                                onClick: () => setPage('signup'), 
-                                className: 'px-8 py-4 bg-yellow-500 text-black text-xl font-bold rounded-lg hover:bg-yellow-400 transition' 
-                            }, 'Rejoindre le Programme')
+                            React.createElement('p', { className: 'text-xl text-gray-300 mb-8' },
+                                'Apportez des clients immobiliers et touchez 20% de la commission agent'
+                            ),
+                            React.createElement('button', {
+                                onClick: () => setCurrentPage('signup'),
+                                className: 'px-8 py-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 rounded-lg font-bold text-lg hover:from-yellow-400 hover:to-yellow-500 transition transform hover:scale-105'
+                            }, 'Nous Rejoindre')
                         ),
-                        h('div', { className: 'grid md:grid-cols-3 gap-8' },
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl border border-yellow-500/30' },
-                                h(Icon, { name: 'dollar-sign', className: 'text-yellow-500 mb-4', size: 48 }),
-                                h('h3', { className: 'text-2xl font-bold text-white mb-3' }, 'Commissions Attractives'),
-                                h('p', { className: 'text-gray-300' }, '20% de notre commission sur chaque vente')
-                            ),
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl border border-yellow-500/30' },
-                                h(Icon, { name: 'trending-up', className: 'text-yellow-500 mb-4', size: 48 }),
-                                h('h3', { className: 'text-2xl font-bold text-white mb-3' }, 'Suivi en Temps Réel'),
-                                h('p', { className: 'text-gray-300' }, 'Dashboard pour suivre vos gains')
-                            ),
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-8 rounded-xl border border-yellow-500/30' },
-                                h(Icon, { name: 'users', className: 'text-yellow-500 mb-4', size: 48 }),
-                                h('h3', { className: 'text-2xl font-bold text-white mb-3' }, 'Réseau d\'Excellence'),
-                                h('p', { className: 'text-gray-300' }, 'Propriétés premium à Dubai')
+                        React.createElement('div', { className: 'grid md:grid-cols-3 gap-8 mb-16' },
+                            [
+                                { price: '3M AED', commission: '6,000 AED' },
+                                { price: '5M AED', commission: '10,000 AED' },
+                                { price: '10M AED', commission: '20,000 AED' }
+                            ].map((example, idx) =>
+                                React.createElement('div', { 
+                                    key: idx,
+                                    className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6 text-center hover:border-yellow-500/40 transition'
+                                },
+                                    React.createElement('div', { className: 'text-gray-400 mb-2' }, 'Vente à'),
+                                    React.createElement('div', { className: 'text-2xl font-bold text-white mb-4' }, example.price),
+                                    React.createElement('div', { className: 'text-yellow-500 text-xl font-bold' }, 
+                                        '→ ', example.commission
+                                    ),
+                                    React.createElement('div', { className: 'text-sm text-gray-400 mt-2' }, 'de commission')
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-8' },
+                            React.createElement('h2', { className: 'text-3xl font-bold text-white mb-6 text-center' }, 'Comment ça marche ?'),
+                            React.createElement('div', { className: 'grid md:grid-cols-3 gap-6' },
+                                [
+                                    { step: '1', title: 'Inscrivez-vous', desc: 'Créez votre compte gratuitement' },
+                                    { step: '2', title: 'Apportez des clients', desc: 'Recommandez vos contacts intéressés' },
+                                    { step: '3', title: 'Touchez votre commission', desc: '20% de la commission agent à la vente' }
+                                ].map((step, idx) =>
+                                    React.createElement('div', { key: idx, className: 'text-center' },
+                                        React.createElement('div', { className: 'w-16 h-16 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full flex items-center justify-center text-2xl font-bold text-slate-900 mx-auto mb-4' }, 
+                                            step.step
+                                        ),
+                                        React.createElement('h3', { className: 'text-xl font-bold text-white mb-2' }, step.title),
+                                        React.createElement('p', { className: 'text-gray-400' }, step.desc)
+                                    )
+                                )
                             )
                         )
                     )
                 );
             }
-            
-            // Login Page
-            if (page === 'login') {
-                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6' },
-                    h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl border border-yellow-500/30 w-full max-w-md' },
-                        h('h2', { className: 'text-3xl font-bold text-white mb-8 text-center' }, 'Connexion'),
-                        h('div', { className: 'space-y-6' },
-                            h('div', null,
-                                h('label', { className: 'block text-gray-300 mb-2' }, 'Email'),
-                                h('input', { 
-                                    type: 'email', 
-                                    value: loginEmail, 
-                                    onChange: (e) => setLoginEmail(e.target.value), 
-                                    className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' 
+
+            // LOGIN PAGE
+            if (currentPage === 'login') {
+                return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-4' },
+                    React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-8 w-full max-w-md' },
+                        React.createElement('div', { className: 'text-center mb-8' },
+                            React.createElement('h2', { className: 'text-3xl font-bold text-white' }, 'Connexion')
+                        ),
+                        React.createElement('form', { onSubmit: handleLogin },
+                            React.createElement('div', { className: 'mb-4' },
+                                React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Email'),
+                                React.createElement('input', {
+                                    type: 'email',
+                                    value: loginForm.email,
+                                    onChange: (e) => setLoginForm({...loginForm, email: e.target.value}),
+                                    className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                    required: true
                                 })
                             ),
-                            h('div', null,
-                                h('label', { className: 'block text-gray-300 mb-2' }, 'Mot de passe'),
-                                h('input', { 
-                                    type: 'password', 
-                                    value: loginPwd, 
-                                    onChange: (e) => setLoginPwd(e.target.value),
-                                    onKeyPress: (e) => e.key === 'Enter' && login(),
-                                    className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white' 
+                            React.createElement('div', { className: 'mb-6' },
+                                React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Mot de passe'),
+                                React.createElement('input', {
+                                    type: 'password',
+                                    value: loginForm.password,
+                                    onChange: (e) => setLoginForm({...loginForm, password: e.target.value}),
+                                    className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                    required: true
                                 })
                             ),
-                            error && h('p', { className: 'text-red-400' }, error),
-                            h('button', { 
-                                onClick: login, 
-                                disabled: loading, 
-                                className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition disabled:opacity-50' 
-                            }, loading ? 'Connexion...' : 'Se connecter')
-                        ),
-                        h('div', { className: 'mt-6 text-center' },
-                            h('button', { 
-                                onClick: () => { setPage('signup'); setError(''); }, 
-                                className: 'text-yellow-500' 
-                            }, 'S\'inscrire'),
-                            h('br'),
-                            h('button', { 
-                                onClick: () => { setPage('landing'); setError(''); }, 
-                                className: 'text-gray-400 mt-2' 
-                            }, 'Retour')
-                        )
-                    )
-                );
-            }
-            
-            // Signup Page
-            if (page === 'signup') {
-                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-6 py-12' },
-                    h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-10 rounded-2xl border border-yellow-500/30 w-full max-w-md' },
-                        h('h2', { className: 'text-3xl font-bold text-white mb-8 text-center' }, 'Inscription'),
-                        h('div', { className: 'space-y-4' },
-                            h('input', { 
-                                placeholder: 'Nom complet', 
-                                value: signupForm.name, 
-                                onChange: (e) => setSignupForm({...signupForm, name: e.target.value}), 
-                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                            }),
-                            h('input', { 
-                                type: 'email', 
-                                placeholder: 'Email', 
-                                value: signupForm.email, 
-                                onChange: (e) => setSignupForm({...signupForm, email: e.target.value}), 
-                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                            }),
-                            h('input', { 
-                                placeholder: '+971 50 XXX XXXX', 
-                                value: signupForm.phone, 
-                                onChange: (e) => setSignupForm({...signupForm, phone: e.target.value}), 
-                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                            }),
-                            h('input', { 
-                                type: 'password', 
-                                placeholder: 'Mot de passe', 
-                                value: signupForm.password, 
-                                onChange: (e) => setSignupForm({...signupForm, password: e.target.value}), 
-                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                            }),
-                            h('input', { 
-                                type: 'password', 
-                                placeholder: 'Confirmer mot de passe', 
-                                value: signupForm.confirmPassword, 
-                                onChange: (e) => setSignupForm({...signupForm, confirmPassword: e.target.value}), 
-                                className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                            }),
-                            error && h('p', { className: 'text-red-400' }, error),
-                            h('button', { 
-                                onClick: signup, 
-                                disabled: loading, 
-                                className: 'w-full py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition disabled:opacity-50' 
-                            }, loading ? 'Création...' : 'Créer mon compte')
-                        ),
-                        h('div', { className: 'mt-6 text-center' },
-                            h('button', { 
-                                onClick: () => { setPage('login'); setError(''); }, 
-                                className: 'text-yellow-500' 
+                            React.createElement('button', {
+                                type: 'submit',
+                                className: 'w-full py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 rounded-lg font-bold hover:from-yellow-400 hover:to-yellow-500 transition'
                             }, 'Se connecter'),
-                            h('br'),
-                            h('button', { 
-                                onClick: () => { setPage('landing'); setError(''); }, 
-                                className: 'text-gray-400 mt-2' 
-                            }, 'Retour')
+                            React.createElement('div', { className: 'mt-4 text-center' },
+                                React.createElement('button', {
+                                    type: 'button',
+                                    onClick: () => setCurrentPage('landing'),
+                                    className: 'text-gray-400 hover:text-yellow-500 transition'
+                                }, 'Retour à l\'accueil')
+                            )
                         )
                     )
                 );
             }
-            
-            // Referrer Dashboard
-            if (page === 'referrer' && user) {
-                const myLeads = leads.filter(l => l.referrer_id === user.id);
-                const total = myLeads.reduce((s, l) => s + (l.referrer_commission || 0), 0);
-                const pending = myLeads.filter(l => l.status !== 'vendu' && l.status !== 'perdu').length;
-                const closed = myLeads.filter(l => l.status === 'vendu').length;
-                
-                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
-                    h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
-                        h('div', { className: 'max-w-7xl mx-auto px-6 py-4 flex justify-between items-center' },
-                            h('div', { className: 'flex items-center gap-2' },
-                                h(Icon, { name: 'home', className: 'text-yellow-500', size: 28 }),
-                                h('span', { className: 'text-xl font-bold text-white' }, 'Real Estate Referrer')
+
+            // SIGNUP PAGE
+            if (currentPage === 'signup') {
+                return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-4' },
+                    React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-8 w-full max-w-md' },
+                        React.createElement('div', { className: 'text-center mb-8' },
+                            React.createElement('h2', { className: 'text-3xl font-bold text-white' }, 'Devenir Apporteur')
+                        ),
+                        React.createElement('form', { onSubmit: handleSignup },
+                            React.createElement('div', { className: 'mb-4' },
+                                React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Nom complet'),
+                                React.createElement('input', {
+                                    type: 'text',
+                                    value: signupForm.name,
+                                    onChange: (e) => setSignupForm({...signupForm, name: e.target.value}),
+                                    className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                    required: true
+                                })
                             ),
-                            h('div', { className: 'flex items-center gap-4' },
-                                h('span', { className: 'text-gray-300' }, `Bienvenue, ${user.name}`),
-                                h('button', { 
-                                    onClick: logout, 
-                                    className: 'flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600' 
+                            React.createElement('div', { className: 'mb-4' },
+                                React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Email'),
+                                React.createElement('input', {
+                                    type: 'email',
+                                    value: signupForm.email,
+                                    onChange: (e) => setSignupForm({...signupForm, email: e.target.value}),
+                                    className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                    required: true
+                                })
+                            ),
+                            React.createElement('div', { className: 'mb-4' },
+                                React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Téléphone'),
+                                React.createElement('input', {
+                                    type: 'tel',
+                                    value: signupForm.phone,
+                                    onChange: (e) => setSignupForm({...signupForm, phone: e.target.value}),
+                                    className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                    placeholder: '+971 ...',
+                                    required: true
+                                })
+                            ),
+                            React.createElement('div', { className: 'mb-6' },
+                                React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Mot de passe'),
+                                React.createElement('input', {
+                                    type: 'password',
+                                    value: signupForm.password,
+                                    onChange: (e) => setSignupForm({...signupForm, password: e.target.value}),
+                                    className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                    required: true,
+                                    minLength: 6
+                                })
+                            ),
+                            React.createElement('button', {
+                                type: 'submit',
+                                className: 'w-full py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 rounded-lg font-bold hover:from-yellow-400 hover:to-yellow-500 transition'
+                            }, 'Créer mon compte'),
+                            React.createElement('div', { className: 'mt-4 text-center' },
+                                React.createElement('button', {
+                                    type: 'button',
+                                    onClick: () => setCurrentPage('landing'),
+                                    className: 'text-gray-400 hover:text-yellow-500 transition'
+                                }, 'Retour à l\'accueil')
+                            )
+                        )
+                    )
+                );
+            }
+
+            // REFERRER DASHBOARD
+            if (currentPage === 'referrer-dashboard') {
+                const stats = calculateStats();
+                
+                return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
+                    React.createElement('nav', { className: 'bg-slate-900/50 backdrop-blur-sm border-b border-yellow-500/20' },
+                        React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center' },
+                            React.createElement('div', { className: 'flex items-center gap-2' },
+                                React.createElement(Home, { className: 'text-yellow-500', size: 28 }),
+                                React.createElement('span', { className: 'text-xl font-bold text-white' }, 'Mon Espace Apporteur')
+                            ),
+                            React.createElement('div', { className: 'flex items-center gap-4' },
+                                React.createElement('span', { className: 'text-gray-300' }, currentUser.name),
+                                React.createElement('button', {
+                                    onClick: handleLogout,
+                                    className: 'flex items-center gap-2 px-4 py-2 text-white hover:text-yellow-500 transition'
                                 },
-                                    h(Icon, { name: 'log-out', size: 18 }),
+                                    React.createElement(LogOut, { size: 20 }),
                                     'Déconnexion'
                                 )
                             )
                         )
                     ),
-                    h('div', { className: 'max-w-7xl mx-auto px-6 py-8' },
-                        h('div', { className: 'grid md:grid-cols-3 gap-6 mb-8' },
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'flex items-center justify-between mb-2' },
-                                    h('span', { className: 'text-gray-300' }, 'Gains Totaux'),
-                                    h(Icon, { name: 'dollar-sign', className: 'text-yellow-500', size: 24 })
-                                ),
-                                h('div', { className: 'text-3xl font-bold text-white' }, `${total.toLocaleString()} AED`)
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8' },
+                        React.createElement('div', { className: 'grid md:grid-cols-3 gap-6 mb-8' },
+                            React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6' },
+                                React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
+                                    React.createElement(DollarSign, { className: 'text-yellow-500', size: 32 }),
+                                    React.createElement('div', null,
+                                        React.createElement('div', { className: 'text-gray-400 text-sm' }, 'Gains totaux'),
+                                        React.createElement('div', { className: 'text-2xl font-bold text-white' }, formatCurrency(stats.totalEarnings))
+                                    )
+                                )
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'flex items-center justify-between mb-2' },
-                                    h('span', { className: 'text-gray-300' }, 'Leads en Cours'),
-                                    h(Icon, { name: 'trending-up', className: 'text-blue-400', size: 24 })
-                                ),
-                                h('div', { className: 'text-3xl font-bold text-white' }, pending)
+                            React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6' },
+                                React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
+                                    React.createElement(TrendingUp, { className: 'text-blue-500', size: 32 }),
+                                    React.createElement('div', null,
+                                        React.createElement('div', { className: 'text-gray-400 text-sm' }, 'Leads en cours'),
+                                        React.createElement('div', { className: 'text-2xl font-bold text-white' }, stats.activeLeads)
+                                    )
+                                )
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'flex items-center justify-between mb-2' },
-                                    h('span', { className: 'text-gray-300' }, 'Ventes'),
-                                    h(Icon, { name: 'check-circle', className: 'text-green-400', size: 24 })
-                                ),
-                                h('div', { className: 'text-3xl font-bold text-white' }, closed)
+                            React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6' },
+                                React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
+                                    React.createElement(CheckCircle, { className: 'text-green-500', size: 32 }),
+                                    React.createElement('div', null,
+                                        React.createElement('div', { className: 'text-gray-400 text-sm' }, 'Ventes conclues'),
+                                        React.createElement('div', { className: 'text-2xl font-bold text-white' }, stats.closedSales)
+                                    )
+                                )
                             )
                         ),
-                        h('button', { 
-                            onClick: () => setShowAddLead(!showAddLead), 
-                            className: 'mb-6 flex items-center gap-2 px-6 py-3 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400' 
-                        },
-                            h(Icon, { name: 'plus', size: 20 }),
-                            'Ajouter un Lead'
+                        React.createElement('div', { className: 'mb-6 flex justify-between items-center' },
+                            React.createElement('h2', { className: 'text-2xl font-bold text-white' }, 'Mes Leads'),
+                            React.createElement('button', {
+                                onClick: () => setShowAddLead(!showAddLead),
+                                className: 'flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 rounded-lg font-bold hover:from-yellow-400 hover:to-yellow-500 transition'
+                            },
+                                React.createElement(Plus, { size: 20 }),
+                                'Ajouter un lead'
+                            )
                         ),
-                        showAddLead && h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30 mb-8' },
-                            h('h3', { className: 'text-2xl font-bold text-white mb-4' }, 'Nouveau Lead'),
-                            h('div', { className: 'grid md:grid-cols-2 gap-4' },
-                                h('input', { 
-                                    placeholder: 'Nom du client', 
-                                    value: newLead.client_name, 
-                                    onChange: (e) => setNewLead({...newLead, client_name: e.target.value}), 
-                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                                }),
-                                h('input', { 
-                                    type: 'email',
-                                    placeholder: 'Email', 
-                                    value: newLead.client_email, 
-                                    onChange: (e) => setNewLead({...newLead, client_email: e.target.value}), 
-                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                                }),
-                                h('input', { 
-                                    placeholder: 'Téléphone', 
-                                    value: newLead.client_phone, 
-                                    onChange: (e) => setNewLead({...newLead, client_phone: e.target.value}), 
-                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                                }),
-                                h('select', {
-                                    value: newLead.property_type,
-                                    onChange: (e) => setNewLead({...newLead, property_type: e.target.value}),
-                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white'
-                                },
-                                    h('option', { value: 'Appartement' }, 'Appartement'),
-                                    h('option', { value: 'Villa' }, 'Villa'),
-                                    h('option', { value: 'Penthouse' }, 'Penthouse'),
-                                    h('option', { value: 'Townhouse' }, 'Townhouse')
+                        showAddLead && React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6 mb-6' },
+                            React.createElement('h3', { className: 'text-xl font-bold text-white mb-4' }, 'Nouveau Lead'),
+                            React.createElement('form', { onSubmit: handleAddLead, className: 'grid md:grid-cols-2 gap-4' },
+                                React.createElement('div', null,
+                                    React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Nom du client'),
+                                    React.createElement('input', {
+                                        type: 'text',
+                                        value: leadForm.clientName,
+                                        onChange: (e) => setLeadForm({...leadForm, clientName: e.target.value}),
+                                        className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                        required: true
+                                    })
                                 ),
-                                h('input', { 
-                                    type: 'number',
-                                    placeholder: 'Budget (AED)', 
-                                    value: newLead.budget, 
-                                    onChange: (e) => setNewLead({...newLead, budget: e.target.value}), 
-                                    className: 'px-4 py-2 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400' 
-                                }),
-                                h('div', { className: 'flex gap-4' },
-                                    h('button', { 
-                                        onClick: addLead, 
-                                        className: 'px-6 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600' 
-                                    }, 'Ajouter'),
-                                    h('button', { 
-                                        onClick: () => setShowAddLead(false), 
-                                        className: 'px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600' 
+                                React.createElement('div', null,
+                                    React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Email'),
+                                    React.createElement('input', {
+                                        type: 'email',
+                                        value: leadForm.clientEmail,
+                                        onChange: (e) => setLeadForm({...leadForm, clientEmail: e.target.value}),
+                                        className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                        required: true
+                                    })
+                                ),
+                                React.createElement('div', null,
+                                    React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Téléphone'),
+                                    React.createElement('input', {
+                                        type: 'tel',
+                                        value: leadForm.clientPhone,
+                                        onChange: (e) => setLeadForm({...leadForm, clientPhone: e.target.value}),
+                                        className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                        required: true
+                                    })
+                                ),
+                                React.createElement('div', null,
+                                    React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Type de bien'),
+                                    React.createElement('select', {
+                                        value: leadForm.propertyType,
+                                        onChange: (e) => setLeadForm({...leadForm, propertyType: e.target.value}),
+                                        className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500'
+                                    },
+                                        React.createElement('option', { value: 'Appartement' }, 'Appartement'),
+                                        React.createElement('option', { value: 'Villa' }, 'Villa'),
+                                        React.createElement('option', { value: 'Penthouse' }, 'Penthouse'),
+                                        React.createElement('option', { value: 'Bureau' }, 'Bureau'),
+                                        React.createElement('option', { value: 'Commerce' }, 'Commerce')
+                                    )
+                                ),
+                                React.createElement('div', { className: 'md:col-span-2' },
+                                    React.createElement('label', { className: 'block text-gray-300 mb-2' }, 'Budget (AED)'),
+                                    React.createElement('input', {
+                                        type: 'number',
+                                        value: leadForm.budget,
+                                        onChange: (e) => setLeadForm({...leadForm, budget: e.target.value}),
+                                        className: 'w-full px-4 py-3 bg-slate-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500',
+                                        required: true,
+                                        min: '0'
+                                    })
+                                ),
+                                React.createElement('div', { className: 'md:col-span-2 flex gap-4' },
+                                    React.createElement('button', {
+                                        type: 'submit',
+                                        className: 'flex-1 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 rounded-lg font-bold hover:from-yellow-400 hover:to-yellow-500 transition'
+                                    }, 'Ajouter le lead'),
+                                    React.createElement('button', {
+                                        type: 'button',
+                                        onClick: () => setShowAddLead(false),
+                                        className: 'px-6 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition'
                                     }, 'Annuler')
                                 )
                             )
                         ),
-                        h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md rounded-xl border border-yellow-500/30 overflow-hidden' },
-                            h('div', { className: 'p-6 border-b border-yellow-500/20' },
-                                h('h3', { className: 'text-2xl font-bold text-white' }, 'Mes Leads')
-                            ),
-                            myLeads.length === 0 ? 
-                                h('p', { className: 'p-8 text-center text-gray-400' }, 'Aucun lead. Ajoutez votre premier lead!') :
-                                h('div', { className: 'overflow-x-auto' },
-                                    h('table', { className: 'w-full' },
-                                        h('thead', { className: 'bg-black bg-opacity-30' },
-                                            h('tr', null,
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Type'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Commission')
+                        React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl overflow-hidden' },
+                            React.createElement('div', { className: 'overflow-x-auto' },
+                                React.createElement('table', { className: 'w-full' },
+                                    React.createElement('thead', { className: 'bg-slate-900/50' },
+                                        React.createElement('tr', null,
+                                            ['Client', 'Contact', 'Type', 'Budget', 'Statut', 'Commission'].map(header =>
+                                                React.createElement('th', { 
+                                                    key: header,
+                                                    className: 'px-6 py-4 text-left text-sm font-semibold text-gray-300'
+                                                }, header)
                                             )
-                                        ),
-                                        h('tbody', null,
-                                            myLeads.map(lead =>
-                                                h('tr', { key: lead.id, className: 'border-t border-yellow-500/10 hover:bg-white hover:bg-opacity-5' },
-                                                    h('td', { className: 'px-6 py-4 text-white font-semibold' }, lead.client_name),
-                                                    h('td', { className: 'px-6 py-4 text-gray-300' }, lead.property_type),
-                                                    h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
-                                                    h('td', { className: 'px-6 py-4' },
-                                                        h('span', { 
-                                                            className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${
-                                                                lead.status === 'vendu' ? 'bg-green-500' : 
-                                                                lead.status === 'perdu' ? 'bg-red-500' :
-                                                                lead.status === 'offre' ? 'bg-orange-500' :
-                                                                lead.status === 'visite' ? 'bg-purple-500' : 'bg-blue-500'
-                                                            }` 
-                                                        }, lead.status.toUpperCase())
+                                        )
+                                    ),
+                                    React.createElement('tbody', { className: 'divide-y divide-slate-700' },
+                                        leads.length === 0 
+                                            ? React.createElement('tr', null,
+                                                React.createElement('td', { colSpan: 6, className: 'px-6 py-8 text-center text-gray-400' },
+                                                    'Aucun lead pour le moment. Ajoutez votre premier client !'
+                                                )
+                                            )
+                                            : leads.map(lead =>
+                                                React.createElement('tr', { key: lead.id, className: 'hover:bg-slate-700/30 transition' },
+                                                    React.createElement('td', { className: 'px-6 py-4' },
+                                                        React.createElement('div', { className: 'font-semibold text-white' }, lead.client_name),
+                                                        React.createElement('div', { className: 'text-sm text-gray-400' }, lead.client_email)
                                                     ),
-                                                    h('td', { className: 'px-6 py-4 text-yellow-500 font-bold' }, 
-                                                        lead.referrer_commission ? `${lead.referrer_commission.toLocaleString()} AED` : '-'
+                                                    React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, lead.client_phone),
+                                                    React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, lead.property_type),
+                                                    React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, formatCurrency(lead.budget)),
+                                                    React.createElement('td', { className: 'px-6 py-4' },
+                                                        React.createElement('span', { className: `px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(lead.status)}` },
+                                                            lead.status
+                                                        )
+                                                    ),
+                                                    React.createElement('td', { className: 'px-6 py-4 font-bold text-yellow-500' },
+                                                        lead.status === 'vendu' 
+                                                            ? formatCurrency(lead.referrer_commission)
+                                                            : '-'
                                                     )
                                                 )
                                             )
-                                        )
                                     )
                                 )
+                            )
                         )
                     )
                 );
             }
-            
-            // Admin Dashboard
-            if (page === 'admin' && user) {
-                const totalReferrers = users.filter(u => u.role === 'referrer').length;
-                const totalCommissions = leads.reduce((s, l) => s + (l.referrer_commission || 0), 0);
-                const closedDeals = leads.filter(l => l.status === 'vendu').length;
+
+            // ADMIN DASHBOARD
+            if (currentPage === 'admin-dashboard') {
+                const stats = calculateStats();
+                const allReferrers = users.filter(u => u.role === 'referrer');
                 
-                return h('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
-                    h('nav', { className: 'bg-black bg-opacity-50 backdrop-blur-md border-b border-yellow-500/20' },
-                        h('div', { className: 'max-w-7xl mx-auto px-6 py-4 flex justify-between items-center' },
-                            h('div', { className: 'flex items-center gap-2' },
-                                h(Icon, { name: 'home', className: 'text-yellow-500', size: 28 }),
-                                h('span', { className: 'text-xl font-bold text-white' }, 'Admin Dashboard')
+                return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
+                    React.createElement('nav', { className: 'bg-slate-900/50 backdrop-blur-sm border-b border-yellow-500/20' },
+                        React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center' },
+                            React.createElement('div', { className: 'flex items-center gap-2' },
+                                React.createElement(Home, { className: 'text-yellow-500', size: 28 }),
+                                React.createElement('span', { className: 'text-xl font-bold text-white' }, 'Admin Dashboard')
                             ),
-                            h('button', { 
-                                onClick: logout, 
-                                className: 'flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600' 
-                            },
-                                h(Icon, { name: 'log-out', size: 18 }),
-                                'Déconnexion'
+                            React.createElement('div', { className: 'flex items-center gap-4' },
+                                React.createElement('span', { className: 'text-gray-300' }, currentUser.name),
+                                React.createElement('button', {
+                                    onClick: handleLogout,
+                                    className: 'flex items-center gap-2 px-4 py-2 text-white hover:text-yellow-500 transition'
+                                },
+                                    React.createElement(LogOut, { size: 20 }),
+                                    'Déconnexion'
+                                )
                             )
                         )
                     ),
-                    h('div', { className: 'max-w-7xl mx-auto px-6 py-8' },
-                        h('div', { className: 'grid md:grid-cols-4 gap-6 mb-8' },
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'flex items-center justify-between mb-2' },
-                                    h('span', { className: 'text-gray-300' }, 'Apporteurs'),
-                                    h(Icon, { name: 'users', className: 'text-blue-400', size: 24 })
-                                ),
-                                h('div', { className: 'text-3xl font-bold text-white' }, totalReferrers)
+                    React.createElement('div', { className: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8' },
+                        React.createElement('div', { className: 'grid md:grid-cols-4 gap-6 mb-8' },
+                            React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6' },
+                                React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
+                                    React.createElement(Users, { className: 'text-purple-500', size: 32 }),
+                                    React.createElement('div', null,
+                                        React.createElement('div', { className: 'text-gray-400 text-sm' }, 'Apporteurs'),
+                                        React.createElement('div', { className: 'text-2xl font-bold text-white' }, allReferrers.length)
+                                    )
+                                )
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'flex items-center justify-between mb-2' },
-                                    h('span', { className: 'text-gray-300' }, 'Total Leads'),
-                                    h(Icon, { name: 'trending-up', className: 'text-purple-400', size: 24 })
-                                ),
-                                h('div', { className: 'text-3xl font-bold text-white' }, leads.length)
+                            React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6' },
+                                React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
+                                    React.createElement(TrendingUp, { className: 'text-blue-500', size: 32 }),
+                                    React.createElement('div', null,
+                                        React.createElement('div', { className: 'text-gray-400 text-sm' }, 'Leads actifs'),
+                                        React.createElement('div', { className: 'text-2xl font-bold text-white' }, stats.activeLeads)
+                                    )
+                                )
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'flex items-center justify-between mb-2' },
-                                    h('span', { className: 'text-gray-300' }, 'Ventes'),
-                                    h(Icon, { name: 'check-circle', className: 'text-green-400', size: 24 })
-                                ),
-                                h('div', { className: 'text-3xl font-bold text-white' }, closedDeals)
+                            React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6' },
+                                React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
+                                    React.createElement(CheckCircle, { className: 'text-green-500', size: 32 }),
+                                    React.createElement('div', null,
+                                        React.createElement('div', { className: 'text-gray-400 text-sm' }, 'Ventes'),
+                                        React.createElement('div', { className: 'text-2xl font-bold text-white' }, stats.closedSales)
+                                    )
+                                )
                             ),
-                            h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-xl border border-yellow-500/30' },
-                                h('div', { className: 'flex items-center justify-between mb-2' },
-                                    h('span', { className: 'text-gray-300' }, 'Commissions'),
-                                    h(Icon, { name: 'dollar-sign', className: 'text-yellow-500', size: 24 })
-                                ),
-                                h('div', { className: 'text-3xl font-bold text-white' }, `${totalCommissions.toLocaleString()} AED`)
+                            React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-6' },
+                                React.createElement('div', { className: 'flex items-center gap-4 mb-2' },
+                                    React.createElement(DollarSign, { className: 'text-yellow-500', size: 32 }),
+                                    React.createElement('div', null,
+                                        React.createElement('div', { className: 'text-gray-400 text-sm' }, 'Commissions versées'),
+                                        React.createElement('div', { className: 'text-2xl font-bold text-white' }, formatCurrency(stats.totalEarnings))
+                                    )
+                                )
                             )
                         ),
-                        h('div', { className: 'bg-white bg-opacity-10 backdrop-blur-md rounded-xl border border-yellow-500/30 overflow-hidden mb-8' },
-                            h('div', { className: 'p-6 border-b border-yellow-500/20' },
-                                h('h3', { className: 'text-2xl font-bold text-white' }, 'Tous les Leads')
-                            ),
-                            leads.length === 0 ?
-                                h('p', { className: 'p-8 text-center text-gray-400' }, 'Aucun lead') :
-                                h('div', { className: 'overflow-x-auto' },
-                                    h('table', { className: 'w-full' },
-                                        h('thead', { className: 'bg-black bg-opacity-30' },
-                                            h('tr', null,
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Apporteur'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Client'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Budget'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Statut'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Commission'),
-                                                h('th', { className: 'px-6 py-4 text-left text-gray-300' }, 'Actions')
+                        React.createElement('h2', { className: 'text-2xl font-bold text-white mb-6' }, 'Tous les Leads'),
+                        React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl overflow-hidden' },
+                            React.createElement('div', { className: 'overflow-x-auto' },
+                                React.createElement('table', { className: 'w-full' },
+                                    React.createElement('thead', { className: 'bg-slate-900/50' },
+                                        React.createElement('tr', null,
+                                            ['Apporteur', 'Client', 'Contact', 'Type', 'Budget', 'Statut', 'Prix vente', 'Commission', 'Actions'].map(header =>
+                                                React.createElement('th', { 
+                                                    key: header,
+                                                    className: 'px-4 py-4 text-left text-sm font-semibold text-gray-300'
+                                                }, header)
                                             )
-                                        ),
-                                        h('tbody', null,
-                                            leads.map(lead => {
-                                                const ref = users.find(u => u.id === lead.referrer_id);
-                                                return h('tr', { key: lead.id, className: 'border-t border-yellow-500/10 hover:bg-white hover:bg-opacity-5' },
-                                                    h('td', { className: 'px-6 py-4 text-white font-semibold' }, ref?.name || 'N/A'),
-                                                    h('td', { className: 'px-6 py-4 text-white' }, lead.client_name),
-                                                    h('td', { className: 'px-6 py-4 text-gray-300' }, `${lead.budget.toLocaleString()} AED`),
-                                                    h('td', { className: 'px-6 py-4' },
-                                                        h('span', { 
-                                                            className: `px-3 py-1 rounded-full text-xs font-semibold text-white ${
-                                                                lead.status === 'vendu' ? 'bg-green-500' : 
-                                                                lead.status === 'perdu' ? 'bg-red-500' :
-                                                                lead.status === 'offre' ? 'bg-orange-500' :
-                                                                lead.status === 'visite' ? 'bg-purple-500' : 'bg-blue-500'
-                                                            }` 
-                                                        }, lead.status.toUpperCase())
+                                        )
+                                    ),
+                                    React.createElement('tbody', { className: 'divide-y divide-slate-700' },
+                                        leads.length === 0 
+                                            ? React.createElement('tr', null,
+                                                React.createElement('td', { colSpan: 9, className: 'px-6 py-8 text-center text-gray-400' },
+                                                    'Aucun lead pour le moment'
+                                                )
+                                            )
+                                            : leads.map(lead => {
+                                                const referrer = users.find(u => u.id === lead.referrer_id);
+                                                return React.createElement('tr', { key: lead.id, className: 'hover:bg-slate-700/30 transition' },
+                                                    React.createElement('td', { className: 'px-4 py-4 text-gray-300' }, referrer?.name || 'N/A'),
+                                                    React.createElement('td', { className: 'px-4 py-4' },
+                                                        React.createElement('div', { className: 'font-semibold text-white' }, lead.client_name),
+                                                        React.createElement('div', { className: 'text-sm text-gray-400' }, lead.client_email)
                                                     ),
-                                                    h('td', { className: 'px-6 py-4 text-yellow-500 font-bold' }, 
-                                                        lead.referrer_commission ? `${lead.referrer_commission.toLocaleString()} AED` : '-'
+                                                    React.createElement('td', { className: 'px-4 py-4 text-gray-300' }, lead.client_phone),
+                                                    React.createElement('td', { className: 'px-4 py-4 text-gray-300' }, lead.property_type),
+                                                    React.createElement('td', { className: 'px-4 py-4 text-gray-300' }, formatCurrency(lead.budget)),
+                                                    React.createElement('td', { className: 'px-4 py-4' },
+                                                        React.createElement('span', { className: `px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(lead.status)}` },
+                                                            lead.status
+                                                        )
                                                     ),
-                                                    h('td', { className: 'px-6 py-4' },
-                                                        lead.status !== 'vendu' && lead.status !== 'perdu' &&
-                                                        h('select', { 
+                                                    React.createElement('td', { className: 'px-4 py-4 text-gray-300' },
+                                                        lead.sale_price ? formatCurrency(lead.sale_price) : '-'
+                                                    ),
+                                                    React.createElement('td', { className: 'px-4 py-4 font-bold text-yellow-500' },
+                                                        lead.referrer_commission ? formatCurrency(lead.referrer_commission) : '-'
+                                                    ),
+                                                    React.createElement('td', { className: 'px-4 py-4' },
+                                                        lead.status !== 'vendu' && React.createElement('select', {
                                                             value: lead.status,
-                                                            onChange: (e) => { 
-                                                                if(e.target.value === 'vendu') {
-                                                                    setSelectedLead(lead.id);
+                                                            onChange: (e) => {
+                                                                const newStatus = e.target.value;
+                                                                if (newStatus === 'vendu') {
+                                                                    const price = prompt('Prix de vente (AED):');
+                                                                    if (price) {
+                                                                        handleUpdateLeadStatus(lead.id, newStatus, price);
+                                                                    }
                                                                 } else {
-                                                                    updateStatus(lead.id, e.target.value);
+                                                                    handleUpdateLeadStatus(lead.id, newStatus);
                                                                 }
-                                                            }, 
-                                                            className: 'px-3 py-1 bg-white bg-opacity-20 border border-yellow-500/30 rounded text-white text-sm focus:outline-none focus:border-yellow-500' 
+                                                            },
+                                                            className: 'px-3 py-2 bg-slate-700 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500'
                                                         },
-                                                            h('option', { value: 'nouveau' }, 'Nouveau'),
-                                                            h('option', { value: 'visite' }, 'Visite'),
-                                                            h('option', { value: 'offre' }, 'Offre'),
-                                                            h('option', { value: 'vendu' }, 'Vendu'),
-                                                            h('option', { value: 'perdu' }, 'Perdu')
+                                                            React.createElement('option', { value: 'nouveau' }, 'Nouveau'),
+                                                            React.createElement('option', { value: 'visite' }, 'Visite'),
+                                                            React.createElement('option', { value: 'offre' }, 'Offre'),
+                                                            React.createElement('option', { value: 'vendu' }, 'Vendu')
                                                         )
                                                     )
                                                 );
                                             })
-                                        )
                                     )
                                 )
+                            )
                         ),
-                        selectedLead && h('div', { className: 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50' },
-                            h('div', { className: 'bg-slate-800 p-8 rounded-xl border border-yellow-500/30 max-w-md w-full mx-4' },
-                                h('h3', { className: 'text-2xl font-bold text-white mb-4' }, 'Prix de vente final'),
-                                h('p', { className: 'text-gray-300 mb-4' }, 'Entrez le prix de vente pour calculer la commission'),
-                                h('input', { 
-                                    type: 'number', 
-                                    value: salePrice, 
-                                    onChange: (e) => setSalePrice(e.target.value), 
-                                    placeholder: 'Prix de vente (AED)', 
-                                    className: 'w-full px-4 py-3 bg-white bg-opacity-20 border border-yellow-500/30 rounded-lg text-white placeholder-gray-400 mb-4 focus:outline-none focus:border-yellow-500' 
-                                }),
-                                h('div', { className: 'flex gap-4' },
-                                    h('button', { 
-                                        onClick: () => { 
-                                            if (salePrice) {
-                                                updateStatus(selectedLead, 'vendu', { salePrice: parseFloat(salePrice) }); 
-                                                setSelectedLead(null); 
-                                                setSalePrice('');
-                                            }
-                                        }, 
-                                        className: 'flex-1 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition' 
-                                    }, 'Confirmer'),
-                                    h('button', { 
-                                        onClick: () => { 
-                                            setSelectedLead(null); 
-                                            setSalePrice(''); 
-                                        }, 
-                                        className: 'flex-1 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition' 
-                                    }, 'Annuler')
+                        React.createElement('h2', { className: 'text-2xl font-bold text-white mb-6 mt-12' }, 'Tous les Apporteurs'),
+                        React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl overflow-hidden' },
+                            React.createElement('div', { className: 'overflow-x-auto' },
+                                React.createElement('table', { className: 'w-full' },
+                                    React.createElement('thead', { className: 'bg-slate-900/50' },
+                                        React.createElement('tr', null,
+                                            ['Nom', 'Email', 'Téléphone', 'Leads apportés', 'Ventes', 'Total commissions'].map(header =>
+                                                React.createElement('th', { 
+                                                    key: header,
+                                                    className: 'px-6 py-4 text-left text-sm font-semibold text-gray-300'
+                                                }, header)
+                                            )
+                                        )
+                                    ),
+                                    React.createElement('tbody', { className: 'divide-y divide-slate-700' },
+                                        allReferrers.map(referrer => {
+                                            const referrerLeads = leads.filter(l => l.referrer_id === referrer.id);
+                                            const sales = referrerLeads.filter(l => l.status === 'vendu').length;
+                                            const totalCommissions = referrerLeads
+                                                .filter(l => l.status === 'vendu')
+                                                .reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
+                                            
+                                            return React.createElement('tr', { key: referrer.id, className: 'hover:bg-slate-700/30 transition' },
+                                                React.createElement('td', { className: 'px-6 py-4 font-semibold text-white' }, referrer.name),
+                                                React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, referrer.email),
+                                                React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, referrer.phone),
+                                                React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, referrerLeads.length),
+                                                React.createElement('td', { className: 'px-6 py-4 text-green-400 font-semibold' }, sales),
+                                                React.createElement('td', { className: 'px-6 py-4 font-bold text-yellow-500' }, formatCurrency(totalCommissions))
+                                            );
+                                        })
+                                    )
                                 )
                             )
                         )
                     )
                 );
             }
-            
+
             return null;
-        }
-        
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(App));
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(
+            React.createElement(RealEstateReferralApp)
+        );
     </script>
 </body>
 </html>
