@@ -105,108 +105,7 @@
       if (formTitle) formTitle.textContent = 'Réinitialiser le mot de passe';
     }
 
-    // Attach form handlers
-    function attachFormHandlers() {
-      // Login handler
-      const loginForm = document.getElementById('loginForm');
-      if (loginForm) {
-        loginForm.onsubmit = async (e) => {
-          e.preventDefault();
-          
-          const email = document.getElementById('loginEmail').value.trim();
-          const password = document.getElementById('loginPassword').value;
 
-          try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-              email,
-              password
-            });
-
-            if (error) throw error;
-
-            currentUser = data.user;
-            await loadProfile();
-            
-          } catch (error) {
-            console.error('Erreur connexion:', error);
-            alert('Email ou mot de passe incorrect');
-          }
-        };
-      }
-
-      // Signup handler
-      const signupForm = document.getElementById('signupForm');
-      if (signupForm) {
-        signupForm.onsubmit = async (e) => {
-          e.preventDefault();
-          
-          const name = document.getElementById('signupName').value.trim();
-          const email = document.getElementById('signupEmail').value.trim();
-          const phone = document.getElementById('signupPhone').value.trim();
-          const password = document.getElementById('signupPassword').value;
-          const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
-
-          // Validation du mot de passe
-          if (password !== passwordConfirm) {
-            alert('Les mots de passe ne correspondent pas !');
-            return;
-          }
-
-          if (password.length < 6) {
-            alert('Le mot de passe doit contenir au moins 6 caractères !');
-            return;
-          }
-
-          try {
-            const { data, error } = await supabase.auth.signUp({
-              email,
-              password,
-              options: {
-                data: {
-                  name,
-                  phone,
-                  role: 'referrer'
-                }
-              }
-            });
-
-            if (error) throw error;
-
-            alert('Compte créé avec succès ! Vérifiez votre email pour confirmer votre compte.');
-            showLogin();
-            
-          } catch (error) {
-            console.error('Erreur inscription:', error);
-            alert('Erreur lors de l\'inscription: ' + error.message);
-          }
-        };
-      }
-
-      // Reset password handler
-      const resetForm = document.getElementById('resetForm');
-      if (resetForm) {
-        resetForm.onsubmit = async (e) => {
-          e.preventDefault();
-          
-          const email = document.getElementById('resetEmail').value.trim();
-
-          try {
-            const { error } = await supabase.auth.resetPasswordForEmail(email, {
-              redirectTo: 'https://real-estate-referrer-3kp6.vercel.app'
-            });
-
-            if (error) throw error;
-
-            alert('Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.');
-            showLogin();
-            
-          } catch (error) {
-            console.error('Erreur reset:', error);
-            alert('Erreur lors de l\'envoi de l\'email: ' + error.message);
-          }
-        };
-      }
-    }
 
     // Logout
     async function logout() {
@@ -293,6 +192,9 @@
           </div>
         </div>
       `;
+      
+      // Attach event handlers after DOM is created
+      setTimeout(() => attachFormHandlers(), 0);
     }
 
     function showAuthPage(type) {
