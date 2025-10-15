@@ -70,31 +70,47 @@
 
     // Form Navigation
     function showLogin() {
-      document.getElementById('loginForm').classList.remove('hidden');
-      document.getElementById('signupForm').classList.add('hidden');
-      document.getElementById('resetForm').classList.add('hidden');
-      document.getElementById('formTitle').textContent = 'Connexion';
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const resetForm = document.getElementById('resetForm');
+      const formTitle = document.getElementById('formTitle');
+      
+      if (loginForm) loginForm.classList.remove('hidden');
+      if (signupForm) signupForm.classList.add('hidden');
+      if (resetForm) resetForm.classList.add('hidden');
+      if (formTitle) formTitle.textContent = 'Connexion';
     }
 
     function showSignup() {
-      document.getElementById('loginForm').classList.add('hidden');
-      document.getElementById('signupForm').classList.remove('hidden');
-      document.getElementById('resetForm').classList.add('hidden');
-      document.getElementById('formTitle').textContent = 'Devenir Apporteur';
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const resetForm = document.getElementById('resetForm');
+      const formTitle = document.getElementById('formTitle');
+      
+      if (loginForm) loginForm.classList.add('hidden');
+      if (signupForm) signupForm.classList.remove('hidden');
+      if (resetForm) resetForm.classList.add('hidden');
+      if (formTitle) formTitle.textContent = 'Devenir Apporteur';
     }
 
     function showReset() {
-      document.getElementById('loginForm').classList.add('hidden');
-      document.getElementById('signupForm').classList.add('hidden');
-      document.getElementById('resetForm').classList.remove('hidden');
-      document.getElementById('formTitle').textContent = 'Réinitialiser le mot de passe';
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const resetForm = document.getElementById('resetForm');
+      const formTitle = document.getElementById('formTitle');
+      
+      if (loginForm) loginForm.classList.add('hidden');
+      if (signupForm) signupForm.classList.add('hidden');
+      if (resetForm) resetForm.classList.remove('hidden');
+      if (formTitle) formTitle.textContent = 'Réinitialiser le mot de passe';
     }
 
-    // Login
-    document.addEventListener('DOMContentLoaded', () => {
+    // Attach form handlers
+    function attachFormHandlers() {
+      // Login handler
       const loginForm = document.getElementById('loginForm');
       if (loginForm) {
-        loginForm.addEventListener('submit', async (e) => {
+        loginForm.onsubmit = async (e) => {
           e.preventDefault();
           
           const email = document.getElementById('loginEmail').value.trim();
@@ -115,15 +131,13 @@
             console.error('Erreur connexion:', error);
             alert('Email ou mot de passe incorrect');
           }
-        });
+        };
       }
-    });
 
-    // Signup
-    document.addEventListener('DOMContentLoaded', () => {
+      // Signup handler
       const signupForm = document.getElementById('signupForm');
       if (signupForm) {
-        signupForm.addEventListener('submit', async (e) => {
+        signupForm.onsubmit = async (e) => {
           e.preventDefault();
           
           const name = document.getElementById('signupName').value.trim();
@@ -165,15 +179,13 @@
             console.error('Erreur inscription:', error);
             alert('Erreur lors de l\'inscription: ' + error.message);
           }
-        });
+        };
       }
-    });
 
-    // Reset Password
-    document.addEventListener('DOMContentLoaded', () => {
+      // Reset password handler
       const resetForm = document.getElementById('resetForm');
       if (resetForm) {
-        resetForm.addEventListener('submit', async (e) => {
+        resetForm.onsubmit = async (e) => {
           e.preventDefault();
           
           const email = document.getElementById('resetEmail').value.trim();
@@ -192,9 +204,9 @@
             console.error('Erreur reset:', error);
             alert('Erreur lors de l\'envoi de l\'email: ' + error.message);
           }
-        });
+        };
       }
-    });
+    }
 
     // Logout
     async function logout() {
