@@ -20,15 +20,14 @@
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const RealEstateReferralApp = () => {
-            // Tous les states déclarés au début (obligatoire pour React hooks)
             const [currentPage, setCurrentPage] = useState('landing');
             const [currentUser, setCurrentUser] = useState(null);
-            const [users, setUsers] = useState([]);
+            const [userProfile, setUserProfile] = useState(null);
+            const [allProfiles, setAllProfiles] = useState([]);
             const [leads, setLeads] = useState([]);
             const [showAddLead, setShowAddLead] = useState(false);
-            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            const [loading, setLoading] = useState(true);
             
-            // Form states
             const [loginForm, setLoginForm] = useState({ email: '', password: '' });
             const [signupForm, setSignupForm] = useState({ name: '', email: '', password: '', phone: '' });
             const [leadForm, setLeadForm] = useState({
@@ -39,26 +38,58 @@
                 budget: ''
             });
 
-            // Charger les données au démarrage
             useEffect(() => {
-                if (currentUser) {
+                checkSession();
+            }, []);
+
+            useEffect(() => {
+                if (currentUser && userProfile) {
                     loadData();
                 }
-            }, [currentUser]);
+            }, [currentUser, userProfile]);
+
+            const checkSession = async () => {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (session) {
+                        setCurrentUser(session.user);
+                        await loadUserProfile(session.user.id);
+                    }
+                } catch (error) {
+                    console.error('Erreur de session:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            const loadUserProfile = async (userId) => {
+                try {
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', userId)
+                        .single();
+                    
+                    if (error) throw error;
+                    
+                    setUserProfile(data);
+                    setCurrentPage(data.role === 'admin' ? 'admin-dashboard' : 'referrer-dashboard');
+                } catch (error) {
+                    console.error('Erreur chargement profil:', error);
+                }
+            };
 
             const loadData = async () => {
                 try {
-                    // Charger tous les utilisateurs
-                    const { data: usersData, error: usersError } = await supabase
-                        .from('users')
-                        .select('*')
-                        .order('joined_at', { ascending: false });
-                    
-                    if (usersError) throw usersError;
-                    setUsers(usersData || []);
+                    if (userProfile.role === 'admin') {
+                        const { data: profilesData, error: profilesError } = await supabase
+                            .from('profiles')
+                            .select('*')
+                            .order('created_at', { ascending: false });
+                        
+                        if (profilesError) throw profilesError;
+                        setAllProfiles(profilesData || []);
 
-                    // Charger les leads
-                    if (currentUser.role === 'admin') {
                         const { data: leadsData, error: leadsError } = await supabase
                             .from('leads')
                             .select('*')
@@ -77,30 +108,24 @@
                         setLeads(leadsData || []);
                     }
                 } catch (error) {
-                    console.error('Erreur lors du chargement des données:', error);
-                    alert('Erreur lors du chargement des données: ' + error.message);
+                    console.error('Erreur chargement données:', error);
+                    alert('Erreur lors du chargement: ' + error.message);
                 }
             };
 
             const handleLogin = async (e) => {
                 e.preventDefault();
                 try {
-                    const { data, error } = await supabase
-                        .from('users')
-                        .select('*')
-                        .eq('email', loginForm.email)
-                        .eq('password', loginForm.password)
-                        .single();
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: loginForm.email,
+                        password: loginForm.password
+                    });
 
                     if (error) throw error;
                     
-                    if (data) {
-                        setCurrentUser(data);
-                        setCurrentPage(data.role === 'admin' ? 'admin-dashboard' : 'referrer-dashboard');
-                        setLoginForm({ email: '', password: '' });
-                    } else {
-                        alert('Email ou mot de passe incorrect');
-                    }
+                    setCurrentUser(data.user);
+                    await loadUserProfile(data.user.id);
+                    setLoginForm({ email: '', password: '' });
                 } catch (error) {
                     console.error('Erreur de connexion:', error);
                     alert('Erreur de connexion: ' + error.message);
@@ -110,17 +135,17 @@
             const handleSignup = async (e) => {
                 e.preventDefault();
                 try {
-                    const { data, error } = await supabase
-                        .from('users')
-                        .insert([{
-                            name: signupForm.name,
-                            email: signupForm.email,
-                            password: signupForm.password,
-                            phone: signupForm.phone,
-                            role: 'referrer'
-                        }])
-                        .select()
-                        .single();
+                    const { data, error } = await supabase.auth.signUp({
+                        email: signupForm.email,
+                        password: signupForm.password,
+                        options: {
+                            data: {
+                                name: signupForm.name,
+                                phone: signupForm.phone,
+                                role: 'referrer'
+                            }
+                        }
+                    });
 
                     if (error) throw error;
 
@@ -128,7 +153,7 @@
                     setCurrentPage('login');
                     setSignupForm({ name: '', email: '', password: '', phone: '' });
                 } catch (error) {
-                    console.error('Erreur lors de l\'inscription:', error);
+                    console.error('Erreur inscription:', error);
                     alert('Erreur lors de l\'inscription: ' + error.message);
                 }
             };
@@ -163,8 +188,8 @@
                     });
                     loadData();
                 } catch (error) {
-                    console.error('Erreur lors de l\'ajout du lead:', error);
-                    alert('Erreur lors de l\'ajout du lead: ' + error.message);
+                    console.error('Erreur ajout lead:', error);
+                    alert('Erreur lors de l\'ajout: ' + error.message);
                 }
             };
 
@@ -174,9 +199,9 @@
                     
                     if (newStatus === 'vendu' && salePrice) {
                         const price = parseFloat(salePrice);
-                        const totalCommission = price * 0.02; // 2% du prix de vente
-                        const agentCommission = totalCommission * 0.5; // 50% pour l'agent (1% du prix)
-                        const referrerCommission = agentCommission * 0.2; // 20% de la part agent
+                        const totalCommission = price * 0.02;
+                        const agentCommission = totalCommission * 0.5;
+                        const referrerCommission = agentCommission * 0.2;
                         
                         updateData.sale_price = price;
                         updateData.agent_commission = agentCommission;
@@ -194,15 +219,21 @@
                     alert('Statut mis à jour avec succès !');
                     loadData();
                 } catch (error) {
-                    console.error('Erreur lors de la mise à jour:', error);
-                    alert('Erreur lors de la mise à jour: ' + error.message);
+                    console.error('Erreur mise à jour:', error);
+                    alert('Erreur: ' + error.message);
                 }
             };
 
-            const handleLogout = () => {
-                setCurrentUser(null);
-                setCurrentPage('landing');
-                setLeads([]);
+            const handleLogout = async () => {
+                try {
+                    await supabase.auth.signOut();
+                    setCurrentUser(null);
+                    setUserProfile(null);
+                    setCurrentPage('landing');
+                    setLeads([]);
+                } catch (error) {
+                    console.error('Erreur déconnexion:', error);
+                }
             };
 
             const formatCurrency = (amount) => {
@@ -223,9 +254,8 @@
                 return colors[status] || 'bg-gray-100 text-gray-800';
             };
 
-            // Calculs des statistiques
             const calculateStats = () => {
-                const userLeads = currentUser?.role === 'admin' 
+                const userLeads = userProfile?.role === 'admin' 
                     ? leads 
                     : leads.filter(l => l.referrer_id === currentUser?.id);
                 
@@ -239,7 +269,12 @@
                 return { totalEarnings, activeLeads, closedSales };
             };
 
-            // LANDING PAGE
+            if (loading) {
+                return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center' },
+                    React.createElement('div', { className: 'text-white text-2xl' }, 'Chargement...')
+                );
+            }
+
             if (currentPage === 'landing') {
                 return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
                     React.createElement('nav', { className: 'bg-slate-900/50 backdrop-blur-sm border-b border-gold-500/20' },
@@ -316,7 +351,6 @@
                 );
             }
 
-            // LOGIN PAGE
             if (currentPage === 'login') {
                 return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-4' },
                     React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-8 w-full max-w-md' },
@@ -360,7 +394,6 @@
                 );
             }
 
-            // SIGNUP PAGE
             if (currentPage === 'signup') {
                 return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center px-4' },
                     React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl p-8 w-full max-w-md' },
@@ -426,7 +459,6 @@
                 );
             }
 
-            // REFERRER DASHBOARD
             if (currentPage === 'referrer-dashboard') {
                 const stats = calculateStats();
                 
@@ -438,7 +470,7 @@
                                 React.createElement('span', { className: 'text-xl font-bold text-white' }, 'Mon Espace Apporteur')
                             ),
                             React.createElement('div', { className: 'flex items-center gap-4' },
-                                React.createElement('span', { className: 'text-gray-300' }, currentUser.name),
+                                React.createElement('span', { className: 'text-gray-300' }, userProfile?.name),
                                 React.createElement('button', {
                                     onClick: handleLogout,
                                     className: 'flex items-center gap-2 px-4 py-2 text-white hover:text-yellow-500 transition'
@@ -609,10 +641,9 @@
                 );
             }
 
-            // ADMIN DASHBOARD
             if (currentPage === 'admin-dashboard') {
                 const stats = calculateStats();
-                const allReferrers = users.filter(u => u.role === 'referrer');
+                const allReferrers = allProfiles.filter(u => u.role === 'referrer');
                 
                 return React.createElement('div', { className: 'min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900' },
                     React.createElement('nav', { className: 'bg-slate-900/50 backdrop-blur-sm border-b border-yellow-500/20' },
@@ -622,7 +653,7 @@
                                 React.createElement('span', { className: 'text-xl font-bold text-white' }, 'Admin Dashboard')
                             ),
                             React.createElement('div', { className: 'flex items-center gap-4' },
-                                React.createElement('span', { className: 'text-gray-300' }, currentUser.name),
+                                React.createElement('span', { className: 'text-gray-300' }, userProfile?.name),
                                 React.createElement('button', {
                                     onClick: handleLogout,
                                     className: 'flex items-center gap-2 px-4 py-2 text-white hover:text-yellow-500 transition'
@@ -673,7 +704,7 @@
                             )
                         ),
                         React.createElement('h2', { className: 'text-2xl font-bold text-white mb-6' }, 'Tous les Leads'),
-                        React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl overflow-hidden' },
+                        React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl overflow-hidden mb-12' },
                             React.createElement('div', { className: 'overflow-x-auto' },
                                 React.createElement('table', { className: 'w-full' },
                                     React.createElement('thead', { className: 'bg-slate-900/50' },
@@ -694,7 +725,7 @@
                                                 )
                                             )
                                             : leads.map(lead => {
-                                                const referrer = users.find(u => u.id === lead.referrer_id);
+                                                const referrer = allProfiles.find(u => u.id === lead.referrer_id);
                                                 return React.createElement('tr', { key: lead.id, className: 'hover:bg-slate-700/30 transition' },
                                                     React.createElement('td', { className: 'px-4 py-4 text-gray-300' }, referrer?.name || 'N/A'),
                                                     React.createElement('td', { className: 'px-4 py-4' },
@@ -743,7 +774,7 @@
                                 )
                             )
                         ),
-                        React.createElement('h2', { className: 'text-2xl font-bold text-white mb-6 mt-12' }, 'Tous les Apporteurs'),
+                        React.createElement('h2', { className: 'text-2xl font-bold text-white mb-6' }, 'Tous les Apporteurs'),
                         React.createElement('div', { className: 'bg-slate-800/50 backdrop-blur-sm border border-yellow-500/20 rounded-xl overflow-hidden' },
                             React.createElement('div', { className: 'overflow-x-auto' },
                                 React.createElement('table', { className: 'w-full' },
@@ -767,7 +798,7 @@
                                             
                                             return React.createElement('tr', { key: referrer.id, className: 'hover:bg-slate-700/30 transition' },
                                                 React.createElement('td', { className: 'px-6 py-4 font-semibold text-white' }, referrer.name),
-                                                React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, referrer.email),
+                                                React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, currentUser.email),
                                                 React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, referrer.phone),
                                                 React.createElement('td', { className: 'px-6 py-4 text-gray-300' }, referrerLeads.length),
                                                 React.createElement('td', { className: 'px-6 py-4 text-green-400 font-semibold' }, sales),
