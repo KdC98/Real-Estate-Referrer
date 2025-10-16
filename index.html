@@ -160,7 +160,6 @@
       const password = document.getElementById('signupPassword').value;
       const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
 
-      // Validation du mot de passe
       if (password !== passwordConfirm) {
         alert('Les mots de passe ne correspondent pas !');
         return;
@@ -222,7 +221,6 @@
       const newPassword = document.getElementById('newPassword').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
 
-      // Validation
       if (newPassword !== confirmPassword) {
         alert('Les mots de passe ne correspondent pas !');
         return;
@@ -242,15 +240,12 @@
 
         alert('Mot de passe mis à jour avec succès ! Veuillez vous reconnecter avec votre nouveau mot de passe.');
         
-        // Déconnecter l'utilisateur
         await supabase.auth.signOut();
         
-        // Reset flag
         isPasswordRecovery = false;
         currentUser = null;
         currentProfile = null;
         
-        // Rediriger vers la page de connexion
         showAuthPage('login');
         
       } catch (error) {
@@ -259,7 +254,6 @@
       }
     };
 
-    // Logout
     async function logout() {
       await supabase.auth.signOut();
       currentUser = null;
@@ -267,11 +261,9 @@
       showLanding();
     }
 
-    // Views
     function showLanding() {
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen">
-          <!-- Navigation -->
           <nav class="bg-gray-900 bg-opacity-50 backdrop-blur-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex justify-between items-center h-16">
@@ -290,7 +282,6 @@
             </div>
           </nav>
 
-          <!-- Hero Section -->
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div class="text-center">
               <h2 class="text-5xl md:text-6xl font-bold mb-6">
@@ -304,7 +295,6 @@
               </button>
             </div>
 
-            <!-- Stats -->
             <div class="grid md:grid-cols-3 gap-8 mt-20">
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">20%</div>
@@ -320,7 +310,6 @@
               </div>
             </div>
 
-            <!-- Examples -->
             <div class="mt-20">
               <h3 class="text-3xl font-bold text-center mb-12">Exemples de gains</h3>
               <div class="grid md:grid-cols-3 gap-6">
@@ -354,7 +343,6 @@
               ${type === 'login' ? 'Connexion' : 'Devenir Apporteur'}
             </h2>
 
-            <!-- Login Form -->
             <form id="loginForm" class="space-y-6 ${type === 'login' ? '' : 'hidden'}">
               <div>
                 <label class="block text-sm font-medium text-gray-200 mb-2">Email</label>
@@ -378,7 +366,6 @@
               </p>
             </form>
 
-            <!-- Signup Form -->
             <form id="signupForm" class="space-y-6 ${type === 'signup' ? '' : 'hidden'}">
               <div>
                 <label class="block text-sm font-medium text-gray-200 mb-2">Nom complet</label>
@@ -415,7 +402,6 @@
               </p>
             </form>
 
-            <!-- Reset Password Form -->
             <form id="resetForm" class="space-y-6 hidden">
               <div class="text-center mb-6">
                 <p class="text-gray-300">Entrez votre email pour recevoir un lien de réinitialisation</p>
@@ -437,21 +423,14 @@
         </div>
       `;
       
-      // Attach handlers immediately after creating DOM
       const loginForm = document.getElementById('loginForm');
-      if (loginForm) {
-        loginForm.onsubmit = window.handleLogin;
-      }
+      if (loginForm) loginForm.onsubmit = window.handleLogin;
 
       const signupForm = document.getElementById('signupForm');
-      if (signupForm) {
-        signupForm.onsubmit = window.handleSignup;
-      }
+      if (signupForm) signupForm.onsubmit = window.handleSignup;
 
       const resetForm = document.getElementById('resetForm');
-      if (resetForm) {
-        resetForm.onsubmit = window.handleReset;
-      }
+      if (resetForm) resetForm.onsubmit = window.handleReset;
     }
 
     function showUpdatePasswordPage() {
@@ -486,7 +465,6 @@
         </div>
       `;
 
-      // Attach handler
       const updatePasswordForm = document.getElementById('updatePasswordForm');
       if (updatePasswordForm) {
         updatePasswordForm.onsubmit = window.handleUpdatePassword;
@@ -517,7 +495,6 @@
 
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen">
-          <!-- Navigation -->
           <nav class="bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex justify-between items-center h-16">
@@ -531,7 +508,6 @@
           </nav>
 
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <!-- Stats Cards -->
             <div class="grid md:grid-cols-3 gap-6 mb-8">
               <div class="bg-gray-800 rounded-xl p-6">
                 <div class="text-sm text-gray-400 mb-1">Gains totaux</div>
@@ -547,14 +523,12 @@
               </div>
             </div>
 
-            <!-- Add Lead Button -->
             <div class="mb-6">
               <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
                 + Ajouter un lead
               </button>
             </div>
 
-            <!-- Leads Table -->
             <div class="bg-gray-800 rounded-xl overflow-hidden">
               <div class="overflow-x-auto">
                 <table class="w-full">
@@ -612,151 +586,161 @@
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-             async function showAdminDashboard() {
-  console.log('🔍 DEBUG: Début showAdminDashboard');
-  
-  // Récupérer les profils et les leads
-  const { data: profiles, error: profilesError } = await supabase.from('profiles').select('*');
-  const { data: leads, error: leadsError } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
-
-  console.log('📊 Profiles récupérés:', profiles);
-  console.log('📊 Leads récupérés:', leads);
-
-  if (profilesError) console.error('❌ Erreur profiles:', profilesError);
-  if (leadsError) console.error('❌ Erreur leads:', leadsError);
-
-  // Créer un map pour accéder rapidement aux profils par ID
-  const profilesMap = {};
-  if (profiles && profiles.length > 0) {
-    profiles.forEach(profile => {
-      console.log(`➕ Ajout au map: ${profile.id} → ${profile.name}`);
-      profilesMap[profile.id] = profile;
-    });
-  }
-
-  console.log('🗺️ ProfilesMap final:', profilesMap);
-
-  const referrers = profiles ? profiles.filter(p => p.role === 'referrer') : [];
-  const activeLeads = leads ? leads.filter(l => l.status !== 'vendu').length : 0;
-  const sales = leads ? leads.filter(l => l.status === 'vendu').length : 0;
-  const totalCommissions = leads ? leads.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) : 0;
-
-  document.getElementById('app').innerHTML = `
-    <div class="min-h-screen">
-      <!-- Navigation -->
-      <nav class="bg-gray-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between items-center h-16">
-            <h1 class="text-xl font-bold text-yellow-500">Admin Dashboard</h1>
-            <div class="flex items-center gap-4">
-              <span class="text-gray-300">${currentProfile.name}</span>
-              <button onclick="logout()" class="text-gray-300 hover:text-white">Déconnexion</button>
+              <input type="email" id="leadClientEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
             </div>
-          </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone</label>
+              <input type="tel" id="leadClientPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Type de propriété</label>
+              <select id="leadPropertyType" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
+                <option value="">Sélectionner...</option>
+                <option value="Appartement">Appartement</option>
+                <option value="Villa">Villa</option>
+                <option value="Penthouse">Penthouse</option>
+                <option value="Studio">Studio</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Budget (AED)</label>
+              <input type="number" id="leadBudget" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
+            </div>
+            <div class="flex gap-4 mt-6">
+              <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg">
+                Ajouter
+              </button>
+              <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
+                Annuler
+              </button>
+            </div>
+          </form>
         </div>
-      </nav>
+      `;
+      document.body.appendChild(modal);
 
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Stats Cards -->
-        <div class="grid md:grid-cols-4 gap-6 mb-8">
-          <div class="bg-gray-800 rounded-xl p-6">
-            <div class="text-sm text-gray-400 mb-1">Apporteurs</div>
-            <div class="text-3xl font-bold text-blue-400">${referrers.length}</div>
-          </div>
-          <div class="bg-gray-800 rounded-xl p-6">
-            <div class="text-sm text-gray-400 mb-1">Leads actifs</div>
-            <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
-          </div>
-          <div class="bg-gray-800 rounded-xl p-6">
-            <div class="text-sm text-gray-400 mb-1">Ventes</div>
-            <div class="text-3xl font-bold text-green-400">${sales}</div>
-          </div>
-          <div class="bg-gray-800 rounded-xl p-6">
-            <div class="text-sm text-gray-400 mb-1">Commissions</div>
-            <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
-          </div>
-        </div>
+      document.getElementById('addLeadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const leadData = {
+          referrer_id: currentUser.id,
+          client_name: document.getElementById('leadClientName').value,
+          client_email: document.getElementById('leadClientEmail').value,
+          client_phone: document.getElementById('leadClientPhone').value,
+          property_type: document.getElementById('leadPropertyType').value,
+          budget: parseFloat(document.getElementById('leadBudget').value),
+          status: 'nouveau'
+        };
 
-        <!-- Leads Table -->
-        <div class="bg-gray-800 rounded-xl overflow-hidden">
-          <div class="px-6 py-4 border-b border-gray-700">
-            <h3 class="text-lg font-semibold text-white">Tous les leads</h3>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-gray-700">
-                <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Apporteur</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Client</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Budget</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-gray-700">
-                ${leads && leads.length > 0 ? leads.map(lead => {
-                  const referrer = profilesMap[lead.referrer_id];
-                  console.log(`🔎 Lead "${lead.client_name}":`, {
-                    referrer_id: lead.referrer_id,
-                    referrer_found: referrer,
-                    referrer_name: referrer ? referrer.name : 'NOT FOUND'
-                  });
-                  
-                  const referrerName = referrer && referrer.name ? referrer.name : 'N/A';
-                  
-                  return `
-                    <tr class="hover:bg-gray-700">
-                      <td class="px-6 py-4 text-gray-300">${referrerName}</td>
-                      <td class="px-6 py-4">
-                        <div class="font-medium text-white">${lead.client_name}</div>
-                        <div class="text-sm text-gray-400">${lead.client_phone}</div>
-                      </td>
-                      <td class="px-6 py-4 text-gray-300">${lead.property_type}</td>
-                      <td class="px-6 py-4 text-gray-300">${lead.budget.toLocaleString()} AED</td>
-                      <td class="px-6 py-4">
-                        <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm">
-                          <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
-                          <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
-                          <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
-                          <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>Vendu</option>
-                        </select>
-                      </td>
-                      <td class="px-6 py-4">
-                        ${lead.status === 'vendu' ? `<span class="text-green-400 text-sm">${lead.referrer_commission?.toLocaleString() || 0} AED</span>` : 
-                          `<button onclick="markAsSold(${lead.id})" class="text-yellow-500 hover:text-yellow-400 text-sm">Marquer vendu</button>`}
-                      </td>
+        const { error } = await supabase.from('leads').insert([leadData]);
+
+        if (error) {
+          alert('Erreur lors de l\'ajout du lead');
+          console.error(error);
+        } else {
+          modal.remove();
+          loadReferrerLeads();
+        }
+      });
+    }
+
+    async function showAdminDashboard() {
+      // SOLUTION SIMPLE : Utiliser une jointure SQL directe
+      const { data: leadsWithReferrers, error } = await supabase
+        .from('leads')
+        .select(`
+          *,
+          referrer:profiles!leads_referrer_id_fkey(name)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Erreur:', error);
+        return;
+      }
+
+      // Récupérer les profils pour les stats
+      const { data: profiles } = await supabase.from('profiles').select('*');
+      
+      const referrers = profiles ? profiles.filter(p => p.role === 'referrer') : [];
+      const activeLeads = leadsWithReferrers ? leadsWithReferrers.filter(l => l.status !== 'vendu').length : 0;
+      const sales = leadsWithReferrers ? leadsWithReferrers.filter(l => l.status === 'vendu').length : 0;
+      const totalCommissions = leadsWithReferrers ? leadsWithReferrers.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) : 0;
+
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen">
+          <nav class="bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="flex justify-between items-center h-16">
+                <h1 class="text-xl font-bold text-yellow-500">Admin Dashboard</h1>
+                <div class="flex items-center gap-4">
+                  <span class="text-gray-300">${currentProfile.name}</span>
+                  <button onclick="logout()" class="text-gray-300 hover:text-white">Déconnexion</button>
+                </div>
+              </div>
+            </div>
+          </nav>
+
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Apporteurs</div>
+                <div class="text-3xl font-bold text-blue-400">${referrers.length}</div>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Leads actifs</div>
+                <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Ventes</div>
+                <div class="text-3xl font-bold text-green-400">${sales}</div>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Commissions</div>
+                <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
+              </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-xl overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-700">
+                <h3 class="text-lg font-semibold text-white">Tous les leads</h3>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead class="bg-gray-700">
+                    <tr>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Apporteur</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Client</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Budget</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
+                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
                     </tr>
-                  `;
-                }).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Aucun lead pour le moment</td></tr>'}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-                            <div class="font-medium text-white">${lead.client_name}</div>
-                            <div class="text-sm text-gray-400">${lead.client_phone}</div>
-                          </td>
-                          <td class="px-6 py-4 text-gray-300">${lead.property_type}</td>
-                          <td class="px-6 py-4 text-gray-300">${lead.budget.toLocaleString()} AED</td>
-                          <td class="px-6 py-4">
-                            <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm">
-                              <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
-                              <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
-                              <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
-                              <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>Vendu</option>
-                            </select>
-                          </td>
-                          <td class="px-6 py-4">
-                            ${lead.status === 'vendu' ? `<span class="text-green-400 text-sm">${lead.referrer_commission?.toLocaleString() || 0} AED</span>` : 
-                              `<button onclick="markAsSold(${lead.id})" class="text-yellow-500 hover:text-yellow-400 text-sm">Marquer vendu</button>`}
-                          </td>
-                        </tr>
-                      `;
-                    }).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Aucun lead pour le moment</td></tr>'}
+                  </thead>
+                  <tbody class="divide-y divide-gray-700">
+                    ${leadsWithReferrers && leadsWithReferrers.length > 0 ? leadsWithReferrers.map(lead => `
+                      <tr class="hover:bg-gray-700">
+                        <td class="px-6 py-4 text-gray-300">${lead.referrer ? lead.referrer.name : 'N/A'}</td>
+                        <td class="px-6 py-4">
+                          <div class="font-medium text-white">${lead.client_name}</div>
+                          <div class="text-sm text-gray-400">${lead.client_phone}</div>
+                        </td>
+                        <td class="px-6 py-4 text-gray-300">${lead.property_type}</td>
+                        <td class="px-6 py-4 text-gray-300">${lead.budget.toLocaleString()} AED</td>
+                        <td class="px-6 py-4">
+                          <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm">
+                            <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
+                            <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
+                            <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
+                            <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>Vendu</option>
+                          </select>
+                        </td>
+                        <td class="px-6 py-4">
+                          ${lead.status === 'vendu' ? `<span class="text-green-400 text-sm">${lead.referrer_commission?.toLocaleString() || 0} AED</span>` : 
+                            `<button onclick="markAsSold(${lead.id})" class="text-yellow-500 hover:text-yellow-400 text-sm">Marquer vendu</button>`}
+                        </td>
+                      </tr>
+                    `).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Aucun lead</td></tr>'}
                   </tbody>
                 </table>
               </div>
@@ -806,7 +790,6 @@
       }
     }
 
-    // Make functions global
     window.showAuthPage = showAuthPage;
     window.showLogin = showLogin;
     window.showSignup = showSignup;
