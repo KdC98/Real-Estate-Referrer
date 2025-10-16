@@ -246,16 +246,18 @@
 
         if (error) throw error;
 
-        alert('Mot de passe mis à jour avec succès !');
+        alert('Mot de passe mis à jour avec succès ! Veuillez vous reconnecter avec votre nouveau mot de passe.');
         
-        // Reset flag and reload profile
+        // Déconnecter l'utilisateur
+        await supabase.auth.signOut();
+        
+        // Reset flag
         isPasswordRecovery = false;
+        currentUser = null;
+        currentProfile = null;
         
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          currentUser = session.user;
-          await loadProfile();
-        }
+        // Rediriger vers la page de connexion
+        showAuthPage('login');
         
       } catch (error) {
         console.error('Erreur mise à jour mot de passe:', error);
