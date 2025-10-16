@@ -671,52 +671,22 @@
     }
 
     async function showAdminDashboard() {
-      // Récupérer les auth users avec leurs metadata
-      const { data: authUsers } = await supabase.auth.admin.listUsers();
-      
-      // Récupérer les profils
-      let { data: profiles } = await supabase.from('profiles').select('*');
-      
-      // Pour chaque user auth, s'assurer qu'un profil existe avec le bon nom
-      if (authUsers && authUsers.users) {
-        for (const user of authUsers.users) {
-          const existingProfile = profiles.find(p => p.id === user.id);
-          const userName = user.user_metadata?.name || user.email;
-          
-          if (!existingProfile) {
-            // Créer le profil s'il n'existe pas
-            await supabase.from('profiles').insert({
-              id: user.id,
-              name: userName,
-              phone: user.user_metadata?.phone || '',
-              role: user.user_metadata?.role || 'referrer'
-            });
-          } else if (!existingProfile.name || existingProfile.name === '') {
-            // Mettre à jour le nom s'il est vide
-            await supabase.from('profiles').update({
-              name: userName
-            }).eq('id', user.id);
-          }
-        }
-        
-        // Recharger les profils après mise à jour
-        const result = await supabase.from('profiles').select('*');
-        profiles = result.data;
-      }
-      
-      // Récupérer les leads
+      // Récupérer les profils et les leads
+      const { data: profiles } = await supabase.from('profiles').select('*');
       const { data: leads } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
 
       // Créer un map pour accéder rapidement aux profils par ID
       const profilesMap = {};
-      profiles.forEach(profile => {
-        profilesMap[profile.id] = profile;
-      });
+      if (profiles) {
+        profiles.forEach(profile => {
+          profilesMap[profile.id] = profile;
+        });
+      }
 
-      const referrers = profiles.filter(p => p.role === 'referrer');
-      const activeLeads = leads.filter(l => l.status !== 'vendu').length;
-      const sales = leads.filter(l => l.status === 'vendu').length;
-      const totalCommissions = leads.reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
+      const referrers = profiles ? profiles.filter(p => p.role === 'referrer') : [];
+      const activeLeads = leads ? leads.filter(l => l.status !== 'vendu').length : 0;
+      const sales = leads ? leads.filter(l => l.status === 'vendu').length : 0;
+      const totalCommissions = leads ? leads.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) : 0;
 
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen">
@@ -772,11 +742,11 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-700">
-                    ${leads.map(lead => {
+                    ${leads && leads.length > 0 ? leads.map(lead => {
                       const referrer = profilesMap[lead.referrer_id];
                       return `
                         <tr class="hover:bg-gray-700">
-                          <td class="px-6 py-4 text-gray-300">${referrer ? referrer.name : 'N/A'}</td>
+                          <td class="px-6 py-4 text-gray-300">${referrer && referrer.name ? referrer.name : 'N/A'}</td>
                           <td class="px-6 py-4">
                             <div class="font-medium text-white">${lead.client_name}</div>
                             <div class="text-sm text-gray-400">${lead.client_phone}</div>
@@ -797,7 +767,7 @@
                           </td>
                         </tr>
                       `;
-                    }).join('')}
+                    }).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Aucun lead pour le moment</td></tr>'}
                   </tbody>
                 </table>
               </div>
