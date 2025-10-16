@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real Estate Referrer - Dubai</title>
+  <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script type="importmap">
     {
@@ -262,13 +262,15 @@
     function showLanding() {
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen">
+          <!-- Header with navigation -->
           <nav class="bg-gray-900 bg-opacity-50 backdrop-blur-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0">
-                  <h1 class="text-2xl font-bold text-yellow-500">Dubai Real Estate</h1>
+                  <h1 class="text-2xl font-bold text-yellow-500">Karyne de Clercq</h1>
                 </div>
-                <div class="flex gap-4">
+                <div class="flex gap-6 items-center">
+                  <a href="/how-it-works.html" class="text-white hover:text-yellow-400 transition">Comment ça marche</a>
                   <button onclick="showAuthPage('login')" class="text-white hover:text-yellow-500 px-4 py-2 transition">
                     Connexion
                   </button>
@@ -280,8 +282,9 @@
             </div>
           </nav>
 
+          <!-- Hero Section -->
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div class="text-center">
+            <div class="text-center mb-12">
               <h2 class="text-5xl md:text-6xl font-bold mb-6">
                 Gagnez jusqu'à <span class="text-yellow-500">20,000 AED</span> par vente
               </h2>
@@ -293,6 +296,26 @@
               </button>
             </div>
 
+            <!-- Photos Dubai -->
+            <div class="grid md:grid-cols-3 gap-6 my-16">
+              <div class="rounded-xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" 
+                     alt="Burj Khalifa Dubai" 
+                     class="w-full h-64 object-cover">
+              </div>
+              <div class="rounded-xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" 
+                     alt="Dubai Marina" 
+                     class="w-full h-64 object-cover">
+              </div>
+              <div class="rounded-xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" 
+                     alt="Dubai Skyline" 
+                     class="w-full h-64 object-cover">
+              </div>
+            </div>
+
+            <!-- Stats -->
             <div class="grid md:grid-cols-3 gap-8 mt-20">
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">20%</div>
@@ -308,6 +331,7 @@
               </div>
             </div>
 
+            <!-- Exemples de gains -->
             <div class="mt-20">
               <h3 class="text-3xl font-bold text-center mb-12">Exemples de gains</h3>
               <div class="grid md:grid-cols-3 gap-6">
@@ -329,6 +353,19 @@
               </div>
             </div>
           </div>
+
+          <!-- Footer -->
+          <footer class="bg-gray-900 text-white py-8 mt-16">
+            <div class="max-w-7xl mx-auto px-4 text-center">
+              <p class="mb-4">&copy; 2025 Karyne de Clercq. Tous droits réservés.</p>
+              <div class="space-x-6">
+                <a href="/terms.html" class="hover:text-yellow-400 transition">CGU</a>
+                <a href="/privacy.html" class="hover:text-yellow-400 transition">Confidentialité</a>
+                <a href="/how-it-works.html" class="hover:text-yellow-400 transition">Comment ça marche</a>
+                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">Contact</a>
+              </div>
+            </div>
+          </footer>
         </div>
       `;
     }
@@ -797,4 +834,3 @@
   </script>
 </body>
 </html>
-
