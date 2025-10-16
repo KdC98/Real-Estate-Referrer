@@ -1,8 +1,8 @@
 # 📋 README - Real Estate Referrer Application
 
-**Dernière mise à jour** : 16 octobre 2025  
-**Version** : 2.0.0  
-**Status** : 🟢 **En production - Fonctionnel et sécurisé**
+**Dernière mise à jour** : 17 octobre 2025 - 01:00  
+**Version** : 3.0.0  
+**Status** : 🟡 **En développement - Multi-langue en cours**
 
 ---
 
@@ -10,151 +10,150 @@
 
 Application web complète de gestion d'apporteurs d'affaires pour agent immobilier à Dubai. Permet de recruter des apporteurs, gérer les leads clients, suivre les ventes et calculer automatiquement les commissions.
 
+**Personnalisé pour** : **Karyne de Clercq** - Agent immobilier indépendant à Dubai
+
 ---
 
 ## 🌐 Accès et URLs
 
-- **Site web** : https://real-estate-referrer-3kp6.vercel.app
+### URLs Actuelles
+- **Site web temporaire** : https://real-estate-referrer-3kp6.vercel.app
 - **GitHub** : https://github.com/KdC98/Real-Estate-Referrer
 - **Supabase** : https://cgizcgwhwxswvoodqver.supabase.co
 
-### Compte Admin
+### 🆕 Nouveau domaine (à configurer demain 17 octobre)
+- **Domaine acheté** : **real-estate-referrer.com**
+- **Registrar** : OVH
+- **Status** : ⏳ Activation en attente
+- **Action requise** : Configuration DNS + Mise à jour Supabase
+
+---
+
+## 🔑 Compte Admin
+
 - **Email** : admin@realestate-referrer.com
 - **Mot de passe** : Défini dans Supabase Auth
 - **UUID** : 68817a49-b31c-4edf-85fe-691eb33d6014
 
 ---
 
-## ✅ ÉTAT ACTUEL DU PROJET (16 octobre 2025)
+## ✅ ÉTAT ACTUEL DU PROJET (17 octobre 2025)
 
-### 🔒 Authentification & Sécurité - **100% COMPLET**
+### 🎨 Interface utilisateur - COMPLET ✅
 
-**✅ Système d'authentification sécurisé Supabase Auth**
-- Mots de passe hashés automatiquement (bcrypt via Supabase)
-- Sessions sécurisées avec JWT tokens
-- Gestion de sessions automatique
-- Protection contre les attaques courantes
+**Pages créées et déployées :**
+- ✅ `index.html` - Landing page avec photos de Dubai
+- ✅ `how-it-works.html` - Page "Comment ça marche" complète
+- ✅ `terms.html` - Conditions Générales d'Utilisation (15 sections)
+- ✅ `privacy.html` - Politique de Confidentialité RGPD (12 sections)
+- ✅ `login.html` / `signup.html` - Authentification
+- ✅ `dashboard.html` - Dashboard apporteur
+- ✅ `admin-dashboard.html` - Dashboard admin
 
-**✅ Fonctionnalités de sécurité**
-- Inscription avec confirmation du mot de passe
-- Validation : minimum 6 caractères
-- Connexion sécurisée (admin + apporteurs)
-- **Mot de passe oublié** : Email de réinitialisation fonctionnel
-- **Page de changement de mot de passe** : Formulaire dédié
-- Déconnexion sécurisée avec nettoyage de session
+**Design :**
+- ✅ Couleurs harmonisées sur toutes les pages (bleu dégradé cohérent)
+- ✅ Footer avec liens vers CGU, Privacy, How it works, Contact
+- ✅ Photos de Dubai sur la landing page (Burj Khalifa, Marina, Skyline)
+- ✅ Design responsive mobile
+- ✅ Branding personnalisé : "Karyne de Clercq" partout
 
-**✅ Flux "Mot de passe oublié" complet**
-1. Utilisateur clique sur "Mot de passe oublié ?"
-2. Entre son email
-3. Reçoit un email avec lien sécurisé
-4. Clique sur le lien → Page "Nouveau mot de passe"
-5. Entre et confirme le nouveau mot de passe
-6. Déconnexion automatique
-7. Redirection vers page de connexion
-8. Reconnexion avec nouveau mot de passe
+### 🌍 Système Multi-langue - EN COURS 🟡
 
-### 📊 Base de données - **COMPLET**
+**✅ Ce qui fonctionne :**
+- Sélecteur de 6 langues dans le header : 🇫🇷 🇬🇧 🇸🇦 🇷🇺 🇮🇳 🇨🇳
+- Traduction instantanée de la landing page (index.html)
+- Mémorisation de la langue choisie (localStorage)
+- Support RTL (right-to-left) pour l'arabe
+
+**🔴 Ce qui ne fonctionne PAS encore :**
+- ❌ Les autres pages (how-it-works, terms, privacy) ne sont pas traduites
+- ❌ Quand on change de page et qu'on revient, la langue n'est pas conservée
+- ❌ Les liens dans le menu ne conservent pas la langue
+
+**Langues disponibles :**
+1. 🇫🇷 Français (par défaut)
+2. 🇬🇧 Anglais
+3. 🇸🇦 Arabe (avec support RTL)
+4. 🇷🇺 Russe
+5. 🇮🇳 Hindi
+6. 🇨🇳 Chinois
+
+### 🔒 Authentification & Sécurité - COMPLET ✅
+
+- ✅ Système d'authentification sécurisé Supabase Auth
+- ✅ Mots de passe hashés (bcrypt via Supabase)
+- ✅ Sessions sécurisées avec JWT tokens
+- ✅ Inscription avec confirmation du mot de passe
+- ✅ Mot de passe oublié : Email de réinitialisation fonctionnel
+- ✅ Page de changement de mot de passe
+- ✅ Déconnexion sécurisée
+
+### 📊 Base de données - COMPLET ✅
 
 **Structure PostgreSQL via Supabase**
 
-**Table `profiles`**
-```sql
-id          UUID PRIMARY KEY (référence auth.users)
-name        TEXT
-phone       TEXT
-role        TEXT ('admin' ou 'referrer')
-created_at  TIMESTAMP
-```
+**Table profiles**
+- id UUID PRIMARY KEY (référence auth.users)
+- name TEXT
+- phone TEXT
+- role TEXT ('admin' ou 'referrer')
+- created_at TIMESTAMP
 
-**Table `leads`**
-```sql
-id                   BIGSERIAL PRIMARY KEY
-referrer_id          UUID (référence auth.users)
-client_name          TEXT
-client_email         TEXT
-client_phone         TEXT
-property_type        TEXT
-budget               NUMERIC
-status               TEXT ('nouveau', 'visite', 'offre', 'vendu')
-sale_price           NUMERIC
-agent_commission     NUMERIC
-referrer_commission  NUMERIC
-created_at           TIMESTAMP
-closed_at            TIMESTAMP
-```
+**Table leads**
+- id BIGSERIAL PRIMARY KEY
+- referrer_id UUID (référence auth.users)
+- client_name TEXT
+- client_email TEXT
+- client_phone TEXT
+- property_type TEXT
+- budget NUMERIC
+- status TEXT ('nouveau', 'visite', 'offre', 'vendu')
+- sale_price NUMERIC
+- agent_commission NUMERIC
+- referrer_commission NUMERIC
+- created_at TIMESTAMP
+- closed_at TIMESTAMP
 
-**Trigger automatique**
-- Création automatique d'un profil dans `profiles` lors de l'inscription
-- Liaison automatique avec `auth.users`
-
-### 🎨 Interface utilisateur - **COMPLET**
-
-**✅ Landing Page**
-- Design premium "Dubai Real Estate"
-- Gradient bleu/or élégant
-- Call-to-action clair
-- Exemples de gains (3M, 5M, 10M AED)
-- Stats du programme (20%, 24/7, 48h)
-- Responsive mobile
-
-**✅ Pages d'authentification**
-- Connexion
-- Inscription (avec confirmation mot de passe)
-- Mot de passe oublié
-- Changement de mot de passe
-- Design cohérent avec landing page
-
-**✅ Dashboard Apporteur**
-- Statistiques personnelles :
-  - Gains totaux (AED)
-  - Leads en cours
-  - Ventes conclues
-- Bouton "Ajouter un lead"
-- Table de tous les leads avec :
-  - Nom du client
-  - Type de propriété
-  - Budget
-  - Status (avec badges colorés)
-  - Commission gagnée
-
-**✅ Dashboard Admin**
-- Vue d'ensemble globale :
-  - Nombre d'apporteurs
-  - Leads actifs
-  - Ventes totales
-  - Commissions versées
-- Table de tous les leads avec :
-  - Nom de l'apporteur
-  - Informations client
-  - Dropdown pour changer le status
-  - Bouton "Marquer vendu"
-  - Calcul automatique des commissions
-
-### 💰 Système de commissions - **COMPLET**
+### 💰 Système de commissions - COMPLET ✅
 
 **Modèle de calcul**
 ```
 Vente immobilière
 └─ Commission totale : 2% du prix de vente
    ├─ Agence : 50% (1% du prix de vente)
-   └─ Agent (vous) : 50% (1% du prix de vente)
+   └─ Agent (Karyne) : 50% (1% du prix de vente)
       ├─ Apporteur : 20% de la part agent
-      └─ Vous : 80% de la part agent
+      └─ Karyne : 80% de la part agent
 ```
 
 **Exemple pour 1,000,000 AED**
 - Commission totale : 20,000 AED
 - Part agent : 10,000 AED
-- Commission apporteur : 2,000 AED (20%)
-- Reste pour vous : 8,000 AED
+- **Commission apporteur : 2,000 AED (20%)**
+- Reste pour Karyne : 8,000 AED
 
-**Calcul automatique**
-- Lorsque l'admin marque un lead comme "vendu"
-- Saisie du prix de vente
-- Calcul automatique des commissions
-- Stockage dans la base de données
+### 📝 Documentation juridique - CRÉÉE ✅
 
-### 🚀 Déploiement - **COMPLET**
+**✅ CGU (Conditions Générales d'Utilisation)**
+- 15 sections juridiques complètes
+- Conformité RERA Dubai
+- Loi applicable : Émirats Arabes Unis
+- Personnalisé avec les infos de Karyne
+
+**✅ Politique de Confidentialité**
+- 12 sections complètes
+- Conformité RGPD/GDPR
+- Protection des données
+- Droits des utilisateurs
+
+**✅ Page "Comment ça marche"**
+- 5 étapes pour devenir apporteur
+- Exemples de gains concrets
+- Critères de leads qualifiés
+- FAQ (10 questions/réponses)
+- Sécurité & transparence
+
+### 🚀 Déploiement - COMPLET ✅
 
 **Stack technique**
 - **Frontend** : React 18 (ESM modules via CDN)
@@ -164,417 +163,359 @@ Vente immobilière
 - **Contrôle de version** : GitHub
 - **Déploiement** : Automatique via GitHub → Vercel
 
-**URLs configurées**
-- Site URL : https://real-estate-referrer-3kp6.vercel.app
-- Redirect URLs : https://real-estate-referrer-3kp6.vercel.app/**
-
 ---
 
 ## ⚠️ PROBLÈMES CONNUS
 
-### 🔓 RLS Désactivé (Row Level Security)
+### 🔴 CRITIQUE
 
-**Status** : ⚠️ **CRITIQUE - À corriger avant mise en production publique**
+**1. Erreur 404 sur les liens internes**
+- **Problème** : Quand on clique sur "Comment ça marche" depuis index.html et qu'on veut se connecter, on obtient une 404
+- **Cause** : Les liens pointent vers `/login.html` mais le routage Vercel ne trouve pas le fichier
+- **Solution** : Vérifier les chemins des fichiers et configuration Vercel
 
-**Situation actuelle**
-- Les politiques RLS sont **désactivées** sur les tables `profiles` et `leads`
-- Tous les utilisateurs authentifiés peuvent lire/modifier toutes les données
-- Pas de séparation au niveau base de données entre admin et apporteurs
+**2. RLS Désactivé (Row Level Security)**
+- **Status** : ⚠️ CRITIQUE - À corriger avant production publique
+- **Situation** : Les politiques RLS sont désactivées sur les tables profiles et leads
+- **Impact** : Tous les utilisateurs authentifiés peuvent lire/modifier toutes les données
+- **Solution prévue** : Réactiver RLS avec fonction PostgreSQL (voir Next Steps)
 
-**Pourquoi**
-- Les politiques initiales causaient une récursion infinie
-- Désactivation temporaire pour débloquer le développement
+### 🟡 IMPORTANT
 
-**Impact**
-- ✅ L'application fonctionne parfaitement
-- ⚠️ Sécurité optimale nécessite RLS activé
-- ⚠️ Recommandé pour production publique
+**3. Multi-langue incomplet**
+- **Problème** : Seule la landing page (index.html) est traduite
+- **Manque** : how-it-works.html, terms.html, privacy.html ne sont pas traduits
+- **Impact** : Mauvaise expérience utilisateur si on change de langue
 
-**Solution prévue** (voir Next Steps)
+**4. Langue non persistée entre les pages**
+- **Problème** : La langue choisie n'est pas conservée quand on navigue
+- **Impact** : Utilisateur doit rechoisir la langue à chaque page
+
+**5. Licence RERA en cours**
+- **Status** : En cours d'obtention (examen dans 3 semaines)
+- **Impact** : Mentions "En cours d'obtention" dans les documents légaux
 
 ---
 
-## 🎯 NEXT STEPS
+## 🎯 PROCHAINES ÉTAPES
 
-### 🔴 PRIORITÉ 1 - Sécurité (Recommandé avant lancement public)
+### 🔴 PRIORITÉ 1 - Finir le Multi-langue (17-18 octobre)
 
-#### 1. Réactiver RLS avec politiques simples
+**1. Intégrer le système de traduction sur toutes les pages**
+- [ ] Ajouter le sélecteur de langue dans how-it-works.html
+- [ ] Ajouter le sélecteur de langue dans terms.html
+- [ ] Ajouter le sélecteur de langue dans privacy.html
+- [ ] Créer les traductions pour chaque page (6 langues × 3 pages)
+- [ ] Tester la navigation entre pages avec conservation de la langue
 
-**Dans Supabase SQL Editor, exécuter :**
+**2. Corriger le problème de persistance de langue**
+- [ ] S'assurer que localStorage.getItem('language') fonctionne sur toutes les pages
+- [ ] Charger automatiquement la langue sauvegardée au chargement de chaque page
+- [ ] Tester le parcours complet : choisir langue → naviguer → revenir
+
+**3. Corriger les liens de navigation (erreur 404)**
+- [ ] Vérifier tous les liens internes (href="/login.html" vs href="login.html")
+- [ ] Tester tous les liens depuis chaque page
+- [ ] Vérifier la configuration Vercel pour le routage
+
+### 🔴 PRIORITÉ 2 - Configuration domaine (17 octobre)
+
+**1. Configurer DNS sur OVH**
+Une fois le domaine activé :
+```
+Type: A Record
+Host: @
+Value: 76.76.21.21
+TTL: Automatic
+
+Type: CNAME Record
+Host: www
+Value: cname.vercel-dns.com
+TTL: Automatic
+```
+
+**2. Configurer Vercel**
+- [ ] Aller sur Vercel → Settings → Domains
+- [ ] Ajouter : real-estate-referrer.com
+- [ ] Ajouter : www.real-estate-referrer.com
+- [ ] Attendre la propagation DNS (10-30 min)
+
+**3. Mettre à jour Supabase**
+```
+Site URL : https://real-estate-referrer.com
+Redirect URLs : 
+- https://real-estate-referrer.com/**
+- https://real-estate-referrer.com/reset-password
+- https://real-estate-referrer.com/dashboard
+```
+
+**4. Tester toutes les fonctionnalités**
+- [ ] Accès au site via le nouveau domaine
+- [ ] Connexion admin
+- [ ] Connexion apporteur
+- [ ] Inscription nouveau compte
+- [ ] Mot de passe oublié
+- [ ] Ajout de lead
+- [ ] Modification de status
+- [ ] Certificat SSL (HTTPS) actif
+
+### 🟡 PRIORITÉ 3 - Sécurité (Avant lancement public)
+
+**1. Réactiver RLS avec politiques optimisées**
+
+Utiliser une fonction PostgreSQL pour éviter la récursion :
 
 ```sql
+-- Créer une fonction qui lit sans RLS
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.profiles
+    WHERE id = auth.uid() AND role = 'admin'
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
 -- Réactiver RLS
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 
 -- Politiques pour profiles
 CREATE POLICY "Utilisateurs lisent leur profil"
-  ON profiles FOR SELECT
-  TO authenticated
-  USING (auth.uid() = id);
+ON profiles FOR SELECT
+TO authenticated
+USING (auth.uid() = id OR is_admin());
 
 CREATE POLICY "Utilisateurs modifient leur profil"
-  ON profiles FOR UPDATE
-  TO authenticated
-  USING (auth.uid() = id);
+ON profiles FOR UPDATE
+TO authenticated
+USING (auth.uid() = id);
 
 CREATE POLICY "Admins lisent tous les profils"
-  ON profiles FOR SELECT
-  TO authenticated
-  USING ((SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
+ON profiles FOR SELECT
+TO authenticated
+USING (is_admin());
 
 -- Politiques pour leads
 CREATE POLICY "Apporteurs lisent leurs leads"
-  ON leads FOR SELECT
-  TO authenticated
-  USING (auth.uid() = referrer_id);
+ON leads FOR SELECT
+TO authenticated
+USING (auth.uid() = referrer_id OR is_admin());
 
 CREATE POLICY "Apporteurs créent leurs leads"
-  ON leads FOR INSERT
-  TO authenticated
-  WITH CHECK (auth.uid() = referrer_id);
+ON leads FOR INSERT
+TO authenticated
+WITH CHECK (auth.uid() = referrer_id);
 
-CREATE POLICY "Admins lisent tous les leads"
-  ON leads FOR SELECT
-  TO authenticated
-  USING ((SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
-
-CREATE POLICY "Admins modifient tous les leads"
-  ON leads FOR UPDATE
-  TO authenticated
-  USING ((SELECT role FROM profiles WHERE id = auth.uid()) = 'admin');
+CREATE POLICY "Admins gèrent tous les leads"
+ON leads FOR ALL
+TO authenticated
+USING (is_admin());
 ```
 
-**Résultat attendu**
-- ✅ Séparation complète des données par utilisateur
-- ✅ Admins voient tout
-- ✅ Apporteurs ne voient que leurs leads
-- ✅ Sécurité maximale
+**2. Changer le mot de passe admin**
+- [ ] Utiliser un mot de passe fort et unique (12+ caractères)
+- [ ] Le stocker dans un gestionnaire de mots de passe
+- [ ] Ne jamais le partager
 
-#### 2. Changer le mot de passe admin
-
-- Utiliser un mot de passe fort et unique
-- Le stocker dans un gestionnaire de mots de passe (1Password, LastPass, etc.)
-- Ne jamais le partager
-
-#### 3. Tester toutes les fonctionnalités avec RLS activé
-
+**3. Tester toutes les fonctionnalités avec RLS activé**
 - [ ] Connexion admin
 - [ ] Connexion apporteur
 - [ ] Ajout de lead (apporteur)
 - [ ] Modification de status (admin)
 - [ ] Calcul de commission
+- [ ] Affichage des noms d'apporteurs
 - [ ] Mot de passe oublié
-- [ ] Changement de mot de passe
 
----
+### 🟢 PRIORITÉ 4 - Email professionnel (Semaine prochaine)
 
-### 🟡 PRIORITÉ 2 - Avant lancement public (2-4 semaines)
+**Configuration email personnalisée**
 
-#### 1. Configuration email personnalisée
+Options recommandées :
+- **Google Workspace** (6 USD/mois) - Recommandé
+- **Zoho Mail** (1-3 USD/mois) - Économique
+- **ProtonMail** (4 USD/mois) - Sécurité
 
-**Objectif** : Envoyer les emails depuis votre domaine
+Emails à créer :
+- contact@real-estate-referrer.com ✅ (déjà mentionné)
+- admin@real-estate-referrer.com
+- support@real-estate-referrer.com (optionnel)
 
-**Dans Supabase → Authentication → Email Templates**
-- Configurer un domaine email personnalisé (ex: noreply@votre-domaine.com)
-- Personnaliser les templates :
-  - Confirmation d'inscription
-  - Reset password
-  - Email de bienvenue
+**Configuration dans Supabase :**
+- [ ] Settings → Auth → SMTP Settings
+- [ ] Utiliser identifiants email professionnel
+- [ ] Personnaliser les templates d'emails (Welcome, Reset Password, etc.)
 
-**Avantages**
-- Plus professionnel
-- Moins de chance d'être marqué comme spam
-- Meilleure délivrabilité
+### 🟢 PRIORITÉ 5 - Conformité RERA (3-4 semaines)
 
-#### 2. Personnalisation de l'application
+**⚠️ CRITIQUE - Amendes jusqu'à 50,000 AED en cas de non-conformité**
 
-- [ ] Remplacer "Dubai Real Estate" par votre vrai nom d'agence
-- [ ] Ajouter votre logo
-- [ ] Personnaliser les couleurs (si besoin)
-- [ ] Ajouter vos coordonnées de contact
-- [ ] Page "À propos" / "Contact"
-- [ ] Conditions d'utilisation
-- [ ] Politique de confidentialité
+Requis obligatoires :
+- [ ] **Licence RERA** (Real Estate Regulatory Agency) - Examen dans 3 semaines
+- [ ] **Examen DREI** (Dubai Real Estate Institute)
+- [ ] **Permis publicitaire Trakheesi** (5,000 AED)
+- [ ] **Form A** avec propriétaires (pour chaque bien)
 
-#### 3. Conformité RERA Dubai
+**⚠️ ATTENTION** : Ne pas lancer publiquement sans ces licences !
 
-**⚠️ IMPORTANT** : Obligations légales avant publicité
+### 🟢 PRIORITÉ 6 - Tests bêta (Après RERA)
 
-- [ ] Obtenir la licence RERA (agent immobilier)
-- [ ] Passer l'examen DREI
-- [ ] Obtenir le permis publicitaire Trakheesi (5,000 AED)
-- [ ] Afficher le numéro de permis sur l'application
-- [ ] Avoir un Form A signé avec les propriétaires
-
-**Amendes en cas de non-respect**
-- Minimum : 50,000 AED
-- Plus sanctions possibles
-
-#### 4. Tests et validation
-
-- [ ] Tester avec 2-3 apporteurs bêta
-- [ ] Corriger les bugs découverts
-- [ ] Valider les calculs de commission avec cas réels
-- [ ] Tester sur différents appareils (iPhone, Android, iPad)
-- [ ] Tester sur différents navigateurs (Chrome, Safari, Firefox)
-- [ ] Vérifier la performance sur connexion lente
-
----
-
-### 🟢 PRIORITÉ 3 - Améliorations futures (Optionnel)
-
-#### Fonctionnalités supplémentaires
-
-**Notifications**
-- [ ] Notifications email automatiques
-  - Nouveau lead pour admin
-  - Changement de status pour apporteur
-  - Commission gagnée
-- [ ] Notifications push (PWA)
-- [ ] Notifications SMS (via Twilio)
-
-**Gestion des données**
-- [ ] Export Excel des leads
-- [ ] Export PDF des commissions
-- [ ] Statistiques avancées avec graphiques (Chart.js)
-- [ ] Tableau de bord avec analytics
-- [ ] Historique des modifications
-
-**Paiements**
-- [ ] Intégration Stripe ou PayPal
-- [ ] Paiement automatique des commissions
-- [ ] Historique des paiements
-- [ ] Reçus automatiques
-
-**Authentification avancée**
-- [ ] Double authentification (2FA)
-- [ ] Connexion avec Google
-- [ ] Connexion avec Apple
-- [ ] Biométrie (mobile)
-
-**Application mobile**
-- [ ] PWA (Progressive Web App)
-- [ ] Application iOS native
-- [ ] Application Android native
-
-**Multi-langues**
-- [ ] Anglais
-- [ ] Arabe
-- [ ] Français
-- [ ] Sélecteur de langue
-
-**Marketing**
-- [ ] Landing page SEO optimisée
-- [ ] Blog intégré
-- [ ] Section témoignages
-- [ ] Programme de parrainage
-- [ ] Intégration réseaux sociaux
-
-#### Optimisations
-
-**Performance**
-- [ ] Lazy loading des images
-- [ ] Optimisation des images (WebP)
-- [ ] Code splitting
-- [ ] Service worker (cache)
-
-**SEO**
-- [ ] Meta tags optimisés
-- [ ] Sitemap.xml
-- [ ] robots.txt
-- [ ] Schema markup
-
-**Analytics**
-- [ ] Google Analytics
-- [ ] Plausible Analytics
-- [ ] Suivi des conversions
-- [ ] A/B testing
-
-**Sécurité avancée**
-- [ ] Rate limiting sur les requêtes
-- [ ] Détection de fraude
-- [ ] Logs d'audit complets
-- [ ] Backup automatique quotidien
+**Phase de tests utilisateurs**
+- [ ] Inviter 2-3 apporteurs bêta
+- [ ] Tester le cycle complet (inscription → lead → vente → commission)
+- [ ] Valider les calculs de commission
+- [ ] Recueillir les feedbacks
+- [ ] Corriger les bugs éventuels
 
 ---
 
 ## 📝 NOTES TECHNIQUES
 
-### Limitations actuelles
-
-- **localStorage/sessionStorage** : Non utilisé (Supabase Auth gère les sessions)
-- **RLS** : Temporairement désactivé (à réactiver - voir Priorité 1)
-- **Emails** : Envoyés via Supabase (domaine par défaut)
-- **Paiements** : Manuel (pas d'intégration automatique)
-
 ### Configuration Supabase
 
-**Clés API (dans le code)**
 ```javascript
 SUPABASE_URL: 'https://cgizcgwhwxswvoodqver.supabase.co'
 SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
 ```
 
-**URL Configuration**
-- Site URL : https://real-estate-referrer-3kp6.vercel.app
-- Redirect URLs : https://real-estate-referrer-3kp6.vercel.app/**
-
 ### Commandes SQL utiles
 
-**Voir tous les profils**
 ```sql
+-- Voir tous les profils
 SELECT * FROM profiles;
-```
 
-**Voir tous les leads**
-```sql
-SELECT * FROM leads;
-```
+-- Voir tous les leads avec noms d'apporteurs
+SELECT 
+  l.*,
+  p.name as referrer_name
+FROM leads l
+LEFT JOIN profiles p ON l.referrer_id = p.id;
 
-**Voir les leads d'un apporteur spécifique**
-```sql
-SELECT * FROM leads WHERE referrer_id = 'UUID';
-```
-
-**Statistiques globales**
-```sql
+-- Statistiques globales
 SELECT 
   COUNT(*) as total_leads,
   SUM(CASE WHEN status = 'vendu' THEN 1 ELSE 0 END) as ventes,
   SUM(referrer_commission) as commissions_totales
 FROM leads;
-```
 
-**Modifier le rôle d'un utilisateur**
-```sql
-UPDATE profiles 
-SET role = 'admin' 
-WHERE id = 'UUID';
+-- Statistiques par apporteur
+SELECT 
+  p.name,
+  COUNT(l.id) as total_leads,
+  SUM(CASE WHEN l.status = 'vendu' THEN 1 ELSE 0 END) as ventes,
+  SUM(l.referrer_commission) as total_commission
+FROM profiles p
+LEFT JOIN leads l ON p.id = l.referrer_id
+WHERE p.role = 'referrer'
+GROUP BY p.name
+ORDER BY total_commission DESC;
 ```
 
 ---
 
 ## 🆘 SUPPORT & DÉPANNAGE
 
-### Problèmes courants
-
-**1. Erreur de connexion**
-- Vérifier que l'email existe dans `Authentication → Users`
-- Vérifier que `Confirmed at` a une date
-- Essayer en navigation privée (cache)
-- Vider le cache : Ctrl+Shift+R (Windows) ou Cmd+Shift+R (Mac)
-
-**2. Email de reset password non reçu**
-- Vérifier les **spams/courrier indésirable**
-- Vérifier que l'email est bien configuré dans Supabase
-- L'email vient de : `noreply@mail.app.supabase.io`
-
-**3. Page blanche / erreur 500**
-- Vérifier les logs dans la Console (F12)
-- Probablement un problème de politiques RLS
-- Vérifier que Vercel a bien déployé
-
-**4. Données ne s'affichent pas**
-- Vérifier les politiques RLS (si activées)
-- Vérifier dans Table Editor que les données existent
-- Vérifier la console pour les erreurs
-
-**5. Dashboard se charge au lieu de la page de reset password**
-- Vider complètement le cache
-- Essayer en navigation privée
-- Vérifier que le dernier code est déployé
-
-### Ressources
-
-**Documentation officielle**
-- **Supabase** : https://docs.supabase.com
-- **Vercel** : https://vercel.com/docs
+### Ressources officielles
+- **Supabase Docs** : https://docs.supabase.com
+- **Vercel Docs** : https://vercel.com/docs
 - **Tailwind CSS** : https://tailwindcss.com/docs
-- **React** : https://react.dev
+- **React Docs** : https://react.dev
 
-**Support**
-- **GitHub Issues** : https://github.com/KdC98/Real-Estate-Referrer/issues
-- **Supabase Community** : https://github.com/supabase/supabase/discussions
-
----
-
-## 📊 MÉTRIQUES DE SUCCÈS
-
-### KPIs à suivre
-
-**Acquisition**
-- Nombre d'apporteurs inscrits
-- Taux de conversion inscription
-- Source des inscriptions
-
-**Activité**
-- Nombre de leads apportés par mois
-- Nombre de leads par apporteur
-- Taux d'activité des apporteurs
-
-**Conversion**
-- Taux de conversion (leads → ventes)
-- Temps moyen de conversion
-- Valeur moyenne des ventes
-
-**Financier**
-- Commissions versées totales
-- Commission moyenne par apporteur
-- ROI du programme
+### RERA Dubai
+- **Site officiel** : https://www.reraproperty.ae
+- **Contact** : +971 4 362 2222
+- **Email** : info@reraproperty.ae
 
 ---
 
 ## 🎉 HISTORIQUE DU PROJET
 
 **14-15 octobre 2025**
-- Création initiale du projet
-- Structure de base
+- Création initiale
 - Problèmes d'authentification
 
 **15 octobre 2025**
 - Migration vers Supabase Auth
-- Résolution des problèmes RLS
-- Première connexion réussie
-- Déploiement en production
+- Première version déployée
 
-**16 octobre 2025**
-- Ajout "Confirmation du mot de passe"
+**16 octobre 2025 - Matin**
 - Ajout "Mot de passe oublié"
-- Ajout page "Changement de mot de passe"
-- Flux complet de reset password
-- Sécurité optimisée
-- **Version 2.0.0 - Production**
+- Flux de reset password complet
+
+**16 octobre 2025 - Après-midi**
+- ✅ **CORRECTION MAJEURE** : Affichage des noms d'apporteurs
+- Désactivation RLS pour résoudre récursion infinie
+- Création des profils manquants
+- Application 100% fonctionnelle
+- **Version 2.1.0 - Production stable**
+
+**16 octobre 2025 - Soir**
+- ✅ Création des CGU complètes (15 sections)
+- ✅ Création de la Politique de Confidentialité (12 sections)
+- ✅ Achat du domaine : **real-estate-referrer.com** (OVH)
+- Préparation configuration domaine
+- **Version 2.2.0 - Domaine acheté**
+
+**17 octobre 2025 - Nuit**
+- ✅ Personnalisation complète : "Karyne de Clercq"
+- ✅ Harmonisation des couleurs sur toutes les pages
+- ✅ Création page "Comment ça marche" complète
+- ✅ Ajout photos de Dubai sur landing page
+- ✅ Footer avec liens CGU/Privacy/Contact
+- ✅ Début système multi-langue (6 langues)
+- ⚠️ Multi-langue incomplet (seulement index.html)
+- ⚠️ Problèmes navigation entre pages
+- **Version 3.0.0 - Multi-langue en cours**
 
 ---
 
-## 📜 LICENCE
+## 🏆 RÉSUMÉ
 
-Projet privé - Tous droits réservés
+### ✅ Ce qui fonctionne PARFAITEMENT
+
+- Application 100% fonctionnelle (auth, dashboards, leads, commissions)
+- Design professionnel et cohérent sur toutes les pages
+- Documentation juridique complète (CGU, Privacy, How it works)
+- Branding personnalisé "Karyne de Clercq"
+- Photos de Dubai attractives
+- Calcul automatique des commissions
+- Système multi-langue sur la landing page (6 langues)
+
+### 🟡 Ce qui est EN COURS
+
+- Multi-langue sur les autres pages (how-it-works, terms, privacy)
+- Persistance de la langue entre les pages
+- Configuration du domaine real-estate-referrer.com
+
+### 🔴 Ce qu'il faut CORRIGER en priorité
+
+1. **Finir le multi-langue** (toutes les pages + persistance)
+2. **Corriger les liens de navigation** (erreur 404)
+3. **Configurer le domaine** (DNS + Vercel + Supabase)
+4. **Réactiver RLS** (sécurité base de données)
+
+### ⏳ Ce qui viendra PLUS TARD
+
+- Configuration email professionnel
+- Obtention licence RERA (3 semaines)
+- Tests bêta avec vrais apporteurs
+- Lancement public officiel
 
 ---
 
-## 🏆 CONCLUSION
+## 📞 Contact
 
-Vous disposez maintenant d'une **application professionnelle complète et sécurisée** pour gérer votre programme d'apporteurs d'affaires à Dubai.
-
-**Points forts**
-- ✅ Authentification sécurisée de niveau professionnel
-- ✅ Interface utilisateur moderne et intuitive
-- ✅ Calcul automatique des commissions
-- ✅ Design premium adapté au marché Dubai
-- ✅ Déploiement en production stable
-
-**Prochaines étapes recommandées**
-1. **Réactiver RLS** (sécurité maximale)
-2. **Tests avec utilisateurs bêta**
-3. **Conformité RERA**
-4. **Lancement public**
+**Agent** : Karyne de Clercq  
+**Email** : contact@real-estate-referrer.com  
+**Téléphone** : +971 58 587 0448  
+**Localisation** : Dubai, United Arab Emirates  
+**Licence RERA** : En cours d'obtention (examen prévu dans 3 semaines)
 
 ---
 
-**📞 Pour toute question, reprenez cette conversation en mentionnant ce README et en décrivant précisément votre besoin.**
+**Dernière mise à jour** : 17 octobre 2025 - 01:00  
+**Version** : 3.0.0  
+**Status** : 🟡 En développement - Multi-langue en cours
 
-**Dernière mise à jour** : 16 octobre 2025  
-**Version** : 2.0.0  
-**Status** : 🟢 **Production - Prêt à l'emploi**
+**🚀 On reprend demain pour finaliser le multi-langue et configurer le domaine !**
