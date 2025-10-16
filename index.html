@@ -35,6 +35,16 @@
     let currentUser = null;
     let currentProfile = null;
 
+    // Check for password recovery
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        showUpdatePasswordPage();
+      } else if (session) {
+        currentUser = session.user;
+        loadProfile();
+      }
+    });
+
     // Check session on load
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
@@ -196,6 +206,45 @@
         
       } catch (error) {
         console.error('Erreur reset:', error);
+        alert('Erreur: ' + error.message);
+      }
+    };
+
+    window.handleUpdatePassword = async function(e) {
+      e.preventDefault();
+      
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      // Validation
+      if (newPassword !== confirmPassword) {
+        alert('Les mots de passe ne correspondent pas !');
+        return;
+      }
+
+      if (newPassword.length < 6) {
+        alert('Le mot de passe doit contenir au moins 6 caractères !');
+        return;
+      }
+
+      try {
+        const { error } = await supabase.auth.updateUser({
+          password: newPassword
+        });
+
+        if (error) throw error;
+
+        alert('Mot de passe mis à jour avec succès !');
+        
+        // Reload profile
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          currentUser = session.user;
+          await loadProfile();
+        }
+        
+      } catch (error) {
+        console.error('Erreur mise à jour mot de passe:', error);
         alert('Erreur: ' + error.message);
       }
     };
@@ -392,6 +441,45 @@
       const resetForm = document.getElementById('resetForm');
       if (resetForm) {
         resetForm.onsubmit = window.handleReset;
+      }
+    }
+
+    function showUpdatePasswordPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen flex items-center justify-center px-4">
+          <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl shadow-2xl p-8">
+            <h2 class="text-3xl font-bold mb-8 text-center text-yellow-500">
+              Nouveau mot de passe
+            </h2>
+
+            <form id="updatePasswordForm" class="space-y-6">
+              <div class="text-center mb-6">
+                <p class="text-gray-300">Entrez votre nouveau mot de passe</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-200 mb-2">Nouveau mot de passe</label>
+                <input type="password" id="newPassword" required minlength="6"
+                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <p class="text-xs text-gray-400 mt-1">Minimum 6 caractères</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-200 mb-2">Confirmer le mot de passe</label>
+                <input type="password" id="confirmPassword" required minlength="6"
+                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <button type="submit"
+                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">
+                Mettre à jour le mot de passe
+              </button>
+            </form>
+          </div>
+        </div>
+      `;
+
+      // Attach handler
+      const updatePasswordForm = document.getElementById('updatePasswordForm');
+      if (updatePasswordForm) {
+        updatePasswordForm.onsubmit = window.handleUpdatePassword;
       }
     }
 
