@@ -19,6 +19,16 @@
       background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
       min-height: 100vh;
     }
+    .lang-selector {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .lang-selector:hover {
+      transform: scale(1.2);
+    }
+    .lang-selector.active {
+      filter: brightness(1.3);
+    }
   </style>
 </head>
 <body class="text-white">
@@ -32,17 +42,170 @@
     
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // ===== MULTI-LANGUAGE SYSTEM =====
+    let currentLang = localStorage.getItem('language') || 'en';
+
+    const translations = {
+      fr: {
+        title: "Karyne de Clercq",
+        howItWorks: "Comment ça marche",
+        login: "Connexion",
+        signup: "Devenir Apporteur",
+        heroTitle: "Gagnez jusqu'à",
+        heroAmount: "20,000 AED",
+        heroSuffix: "par vente",
+        heroSubtitle: "Devenez apporteur d'affaires et touchez une commission de 20% sur chaque vente immobilière que vous amenez",
+        ctaButton: "Commencer maintenant",
+        stat1: "Commission par vente",
+        stat2: "Support disponible",
+        stat3: "Paiement rapide",
+        examplesTitle: "Exemples de gains",
+        example1: "Vente à 3M AED",
+        example2: "Vente à 5M AED",
+        example3: "Vente à 10M AED",
+        commission: "Votre commission",
+        footer: "Tous droits réservés",
+        terms: "CGU",
+        privacy: "Confidentialité",
+        contact: "Contact"
+      },
+      en: {
+        title: "Karyne de Clercq",
+        howItWorks: "How it works",
+        login: "Login",
+        signup: "Become a Referrer",
+        heroTitle: "Earn up to",
+        heroAmount: "20,000 AED",
+        heroSuffix: "per sale",
+        heroSubtitle: "Become a business referrer and earn 20% commission on every real estate sale you bring",
+        ctaButton: "Start now",
+        stat1: "Commission per sale",
+        stat2: "24/7 Support",
+        stat3: "Fast payment",
+        examplesTitle: "Earning examples",
+        example1: "Sale at 3M AED",
+        example2: "Sale at 5M AED",
+        example3: "Sale at 10M AED",
+        commission: "Your commission",
+        footer: "All rights reserved",
+        terms: "Terms",
+        privacy: "Privacy",
+        contact: "Contact"
+      },
+      ar: {
+        title: "كارين دي كليرك",
+        howItWorks: "كيف يعمل",
+        login: "تسجيل الدخول",
+        signup: "كن وسيطًا",
+        heroTitle: "اكسب حتى",
+        heroAmount: "20,000 درهم",
+        heroSuffix: "لكل عملية بيع",
+        heroSubtitle: "كن وسيط أعمال واحصل على عمولة 20٪ على كل عملية بيع عقارية تجلبها",
+        ctaButton: "ابدأ الآن",
+        stat1: "عمولة لكل بيع",
+        stat2: "دعم 24/7",
+        stat3: "دفع سريع",
+        examplesTitle: "أمثلة الأرباح",
+        example1: "بيع بـ 3 مليون درهم",
+        example2: "بيع بـ 5 مليون درهم",
+        example3: "بيع بـ 10 مليون درهم",
+        commission: "عمولتك",
+        footer: "جميع الحقوق محفوظة",
+        terms: "الشروط",
+        privacy: "الخصوصية",
+        contact: "اتصل"
+      },
+      ru: {
+        title: "Карин де Клерк",
+        howItWorks: "Как работает",
+        login: "Вход",
+        signup: "Стать партнером",
+        heroTitle: "Зарабатывайте до",
+        heroAmount: "20,000 AED",
+        heroSuffix: "за продажу",
+        heroSubtitle: "Станьте бизнес-партнером и получайте 20% комиссии с каждой сделки",
+        ctaButton: "Начать сейчас",
+        stat1: "Комиссия за продажу",
+        stat2: "Поддержка 24/7",
+        stat3: "Быстрая оплата",
+        examplesTitle: "Примеры заработка",
+        example1: "Продажа 3M AED",
+        example2: "Продажа 5M AED",
+        example3: "Продажа 10M AED",
+        commission: "Ваша комиссия",
+        footer: "Все права защищены",
+        terms: "Условия",
+        privacy: "Конфиденциальность",
+        contact: "Контакт"
+      },
+      hi: {
+        title: "कैरीन डी क्लर्क",
+        howItWorks: "यह कैसे काम करता है",
+        login: "लॉग इन",
+        signup: "रेफरर बनें",
+        heroTitle: "कमाएं",
+        heroAmount: "20,000 AED",
+        heroSuffix: "प्रति बिक्री",
+        heroSubtitle: "बिजनेस रेफरर बनें और हर रियल एस्टेट बिक्री पर 20% कमीशन कमाएं",
+        ctaButton: "अभी शुरू करें",
+        stat1: "प्रति बिक्री कमीशन",
+        stat2: "24/7 समर्थन",
+        stat3: "तेज़ भुगतान",
+        examplesTitle: "कमाई के उदाहरण",
+        example1: "3M AED बिक्री",
+        example2: "5M AED बिक्री",
+        example3: "10M AED बिक्री",
+        commission: "आपका कमीशन",
+        footer: "सर्वाधिकार सुरक्षित",
+        terms: "शर्तें",
+        privacy: "गोपनीयता",
+        contact: "संपर्क"
+      },
+      zh: {
+        title: "凯琳·德·克莱克",
+        howItWorks: "如何运作",
+        login: "登录",
+        signup: "成为推荐人",
+        heroTitle: "赚取高达",
+        heroAmount: "20,000迪拉姆",
+        heroSuffix: "每笔销售",
+        heroSubtitle: "成为业务推荐人，每笔房地产交易赚取20%佣金",
+        ctaButton: "立即开始",
+        stat1: "每笔销售佣金",
+        stat2: "全天候支持",
+        stat3: "快速付款",
+        examplesTitle: "收入示例",
+        example1: "300万迪拉姆销售",
+        example2: "500万迪拉姆销售",
+        example3: "1000万迪拉姆销售",
+        commission: "您的佣金",
+        footer: "版权所有",
+        terms: "条款",
+        privacy: "隐私",
+        contact: "联系"
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('language', lang);
+      const appContent = document.getElementById('app').innerHTML;
+      if (appContent.includes('max-w-7xl') && appContent.includes('gradient')) {
+        showLanding();
+      }
+    }
+
+    window.setLanguage = setLanguage;
+
     let currentUser = null;
     let currentProfile = null;
     let isPasswordRecovery = false;
 
-    // Check URL for recovery token
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
     if (hashParams.get('type') === 'recovery') {
       isPasswordRecovery = true;
     }
 
-    // Check for password recovery
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
         isPasswordRecovery = true;
@@ -55,7 +218,6 @@
       }
     });
 
-    // Check session on load
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (isPasswordRecovery) {
         showUpdatePasswordPage();
@@ -260,43 +422,51 @@
     }
 
     function showLanding() {
+      const t = translations[currentLang];
+      const isRTL = currentLang === 'ar';
+
       document.getElementById('app').innerHTML = `
-        <div class="min-h-screen">
-          <!-- Header with navigation -->
+        <div class="min-h-screen" ${isRTL ? 'dir="rtl"' : ''}>
           <nav class="bg-gray-900 bg-opacity-50 backdrop-blur-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0">
-                  <h1 class="text-2xl font-bold text-yellow-500">Karyne de Clercq</h1>
+                  <h1 class="text-2xl font-bold text-yellow-500">${t.title}</h1>
                 </div>
                 <div class="flex gap-6 items-center">
-                  <a href="/how-it-works.html" class="text-white hover:text-yellow-400 transition">Comment ça marche</a>
+                  <div class="flex gap-2 border-l border-gray-600 pl-4">
+                    <span class="lang-selector text-2xl ${currentLang === 'fr' ? 'active' : ''}" onclick="setLanguage('fr')" title="Français">🇫🇷</span>
+                    <span class="lang-selector text-2xl ${currentLang === 'en' ? 'active' : ''}" onclick="setLanguage('en')" title="English">🇬🇧</span>
+                    <span class="lang-selector text-2xl ${currentLang === 'ar' ? 'active' : ''}" onclick="setLanguage('ar')" title="العربية">🇸🇦</span>
+                    <span class="lang-selector text-2xl ${currentLang === 'ru' ? 'active' : ''}" onclick="setLanguage('ru')" title="Русский">🇷🇺</span>
+                    <span class="lang-selector text-2xl ${currentLang === 'hi' ? 'active' : ''}" onclick="setLanguage('hi')" title="हिन्दी">🇮🇳</span>
+                    <span class="lang-selector text-2xl ${currentLang === 'zh' ? 'active' : ''}" onclick="setLanguage('zh')" title="中文">🇨🇳</span>
+                  </div>
+                  <a href="/how-it-works.html" class="text-white hover:text-yellow-400 transition">${t.howItWorks}</a>
                   <button onclick="showAuthPage('login')" class="text-white hover:text-yellow-500 px-4 py-2 transition">
-                    Connexion
+                    ${t.login}
                   </button>
                   <button onclick="showAuthPage('signup')" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">
-                    Devenir Apporteur
+                    ${t.signup}
                   </button>
                 </div>
               </div>
             </div>
           </nav>
 
-          <!-- Hero Section -->
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
             <div class="text-center mb-12">
               <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                Gagnez jusqu'à <span class="text-yellow-500">20,000 AED</span> par vente
+                ${t.heroTitle} <span class="text-yellow-500">${t.heroAmount}</span> ${t.heroSuffix}
               </h2>
               <p class="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
-                Devenez apporteur d'affaires et touchez une commission de 20% sur chaque vente immobilière que vous amenez
+                ${t.heroSubtitle}
               </p>
               <button onclick="showAuthPage('signup')" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
-                Commencer maintenant
+                ${t.ctaButton}
               </button>
             </div>
 
-            <!-- Photos Dubai -->
             <div class="grid md:grid-cols-3 gap-6 my-16">
               <div class="rounded-xl overflow-hidden shadow-2xl">
                 <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" 
@@ -315,54 +485,51 @@
               </div>
             </div>
 
-            <!-- Stats -->
             <div class="grid md:grid-cols-3 gap-8 mt-20">
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">20%</div>
-                <div class="text-gray-300">Commission par vente</div>
+                <div class="text-gray-300">${t.stat1}</div>
               </div>
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">24/7</div>
-                <div class="text-gray-300">Support disponible</div>
+                <div class="text-gray-300">${t.stat2}</div>
               </div>
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">48h</div>
-                <div class="text-gray-300">Paiement rapide</div>
+                <div class="text-gray-300">${t.stat3}</div>
               </div>
             </div>
 
-            <!-- Exemples de gains -->
             <div class="mt-20">
-              <h3 class="text-3xl font-bold text-center mb-12">Exemples de gains</h3>
+              <h3 class="text-3xl font-bold text-center mb-12">${t.examplesTitle}</h3>
               <div class="grid md:grid-cols-3 gap-6">
                 <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-6 text-gray-900">
-                  <div class="text-sm font-medium mb-2">Vente à 3M AED</div>
+                  <div class="text-sm font-medium mb-2">${t.example1}</div>
                   <div class="text-3xl font-bold mb-2">6,000 AED</div>
-                  <div class="text-sm">Votre commission</div>
+                  <div class="text-sm">${t.commission}</div>
                 </div>
                 <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-6 text-gray-900">
-                  <div class="text-sm font-medium mb-2">Vente à 5M AED</div>
+                  <div class="text-sm font-medium mb-2">${t.example2}</div>
                   <div class="text-3xl font-bold mb-2">10,000 AED</div>
-                  <div class="text-sm">Votre commission</div>
+                  <div class="text-sm">${t.commission}</div>
                 </div>
                 <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-6 text-gray-900">
-                  <div class="text-sm font-medium mb-2">Vente à 10M AED</div>
+                  <div class="text-sm font-medium mb-2">${t.example3}</div>
                   <div class="text-3xl font-bold mb-2">20,000 AED</div>
-                  <div class="text-sm">Votre commission</div>
+                  <div class="text-sm">${t.commission}</div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Footer -->
           <footer class="bg-gray-900 text-white py-8 mt-16">
             <div class="max-w-7xl mx-auto px-4 text-center">
-              <p class="mb-4">&copy; 2025 Karyne de Clercq. Tous droits réservés.</p>
+              <p class="mb-4">&copy; 2025 ${t.title}. ${t.footer}.</p>
               <div class="space-x-6">
-                <a href="/terms.html" class="hover:text-yellow-400 transition">CGU</a>
-                <a href="/privacy.html" class="hover:text-yellow-400 transition">Confidentialité</a>
-                <a href="/how-it-works.html" class="hover:text-yellow-400 transition">Comment ça marche</a>
-                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">Contact</a>
+                <a href="/terms.html" class="hover:text-yellow-400 transition">${t.terms}</a>
+                <a href="/privacy.html" class="hover:text-yellow-400 transition">${t.privacy}</a>
+                <a href="/how-it-works.html" class="hover:text-yellow-400 transition">${t.howItWorks}</a>
+                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t.contact}</a>
               </div>
             </div>
           </footer>
