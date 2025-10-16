@@ -33,7 +33,6 @@
     let currentUser = null;
     let currentProfile = null;
 
-    // Init
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         currentUser = session.user;
@@ -167,16 +166,43 @@
     }
 
     async function showAdminDashboard() {
-      // RÉCUPÉRATION SÉPARÉE
-      const { data: allProfiles } = await supabase.from('profiles').select('*');
-      const { data: allLeads } = await supabase.from('leads').select('*');
+      console.log('🔵 DÉBUT showAdminDashboard');
+      
+      const { data: allProfiles, error: profilesError } = await supabase.from('profiles').select('*');
+      const { data: allLeads, error: leadsError } = await supabase.from('leads').select('*');
 
-      // CRÉATION DU MAP
+      console.log('📊 PROFILES récupérés:', allProfiles);
+      console.log('📊 LEADS récupérés:', allLeads);
+
+      if (profilesError) console.error('❌ Erreur profiles:', profilesError);
+      if (leadsError) console.error('❌ Erreur leads:', leadsError);
+
       const profileMap = {};
-      allProfiles.forEach(p => profileMap[p.id] = p);
+      if (allProfiles) {
+        allProfiles.forEach(p => {
+          console.log(`➕ Ajout au map: ${p.id} → ${p.name}`);
+          profileMap[p.id] = p;
+        });
+      }
 
-      const referrers = allProfiles.filter(p => p.role === 'referrer');
-      const total = allLeads.reduce((s, l) => s + (l.referrer_commission || 0), 0);
+      console.log('🗺️ PROFILE MAP FINAL:', profileMap);
+
+      const referrers = allProfiles ? allProfiles.filter(p => p.role === 'referrer') : [];
+      const total = allLeads ? allLeads.reduce((s, l) => s + (l.referrer_commission || 0), 0) : 0;
+
+      console.log('📈 Stats - Referrers:', referrers.length, 'Total:', total);
+
+      // Pour chaque lead, logger ce qui se passe
+      if (allLeads) {
+        allLeads.forEach(lead => {
+          const ref = profileMap[lead.referrer_id];
+          console.log(`🔎 Lead "${lead.client_name}":`, {
+            referrer_id: lead.referrer_id,
+            profile_trouvé: ref ? 'OUI' : 'NON',
+            nom: ref ? ref.name : 'N/A'
+          });
+        });
+      }
 
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen">
@@ -194,7 +220,7 @@
               </div>
               <div class="bg-gray-800 rounded-xl p-6">
                 <div class="text-sm text-gray-400">Leads</div>
-                <div class="text-3xl font-bold text-yellow-500">${allLeads.length}</div>
+                <div class="text-3xl font-bold text-yellow-500">${allLeads ? allLeads.length : 0}</div>
               </div>
               <div class="bg-gray-800 rounded-xl p-6">
                 <div class="text-sm text-gray-400">Commissions</div>
@@ -215,17 +241,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  ${allLeads.map(l => {
+                  ${allLeads ? allLeads.map(l => {
                     const ref = profileMap[l.referrer_id];
+                    const displayName = ref && ref.name ? ref.name : 'N/A';
                     return `
                       <tr class="border-t border-gray-700">
-                        <td class="px-6 py-4">${ref ? ref.name : 'N/A'}</td>
+                        <td class="px-6 py-4">${displayName}</td>
                         <td class="px-6 py-4">${l.client_name}</td>
                         <td class="px-6 py-4">${l.budget.toLocaleString()} AED</td>
                         <td class="px-6 py-4">${l.status}</td>
                       </tr>
                     `;
-                  }).join('')}
+                  }).join('') : '<tr><td colspan="4" class="px-6 py-4 text-center">Aucun lead</td></tr>'}
                 </tbody>
               </table>
             </div>
