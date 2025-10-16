@@ -34,20 +34,32 @@
 
     let currentUser = null;
     let currentProfile = null;
+    let isPasswordRecovery = false;
+
+    // Check URL for recovery token
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    if (hashParams.get('type') === 'recovery') {
+      isPasswordRecovery = true;
+    }
 
     // Check for password recovery
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'PASSWORD_RECOVERY') {
+        isPasswordRecovery = true;
         showUpdatePasswordPage();
-      } else if (session) {
-        currentUser = session.user;
-        loadProfile();
+      } else if (event === 'SIGNED_IN' && !isPasswordRecovery) {
+        if (session) {
+          currentUser = session.user;
+          loadProfile();
+        }
       }
     });
 
     // Check session on load
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+      if (isPasswordRecovery) {
+        showUpdatePasswordPage();
+      } else if (session) {
         currentUser = session.user;
         loadProfile();
       } else {
@@ -236,7 +248,9 @@
 
         alert('Mot de passe mis à jour avec succès !');
         
-        // Reload profile
+        // Reset flag and reload profile
+        isPasswordRecovery = false;
+        
         const { data: { session } } = await supabase.auth.getSession();
         if (session) {
           currentUser = session.user;
