@@ -139,7 +139,6 @@
               <div class="text-sm text-gray-400">Gains totaux</div>
               <div class="text-3xl font-bold text-yellow-500">${total.toLocaleString()} AED</div>
             </div>
-            <button onclick="addLead()" class="bg-yellow-500 text-gray-900 font-bold px-6 py-3 rounded-lg mb-6">+ Ajouter un lead</button>
             <div class="bg-gray-800 rounded-xl overflow-hidden">
               <table class="w-full">
                 <thead class="bg-gray-700">
@@ -166,43 +165,41 @@
     }
 
     async function showAdminDashboard() {
-      console.log('🔵 DÉBUT showAdminDashboard');
-      
       const { data: allProfiles, error: profilesError } = await supabase.from('profiles').select('*');
       const { data: allLeads, error: leadsError } = await supabase.from('leads').select('*');
 
-      console.log('📊 PROFILES récupérés:', allProfiles);
-      console.log('📊 LEADS récupérés:', allLeads);
-
-      if (profilesError) console.error('❌ Erreur profiles:', profilesError);
-      if (leadsError) console.error('❌ Erreur leads:', leadsError);
+      // AFFICHER LES DONNÉES EN HAUT DE LA PAGE
+      let debugInfo = '';
+      debugInfo += `<div class="bg-red-900 text-white p-4 mb-4 rounded text-xs">`;
+      debugInfo += `<strong>DEBUG INFO:</strong><br>`;
+      debugInfo += `Profiles récupérés: ${allProfiles ? allProfiles.length : 0}<br>`;
+      debugInfo += `Leads récupérés: ${allLeads ? allLeads.length : 0}<br>`;
+      
+      if (allProfiles) {
+        debugInfo += `<br><strong>PROFILES:</strong><br>`;
+        allProfiles.forEach(p => {
+          debugInfo += `- ${p.name} (${p.role}) [ID: ${p.id.substring(0,8)}...]<br>`;
+        });
+      }
+      
+      if (allLeads) {
+        debugInfo += `<br><strong>LEADS:</strong><br>`;
+        allLeads.forEach(l => {
+          debugInfo += `- ${l.client_name} → referrer_id: ${l.referrer_id ? l.referrer_id.substring(0,8) + '...' : 'NULL'}<br>`;
+        });
+      }
+      
+      debugInfo += `</div>`;
 
       const profileMap = {};
       if (allProfiles) {
         allProfiles.forEach(p => {
-          console.log(`➕ Ajout au map: ${p.id} → ${p.name}`);
           profileMap[p.id] = p;
         });
       }
 
-      console.log('🗺️ PROFILE MAP FINAL:', profileMap);
-
       const referrers = allProfiles ? allProfiles.filter(p => p.role === 'referrer') : [];
       const total = allLeads ? allLeads.reduce((s, l) => s + (l.referrer_commission || 0), 0) : 0;
-
-      console.log('📈 Stats - Referrers:', referrers.length, 'Total:', total);
-
-      // Pour chaque lead, logger ce qui se passe
-      if (allLeads) {
-        allLeads.forEach(lead => {
-          const ref = profileMap[lead.referrer_id];
-          console.log(`🔎 Lead "${lead.client_name}":`, {
-            referrer_id: lead.referrer_id,
-            profile_trouvé: ref ? 'OUI' : 'NON',
-            nom: ref ? ref.name : 'N/A'
-          });
-        });
-      }
 
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen">
@@ -213,6 +210,7 @@
             </div>
           </nav>
           <div class="max-w-7xl mx-auto p-8">
+            ${debugInfo}
             <div class="grid md:grid-cols-3 gap-6 mb-8">
               <div class="bg-gray-800 rounded-xl p-6">
                 <div class="text-sm text-gray-400">Apporteurs</div>
@@ -261,7 +259,6 @@
       `;
     }
 
-    window.addLead = () => alert('Fonction à venir');
     window.showAuthPage = showAuthPage;
     window.logout = async () => {
       await supabase.auth.signOut();
