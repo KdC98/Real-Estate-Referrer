@@ -16,13 +16,13 @@
     const supabaseUrl = 'https://cgizcgwhwxswvoodqver.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MzE0ODEsImV4cCI6MjA0NDUwNzQ4MX0.LBjJyx8RYqrE-kkerman7tLE_3y7c7vT2VD6vZYIqmZU';
     
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
     let currentProfile = null;
 
     async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session } } = await supabaseClient.auth.getSession();
       
       if (session) {
         currentUser = session.user;
@@ -38,7 +38,7 @@
     }
 
     async function loadProfile() {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseClient
         .from('profiles')
         .select('*')
         .eq('id', currentUser.id)
@@ -155,7 +155,7 @@
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
           email,
           password
         });
@@ -227,7 +227,7 @@
           return;
         }
 
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await supabaseClient.auth.signUp({
           email,
           password,
           options: {
@@ -275,7 +275,7 @@
         e.preventDefault();
         const email = document.getElementById('resetEmail').value;
 
-        const { error } = await supabase.auth.resetPasswordForEmail(email);
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
 
         if (error) {
           alert('Erreur: ' + error.message);
@@ -287,14 +287,14 @@
     }
 
     async function logout() {
-      await supabase.auth.signOut();
+      await supabaseClient.auth.signOut();
       currentUser = null;
       currentProfile = null;
       showLandingPage();
     }
 
     async function showReferrerDashboard() {
-      const { data: leads } = await supabase
+      const { data: leads } = await supabaseClient
         .from('leads')
         .select('*')
         .eq('referrer_id', currentUser.id)
@@ -395,7 +395,6 @@
           </div>
         </div>
 
-        <!-- Modal Ajouter un lead -->
         <div id="addLeadModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
           <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-gray-800">
             <div class="flex justify-between items-center mb-4">
@@ -550,7 +549,7 @@
             leadData.annual_rent = parseFloat(annualRent);
           }
           
-          const { error } = await supabase
+          const { error } = await supabaseClient
             .from('leads')
             .insert([leadData]);
           
@@ -579,12 +578,12 @@
     };
 
     async function showAdminDashboard() {
-      const { data: allLeads } = await supabase
+      const { data: allLeads } = await supabaseClient
         .from('leads')
         .select('*')
         .order('created_at', { ascending: false });
 
-      const { data: allProfiles } = await supabase
+      const { data: allProfiles } = await supabaseClient
         .from('profiles')
         .select('*');
 
@@ -664,6 +663,9 @@
                                            (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' AED/an' : '-') :
                                            (lead.budget ? lead.budget.toLocaleString() + ' AED' : '-');
                       
+                      const isRental = lead.lead_type === 'rent_landlord' || lead.lead_type === 'rent_tenant';
+                      const buttonText = isRental ? 'Marquer loué' : 'Marquer vendu';
+                      
                       return `
                         <tr class="hover:bg-gray-700">
                           <td class="px-6 py-4 text-gray-300">${referrerName}</td>
@@ -686,7 +688,7 @@
                           <td class="px-6 py-4">
                             ${(lead.status === 'vendu' || lead.status === 'loué') ? 
                               `<span class="text-green-400 text-sm">${(lead.referrer_commission?.toLocaleString() || 0)} AED</span>` : 
-                              `<button onclick="markAsSold(${lead.id}, '${lead.lead_type}')" class="text-yellow-500 hover:text-yellow-400 text-sm">Marquer vendu</button>`
+                              `<button onclick="markAsCompleted(${lead.id}, '${lead.lead_type}')" class="text-yellow-500 hover:text-yellow-400 text-sm">${buttonText}</button>`
                             }
                           </td>
                         </tr>
@@ -702,7 +704,7 @@
     }
 
     async function updateLeadStatus(leadId, newStatus) {
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from('leads')
         .update({ status: newStatus })
         .eq('id', leadId);
@@ -713,16 +715,21 @@
       }
     }
 
-    async function markAsSold(leadId, leadType) {
+    async function markAsCompleted(leadId, leadType) {
+      const isRental = leadType === 'rent_landlord' || leadType === 'rent_tenant';
+      
       let priceLabel = '';
       let commissionRate = 0;
+      let newStatus = '';
       
-      if (leadType === 'sale_buyer' || leadType === 'sale_seller') {
-        priceLabel = 'Prix de vente final (AED):';
-        commissionRate = 0.02;
-      } else if (leadType === 'rent_landlord' || leadType === 'rent_tenant') {
+      if (isRental) {
         priceLabel = 'Loyer annuel du contrat (AED):';
         commissionRate = 0.05;
+        newStatus = 'loué';
+      } else {
+        priceLabel = 'Prix de vente final (AED):';
+        commissionRate = 0.02;
+        newStatus = 'vendu';
       }
       
       const price = prompt(priceLabel);
@@ -733,10 +740,10 @@
       const agentCommission = totalCommission * 0.5;
       const referrerCommission = agentCommission * 0.2;
 
-      const { error } = await supabase
+      const { error } = await supabaseClient
         .from('leads')
         .update({
-          status: 'vendu',
+          status: newStatus,
           sale_price: priceValue,
           agent_commission: agentCommission,
           referrer_commission: referrerCommission,
@@ -758,7 +765,7 @@
     window.showReset = showReset;
     window.logout = logout;
     window.updateLeadStatus = updateLeadStatus;
-    window.markAsSold = markAsSold;
+    window.markAsCompleted = markAsCompleted;
 
     init();
   </script>
