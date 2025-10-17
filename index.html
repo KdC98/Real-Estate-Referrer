@@ -716,13 +716,13 @@
           const fileName = `${currentUser.id}/contract_${Date.now()}.pdf`;
           
           const { data: uploadData, error: uploadError } = await supabaseClient.storage
-            .from('contracts')
+            .from('Contracts')
             .upload(fileName, file);
 
           if (uploadError) throw uploadError;
 
           const { data: urlData } = supabaseClient.storage
-            .from('contracts')
+            .from('Contracts')
             .getPublicUrl(fileName);
 
           const { error: updateError } = await supabaseClient
@@ -817,13 +817,13 @@
           const fileName = `${currentUser.id}/contract_${Date.now()}.pdf`;
           
           const { data: uploadData, error: uploadError } = await supabaseClient.storage
-            .from('contracts')
+            .from('Contracts')
             .upload(fileName, file);
 
           if (uploadError) throw uploadError;
 
           const { data: urlData } = supabaseClient.storage
-            .from('contracts')
+            .from('Contracts')
             .getPublicUrl(fileName);
 
           const { error: updateError } = await supabaseClient
