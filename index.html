@@ -19,22 +19,30 @@
     let currentUser = null;
     let currentProfile = null;
 
-    async function init() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      
-      if (session) {
-        currentUser = session.user;
-        await loadProfile();
-        if (currentProfile && currentProfile.role === 'admin') {
-          showAdminDashboard();
-        } else if (currentProfile) {
-          showReferrerDashboard();
-        }
-      } else {
-        showLandingPage();
-      }
+   async function init() {
+  // Vérifier si c'est un lien de réinitialisation de mot de passe
+  const urlParams = new URLSearchParams(window.location.search);
+  const isRecovery = urlParams.get('type') === 'recovery';
+  
+  if (isRecovery) {
+    showPasswordReset();
+    return;
+  }
+  
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  
+  if (session) {
+    currentUser = session.user;
+    await loadProfile();
+    if (currentProfile && currentProfile.role === 'admin') {
+      showAdminDashboard();
+    } else if (currentProfile) {
+      showReferrerDashboard();
     }
-
+  } else {
+    showLandingPage();
+  }
+}
     async function loadProfile() {
       try {
         const { data, error } = await supabaseClient
