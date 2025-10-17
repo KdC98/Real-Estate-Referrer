@@ -27,9 +27,9 @@
       if (session) {
         currentUser = session.user;
         await loadProfile();
-        if (currentProfile.role === 'admin') {
+        if (currentProfile && currentProfile.role === 'admin') {
           showAdminDashboard();
-        } else {
+        } else if (currentProfile) {
           showReferrerDashboard();
         }
       } else {
@@ -38,31 +38,50 @@
     }
 
     async function loadProfile() {
-  try {
-    const { data, error } = await supabaseClient
-      .from('profiles')
-      .select('*')
-      .eq('id', currentUser.id)
-      .single();
-    
-    if (error) {
-      console.error('Erreur chargement profil:', error);
-      return;
+      try {
+        const { data, error } = await supabaseClient
+          .from('profiles')
+          .select('*')
+          .eq('id', currentUser.id)
+          .single();
+        
+        if (error && error.code !== 'PGRST116') {
+          console.error('Erreur chargement profil:', error);
+          alert('Erreur lors du chargement du profil. Création en cours...');
+        }
+        
+        if (data) {
+          currentProfile = data;
+        } else {
+          console.log('Profil non trouvé, création automatique...');
+          
+          const { data: newProfile, error: createError } = await supabaseClient
+            .from('profiles')
+            .insert([{
+              id: currentUser.id,
+              name: currentUser.user_metadata?.name || 'Utilisateur',
+              phone: currentUser.user_metadata?.phone || '',
+              role: currentUser.user_metadata?.role || 'referrer'
+            }])
+            .select()
+            .single();
+          
+          if (createError) {
+            console.error('Erreur création profil:', createError);
+            alert('Erreur lors de la création du profil. Veuillez réessayer ou contacter le support.');
+            logout();
+            return;
+          }
+          
+          currentProfile = newProfile;
+          console.log('Profil créé avec succès:', currentProfile);
+        }
+      } catch (err) {
+        console.error('Erreur:', err);
+        alert('Erreur lors du chargement du profil');
+        logout();
+      }
     }
-    
-    if (data) {
-      currentProfile = data;
-    } else {
-      console.error('Aucun profil trouvable');
-      alert('Erreur : Profil introuvable.');
-      logout();
-    }
-  } catch (err) {
-    console.error('Erreur:', err);
-    alert('Erreur lors du chargement du profil');
-    logout();
-  }
-}
 
     function showLandingPage() {
       document.getElementById('app').innerHTML = `
@@ -180,9 +199,9 @@
         } else {
           currentUser = data.user;
           await loadProfile();
-          if (currentProfile.role === 'admin') {
+          if (currentProfile && currentProfile.role === 'admin') {
             showAdminDashboard();
-          } else {
+          } else if (currentProfile) {
             showReferrerDashboard();
           }
         }
