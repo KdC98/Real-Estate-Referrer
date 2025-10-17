@@ -38,16 +38,31 @@
     }
 
     async function loadProfile() {
-      const { data, error } = await supabaseClient
-        .from('profiles')
-        .select('*')
-        .eq('id', currentUser.id)
-        .single();
-      
-      if (data) {
-        currentProfile = data;
-      }
+  try {
+    const { data, error } = await supabaseClient
+      .from('profiles')
+      .select('*')
+      .eq('id', currentUser.id)
+      .single();
+    
+    if (error) {
+      console.error('Erreur chargement profil:', error);
+      return;
     }
+    
+    if (data) {
+      currentProfile = data;
+    } else {
+      console.error('Aucun profil trouvable');
+      alert('Erreur : Profil introuvable.');
+      logout();
+    }
+  } catch (err) {
+    console.error('Erreur:', err);
+    alert('Erreur lors du chargement du profil');
+    logout();
+  }
+}
 
     function showLandingPage() {
       document.getElementById('app').innerHTML = `
