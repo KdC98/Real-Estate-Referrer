@@ -1,8 +1,8 @@
 # 📋 README - Real Estate Referrer Application
 
-**Dernière mise à jour** : 17 octobre 2025  
-**Version** : 4.0.0  
-**Status** : 🟢 **Production - Entièrement Fonctionnel**
+**Dernière mise à jour** : 18 octobre 2025  
+**Version** : 4.1.0  
+**Status** : 🟢 **Production - Entièrement Fonctionnel et Sécurisé**
 
 ---
 
@@ -37,9 +37,9 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 
 ---
 
-## ✅ ÉTAT ACTUEL DU PROJET (17 octobre 2025)
+## ✅ ÉTAT ACTUEL DU PROJET (18 octobre 2025)
 
-### 🎯 Fonctionnalités 100% Complètes
+### 🎯 Fonctionnalités 100% Complètes et Testées
 
 #### 1. Authentification & Sécurité ✅
 - ✅ Système d'authentification sécurisé Supabase Auth
@@ -51,9 +51,10 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 - ✅ Page de changement de mot de passe
 - ✅ Déconnexion sécurisée avec nettoyage de session
 - ✅ Création automatique du profil utilisateur
+- ✅ **RLS (Row Level Security) ACTIVÉ** avec politiques optimisées
 
 #### 2. Système de Validation de Contrat ✅
-**Flux complet implémenté :**
+**Flux complet implémenté et testé :**
 1. Nouvel apporteur s'inscrit → Status `pending`
 2. Dashboard bloqué → Message "Contract Required"
 3. Télécharge le template → Bouton "Download Contract Template"
@@ -61,15 +62,16 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 5. Upload le PDF signé → Formulaire d'upload (max 5MB)
 6. Status change → `uploaded` (en attente validation admin)
 7. Admin reçoit notification → Badge rouge sur onglet "Contracts"
-8. Admin voit le contrat → Bouton "View" ouvre le PDF
+8. Admin voit le contrat → Bouton "View" télécharge le PDF
 9. Admin valide ou rejette → Boutons "Validate" / "Reject"
 10. Si validé → Apporteur peut ajouter des leads
 11. Si rejeté → Apporteur doit re-uploader
 
 **Sécurité Storage :**
 - ✅ Bucket Contracts (privé)
-- ✅ Policies RLS configurées
+- ✅ Policies RLS configurées et testées
 - ✅ Fichiers stockés par UUID : `{user_id}/contract_{timestamp}.pdf`
+- ✅ **Téléchargement via blob (compatible Safari)**
 
 #### 3. 4 Types de Leads ✅
 L'application gère 4 types de leads distincts :
@@ -88,9 +90,9 @@ L'application gère 4 types de leads distincts :
 - ✅ Dropdown adapté selon le type de lead
 - ✅ Badges colorés pour chaque statut
 - ✅ Boutons adaptés ("Mark Sold" / "Mark Rented")
+- ✅ **Affichage correct des commissions pour leads vendus/loués**
 
 #### 5. Système de Commissions ✅
-
 **Structure :**
 ```
 Transaction immobilière (vente ou location)
@@ -116,7 +118,6 @@ Transaction immobilière (vente ou location)
 - **Locations** : 7-14 jours après signature du Tenancy Contract
 
 #### 6. Base de données PostgreSQL ✅
-
 **Table profiles :**
 ```sql
 - id UUID PRIMARY KEY (référence auth.users)
@@ -157,10 +158,9 @@ Transaction immobilière (vente ou location)
 - ✅ Policies de sécurité configurées et testées
 - ✅ Upload de fichiers PDF (max 5MB)
 - ✅ Lecture sécurisée par UUID
-- ✅ Fonction viewContract pour l'admin
+- ✅ **Téléchargement via blob (compatible Safari)**
 
 #### 8. Interface Utilisateur 100% en Français ✅
-
 **Landing Page :**
 - Design premium "Dubai Real Estate"
 - Gradient bleu/or élégant
@@ -188,16 +188,15 @@ Transaction immobilière (vente ou location)
 - **Onglet "Leads"** :
   - Table de tous les leads
   - Dropdown pour changer le statut
-  - Bouton adapté ("Mark Sold" ou "Mark Rented")
+  - **Affichage correct** : Commission en vert pour leads vendus/loués, boutons pour leads actifs
   - Calcul automatique des commissions
 - **Onglet "Contracts"** :
   - Badge de notification pour contrats en attente
   - Liste de tous les apporteurs avec leur statut de contrat
   - Boutons "View" / "Validate" / "Reject"
-  - Affichage des contrats uploadés
+  - **Téléchargement PDF fonctionnel (compatible Safari)**
 
 #### 9. Pages Juridiques Complètes ✅
-
 **Toutes les pages sont en français avec design harmonisé :**
 
 - ✅ **`how-it-works.html`** - Comment ça marche
@@ -258,7 +257,7 @@ Transaction immobilière (vente ou location)
 
 ```
 Real-Estate-Referrer/ (GitHub Repository)
-├── index.html                  ← Application principale (SPA) - FR
+├── index.html                  ← Application principale (SPA) - FR ✅
 ├── contract-template.html      ← Template de contrat téléchargeable
 ├── how-it-works.html          ← Page "Comment ça marche" - FR ✅
 ├── terms.html                 ← CGU - FR ✅
@@ -268,23 +267,34 @@ Real-Estate-Referrer/ (GitHub Repository)
 
 ---
 
-## ⚠️ POINTS D'ATTENTION
+## 🔒 Sécurité - État Actuel
 
-### 🔓 Row Level Security (RLS) - À activer avant lancement public
+### ✅ Row Level Security (RLS) - ACTIVÉ
+**Status** : ✅ **RLS activé avec politiques fonctionnelles**
 
-**Status actuel** : ⚠️ RLS désactivé sur les tables `profiles` et `leads`
+**Configuration actuelle :**
+- ✅ Fonction `is_admin()` créée avec SECURITY DEFINER
+- ✅ RLS activé sur les tables `profiles` et `leads`
+- ✅ Politiques configurées et testées :
+  - Users read own profile
+  - Admins read all profiles
+  - Users update own profile
+  - Admins update all profiles
+  - Referrers read own leads
+  - Admins read all leads
+  - Referrers create own leads
+  - Admins manage all leads
 
-**Pourquoi :**
-- Les politiques initiales causaient des problèmes de récursion
-- Désactivation temporaire pour assurer le bon fonctionnement
-- Le Storage est sécurisé avec des policies fonctionnelles
+**Storage Security :**
+- ✅ Bucket "Contracts" privé
+- ✅ Policies RLS configurées pour l'upload et la lecture
+- ✅ Téléchargement sécurisé via blob
 
 **Impact :**
 - ✅ L'application fonctionne parfaitement
-- ✅ Le Storage est sécurisé (policies actives)
-- ⚠️ Pour production publique, RLS sur les tables SQL est recommandé
-
-**Solution à implémenter avant lancement public** : Voir section "Next Steps"
+- ✅ Base de données sécurisée
+- ✅ Storage sécurisé
+- ✅ Prêt pour production
 
 ---
 
@@ -330,73 +340,16 @@ Dans Supabase → Authentication → URL Configuration :
 
 ---
 
-### 🟡 PRIORITÉ 2 - Sécurité Base de Données (1-2 heures)
-
-#### Réactiver RLS avec fonction PostgreSQL
-
-```sql
--- Créer une fonction qui lit sans RLS
-CREATE OR REPLACE FUNCTION public.is_admin()
-RETURNS boolean AS $$
-BEGIN
-  RETURN EXISTS (
-    SELECT 1 FROM public.profiles
-    WHERE id = auth.uid() AND role = 'admin'
-  );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Réactiver RLS
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
-
--- Politiques pour profiles
-CREATE POLICY "Users read own profile"
-ON profiles FOR SELECT
-TO authenticated
-USING (auth.uid() = id OR is_admin());
-
-CREATE POLICY "Users update own profile"
-ON profiles FOR UPDATE
-TO authenticated
-USING (auth.uid() = id);
-
-CREATE POLICY "Admins read all profiles"
-ON profiles FOR SELECT
-TO authenticated
-USING (is_admin());
-
--- Politiques pour leads
-CREATE POLICY "Referrers read own leads"
-ON leads FOR SELECT
-TO authenticated
-USING (auth.uid() = referrer_id OR is_admin());
-
-CREATE POLICY "Referrers create own leads"
-ON leads FOR INSERT
-TO authenticated
-WITH CHECK (auth.uid() = referrer_id);
-
-CREATE POLICY "Admins manage all leads"
-ON leads FOR ALL
-TO authenticated
-USING (is_admin());
-```
-
-#### Tester après activation :
-- [ ] Connexion admin
-- [ ] Connexion apporteur
-- [ ] Ajout de lead (4 types)
-- [ ] Modification de statut
-- [ ] Calcul de commission
-- [ ] Affichage des noms d'apporteurs
-- [ ] Upload de contrat
-- [ ] Validation de contrat
+### 🟡 PRIORITÉ 2 - Sécurité Avancée (1 heure)
 
 #### Changer le mot de passe admin :
 - [ ] Utiliser un mot de passe fort (12+ caractères)
 - [ ] Le stocker dans un gestionnaire de mots de passe
 - [ ] Ne jamais le partager
+
+#### Configurer les alertes Supabase :
+- [ ] Activer les notifications pour tentatives de connexion suspectes
+- [ ] Configurer des limites de taux (rate limiting)
 
 ---
 
@@ -412,12 +365,12 @@ USING (is_admin());
    - Créer des fichiers JSON de traduction
 
 2. **Structure des fichiers de traduction**
-   ```
-   /translations/
-   ├── fr.json  (déjà implémenté dans le code)
-   ├── en.json  (à créer)
-   └── ar.json  (à créer)
-   ```
+```
+/translations/
+├── fr.json (déjà implémenté dans le code)
+├── en.json (à créer)
+└── ar.json (à créer)
+```
 
 3. **Pages à traduire :**
    - [ ] `index.html` (Landing page + dashboards)
@@ -438,7 +391,6 @@ USING (is_admin());
    - Ajustements CSS pour l'alignement
 
 **Exemple d'implémentation :**
-
 ```javascript
 // translations.js
 const translations = {
@@ -452,7 +404,6 @@ const translations = {
       totalEarnings: "Gains Totaux",
       activeLeads: "Leads Actifs"
     }
-    // ... etc
   },
   en: {
     nav: {
@@ -464,7 +415,6 @@ const translations = {
       totalEarnings: "Total Earnings",
       activeLeads: "Active Leads"
     }
-    // ... etc
   },
   ar: {
     nav: {
@@ -476,30 +426,8 @@ const translations = {
       totalEarnings: "إجمالي الأرباح",
       activeLeads: "العملاء النشطون"
     }
-    // ... etc
   }
 };
-
-// Utilisation
-function t(key) {
-  const lang = localStorage.getItem('language') || 'fr';
-  const keys = key.split('.');
-  let value = translations[lang];
-  for (const k of keys) {
-    value = value[k];
-  }
-  return value;
-}
-```
-
-**Ajout du sélecteur de langue dans le header :**
-
-```html
-<div class="language-selector">
-  <button onclick="changeLanguage('fr')" class="lang-btn">🇫🇷 FR</button>
-  <button onclick="changeLanguage('en')" class="lang-btn">🇬🇧 EN</button>
-  <button onclick="changeLanguage('ar')" class="lang-btn">🇦🇪 AR</button>
-</div>
 ```
 
 ---
@@ -563,6 +491,28 @@ function t(key) {
 
 ---
 
+### 🟢 PRIORITÉ 8 - Fonctionnalités Avancées (Optionnel)
+
+#### Notifications par Email
+- [ ] Email de bienvenue après inscription
+- [ ] Email de confirmation après upload de contrat
+- [ ] Email de validation/rejet de contrat
+- [ ] Email de notification pour nouveau lead (admin)
+- [ ] Email de notification de vente (apporteur)
+
+#### Dashboard Analytics
+- [ ] Graphiques de performance (Chart.js)
+- [ ] Statistiques par mois/année
+- [ ] Top apporteurs
+- [ ] Taux de conversion des leads
+
+#### Système de Parrainage
+- [ ] Code de parrainage unique pour chaque apporteur
+- [ ] Bonus pour parrainage d'autres apporteurs
+- [ ] Tableau de bord des filleuls
+
+---
+
 ## 📝 Notes Techniques
 
 ### Configuration Supabase
@@ -581,20 +531,19 @@ Type accepté: application/pdf
 ```
 
 ### Commandes SQL Utiles
-
 ```sql
 -- Voir tous les profils
 SELECT * FROM profiles;
 
 -- Voir tous les leads avec noms d'apporteurs
-SELECT
+SELECT 
   l.*,
   p.name as referrer_name
 FROM leads l
 LEFT JOIN profiles p ON l.referrer_id = p.id;
 
 -- Statistiques globales
-SELECT
+SELECT 
   COUNT(*) as total_leads,
   SUM(CASE WHEN status = 'vendu' THEN 1 ELSE 0 END) as ventes,
   SUM(CASE WHEN status = 'loué' THEN 1 ELSE 0 END) as locations,
@@ -602,7 +551,7 @@ SELECT
 FROM leads;
 
 -- Statistiques par apporteur
-SELECT
+SELECT 
   p.name,
   p.contract_status,
   COUNT(l.id) as total_leads,
@@ -619,7 +568,7 @@ ORDER BY total_commission DESC;
 SELECT name, contract_status, contract_file_url, created_at
 FROM profiles
 WHERE role = 'referrer'
-AND contract_status = 'uploaded'
+  AND contract_status = 'uploaded'
 ORDER BY created_at DESC;
 ```
 
@@ -665,8 +614,8 @@ ORDER BY created_at DESC;
 
 **17 octobre 2025 - Matin**
 - **AJOUT DES 4 TYPES DE LEADS** ✅
-  - 2 types de vente (acheteur/vendeur)
-  - 2 types de location (propriétaire/locataire)
+- 2 types de vente (acheteur/vendeur)
+- 2 types de location (propriétaire/locataire)
 - **AJOUT STATUT "LOUÉ"** ✅
 - **CALCULS AUTOMATIQUES** ✅
 - Configuration Supabase Storage (bucket Contracts)
@@ -679,15 +628,25 @@ ORDER BY created_at DESC;
 
 **17 octobre 2025 - Soir**
 - **CRÉATION PAGES JURIDIQUES COMPLÈTES** ✅
-  - `how-it-works.html` avec FAQ détaillée
-  - `terms.html` avec CGU complets (13 articles)
-  - `privacy.html` avec politique RGPD (13 sections)
+- `how-it-works.html` avec FAQ détaillée
+- `terms.html` avec CGU complets (13 articles)
+- `privacy.html` avec politique RGPD (13 sections)
 - **AJOUT FOOTER SUR TOUTES LES PAGES** ✅
 - **TRADUCTION 100% FRANÇAIS** ✅
 - **CORRECTION DÉLAIS DE PAIEMENT** ✅
-  - Cohérence totale entre toutes les pages
-  - Délais réalistes : 45-60j (ventes), 7-14j (locations)
+- Cohérence totale entre toutes les pages
+- Délais réalistes : 45-60j (ventes), 7-14j (locations)
 - **Version 4.0.0 - PRODUCTION COMPLÈTE** 🎊🎉
+
+**18 octobre 2025 - Matin**
+- **RÉACTIVATION RLS AVEC POLITIQUES OPTIMISÉES** ✅
+- Fonction `is_admin()` avec SECURITY DEFINER
+- Politiques RLS testées et fonctionnelles
+- **CORRECTION VISUALISATION PDF (SAFARI)** ✅
+- Téléchargement via blob (compatible tous navigateurs)
+- **CORRECTION AFFICHAGE COMMISSIONS** ✅
+- Logique corrigée : commission pour vendus/loués, boutons pour actifs
+- **Version 4.1.0 - PRODUCTION SÉCURISÉE** 🎊✅
 
 ---
 
@@ -709,16 +668,18 @@ ORDER BY created_at DESC;
 12. ✅ **Footer cohérent** sur toutes les pages
 13. ✅ **Interface 100% en français**
 14. ✅ **Délais de paiement cohérents** partout
+15. ✅ **RLS activé** avec politiques testées
+16. ✅ **Téléchargement PDF fonctionnel** (compatible Safari)
+17. ✅ **Affichage correct des commissions** dans dashboard admin
 
 ### ⏳ À faire avant lancement public
 
 1. ⏰ **Configurer DNS** → Vercel (quand domaine actif)
 2. 🌐 **Ajouter traductions** EN + AR (optionnel mais recommandé)
-3. 🔒 **Réactiver RLS** sur tables SQL (sécurité)
-4. 🏛️ **Obtenir licences RERA**
-5. 👥 **Phase de tests bêta** (2-3 apporteurs)
-6. 📧 **Email professionnel**
-7. 🎨 **Personnalisation** (logo, nom agence)
+3. 🏛️ **Obtenir licences RERA**
+4. 👥 **Phase de tests bêta** (2-3 apporteurs)
+5. 📧 **Email professionnel**
+6. 🎨 **Personnalisation** (logo, nom agence)
 
 ### 🚀 Prêt pour
 
@@ -728,6 +689,7 @@ ORDER BY created_at DESC;
 - ✅ Suivi des commissions
 - ✅ Validation de contrats
 - ✅ Présentation professionnelle du programme
+- ✅ **Production avec données réelles**
 
 ---
 
@@ -735,9 +697,9 @@ ORDER BY created_at DESC;
 
 Pour toute question sur le projet, consultez cette documentation ou contactez le développeur via GitHub.
 
-**Dernière mise à jour** : 17 octobre 2025 - 21h00  
-**Version** : 4.0.0  
-**Status** : 🟢 **Production - Système complet, cohérent et professionnel**
+**Dernière mise à jour** : 18 octobre 2025 - 10h00  
+**Version** : 4.1.0  
+**Status** : 🟢 **Production - Système complet, sécurisé et professionnel**
 
 ---
 
@@ -746,17 +708,27 @@ Pour toute question sur le projet, consultez cette documentation ou contactez le
 ### Pour tester l'application :
 
 1. **Aller sur** : https://real-estate-referrer-3kp6.vercel.app
+
 2. **Explorer les pages** :
    - Landing page avec footer
    - Comment ça marche (FAQ)
    - CGU
    - Politique de confidentialité
+
 3. **Créer un compte apporteur** → Sign Up
+
 4. **Télécharger le contrat** → Suivre les instructions
+
 5. **Uploader le contrat signé** → PDF max 5MB
+
 6. **Se connecter en admin** → admin@realestate-referrer.com
+
 7. **Valider le contrat** → Onglet "Contracts" → Validate
+
 8. **Ajouter des leads** → Tester les 4 types
+
 9. **Marquer une vente/location** → Voir le calcul de commission
+
+10. **Télécharger un contrat** → Tester la visualisation PDF
 
 **🎉 Bon test !**
