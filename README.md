@@ -1,8 +1,8 @@
 # 📋 README - Real Estate Referrer Application
 
 **Dernière mise à jour** : 17 octobre 2025  
-**Version** : 3.1.0  
-**Status** : 🟢 **En production - Pleinement fonctionnel**
+**Version** : 4.0.0  
+**Status** : 🟢 **Production - Entièrement Fonctionnel**
 
 ---
 
@@ -41,7 +41,7 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 
 ### 🎯 Fonctionnalités 100% Complètes
 
-#### 1. **Authentification & Sécurité** ✅
+#### 1. Authentification & Sécurité ✅
 - ✅ Système d'authentification sécurisé Supabase Auth
 - ✅ Mots de passe hashés automatiquement (bcrypt)
 - ✅ Sessions sécurisées avec JWT tokens
@@ -52,30 +52,26 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 - ✅ Déconnexion sécurisée avec nettoyage de session
 - ✅ Création automatique du profil utilisateur
 
-#### 2. **Système de Validation de Contrat** ✅ NOUVEAU !
+#### 2. Système de Validation de Contrat ✅
 **Flux complet implémenté :**
-
-1. **Nouvel apporteur s'inscrit** → Status `pending`
-2. **Dashboard bloqué** → Message "Contract Required"
-3. **Télécharge le template** → Bouton "Download Contract Template"
-4. **Signe le contrat** → Imprime, remplit, signe
-5. **Upload le PDF signé** → Formulaire d'upload (max 5MB)
-6. **Status change** → `uploaded` (en attente validation admin)
-7. **Admin reçoit notification** → Badge rouge sur onglet "Contracts"
-8. **Admin voit le contrat** → Bouton "View" ouvre le PDF
-9. **Admin valide ou rejette** → Boutons "Validate" / "Reject"
-10. **Si validé** → Apporteur peut ajouter des leads
-11. **Si rejeté** → Apporteur doit re-uploader
+1. Nouvel apporteur s'inscrit → Status `pending`
+2. Dashboard bloqué → Message "Contract Required"
+3. Télécharge le template → Bouton "Download Contract Template"
+4. Signe le contrat → Imprime, remplit, signe
+5. Upload le PDF signé → Formulaire d'upload (max 5MB)
+6. Status change → `uploaded` (en attente validation admin)
+7. Admin reçoit notification → Badge rouge sur onglet "Contracts"
+8. Admin voit le contrat → Bouton "View" ouvre le PDF
+9. Admin valide ou rejette → Boutons "Validate" / "Reject"
+10. Si validé → Apporteur peut ajouter des leads
+11. Si rejeté → Apporteur doit re-uploader
 
 **Sécurité Storage :**
-- ✅ Bucket `Contracts` (privé)
-- ✅ Policies RLS configurées :
-  - Apporteurs peuvent uploader leur contrat uniquement
-  - Apporteurs peuvent lire leur propre contrat
-  - Admins peuvent lire tous les contrats
+- ✅ Bucket Contracts (privé)
+- ✅ Policies RLS configurées
 - ✅ Fichiers stockés par UUID : `{user_id}/contract_{timestamp}.pdf`
 
-#### 3. **4 Types de Leads** ✅
+#### 3. 4 Types de Leads ✅
 L'application gère 4 types de leads distincts :
 
 **Ventes :**
@@ -86,14 +82,14 @@ L'application gère 4 types de leads distincts :
 - 🏢 **Rental - Landlord** : Cherche à louer son bien
 - 🔑 **Rental - Tenant** : Client cherche à louer
 
-#### 4. **Statuts Distincts** ✅
+#### 4. Statuts Distincts ✅
 - **Pour les ventes** : nouveau → visite → offre → **vendu**
 - **Pour les locations** : nouveau → visite → offre → **loué**
 - ✅ Dropdown adapté selon le type de lead
 - ✅ Badges colorés pour chaque statut
 - ✅ Boutons adaptés ("Mark Sold" / "Mark Rented")
 
-#### 5. **Système de Commissions** ✅
+#### 5. Système de Commissions ✅
 
 **Structure :**
 ```
@@ -115,9 +111,13 @@ Transaction immobilière (vente ou location)
 - Villa vendue 5M AED → Apporteur : **10,000 AED**
 - Appartement loué 150K AED/an → Apporteur : **750 AED**
 
-#### 6. **Base de données PostgreSQL** ✅
+**Délais de paiement :**
+- **Ventes** : 45-60 jours après émission du Title Deed
+- **Locations** : 7-14 jours après signature du Tenancy Contract
 
-**Table `profiles` :**
+#### 6. Base de données PostgreSQL ✅
+
+**Table profiles :**
 ```sql
 - id UUID PRIMARY KEY (référence auth.users)
 - name TEXT
@@ -129,7 +129,7 @@ Transaction immobilière (vente ou location)
 - contract_file_url TEXT
 ```
 
-**Table `leads` :**
+**Table leads :**
 ```sql
 - id BIGSERIAL PRIMARY KEY
 - referrer_id UUID (référence auth.users)
@@ -149,24 +149,25 @@ Transaction immobilière (vente ou location)
 ```
 
 **Trigger automatique :**
-- Création automatique d'un profil dans `profiles` lors de l'inscription
-- Liaison automatique avec `auth.users`
+- Création automatique d'un profil dans profiles lors de l'inscription
+- Liaison automatique avec auth.users
 
-#### 7. **Supabase Storage** ✅
+#### 7. Supabase Storage ✅
 - ✅ Bucket "Contracts" créé (PRIVÉ)
 - ✅ Policies de sécurité configurées et testées
 - ✅ Upload de fichiers PDF (max 5MB)
 - ✅ Lecture sécurisée par UUID
-- ✅ Fonction `viewContract` pour l'admin
+- ✅ Fonction viewContract pour l'admin
 
-#### 8. **Interface Utilisateur** ✅
+#### 8. Interface Utilisateur 100% en Français ✅
 
 **Landing Page :**
 - Design premium "Dubai Real Estate"
 - Gradient bleu/or élégant
 - Call-to-action clair
 - Exemples de gains (6K, 10K, 20K AED)
-- Stats du programme (20%, 24/7, 48h)
+- Stats du programme (20%, 24/7, délais réalistes)
+- Footer avec liens juridiques
 - Responsive mobile
 
 **Dashboard Apporteur :**
@@ -189,11 +190,56 @@ Transaction immobilière (vente ou location)
   - Dropdown pour changer le statut
   - Bouton adapté ("Mark Sold" ou "Mark Rented")
   - Calcul automatique des commissions
-- **Onglet "Contracts"** (NOUVEAU !) :
+- **Onglet "Contracts"** :
   - Badge de notification pour contrats en attente
   - Liste de tous les apporteurs avec leur statut de contrat
   - Boutons "View" / "Validate" / "Reject"
   - Affichage des contrats uploadés
+
+#### 9. Pages Juridiques Complètes ✅
+
+**Toutes les pages sont en français avec design harmonisé :**
+
+- ✅ **`how-it-works.html`** - Comment ça marche
+  - 5 étapes pour devenir apporteur
+  - Exemples de gains concrets
+  - Critères d'un bon lead (qualifié vs non qualifié)
+  - Sécurité & Transparence (4 garanties)
+  - FAQ complète (10 questions/réponses)
+  - Délais de paiement réalistes et cohérents
+
+- ✅ **`terms.html`** - Conditions Générales d'Utilisation
+  - 13 articles complets
+  - Définitions claires
+  - Inscription et validation du contrat
+  - Programme de référencement (4 types de leads)
+  - Commissions détaillées (ventes + locations)
+  - Obligations de l'apporteur et de l'agent
+  - Propriété intellectuelle
+  - Données personnelles (RGPD/GDPR)
+  - Résiliation, Responsabilité
+  - Loi applicable (UAE)
+
+- ✅ **`privacy.html`** - Politique de Confidentialité
+  - 13 sections complètes
+  - Responsable du traitement
+  - Données collectées (4 catégories)
+  - Base légale et finalités (5 types)
+  - Partage des données (transparence totale)
+  - Sécurité (mesures techniques + organisationnelles)
+  - Conservation des données (durées légales)
+  - Cookies et technologies similaires
+  - Droits des utilisateurs (7 droits RGPD)
+  - Transferts internationaux
+  - Protection des mineurs
+  - Modifications et réclamations
+  - Contact
+
+- ✅ **Footer cohérent** sur toutes les pages avec liens vers :
+  - CGU
+  - Confidentialité
+  - Comment ça marche
+  - Contact (email)
 
 ---
 
@@ -212,12 +258,12 @@ Transaction immobilière (vente ou location)
 
 ```
 Real-Estate-Referrer/ (GitHub Repository)
-├── index.html                    ← Application principale (Single Page App)
-├── contract-template.html        ← Template de contrat téléchargeable
-├── how-it-works.html            ← Page "Comment ça marche" (à créer)
-├── terms.html                   ← CGU (à créer)
-├── privacy.html                 ← Politique de confidentialité (à créer)
-└── README.md                    ← Ce fichier
+├── index.html                  ← Application principale (SPA) - FR
+├── contract-template.html      ← Template de contrat téléchargeable
+├── how-it-works.html          ← Page "Comment ça marche" - FR ✅
+├── terms.html                 ← CGU - FR ✅
+├── privacy.html               ← Politique de confidentialité - FR ✅
+└── README.md                  ← Ce fichier
 ```
 
 ---
@@ -246,10 +292,8 @@ Real-Estate-Referrer/ (GitHub Repository)
 
 ### 🔴 PRIORITÉ 1 - Configuration Domaine (Quand actif chez OVH)
 
-**1. Configurer DNS sur OVH**
-
+#### 1. Configurer DNS sur OVH
 Créer ces enregistrements DNS :
-
 ```
 Type: A Record
 Host: @
@@ -262,21 +306,20 @@ Value: cname.vercel-dns.com
 TTL: Automatic
 ```
 
-**2. Configurer Vercel**
+#### 2. Configurer Vercel
 - Aller sur Vercel → Settings → Domains
 - Ajouter : `real-estate-referrer.com`
 - Ajouter : `www.real-estate-referrer.com`
 - Attendre la propagation DNS (10-30 min)
 
-**3. Mettre à jour Supabase**
-
+#### 3. Mettre à jour Supabase
 Dans Supabase → Authentication → URL Configuration :
 - **Site URL** : `https://real-estate-referrer.com`
 - **Redirect URLs** :
   - `https://real-estate-referrer.com/**`
   - `https://www.real-estate-referrer.com/**`
 
-**4. Tester**
+#### 4. Tester
 - [ ] Accès au site via le nouveau domaine
 - [ ] Connexion admin
 - [ ] Connexion apporteur
@@ -287,67 +330,9 @@ Dans Supabase → Authentication → URL Configuration :
 
 ---
 
-### 🟡 PRIORITÉ 2 - Documentation Juridique (1 semaine)
+### 🟡 PRIORITÉ 2 - Sécurité Base de Données (1-2 heures)
 
-#### 1. **Conditions Générales d'Utilisation (CGU)**
-
-**Créer le fichier `terms.html` avec :**
-
-**Sections obligatoires :**
-1. Définitions (Apporteur, Lead, Commission)
-2. Inscription et validation du contrat
-3. Programme de référencement
-4. Commissions (taux, délais, modalités)
-5. Obligations de l'apporteur (pas de démarchage, conformité RERA)
-6. Obligations de l'agent
-7. Propriété intellectuelle
-8. Résiliation
-9. Responsabilité
-10. Données personnelles (RGPD/GDPR)
-11. Loi applicable (UAE)
-
-**Éléments à personnaliser :**
-- [ ] Nom de votre agence
-- [ ] Numéro de licence RERA
-- [ ] Email de contact professionnel
-- [ ] Téléphone professionnel
-- [ ] Adresse à Dubai
-
-**Délais de paiement à définir :**
-- Ventes : 45-60 jours après Title Deed
-- Locations : 7-14 jours après Tenancy Contract
-
-#### 2. **Page "Comment ça marche" (how-it-works.html)**
-
-Créer une page explicative avec :
-- 🎯 Comment devenir apporteur (étapes détaillées)
-- 📋 Processus de validation du contrat
-- 💰 Exemples de gains concrets (ventes + locations)
-- 📊 Critères d'un bon lead
-- 🔒 Sécurité & transparence
-- ❓ FAQ (15-20 questions/réponses)
-
-#### 3. **Politique de confidentialité (privacy.html)**
-
-**Sections obligatoires :**
-- Données collectées (nom, email, téléphone, contrats)
-- Utilisation des données
-- Partage des données (jamais vendues)
-- Sécurité des données (Storage sécurisé, Auth)
-- Droits des utilisateurs (accès, rectification, suppression)
-- Gestion des cookies
-- Contact pour questions RGPD
-
-#### 4. **Intégration dans le site**
-- [ ] Créer les 3 fichiers HTML
-- [ ] Ajouter un footer avec liens vers ces pages
-- [ ] Ajouter checkbox "J'accepte les CGU" à l'inscription
-
----
-
-### 🟡 PRIORITÉ 3 - Sécurité Base de Données (1-2 heures)
-
-**Réactiver RLS avec fonction PostgreSQL**
+#### Réactiver RLS avec fonction PostgreSQL
 
 ```sql
 -- Créer une fonction qui lit sans RLS
@@ -367,38 +352,38 @@ ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 
 -- Politiques pour profiles
 CREATE POLICY "Users read own profile"
-  ON profiles FOR SELECT
-  TO authenticated
-  USING (auth.uid() = id OR is_admin());
+ON profiles FOR SELECT
+TO authenticated
+USING (auth.uid() = id OR is_admin());
 
 CREATE POLICY "Users update own profile"
-  ON profiles FOR UPDATE
-  TO authenticated
-  USING (auth.uid() = id);
+ON profiles FOR UPDATE
+TO authenticated
+USING (auth.uid() = id);
 
 CREATE POLICY "Admins read all profiles"
-  ON profiles FOR SELECT
-  TO authenticated
-  USING (is_admin());
+ON profiles FOR SELECT
+TO authenticated
+USING (is_admin());
 
 -- Politiques pour leads
 CREATE POLICY "Referrers read own leads"
-  ON leads FOR SELECT
-  TO authenticated
-  USING (auth.uid() = referrer_id OR is_admin());
+ON leads FOR SELECT
+TO authenticated
+USING (auth.uid() = referrer_id OR is_admin());
 
 CREATE POLICY "Referrers create own leads"
-  ON leads FOR INSERT
-  TO authenticated
-  WITH CHECK (auth.uid() = referrer_id);
+ON leads FOR INSERT
+TO authenticated
+WITH CHECK (auth.uid() = referrer_id);
 
 CREATE POLICY "Admins manage all leads"
-  ON leads FOR ALL
-  TO authenticated
-  USING (is_admin());
+ON leads FOR ALL
+TO authenticated
+USING (is_admin());
 ```
 
-**Tester après activation :**
+#### Tester après activation :
 - [ ] Connexion admin
 - [ ] Connexion apporteur
 - [ ] Ajout de lead (4 types)
@@ -408,37 +393,120 @@ CREATE POLICY "Admins manage all leads"
 - [ ] Upload de contrat
 - [ ] Validation de contrat
 
-**Changer le mot de passe admin :**
+#### Changer le mot de passe admin :
 - [ ] Utiliser un mot de passe fort (12+ caractères)
 - [ ] Le stocker dans un gestionnaire de mots de passe
 - [ ] Ne jamais le partager
 
 ---
 
-### 🟢 PRIORITÉ 4 - Avant Lancement Public (2-4 semaines)
+### 🟢 PRIORITÉ 3 - Système Multilingue (1-2 semaines)
 
-#### 1. **Configuration Email Professionnelle**
+#### Ajouter traductions Anglais + Arabe
 
-**Options recommandées :**
-- Google Workspace (6 USD/mois) - Recommandé
-- Zoho Mail (1-3 USD/mois) - Économique
-- ProtonMail (4 USD/mois) - Sécurité maximale
+**Stratégie recommandée :**
 
-**Emails à créer :**
-- `contact@real-estate-referrer.com`
-- `admin@real-estate-referrer.com`
-- `support@real-estate-referrer.com` (optionnel)
+1. **Créer un système de traduction simple**
+   - Ajouter un sélecteur de langue dans le header
+   - Stocker la langue préférée dans localStorage
+   - Créer des fichiers JSON de traduction
 
-#### 2. **Personnalisation de l'Application**
-- [ ] Remplacer "Dubai Real Estate" par votre nom d'agence
-- [ ] Ajouter votre logo
-- [ ] Ajouter vos coordonnées (téléphone, adresse)
-- [ ] Personnaliser les couleurs si souhaité
-- [ ] Ajouter photo de profil admin
+2. **Structure des fichiers de traduction**
+   ```
+   /translations/
+   ├── fr.json  (déjà implémenté dans le code)
+   ├── en.json  (à créer)
+   └── ar.json  (à créer)
+   ```
 
-#### 3. **Conformité RERA Dubai** ⚠️ **CRITIQUE**
+3. **Pages à traduire :**
+   - [ ] `index.html` (Landing page + dashboards)
+   - [ ] `how-it-works.html`
+   - [ ] `terms.html`
+   - [ ] `privacy.html`
+   - [ ] `contract-template.html`
 
-**⚠️ AMENDES JUSQU'À 50,000 AED EN CAS DE NON-CONFORMITÉ**
+4. **Éléments à traduire :**
+   - Tous les textes de l'interface
+   - Messages d'erreur et de succès
+   - Emails de confirmation
+   - Templates de contrats
+
+5. **Considérations pour l'arabe :**
+   - Direction RTL (right-to-left)
+   - Polices adaptées
+   - Ajustements CSS pour l'alignement
+
+**Exemple d'implémentation :**
+
+```javascript
+// translations.js
+const translations = {
+  fr: {
+    nav: {
+      login: "Connexion",
+      signup: "S'inscrire",
+      logout: "Déconnexion"
+    },
+    dashboard: {
+      totalEarnings: "Gains Totaux",
+      activeLeads: "Leads Actifs"
+    }
+    // ... etc
+  },
+  en: {
+    nav: {
+      login: "Login",
+      signup: "Sign Up",
+      logout: "Logout"
+    },
+    dashboard: {
+      totalEarnings: "Total Earnings",
+      activeLeads: "Active Leads"
+    }
+    // ... etc
+  },
+  ar: {
+    nav: {
+      login: "تسجيل الدخول",
+      signup: "التسجيل",
+      logout: "تسجيل الخروج"
+    },
+    dashboard: {
+      totalEarnings: "إجمالي الأرباح",
+      activeLeads: "العملاء النشطون"
+    }
+    // ... etc
+  }
+};
+
+// Utilisation
+function t(key) {
+  const lang = localStorage.getItem('language') || 'fr';
+  const keys = key.split('.');
+  let value = translations[lang];
+  for (const k of keys) {
+    value = value[k];
+  }
+  return value;
+}
+```
+
+**Ajout du sélecteur de langue dans le header :**
+
+```html
+<div class="language-selector">
+  <button onclick="changeLanguage('fr')" class="lang-btn">🇫🇷 FR</button>
+  <button onclick="changeLanguage('en')" class="lang-btn">🇬🇧 EN</button>
+  <button onclick="changeLanguage('ar')" class="lang-btn">🇦🇪 AR</button>
+</div>
+```
+
+---
+
+### 🟢 PRIORITÉ 4 - Conformité RERA Dubai (2-4 semaines)
+
+#### ⚠️ AMENDES JUSQU'À 50,000 AED EN CAS DE NON-CONFORMITÉ
 
 **Requis obligatoires :**
 - [ ] **Licence RERA** (Real Estate Regulatory Agency)
@@ -453,7 +521,35 @@ CREATE POLICY "Admins manage all leads"
 
 **🚨 ATTENTION : Ne lancez pas publiquement sans ces licences !**
 
-#### 4. **Tests Utilisateurs**
+---
+
+### 🟢 PRIORITÉ 5 - Configuration Email Professionnelle (1 jour)
+
+**Options recommandées :**
+- Google Workspace (6 USD/mois) - Recommandé
+- Zoho Mail (1-3 USD/mois) - Économique
+- ProtonMail (4 USD/mois) - Sécurité maximale
+
+**Emails à créer :**
+- `contact@real-estate-referrer.com`
+- `admin@real-estate-referrer.com`
+- `support@real-estate-referrer.com` (optionnel)
+
+---
+
+### 🟢 PRIORITÉ 6 - Personnalisation (1-2 jours)
+
+- [ ] Remplacer "Dubai Real Estate" par votre nom d'agence
+- [ ] Ajouter votre logo
+- [ ] Ajouter vos coordonnées (téléphone, adresse)
+- [ ] Personnaliser les couleurs si souhaité
+- [ ] Ajouter photo de profil admin
+- [ ] Mettre à jour les CGU avec vos informations réelles
+
+---
+
+### 🟢 PRIORITÉ 7 - Tests Utilisateurs (1 semaine)
+
 - [ ] Inviter 2-3 apporteurs bêta
 - [ ] Tester le cycle complet :
   - Inscription
@@ -470,14 +566,12 @@ CREATE POLICY "Admins manage all leads"
 ## 📝 Notes Techniques
 
 ### Configuration Supabase
-
 ```javascript
 const supabaseUrl = 'https://cgizcgwhwxswvoodqver.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
 ```
 
 ### Bucket Storage
-
 ```
 Nom: Contracts
 Type: Privé
@@ -493,7 +587,7 @@ Type accepté: application/pdf
 SELECT * FROM profiles;
 
 -- Voir tous les leads avec noms d'apporteurs
-SELECT 
+SELECT
   l.*,
   p.name as referrer_name
 FROM leads l
@@ -524,7 +618,7 @@ ORDER BY total_commission DESC;
 -- Voir les contrats en attente de validation
 SELECT name, contract_status, contract_file_url, created_at
 FROM profiles
-WHERE role = 'referrer' 
+WHERE role = 'referrer'
 AND contract_status = 'uploaded'
 ORDER BY created_at DESC;
 ```
@@ -548,54 +642,52 @@ ORDER BY created_at DESC;
 
 ## 🎉 Historique du Projet
 
-### 14-15 octobre 2025
+**14-15 octobre 2025**
 - Création initiale
 - Problèmes d'authentification
 
-### 15 octobre 2025
+**15 octobre 2025**
 - Migration vers Supabase Auth
 - Première version déployée
 
-### 16 octobre 2025 - Matin
+**16 octobre 2025 - Matin**
 - Ajout "Mot de passe oublié"
 - Flux de reset password complet
 
-### 16 octobre 2025 - Après-midi
+**16 octobre 2025 - Après-midi**
 - Correction affichage des noms d'apporteurs
 - Désactivation RLS pour résoudre récursion
 - Version 2.1.0 - Production stable
 
-### 16 octobre 2025 - Soir
+**16 octobre 2025 - Soir**
 - Achat du domaine real-estate-referrer.com
 - Version 2.2.0
 
-### 17 octobre 2025 - Matin
+**17 octobre 2025 - Matin**
 - **AJOUT DES 4 TYPES DE LEADS** ✅
   - 2 types de vente (acheteur/vendeur)
   - 2 types de location (propriétaire/locataire)
 - **AJOUT STATUT "LOUÉ"** ✅
-  - Statuts distincts pour ventes et locations
-  - Boutons adaptés selon le type
 - **CALCULS AUTOMATIQUES** ✅
-  - Ventes : 2% du prix
-  - Locations : 5% du loyer annuel
 - Configuration Supabase Storage (bucket Contracts)
 - **Version 3.0.0 - PLEINEMENT FONCTIONNEL** 🎉
 
-### 17 octobre 2025 - Après-midi
+**17 octobre 2025 - Après-midi**
 - **SYSTÈME DE VALIDATION DE CONTRAT COMPLET** ✅
-  - Écran de blocage pour apporteurs sans contrat
-  - Téléchargement du template de contrat
-  - Upload de contrat signé (PDF, max 5MB)
-  - Onglet "Contracts" pour l'admin
-  - Fonction viewContract pour voir les PDFs
-  - Validation/Rejet de contrats
-  - Policies Storage sécurisées
 - **CORRECTION BUCKET STORAGE** ✅
-  - Changement de 'contracts' → 'Contracts'
-  - Configuration des policies RLS Storage
-  - Tests complets upload/view
 - **Version 3.1.0 - SYSTÈME COMPLET** 🎊
+
+**17 octobre 2025 - Soir**
+- **CRÉATION PAGES JURIDIQUES COMPLÈTES** ✅
+  - `how-it-works.html` avec FAQ détaillée
+  - `terms.html` avec CGU complets (13 articles)
+  - `privacy.html` avec politique RGPD (13 sections)
+- **AJOUT FOOTER SUR TOUTES LES PAGES** ✅
+- **TRADUCTION 100% FRANÇAIS** ✅
+- **CORRECTION DÉLAIS DE PAIEMENT** ✅
+  - Cohérence totale entre toutes les pages
+  - Délais réalistes : 45-60j (ventes), 7-14j (locations)
+- **Version 4.0.0 - PRODUCTION COMPLÈTE** 🎊🎉
 
 ---
 
@@ -611,13 +703,17 @@ ORDER BY created_at DESC;
 6. ✅ **Dashboard apporteur** (avec blocage si contrat non validé)
 7. ✅ **Storage sécurisé** (policies fonctionnelles)
 8. ✅ **Statuts "vendu" et "loué"** distincts
-9. ✅ **Design premium Dubai**
+9. ✅ **Design premium Dubai** avec couleurs harmonisées
 10. ✅ **Déploiement automatique** GitHub → Vercel
+11. ✅ **Pages juridiques complètes** (CGU, Privacy, How it works)
+12. ✅ **Footer cohérent** sur toutes les pages
+13. ✅ **Interface 100% en français**
+14. ✅ **Délais de paiement cohérents** partout
 
 ### ⏳ À faire avant lancement public
 
 1. ⏰ **Configurer DNS** → Vercel (quand domaine actif)
-2. 📝 **Créer CGU + Privacy Policy + How it works**
+2. 🌐 **Ajouter traductions** EN + AR (optionnel mais recommandé)
 3. 🔒 **Réactiver RLS** sur tables SQL (sécurité)
 4. 🏛️ **Obtenir licences RERA**
 5. 👥 **Phase de tests bêta** (2-3 apporteurs)
@@ -631,15 +727,17 @@ ORDER BY created_at DESC;
 - ✅ Ajout de leads réels
 - ✅ Suivi des commissions
 - ✅ Validation de contrats
+- ✅ Présentation professionnelle du programme
 
 ---
 
-**📞 Contact**  
+## 📞 Contact
+
 Pour toute question sur le projet, consultez cette documentation ou contactez le développeur via GitHub.
 
-**Dernière mise à jour** : 17 octobre 2025 - 16h30  
-**Version** : 3.1.0  
-**Status** : 🟢 **Production - Système complet et fonctionnel**
+**Dernière mise à jour** : 17 octobre 2025 - 21h00  
+**Version** : 4.0.0  
+**Status** : 🟢 **Production - Système complet, cohérent et professionnel**
 
 ---
 
@@ -648,12 +746,17 @@ Pour toute question sur le projet, consultez cette documentation ou contactez le
 ### Pour tester l'application :
 
 1. **Aller sur** : https://real-estate-referrer-3kp6.vercel.app
-2. **Créer un compte apporteur** → Sign Up
-3. **Télécharger le contrat** → Suivre les instructions
-4. **Uploader le contrat signé** → PDF max 5MB
-5. **Se connecter en admin** → admin@realestate-referrer.com
-6. **Valider le contrat** → Onglet "Contracts" → Validate
-7. **Ajouter des leads** → Tester les 4 types
-8. **Marquer une vente/location** → Voir le calcul de commission
+2. **Explorer les pages** :
+   - Landing page avec footer
+   - Comment ça marche (FAQ)
+   - CGU
+   - Politique de confidentialité
+3. **Créer un compte apporteur** → Sign Up
+4. **Télécharger le contrat** → Suivre les instructions
+5. **Uploader le contrat signé** → PDF max 5MB
+6. **Se connecter en admin** → admin@realestate-referrer.com
+7. **Valider le contrat** → Onglet "Contracts" → Validate
+8. **Ajouter des leads** → Tester les 4 types
+9. **Marquer une vente/location** → Voir le calcul de commission
 
 **🎉 Bon test !**
