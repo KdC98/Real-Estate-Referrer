@@ -327,7 +327,9 @@
         e.preventDefault();
         const email = document.getElementById('resetEmail').value;
 
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+  redirectTo: 'https://real-estate-referrer-3kp6.vercel.app/reset-password'
+});
 
         if (error) {
           alert('Erreur: ' + error.message);
