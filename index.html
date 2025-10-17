@@ -1284,8 +1284,248 @@
       const sales = allLeads ? allLeads.filter(l => l.status === 'vendu').length : 0;
       const totalCommissions = allLeads ? allLeads.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) : 0;
 
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen">
-          <nav class="bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center html>
+      const referrers = allProfiles ? allProfiles.filter(p => p.role === 'referrer') : [];
+      const pendingContracts = allProfiles ? allProfiles.filter(p => p.role === 'referrer' && p.contract_status === 'pending_review') : [];
+      const activeLeads = allLeads ? allLeads.filter(l => l.status !== 'vendu').length : 0;
+      const sales = allLeads ? allLeads.filter(l => l.status === 'vendu').length : 0;
+      const totalCommissions = allLeads ? allLeads.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) : 0;</div>
+          </nav>
+
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Stats -->
+            <div class="grid md:grid-cols-4 gap-6 mb-8">
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Apporteurs</div>
+                <div class="text-3xl font-bold text-blue-400">${referrers.length}</div>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Leads actifs</div>
+                <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Ventes</div>
+                <div class="text-3xl font-bold text-green-400">${sales}</div>
+              </div>
+              <div class="bg-gray-800 rounded-xl p-6">
+                <div class="text-sm text-gray-400 mb-1">Commissions</div>
+                <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
+              </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="mb-6 border-b border-gray-700">
+              <nav class="flex space-x-8">
+                <button onclick="switchAdminTab('leads')" id="tabLeads" class="py-4 px-1 border-b-2 border-yellow-500 font-medium text-yellow-500">
+                  Tous les leads
+                </button>
+                <button onclick="switchAdminTab('contracts')" id="tabContracts" class="py-4 px-1 border-b-2 border-transparent font-medium text-gray-400 hover:text-gray-300 hover:border-gray-300">
+                  Contrats à valider ${pendingContracts.length > 0 ? '<span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">' + pendingContracts.length + '</span>' : ''}
+                </button>
+              </nav>
+            </div>
+
+            <!-- Tab Content: Leads -->
+            <div id="contentLeads">
+              <div class="bg-gray-800 rounded-xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-700">
+                  <h3 class="text-lg font-semibold text-white">Tous les leads</h3>
+                </div>
+                <div class="overflow-x-auto">
+                  <table class="w-full">
+                    <thead class="bg-gray-700">
+                      <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Apporteur</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type lead</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Client</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Propriété</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Budget/Loyer</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-700">
+                      ${allLeads && allLeads.length > 0 ? allLeads.map(lead => {
+                        const referrer = profileMap[lead.referrer_id];
+                        const referrerName = referrer && referrer.name ? referrer.name : 'N/A';
+                        const leadTypeLabel = lead.lead_type === 'sale_buyer' ? '🏠 Acheteur' : 
+                                             lead.lead_type === 'sale_seller' ? '🏡 Vendeur' :
+                                             lead.lead_type === 'rent_landlord' ? '🏢 Loc. (proprio)' : 
+                                             lead.lead_type === 'rent_tenant' ? '🔑 Loc. (locataire)' : 
+                                             '🏠 Acheteur';
+                        const budgetDisplay = lead.lead_type === 'rent_landlord' ? 
+                                             (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' AED/an' : '-') :
+                                             (lead.budget ? lead.budget.toLocaleString() + ' AED' : '-');
+                        
+                        return '<tr class="hover:bg-gray-700"><td class="px-6 py-4 text-gray-300">' + referrerName + '</td><td class="px-6 py-4 text-gray-300 text-sm">' + leadTypeLabel + '</td><td class="px-6 py-4"><div class="font-medium text-white">' + lead.client_name + '</div><div class="text-sm text-gray-400">' + lead.client_phone + '</div></td><td class="px-6 py-4 text-gray-300">' + lead.property_type + '</td><td class="px-6 py-4 text-gray-300">' + budgetDisplay + '</td><td class="px-6 py-4"><select onchange="updateLeadStatus(' + lead.id + ', this.value)" class="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm"><option value="nouveau"' + (lead.status === 'nouveau' ? ' selected' : '') + '>Nouveau</option><option value="visite"' + (lead.status === 'visite' ? ' selected' : '') + '>Visite</option><option value="offre"' + (lead.status === 'offre' ? ' selected' : '') + '>Offre</option><option value="vendu"' + (lead.status === 'vendu' ? ' selected' : '') + '>Vendu</option></select></td><td class="px-6 py-4">' + (lead.status === 'vendu' ? '<span class="text-green-400 text-sm">' + (lead.referrer_commission?.toLocaleString() || 0) + ' AED</span>' : '<button onclick="markAsSold(' + lead.id + ', \'' + lead.lead_type + '\')" class="text-yellow-500 hover:text-yellow-400 text-sm">Marquer vendu</button>') + '</td></tr>';
+                      }).join('') : '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-400">Aucun lead pour le moment</td></tr>'}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab Content: Contracts -->
+            <div id="contentContracts" class="hidden">
+              <div class="bg-gray-800 rounded-xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-700">
+                  <h3 class="text-lg font-semibold text-white">Contrats à valider</h3>
+                </div>
+                <div class="divide-y divide-gray-700">
+                  ${pendingContracts.length > 0 ? pendingContracts.map(referrer => '<div class="p-6"><div class="flex items-center justify-between"><div class="flex-1"><h4 class="text-lg font-medium text-white mb-2">' + referrer.name + '</h4><p class="text-sm text-gray-400 mb-1">📧 ' + referrer.id + '</p><p class="text-sm text-gray-400 mb-1">📞 ' + (referrer.phone || 'Non renseigné') + '</p><p class="text-sm text-gray-500">Contrat uploadé le : ' + new Date(referrer.contract_uploaded_at).toLocaleDateString('fr-FR') + '</p></div><div class="flex gap-3"><button onclick="downloadContract(\'' + referrer.id + '\')" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">📥 Télécharger</button><button onclick="validateContract(\'' + referrer.id + '\')" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">✅ Valider</button><button onclick="rejectContract(\'' + referrer.id + '\')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm">❌ Rejeter</button></div></div></div>').join('') : '<div class="p-6 text-center text-gray-400">Aucun contrat en attente</div>'}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    window.switchAdminTab = function(tab) {
+      const tabLeads = document.getElementById('tabLeads');
+      const tabContracts = document.getElementById('tabContracts');
+      const contentLeads = document.getElementById('contentLeads');
+      const contentContracts = document.getElementById('contentContracts');
+
+      if (tab === 'leads') {
+        tabLeads.className = 'py-4 px-1 border-b-2 border-yellow-500 font-medium text-yellow-500';
+        tabContracts.className = 'py-4 px-1 border-b-2 border-transparent font-medium text-gray-400 hover:text-gray-300 hover:border-gray-300';
+        contentLeads.classList.remove('hidden');
+        contentContracts.classList.add('hidden');
+      } else {
+        tabLeads.className = 'py-4 px-1 border-b-2 border-transparent font-medium text-gray-400 hover:text-gray-300 hover:border-gray-300';
+        tabContracts.className = 'py-4 px-1 border-b-2 border-yellow-500 font-medium text-yellow-500';
+        contentLeads.classList.add('hidden');
+        contentContracts.classList.remove('hidden');
+      }
+    };
+
+    window.downloadContract = async function(referrerId) {
+      try {
+        const { data, error } = await supabase.storage
+          .from('Contracts')
+          .download(referrerId + '/contract.pdf');
+
+        if (error) throw error;
+
+        const url = URL.createObjectURL(data);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'contract_' + referrerId + '.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (error) {
+        console.error('Erreur téléchargement:', error);
+        alert('Erreur lors du téléchargement du contrat');
+      }
+    };
+
+    window.validateContract = async function(referrerId) {
+      if (!confirm('Êtes-vous sûr de vouloir valider ce contrat ?')) return;
+
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ 
+            contract_status: 'validated',
+            contract_validated_at: new Date().toISOString()
+          })
+          .eq('id', referrerId);
+
+        if (error) throw error;
+
+        alert('Contrat validé ! L\'apporteur peut maintenant ajouter des leads.');
+        showAdminDashboard();
+      } catch (error) {
+        console.error('Erreur validation:', error);
+        alert('Erreur lors de la validation du contrat');
+      }
+    };
+
+    window.rejectContract = async function(referrerId) {
+      const reason = prompt('Raison du rejet (optionnel) :');
+      
+      if (!confirm('Êtes-vous sûr de vouloir rejeter ce contrat ?')) return;
+
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({ 
+            contract_status: 'rejected',
+            contract_rejection_reason: reason
+          })
+          .eq('id', referrerId);
+
+        if (error) throw error;
+
+        alert('Contrat rejeté.');
+        showAdminDashboard();
+      } catch (error) {
+        console.error('Erreur rejet:', error);
+        alert('Erreur lors du rejet du contrat');
+      }
+    };
+
+    async function updateLeadStatus(leadId, newStatus) {
+      const { error } = await supabase
+        .from('leads')
+        .update({ status: newStatus })
+        .eq('id', leadId);
+
+      if (error) {
+        alert('Erreur lors de la mise à jour');
+        console.error(error);
+      }
+    }
+
+    async function markAsSold(leadId, leadType) {
+      let priceLabel = '';
+      let commissionRate = 0;
+      
+      if (leadType === 'sale_buyer' || leadType === 'sale_seller') {
+        priceLabel = 'Prix de vente final (AED):';
+        commissionRate = 0.02;
+      } else if (leadType === 'rent_landlord' || leadType === 'rent_tenant') {
+        priceLabel = 'Loyer annuel du contrat (AED):';
+        commissionRate = 0.05;
+      }
+      
+      const price = prompt(priceLabel);
+      if (!price) return;
+
+      const priceValue = parseFloat(price);
+      const totalCommission = priceValue * commissionRate;
+      const agentCommission = totalCommission * 0.5;
+      const referrerCommission = agentCommission * 0.2;
+
+      const { error } = await supabase
+        .from('leads')
+        .update({
+          status: 'vendu',
+          sale_price: priceValue,
+          agent_commission: agentCommission,
+          referrer_commission: referrerCommission,
+          closed_at: new Date().toISOString()
+        })
+        .eq('id', leadId);
+
+      if (error) {
+        alert('Erreur lors de la mise à jour');
+        console.error(error);
+      } else {
+        showAdminDashboard();
+      }
+    }
+
+    window.showAuthPage = showAuthPage;
+    window.showLogin = showLogin;
+    window.showSignup = showSignup;
+    window.showReset = showReset;
+    window.logout = logout;
+    window.showAddLeadForm = showAddLeadForm;
+    window.updateLeadStatus = updateLeadStatus;
+    window.markAsSold = markAsSold;
+  </script>
+</body>
+</html>
