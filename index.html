@@ -3,334 +3,230 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
+  <title>Real Estate Referrer - Dubai</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script type="importmap">
-    {
-      "imports": {
-        "react": "https://esm.sh/react@18.2.0",
-        "react-dom": "https://esm.sh/react-dom@18.2.0",
-        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
-      }
-    }
-  </script>
-  <style>
-    body {
-      background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
-      min-height: 100vh;
-    }
-    .lang-selector {
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    .lang-selector:hover {
-      transform: scale(1.2);
-    }
-    .lang-selector.active {
-      filter: brightness(1.3);
-    }
-  </style>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
-<body class="text-white">
+<body class="bg-gray-900">
   <div id="app"></div>
 
   <script type="module">
-    import { createClient } from '@supabase/supabase-js';
-
-    const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
+    const { createClient } = supabase;
     
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ===== MULTI-LANGUAGE SYSTEM =====
-    let currentLang = localStorage.getItem('language') || 'en';
-
-    const translations = {
-      fr: {
-        title: "Karyne de Clercq",
-        howItWorks: "Comment ça marche",
-        login: "Connexion",
-        signup: "Devenir Apporteur",
-        heroTitle: "Gagnez jusqu'à",
-        heroAmount: "20,000 AED",
-        heroSuffix: "par vente",
-        heroSubtitle: "Devenez apporteur d'affaires et touchez une commission de 20% sur chaque vente immobilière que vous amenez",
-        ctaButton: "Commencer maintenant",
-        stat1: "Commission par vente",
-        stat2: "Support disponible",
-        stat3: "Paiement rapide",
-        examplesTitle: "Exemples de gains",
-        example1: "Vente à 3M AED",
-        example2: "Vente à 5M AED",
-        example3: "Vente à 10M AED",
-        commission: "Votre commission",
-        footer: "Tous droits réservés",
-        terms: "CGU",
-        privacy: "Confidentialité",
-        contact: "Contact"
-      },
-      en: {
-        title: "Karyne de Clercq",
-        howItWorks: "How it works",
-        login: "Login",
-        signup: "Become a Referrer",
-        heroTitle: "Earn up to",
-        heroAmount: "20,000 AED",
-        heroSuffix: "per sale",
-        heroSubtitle: "Become a business referrer and earn 20% commission on every real estate sale you bring",
-        ctaButton: "Start now",
-        stat1: "Commission per sale",
-        stat2: "24/7 Support",
-        stat3: "Fast payment",
-        examplesTitle: "Earning examples",
-        example1: "Sale at 3M AED",
-        example2: "Sale at 5M AED",
-        example3: "Sale at 10M AED",
-        commission: "Your commission",
-        footer: "All rights reserved",
-        terms: "Terms",
-        privacy: "Privacy",
-        contact: "Contact"
-      },
-      ar: {
-        title: "كارين دي كليرك",
-        howItWorks: "كيف يعمل",
-        login: "تسجيل الدخول",
-        signup: "كن وسيطًا",
-        heroTitle: "اكسب حتى",
-        heroAmount: "20,000 درهم",
-        heroSuffix: "لكل عملية بيع",
-        heroSubtitle: "كن وسيط أعمال واحصل على عمولة 20٪ على كل عملية بيع عقارية تجلبها",
-        ctaButton: "ابدأ الآن",
-        stat1: "عمولة لكل بيع",
-        stat2: "دعم 24/7",
-        stat3: "دفع سريع",
-        examplesTitle: "أمثلة الأرباح",
-        example1: "بيع بـ 3 مليون درهم",
-        example2: "بيع بـ 5 مليون درهم",
-        example3: "بيع بـ 10 مليون درهم",
-        commission: "عمولتك",
-        footer: "جميع الحقوق محفوظة",
-        terms: "الشروط",
-        privacy: "الخصوصية",
-        contact: "اتصل"
-      },
-      ru: {
-        title: "Карин де Клерк",
-        howItWorks: "Как работает",
-        login: "Вход",
-        signup: "Стать партнером",
-        heroTitle: "Зарабатывайте до",
-        heroAmount: "20,000 AED",
-        heroSuffix: "за продажу",
-        heroSubtitle: "Станьте бизнес-партнером и получайте 20% комиссии с каждой сделки",
-        ctaButton: "Начать сейчас",
-        stat1: "Комиссия за продажу",
-        stat2: "Поддержка 24/7",
-        stat3: "Быстрая оплата",
-        examplesTitle: "Примеры заработка",
-        example1: "Продажа 3M AED",
-        example2: "Продажа 5M AED",
-        example3: "Продажа 10M AED",
-        commission: "Ваша комиссия",
-        footer: "Все права защищены",
-        terms: "Условия",
-        privacy: "Конфиденциальность",
-        contact: "Контакт"
-      },
-      hi: {
-        title: "कैरीन डी क्लर्क",
-        howItWorks: "यह कैसे काम करता है",
-        login: "लॉग इन",
-        signup: "रेफरर बनें",
-        heroTitle: "कमाएं",
-        heroAmount: "20,000 AED",
-        heroSuffix: "प्रति बिक्री",
-        heroSubtitle: "बिजनेस रेफरर बनें और हर रियल एस्टेट बिक्री पर 20% कमीशन कमाएं",
-        ctaButton: "अभी शुरू करें",
-        stat1: "प्रति बिक्री कमीशन",
-        stat2: "24/7 समर्थन",
-        stat3: "तेज़ भुगतान",
-        examplesTitle: "कमाई के उदाहरण",
-        example1: "3M AED बिक्री",
-        example2: "5M AED बिक्री",
-        example3: "10M AED बिक्री",
-        commission: "आपका कमीशन",
-        footer: "सर्वाधिकार सुरक्षित",
-        terms: "शर्तें",
-        privacy: "गोपनीयता",
-        contact: "संपर्क"
-      },
-      zh: {
-        title: "凯琳·德·克莱克",
-        howItWorks: "如何运作",
-        login: "登录",
-        signup: "成为推荐人",
-        heroTitle: "赚取高达",
-        heroAmount: "20,000迪拉姆",
-        heroSuffix: "每笔销售",
-        heroSubtitle: "成为业务推荐人，每笔房地产交易赚取20%佣金",
-        ctaButton: "立即开始",
-        stat1: "每笔销售佣金",
-        stat2: "全天候支持",
-        stat3: "快速付款",
-        examplesTitle: "收入示例",
-        example1: "300万迪拉姆销售",
-        example2: "500万迪拉姆销售",
-        example3: "1000万迪拉姆销售",
-        commission: "您的佣金",
-        footer: "版权所有",
-        terms: "条款",
-        privacy: "隐私",
-        contact: "联系"
-      }
-    };
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      localStorage.setItem('language', lang);
-      const appContent = document.getElementById('app').innerHTML;
-      if (appContent.includes('max-w-7xl') && appContent.includes('gradient')) {
-        showLanding();
-      }
-    }
-
-    window.setLanguage = setLanguage;
+    const supabaseUrl = 'https://cgizcgwhwxswvoodqver.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MzE0ODEsImV4cCI6MjA0NDUwNzQ4MX0.LBjJyx8RYqrE-kkerman7tLE_3y7c7vT2VD6vZYIqmZU';
+    
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     let currentUser = null;
     let currentProfile = null;
-    let isPasswordRecovery = false;
 
-    const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    if (hashParams.get('type') === 'recovery') {
-      isPasswordRecovery = true;
-    }
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        isPasswordRecovery = true;
-        showUpdatePasswordPage();
-      } else if (event === 'SIGNED_IN' && !isPasswordRecovery) {
-        if (session) {
-          currentUser = session.user;
-          loadProfile();
-        }
-      }
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (isPasswordRecovery) {
-        showUpdatePasswordPage();
-      } else if (session) {
+    async function init() {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
         currentUser = session.user;
-        loadProfile();
-      } else {
-        showLanding();
-      }
-    });
-
-    async function loadProfile() {
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', currentUser.id)
-          .single();
-
-        if (error) throw error;
-
-        currentProfile = data;
-        
-        if (data.role === 'admin') {
+        await loadProfile();
+        if (currentProfile.role === 'admin') {
           showAdminDashboard();
         } else {
           showReferrerDashboard();
         }
-      } catch (error) {
-        console.error('Erreur chargement profil:', error);
-        alert('Erreur chargement profil');
+      } else {
+        showLandingPage();
       }
     }
 
+    async function loadProfile() {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', currentUser.id)
+        .single();
+      
+      if (data) {
+        currentProfile = data;
+      }
+    }
+
+    function showLandingPage() {
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
+          <nav class="bg-gray-900/50 backdrop-blur-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="flex justify-between items-center h-16">
+                <h1 class="text-2xl font-bold text-yellow-500">Dubai Real Estate</h1>
+                <button onclick="showAuthPage()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-2 rounded-lg font-semibold">
+                  Connexion
+                </button>
+              </div>
+            </div>
+          </nav>
+
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center mb-16">
+              <h2 class="text-5xl font-bold text-white mb-6">
+                Gagnez des commissions en apportant des clients
+              </h2>
+              <p class="text-xl text-gray-300 mb-8">
+                Devenez apporteur d'affaires et touchez jusqu'à 20% de commission sur chaque vente
+              </p>
+              <button onclick="showAuthPage()" class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 px-8 py-4 rounded-lg text-lg font-bold shadow-lg">
+                Rejoindre le programme
+              </button>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+              <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center">
+                <div class="text-4xl font-bold text-yellow-500 mb-2">20%</div>
+                <div class="text-gray-300">de commission sur chaque vente</div>
+              </div>
+              <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center">
+                <div class="text-4xl font-bold text-yellow-500 mb-2">24/7</div>
+                <div class="text-gray-300">Suivi en temps réel de vos leads</div>
+              </div>
+              <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center">
+                <div class="text-4xl font-bold text-yellow-500 mb-2">48h</div>
+                <div class="text-gray-300">Paiement après signature</div>
+              </div>
+            </div>
+
+            <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8">
+              <h3 class="text-2xl font-bold text-white mb-6">Exemples de gains</h3>
+              <div class="space-y-4">
+                <div class="flex justify-between items-center border-b border-gray-700 pb-4">
+                  <span class="text-gray-300">Villa à 3,000,000 AED</span>
+                  <span class="text-2xl font-bold text-yellow-500">6,000 AED</span>
+                </div>
+                <div class="flex justify-between items-center border-b border-gray-700 pb-4">
+                  <span class="text-gray-300">Appartement à 5,000,000 AED</span>
+                  <span class="text-2xl font-bold text-yellow-500">10,000 AED</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-300">Penthouse à 10,000,000 AED</span>
+                  <span class="text-2xl font-bold text-yellow-500">20,000 AED</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function showAuthPage() {
+      showLogin();
+    }
+
     function showLogin() {
-      const loginForm = document.getElementById('loginForm');
-      const signupForm = document.getElementById('signupForm');
-      const resetForm = document.getElementById('resetForm');
-      const formTitle = document.getElementById('formTitle');
-      
-      if (loginForm) loginForm.classList.remove('hidden');
-      if (signupForm) signupForm.classList.add('hidden');
-      if (resetForm) resetForm.classList.add('hidden');
-      if (formTitle) formTitle.textContent = 'Connexion';
-    }
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
+          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Connexion</h2>
+            <form id="loginForm" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input type="email" id="loginEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+                <input type="password" id="loginPassword" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
+                Se connecter
+              </button>
+            </form>
+            <div class="mt-4 text-center space-y-2">
+              <button onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">
+                Mot de passe oublié ?
+              </button>
+              <div>
+                <span class="text-gray-400 text-sm">Pas encore de compte ? </span>
+                <button onclick="showSignup()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
+                  S'inscrire
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
 
-    function showSignup() {
-      const loginForm = document.getElementById('loginForm');
-      const signupForm = document.getElementById('signupForm');
-      const resetForm = document.getElementById('resetForm');
-      const formTitle = document.getElementById('formTitle');
-      
-      if (loginForm) loginForm.classList.add('hidden');
-      if (signupForm) signupForm.classList.remove('hidden');
-      if (resetForm) resetForm.classList.add('hidden');
-      if (formTitle) formTitle.textContent = 'Devenir Apporteur';
-    }
+      document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
 
-    function showReset() {
-      const loginForm = document.getElementById('loginForm');
-      const signupForm = document.getElementById('signupForm');
-      const resetForm = document.getElementById('resetForm');
-      const formTitle = document.getElementById('formTitle');
-      
-      if (loginForm) loginForm.classList.add('hidden');
-      if (signupForm) signupForm.classList.add('hidden');
-      if (resetForm) resetForm.classList.remove('hidden');
-      if (formTitle) formTitle.textContent = 'Réinitialiser le mot de passe';
-    }
-
-    window.handleLogin = async function(e) {
-      e.preventDefault();
-      
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value;
-
-      try {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password
         });
 
-        if (error) throw error;
+        if (error) {
+          alert('Erreur de connexion: ' + error.message);
+        } else {
+          currentUser = data.user;
+          await loadProfile();
+          if (currentProfile.role === 'admin') {
+            showAdminDashboard();
+          } else {
+            showReferrerDashboard();
+          }
+        }
+      });
+    }
 
-        currentUser = data.user;
-        await loadProfile();
-        
-      } catch (error) {
-        console.error('Erreur connexion:', error);
-        alert('Email ou mot de passe incorrect');
-      }
-    };
+    function showSignup() {
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
+          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Inscription</h2>
+            <form id="signupForm" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Nom complet</label>
+                <input type="text" id="signupName" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone</label>
+                <input type="tel" id="signupPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input type="email" id="signupEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+                <input type="password" id="signupPassword" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
+                <input type="password" id="signupPasswordConfirm" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
+                S'inscrire
+              </button>
+            </form>
+            <div class="mt-4 text-center">
+              <span class="text-gray-400 text-sm">Déjà un compte ? </span>
+              <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
+                Se connecter
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
 
-    window.handleSignup = async function(e) {
-      e.preventDefault();
-      
-      const name = document.getElementById('signupName').value.trim();
-      const email = document.getElementById('signupEmail').value.trim();
-      const phone = document.getElementById('signupPhone').value.trim();
-      const password = document.getElementById('signupPassword').value;
-      const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+      document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value;
+        const phone = document.getElementById('signupPhone').value;
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
 
-      if (password !== passwordConfirm) {
-        alert('Les mots de passe ne correspondent pas !');
-        return;
-      }
+        if (password !== passwordConfirm) {
+          alert('Les mots de passe ne correspondent pas');
+          return;
+        }
 
-      if (password.length < 6) {
-        alert('Le mot de passe doit contenir au moins 6 caractères !');
-        return;
-      }
-
-      try {
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -343,360 +239,73 @@
           }
         });
 
-        if (error) throw error;
+        if (error) {
+          alert('Erreur lors de l\'inscription: ' + error.message);
+        } else {
+          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+          showLogin();
+        }
+      });
+    }
 
-        alert('Compte créé avec succès ! Vérifiez votre email pour confirmer votre compte.');
-        showLogin();
-        
-      } catch (error) {
-        console.error('Erreur inscription:', error);
-        alert('Erreur lors de l\'inscription: ' + error.message);
-      }
-    };
+    function showReset() {
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
+          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Mot de passe oublié</h2>
+            <form id="resetForm" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input type="email" id="resetEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
+                Envoyer le lien de réinitialisation
+              </button>
+            </form>
+            <div class="mt-4 text-center">
+              <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm">
+                Retour à la connexion
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
 
-    window.handleReset = async function(e) {
-      e.preventDefault();
-      
-      const email = document.getElementById('resetEmail').value.trim();
+      document.getElementById('resetForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('resetEmail').value;
 
-      try {
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: 'https://real-estate-referrer-3kp6.vercel.app'
-        });
+        const { error } = await supabase.auth.resetPasswordForEmail(email);
 
-        if (error) throw error;
-
-        alert('Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.');
-        showLogin();
-        
-      } catch (error) {
-        console.error('Erreur reset:', error);
-        alert('Erreur: ' + error.message);
-      }
-    };
-
-    window.handleUpdatePassword = async function(e) {
-      e.preventDefault();
-      
-      const newPassword = document.getElementById('newPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      if (newPassword !== confirmPassword) {
-        alert('Les mots de passe ne correspondent pas !');
-        return;
-      }
-
-      if (newPassword.length < 6) {
-        alert('Le mot de passe doit contenir au moins 6 caractères !');
-        return;
-      }
-
-      try {
-        const { error } = await supabase.auth.updateUser({
-          password: newPassword
-        });
-
-        if (error) throw error;
-
-        alert('Mot de passe mis à jour avec succès ! Veuillez vous reconnecter.');
-        
-        await supabase.auth.signOut();
-        
-        isPasswordRecovery = false;
-        currentUser = null;
-        currentProfile = null;
-        
-        showAuthPage('login');
-        
-      } catch (error) {
-        console.error('Erreur mise à jour mot de passe:', error);
-        alert('Erreur: ' + error.message);
-      }
-    };
+        if (error) {
+          alert('Erreur: ' + error.message);
+        } else {
+          alert('Email de réinitialisation envoyé ! Vérifiez votre boîte mail.');
+          showLogin();
+        }
+      });
+    }
 
     async function logout() {
       await supabase.auth.signOut();
       currentUser = null;
       currentProfile = null;
-      showLanding();
+      showLandingPage();
     }
 
-    function showLanding() {
-      const t = translations[currentLang];
-      const isRTL = currentLang === 'ar';
-
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen" ${isRTL ? 'dir="rtl"' : ''}>
-          <nav class="bg-gray-900 bg-opacity-50 backdrop-blur-md">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center h-16">
-                <div class="flex-shrink-0">
-                  <h1 class="text-2xl font-bold text-yellow-500">${t.title}</h1>
-                </div>
-                <div class="flex gap-6 items-center">
-                  <div class="flex gap-2 border-l border-gray-600 pl-4">
-                    <span class="lang-selector text-2xl ${currentLang === 'fr' ? 'active' : ''}" onclick="setLanguage('fr')" title="Français">🇫🇷</span>
-                    <span class="lang-selector text-2xl ${currentLang === 'en' ? 'active' : ''}" onclick="setLanguage('en')" title="English">🇬🇧</span>
-                    <span class="lang-selector text-2xl ${currentLang === 'ar' ? 'active' : ''}" onclick="setLanguage('ar')" title="العربية">🇸🇦</span>
-                    <span class="lang-selector text-2xl ${currentLang === 'ru' ? 'active' : ''}" onclick="setLanguage('ru')" title="Русский">🇷🇺</span>
-                    <span class="lang-selector text-2xl ${currentLang === 'hi' ? 'active' : ''}" onclick="setLanguage('hi')" title="हिन्दी">🇮🇳</span>
-                    <span class="lang-selector text-2xl ${currentLang === 'zh' ? 'active' : ''}" onclick="setLanguage('zh')" title="中文">🇨🇳</span>
-                  </div>
-                  <a href="/how-it-works.html" class="text-white hover:text-yellow-400 transition">${t.howItWorks}</a>
-                  <button onclick="showAuthPage('login')" class="text-white hover:text-yellow-500 px-4 py-2 transition">
-                    ${t.login}
-                  </button>
-                  <button onclick="showAuthPage('signup')" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">
-                    ${t.signup}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div class="text-center mb-12">
-              <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                ${t.heroTitle} <span class="text-yellow-500">${t.heroAmount}</span> ${t.heroSuffix}
-              </h2>
-              <p class="text-xl text-gray-300 mb-12 max-w-3xl mx-auto">
-                ${t.heroSubtitle}
-              </p>
-              <button onclick="showAuthPage('signup')" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
-                ${t.ctaButton}
-              </button>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6 my-16">
-              <div class="rounded-xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" 
-                     alt="Burj Khalifa Dubai" 
-                     class="w-full h-64 object-cover">
-              </div>
-              <div class="rounded-xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" 
-                     alt="Dubai Marina" 
-                     class="w-full h-64 object-cover">
-              </div>
-              <div class="rounded-xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" 
-                     alt="Dubai Skyline" 
-                     class="w-full h-64 object-cover">
-              </div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8 mt-20">
-              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                <div class="text-4xl font-bold text-yellow-500 mb-2">20%</div>
-                <div class="text-gray-300">${t.stat1}</div>
-              </div>
-              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                <div class="text-4xl font-bold text-yellow-500 mb-2">24/7</div>
-                <div class="text-gray-300">${t.stat2}</div>
-              </div>
-              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                <div class="text-4xl font-bold text-yellow-500 mb-2">48h</div>
-                <div class="text-gray-300">${t.stat3}</div>
-              </div>
-            </div>
-
-            <div class="mt-20">
-              <h3 class="text-3xl font-bold text-center mb-12">${t.examplesTitle}</h3>
-              <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-6 text-gray-900">
-                  <div class="text-sm font-medium mb-2">${t.example1}</div>
-                  <div class="text-3xl font-bold mb-2">6,000 AED</div>
-                  <div class="text-sm">${t.commission}</div>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-6 text-gray-900">
-                  <div class="text-sm font-medium mb-2">${t.example2}</div>
-                  <div class="text-3xl font-bold mb-2">10,000 AED</div>
-                  <div class="text-sm">${t.commission}</div>
-                </div>
-                <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 rounded-xl p-6 text-gray-900">
-                  <div class="text-sm font-medium mb-2">${t.example3}</div>
-                  <div class="text-3xl font-bold mb-2">20,000 AED</div>
-                  <div class="text-sm">${t.commission}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <footer class="bg-gray-900 text-white py-8 mt-16">
-            <div class="max-w-7xl mx-auto px-4 text-center">
-              <p class="mb-4">&copy; 2025 ${t.title}. ${t.footer}.</p>
-              <div class="space-x-6">
-                <a href="/terms.html" class="hover:text-yellow-400 transition">${t.terms}</a>
-                <a href="/privacy.html" class="hover:text-yellow-400 transition">${t.privacy}</a>
-                <a href="/how-it-works.html" class="hover:text-yellow-400 transition">${t.howItWorks}</a>
-                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t.contact}</a>
-              </div>
-            </div>
-          </footer>
-        </div>
-      `;
-    }
-
-    function showAuthPage(type) {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen flex items-center justify-center px-4">
-          <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl shadow-2xl p-8">
-            <h2 id="formTitle" class="text-3xl font-bold mb-8 text-center text-yellow-500">
-              ${type === 'login' ? 'Connexion' : 'Devenir Apporteur'}
-            </h2>
-
-            <form id="loginForm" class="space-y-6 ${type === 'login' ? '' : 'hidden'}">
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Email</label>
-                <input type="email" id="loginEmail" required
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Mot de passe</label>
-                <input type="password" id="loginPassword" required
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div class="text-right">
-                <a href="#" class="text-sm text-yellow-500 hover:underline" onclick="showReset(); return false;">Mot de passe oublié ?</a>
-              </div>
-              <button type="submit"
-                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">
-                Se connecter
-              </button>
-              <p class="text-center text-gray-400">
-                Pas encore inscrit ? <a href="#" class="text-yellow-500 hover:underline" onclick="showSignup(); return false;">Créer un compte</a>
-              </p>
-            </form>
-
-            <form id="signupForm" class="space-y-6 ${type === 'signup' ? '' : 'hidden'}">
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Nom complet</label>
-                <input type="text" id="signupName" required
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Email</label>
-                <input type="email" id="signupEmail" required
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Téléphone</label>
-                <input type="tel" id="signupPhone" required
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Mot de passe</label>
-                <input type="password" id="signupPassword" required minlength="6"
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                <p class="text-xs text-gray-400 mt-1">Minimum 6 caractères</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Confirmer le mot de passe</label>
-                <input type="password" id="signupPasswordConfirm" required minlength="6"
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit"
-                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">
-                Créer mon compte
-              </button>
-              <p class="text-center text-gray-400">
-                Déjà inscrit ? <a href="#" class="text-yellow-500 hover:underline" onclick="showLogin(); return false;">Connexion</a>
-              </p>
-            </form>
-
-            <form id="resetForm" class="space-y-6 hidden">
-              <div class="text-center mb-6">
-                <p class="text-gray-300">Entrez votre email pour recevoir un lien de réinitialisation</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Email</label>
-                <input type="email" id="resetEmail" required
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit"
-                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">
-                Envoyer le lien
-              </button>
-              <p class="text-center text-gray-400">
-                <a href="#" class="text-yellow-500 hover:underline" onclick="showLogin(); return false;">Retour à la connexion</a>
-              </p>
-            </form>
-          </div>
-        </div>
-      `;
-      
-      const loginForm = document.getElementById('loginForm');
-      if (loginForm) loginForm.onsubmit = window.handleLogin;
-
-      const signupForm = document.getElementById('signupForm');
-      if (signupForm) signupForm.onsubmit = window.handleSignup;
-
-      const resetForm = document.getElementById('resetForm');
-      if (resetForm) resetForm.onsubmit = window.handleReset;
-    }
-
-    function showUpdatePasswordPage() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen flex items-center justify-center px-4">
-          <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl shadow-2xl p-8">
-            <h2 class="text-3xl font-bold mb-8 text-center text-yellow-500">
-              Nouveau mot de passe
-            </h2>
-
-            <form id="updatePasswordForm" class="space-y-6">
-              <div class="text-center mb-6">
-                <p class="text-gray-300">Entrez votre nouveau mot de passe</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Nouveau mot de passe</label>
-                <input type="password" id="newPassword" required minlength="6"
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                <p class="text-xs text-gray-400 mt-1">Minimum 6 caractères</p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-200 mb-2">Confirmer le mot de passe</label>
-                <input type="password" id="confirmPassword" required minlength="6"
-                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit"
-                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition duration-300">
-                Mettre à jour le mot de passe
-              </button>
-            </form>
-          </div>
-        </div>
-      `;
-
-      const updatePasswordForm = document.getElementById('updatePasswordForm');
-      if (updatePasswordForm) {
-        updatePasswordForm.onsubmit = window.handleUpdatePassword;
-      }
-    }
-
-    function showReferrerDashboard() {
-      loadReferrerLeads();
-    }
-
-    async function loadReferrerLeads() {
-      const { data: leads, error } = await supabase
+    async function showReferrerDashboard() {
+      const { data: leads } = await supabase
         .from('leads')
         .select('*')
         .eq('referrer_id', currentUser.id)
         .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Erreur chargement leads:', error);
-        return;
-      }
-
-      const stats = {
-        total: leads.reduce((sum, lead) => sum + (lead.referrer_commission || 0), 0),
-        active: leads.filter(l => l.status !== 'vendu').length,
-        sold: leads.filter(l => l.status === 'vendu').length
-      };
+      const totalEarnings = leads ? leads.reduce((sum, lead) => sum + (lead.referrer_commission || 0), 0) : 0;
+      const activeLeads = leads ? leads.filter(l => l.status !== 'vendu' && l.status !== 'loué').length : 0;
+      const completedDeals = leads ? leads.filter(l => l.status === 'vendu' || l.status === 'loué').length : 0;
 
       document.getElementById('app').innerHTML = `
-        <div class="min-h-screen">
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
           <nav class="bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex justify-between items-center h-16">
@@ -713,25 +322,26 @@
             <div class="grid md:grid-cols-3 gap-6 mb-8">
               <div class="bg-gray-800 rounded-xl p-6">
                 <div class="text-sm text-gray-400 mb-1">Gains totaux</div>
-                <div class="text-3xl font-bold text-yellow-500">${stats.total.toLocaleString()} AED</div>
+                <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
               </div>
               <div class="bg-gray-800 rounded-xl p-6">
                 <div class="text-sm text-gray-400 mb-1">Leads en cours</div>
-                <div class="text-3xl font-bold text-blue-400">${stats.active}</div>
+                <div class="text-3xl font-bold text-blue-400">${activeLeads}</div>
               </div>
               <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-sm text-gray-400 mb-1">Ventes conclues</div>
-                <div class="text-3xl font-bold text-green-400">${stats.sold}</div>
+                <div class="text-sm text-gray-400 mb-1">Ventes/Locations conclues</div>
+                <div class="text-3xl font-bold text-green-400">${completedDeals}</div>
               </div>
             </div>
 
-            <div class="mb-6">
-              <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
-                + Ajouter un lead
-              </button>
-            </div>
+            <button onclick="showAddLeadForm()" class="mb-6 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 px-6 py-3 rounded-lg font-semibold">
+              + Ajouter un lead
+            </button>
 
             <div class="bg-gray-800 rounded-xl overflow-hidden">
+              <div class="px-6 py-4 border-b border-gray-700">
+                <h3 class="text-lg font-semibold text-white">Mes leads</h3>
+              </div>
               <div class="overflow-x-auto">
                 <table class="w-full">
                   <thead class="bg-gray-700">
@@ -745,124 +355,147 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-700">
-                    ${leads.map(lead => {
+                    ${leads && leads.length > 0 ? leads.map(lead => {
                       const leadTypeLabel = lead.lead_type === 'sale_buyer' ? '🏠 Acheteur' : 
                                            lead.lead_type === 'sale_seller' ? '🏡 Vendeur' :
                                            lead.lead_type === 'rent_landlord' ? '🏢 Loc. (proprio)' : 
-                                           '🔑 Loc. (locataire)';
+                                           lead.lead_type === 'rent_tenant' ? '🔑 Loc. (locataire)' : 
+                                           '🏠 Acheteur';
                       const budgetDisplay = lead.lead_type === 'rent_landlord' ? 
                                            (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' AED/an' : '-') :
                                            (lead.budget ? lead.budget.toLocaleString() + ' AED' : '-');
+                      
+                      let statusBadge = '';
+                      if (lead.status === 'nouveau') statusBadge = '<span class="px-3 py-1 bg-blue-600 text-white rounded-full text-sm">nouveau</span>';
+                      else if (lead.status === 'visite') statusBadge = '<span class="px-3 py-1 bg-yellow-600 text-white rounded-full text-sm">visite</span>';
+                      else if (lead.status === 'offre') statusBadge = '<span class="px-3 py-1 bg-orange-600 text-white rounded-full text-sm">offre</span>';
+                      else if (lead.status === 'vendu') statusBadge = '<span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">vendu</span>';
+                      else if (lead.status === 'loué') statusBadge = '<span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">loué</span>';
                       
                       return `
                         <tr class="hover:bg-gray-700">
                           <td class="px-6 py-4">
                             <div class="font-medium text-white">${lead.client_name}</div>
-                            <div class="text-sm text-gray-400">${lead.client_email}</div>
+                            <div class="text-sm text-gray-400">${lead.client_phone}</div>
                           </td>
-                          <td class="px-6 py-4 text-gray-300">${leadTypeLabel}</td>
+                          <td class="px-6 py-4 text-gray-300 text-sm">${leadTypeLabel}</td>
                           <td class="px-6 py-4 text-gray-300">${lead.property_type}</td>
                           <td class="px-6 py-4 text-gray-300">${budgetDisplay}</td>
-                          <td class="px-6 py-4">
-                            <span class="px-3 py-1 rounded-full text-xs font-medium
-                              ${lead.status === 'nouveau' ? 'bg-blue-900 text-blue-300' : ''}
-                              ${lead.status === 'visite' ? 'bg-yellow-900 text-yellow-300' : ''}
-                              ${lead.status === 'offre' ? 'bg-orange-900 text-orange-300' : ''}
-                              ${lead.status === 'vendu' ? 'bg-green-900 text-green-300' : ''}">
-                              ${lead.status}
-                            </span>
-                          </td>
-                          <td class="px-6 py-4 font-medium text-yellow-500">
+                          <td class="px-6 py-4">${statusBadge}</td>
+                          <td class="px-6 py-4 text-yellow-500 font-semibold">
                             ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
                           </td>
                         </tr>
                       `;
-                    }).join('')}
+                    }).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Aucun lead pour le moment</td></tr>'}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
-      `;
-    }
 
-    function showAddLeadForm() {
-      const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
-      modal.innerHTML = `
-        <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full max-h-[90vh] overflow-y-auto">
-          <h3 class="text-2xl font-bold text-yellow-500 mb-6">Ajouter un lead</h3>
-          <form id="addLeadForm" class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Type de lead *</label>
-              <select id="leadType" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
-                <option value="">Sélectionner...</option>
-                <option value="sale_buyer">🏠 Vente - Client cherche à acheter</option>
-                <option value="sale_seller">🏡 Vente - Propriétaire cherche à vendre</option>
-                <option value="rent_landlord">🏢 Location - Propriétaire cherche à louer son bien</option>
-                <option value="rent_tenant">🔑 Location - Client cherche à louer</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Nom du client *</label>
-              <input type="text" id="leadClientName" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
-              <input type="email" id="leadClientEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone *</label>
-              <input type="tel" id="leadClientPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">Type de propriété *</label>
-              <select id="leadPropertyType" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
-                <option value="">Sélectionner...</option>
-                <option value="Appartement">Appartement</option>
-                <option value="Villa">Villa</option>
-                <option value="Townhouse">Townhouse</option>
-                <option value="Penthouse">Penthouse</option>
-                <option value="Studio">Studio</option>
-                <option value="Bureau">Bureau</option>
-                <option value="Commerce">Commerce</option>
-              </select>
-            </div>
-            <div id="budgetField" class="hidden">
-              <label class="block text-sm font-medium text-gray-300 mb-2" id="budgetLabel">Budget (AED) *</label>
-              <input type="number" id="leadBudget" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
-              <p class="text-xs text-gray-400 mt-1" id="budgetHelper">Montant en AED</p>
-            </div>
-            <div id="rentField" class="hidden">
-              <label class="block text-sm font-medium text-gray-300 mb-2">Loyer annuel souhaité (AED) *</label>
-              <input type="number" id="leadAnnualRent" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white">
-              <p class="text-xs text-gray-400 mt-1">Montant en AED par an</p>
-            </div>
-            <div class="flex gap-4 mt-6">
-              <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg">
-                Ajouter
-              </button>
-              <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg">
-                Annuler
+        <!-- Modal Ajouter un lead -->
+        <div id="addLeadModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-gray-800">
+            <div class="flex justify-between items-center mb-4">
+              <h3 class="text-xl font-bold text-white">Ajouter un nouveau lead</h3>
+              <button onclick="closeAddLeadModal()" class="text-gray-400 hover:text-gray-200">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
               </button>
             </div>
-          </form>
+            
+            <form id="addLeadForm" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Type de lead *</label>
+                <select id="leadType" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <option value="">Sélectionnez un type</option>
+                  <option value="sale_buyer">🏠 Vente - Client cherche à acheter</option>
+                  <option value="sale_seller">🏡 Vente - Propriétaire cherche à vendre</option>
+                  <option value="rent_landlord">🏢 Location - Propriétaire cherche à louer son bien</option>
+                  <option value="rent_tenant">🔑 Location - Client cherche à louer</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Nom du client *</label>
+                <input type="text" id="clientName" required 
+                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                       placeholder="Ex: Ahmed Al Mansouri">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
+                <input type="email" id="clientEmail" required 
+                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                       placeholder="Ex: ahmed@email.com">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone *</label>
+                <input type="tel" id="clientPhone" required 
+                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                       placeholder="Ex: +971 50 123 4567">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Type de propriété *</label>
+                <select id="propertyType" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                  <option value="">Sélectionnez un type</option>
+                  <option value="Appartement">Appartement</option>
+                  <option value="Villa">Villa</option>
+                  <option value="Townhouse">Townhouse</option>
+                  <option value="Penthouse">Penthouse</option>
+                  <option value="Studio">Studio</option>
+                  <option value="Bureau">Bureau</option>
+                  <option value="Commerce">Commerce</option>
+                </select>
+              </div>
+
+              <div id="budgetField" class="hidden">
+                <label class="block text-sm font-medium text-gray-300 mb-2">
+                  <span id="budgetLabel">Budget *</span>
+                </label>
+                <input type="number" id="budget" 
+                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                       placeholder="Ex: 1000000">
+                <p class="mt-1 text-sm text-gray-400" id="budgetHelper">Montant en AED</p>
+              </div>
+
+              <div id="rentField" class="hidden">
+                <label class="block text-sm font-medium text-gray-300 mb-2">Loyer annuel souhaité *</label>
+                <input type="number" id="annualRent" 
+                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                       placeholder="Ex: 150000">
+                <p class="mt-1 text-sm text-gray-400">Montant en AED par an</p>
+              </div>
+
+              <div class="flex justify-end space-x-3 pt-4">
+                <button type="button" onclick="closeAddLeadModal()"
+                        class="px-6 py-2 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-700">
+                  Annuler
+                </button>
+                <button type="submit"
+                        class="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 rounded-lg font-semibold">
+                  Ajouter le lead
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       `;
-      document.body.appendChild(modal);
 
-      const leadTypeSelect = document.getElementById('leadType');
-      const budgetField = document.getElementById('budgetField');
-      const rentField = document.getElementById('rentField');
-      const budgetInput = document.getElementById('leadBudget');
-      const rentInput = document.getElementById('leadAnnualRent');
-      const budgetLabel = document.getElementById('budgetLabel');
-      const budgetHelper = document.getElementById('budgetHelper');
-
-      leadTypeSelect.addEventListener('change', function() {
+      document.getElementById('leadType').addEventListener('change', function() {
         const leadType = this.value;
-        
+        const budgetField = document.getElementById('budgetField');
+        const rentField = document.getElementById('rentField');
+        const budgetInput = document.getElementById('budget');
+        const rentInput = document.getElementById('annualRent');
+        const budgetLabel = document.getElementById('budgetLabel');
+        const budgetHelper = document.getElementById('budgetHelper');
+
         budgetField.classList.add('hidden');
         rentField.classList.add('hidden');
         budgetInput.removeAttribute('required');
@@ -871,17 +504,17 @@
         if (leadType === 'sale_buyer') {
           budgetField.classList.remove('hidden');
           budgetInput.setAttribute('required', 'required');
-          budgetLabel.textContent = "Budget d'achat (AED) *";
+          budgetLabel.textContent = "Budget d'achat *";
           budgetHelper.textContent = "Budget d'achat en AED";
         } else if (leadType === 'sale_seller') {
           budgetField.classList.remove('hidden');
           budgetInput.setAttribute('required', 'required');
-          budgetLabel.textContent = "Prix de vente souhaité (AED) *";
+          budgetLabel.textContent = "Prix de vente souhaité *";
           budgetHelper.textContent = "Prix de vente en AED";
         } else if (leadType === 'rent_tenant') {
           budgetField.classList.remove('hidden');
           budgetInput.setAttribute('required', 'required');
-          budgetLabel.textContent = "Budget de loyer annuel (AED) *";
+          budgetLabel.textContent = "Budget de loyer annuel *";
           budgetHelper.textContent = "Budget de loyer en AED par an";
         } else if (leadType === 'rent_landlord') {
           rentField.classList.remove('hidden');
@@ -893,37 +526,67 @@
         e.preventDefault();
         
         const leadType = document.getElementById('leadType').value;
-        const leadData = {
-          referrer_id: currentUser.id,
-          lead_type: leadType,
-          client_name: document.getElementById('leadClientName').value,
-          client_email: document.getElementById('leadClientEmail').value,
-          client_phone: document.getElementById('leadClientPhone').value,
-          property_type: document.getElementById('leadPropertyType').value,
-          status: 'nouveau'
-        };
+        const clientName = document.getElementById('clientName').value;
+        const clientEmail = document.getElementById('clientEmail').value;
+        const clientPhone = document.getElementById('clientPhone').value;
+        const propertyType = document.getElementById('propertyType').value;
+        const budget = document.getElementById('budget').value || null;
+        const annualRent = document.getElementById('annualRent').value || null;
+        
+        try {
+          const leadData = {
+            referrer_id: currentUser.id,
+            lead_type: leadType,
+            client_name: clientName,
+            client_email: clientEmail,
+            client_phone: clientPhone,
+            property_type: propertyType,
+            status: 'nouveau'
+          };
 
-        if (leadType === 'sale_buyer' || leadType === 'sale_seller' || leadType === 'rent_tenant') {
-          leadData.budget = parseFloat(document.getElementById('leadBudget').value);
-        } else if (leadType === 'rent_landlord') {
-          leadData.annual_rent = parseFloat(document.getElementById('leadAnnualRent').value);
-        }
-
-        const { error } = await supabase.from('leads').insert([leadData]);
-
-        if (error) {
+          if (leadType === 'sale_buyer' || leadType === 'sale_seller' || leadType === 'rent_tenant') {
+            leadData.budget = parseFloat(budget);
+          } else if (leadType === 'rent_landlord') {
+            leadData.annual_rent = parseFloat(annualRent);
+          }
+          
+          const { error } = await supabase
+            .from('leads')
+            .insert([leadData]);
+          
+          if (error) throw error;
+          
+          alert('Lead ajouté avec succès !');
+          closeAddLeadModal();
+          showReferrerDashboard();
+          
+        } catch (error) {
+          console.error('Erreur:', error);
           alert('Erreur lors de l\'ajout du lead');
-          console.error(error);
-        } else {
-          modal.remove();
-          loadReferrerLeads();
         }
       });
     }
 
+    window.showAddLeadForm = function() {
+      document.getElementById('addLeadModal').classList.remove('hidden');
+    };
+
+    window.closeAddLeadModal = function() {
+      document.getElementById('addLeadModal').classList.add('hidden');
+      document.getElementById('addLeadForm').reset();
+      document.getElementById('budgetField').classList.add('hidden');
+      document.getElementById('rentField').classList.add('hidden');
+    };
+
     async function showAdminDashboard() {
-      const { data: allProfiles } = await supabase.from('profiles').select('*');
-      const { data: allLeads } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+      const { data: allLeads } = await supabase
+        .from('leads')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      const { data: allProfiles } = await supabase
+        .from('profiles')
+        .select('*');
 
       const profileMap = {};
       if (allProfiles) {
@@ -933,12 +596,13 @@
       }
 
       const referrers = allProfiles ? allProfiles.filter(p => p.role === 'referrer') : [];
-      const activeLeads = allLeads ? allLeads.filter(l => l.status !== 'vendu').length : 0;
-      const sales = allLeads ? allLeads.filter(l => l.status === 'vendu').length : 0;
+      const activeLeads = allLeads ? allLeads.filter(l => l.status !== 'vendu' && l.status !== 'loué').length : 0;
+      const completedSales = allLeads ? allLeads.filter(l => l.status === 'vendu').length : 0;
+      const completedRentals = allLeads ? allLeads.filter(l => l.status === 'loué').length : 0;
       const totalCommissions = allLeads ? allLeads.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) : 0;
 
       document.getElementById('app').innerHTML = `
-        <div class="min-h-screen">
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
           <nav class="bg-gray-900">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex justify-between items-center h-16">
@@ -962,8 +626,9 @@
                 <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
               </div>
               <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-sm text-gray-400 mb-1">Ventes</div>
-                <div class="text-3xl font-bold text-green-400">${sales}</div>
+                <div class="text-sm text-gray-400 mb-1">Ventes/Locations</div>
+                <div class="text-3xl font-bold text-green-400">${completedSales + completedRentals}</div>
+                <div class="text-xs text-gray-400 mt-1">${completedSales} ventes • ${completedRentals} locations</div>
               </div>
               <div class="bg-gray-800 rounded-xl p-6">
                 <div class="text-sm text-gray-400 mb-1">Commissions</div>
@@ -1001,6 +666,9 @@
                                            (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' AED/an' : '-') :
                                            (lead.budget ? lead.budget.toLocaleString() + ' AED' : '-');
                       
+                      const isRental = lead.lead_type === 'rent_landlord' || lead.lead_type === 'rent_tenant';
+                      const isSale = lead.lead_type === 'sale_buyer' || lead.lead_type === 'sale_seller';
+                      
                       return `
                         <tr class="hover:bg-gray-700">
                           <td class="px-6 py-4 text-gray-300">${referrerName}</td>
@@ -1012,16 +680,21 @@
                           <td class="px-6 py-4 text-gray-300">${lead.property_type}</td>
                           <td class="px-6 py-4 text-gray-300">${budgetDisplay}</td>
                           <td class="px-6 py-4">
-                            <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm">
-                              <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
-                              <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
-                              <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
-                              <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>Vendu</option>
+                            <select onchange="updateLeadStatus(${lead.id}, this.value, '${lead.lead_type}')" class="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm">
+                              <option value="nouveau"${lead.status === 'nouveau' ? ' selected' : ''}>Nouveau</option>
+                              <option value="visite"${lead.status === 'visite' ? ' selected' : ''}>Visite</option>
+                              <option value="offre"${lead.status === 'offre' ? ' selected' : ''}>Offre</option>
+                              ${isSale ? `<option value="vendu"${lead.status === 'vendu' ? ' selected' : ''}>Vendu</option>` : ''}
+                              ${isRental ? `<option value="loué"${lead.status === 'loué' ? ' selected' : ''}>Loué</option>` : ''}
                             </select>
                           </td>
                           <td class="px-6 py-4">
-                            ${lead.status === 'vendu' ? `<span class="text-green-400 text-sm">${lead.referrer_commission?.toLocaleString() || 0} AED</span>` : 
-                              `<button onclick="markAsSold(${lead.id}, '${lead.lead_type}')" class="text-yellow-500 hover:text-yellow-400 text-sm">Marquer vendu</button>`}
+                            ${(lead.status === 'vendu' || lead.status === 'loué') ? 
+                              `<span class="text-green-400 text-sm">${(lead.referrer_commission?.toLocaleString() || 0)} AED</span>` : 
+                              `<button onclick="markAsCompleted(${lead.id}, '${lead.lead_type}')" class="text-yellow-500 hover:text-yellow-400 text-sm">
+                                ${isRental ? 'Marquer loué' : 'Marquer vendu'}
+                              </button>`
+                            }
                           </td>
                         </tr>
                       `;
@@ -1035,7 +708,7 @@
       `;
     }
 
-    async function updateLeadStatus(leadId, newStatus) {
+    window.updateLeadStatus = async function(leadId, newStatus, leadType) {
       const { error } = await supabase
         .from('leads')
         .update({ status: newStatus })
@@ -1044,19 +717,27 @@
       if (error) {
         alert('Erreur lors de la mise à jour');
         console.error(error);
+      } else {
+        showAdminDashboard();
       }
-    }
+    };
 
-    async function markAsSold(leadId, leadType) {
+    window.markAsCompleted = async function(leadId, leadType) {
+      const isRental = leadType === 'rent_landlord' || leadType === 'rent_tenant';
+      const isSale = leadType === 'sale_buyer' || leadType === 'sale_seller';
+      
       let priceLabel = '';
       let commissionRate = 0;
+      let newStatus = '';
       
-      if (leadType === 'sale_buyer' || leadType === 'sale_seller') {
+      if (isSale) {
         priceLabel = 'Prix de vente final (AED):';
         commissionRate = 0.02;
-      } else if (leadType === 'rent_landlord' || leadType === 'rent_tenant') {
+        newStatus = 'vendu';
+      } else if (isRental) {
         priceLabel = 'Loyer annuel du contrat (AED):';
         commissionRate = 0.05;
+        newStatus = 'loué';
       }
       
       const price = prompt(priceLabel);
@@ -1070,7 +751,7 @@
       const { error } = await supabase
         .from('leads')
         .update({
-          status: 'vendu',
+          status: newStatus,
           sale_price: priceValue,
           agent_commission: agentCommission,
           referrer_commission: referrerCommission,
@@ -1084,16 +765,15 @@
       } else {
         showAdminDashboard();
       }
-    }
+    };
 
     window.showAuthPage = showAuthPage;
     window.showLogin = showLogin;
     window.showSignup = showSignup;
     window.showReset = showReset;
     window.logout = logout;
-    window.showAddLeadForm = showAddLeadForm;
-    window.updateLeadStatus = updateLeadStatus;
-    window.markAsSold = markAsSold;
+
+    init();
   </script>
 </body>
 </html>
