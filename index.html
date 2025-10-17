@@ -708,7 +708,7 @@
       `;
     }
 
-    window.updateLeadStatus = async function(leadId, newStatus, leadType) {
+    async function updateLeadStatus(leadId, newStatus) {
       const { error } = await supabase
         .from('leads')
         .update({ status: newStatus })
@@ -717,12 +717,10 @@
       if (error) {
         alert('Erreur lors de la mise à jour');
         console.error(error);
-      } else {
-        showAdminDashboard();
       }
-    };
+    }
 
-    window.markAsCompleted = async function(leadId, leadType) {
+    async function markAsCompleted(leadId, leadType) {
       const isRental = leadType === 'rent_landlord' || leadType === 'rent_tenant';
       const isSale = leadType === 'sale_buyer' || leadType === 'sale_seller';
       
@@ -765,7 +763,10 @@
       } else {
         showAdminDashboard();
       }
-    };
+    }
+
+    window.updateLeadStatus = updateLeadStatus;
+    window.markAsCompleted = markAsCompleted;
 
     window.showAuthPage = showAuthPage;
     window.showLogin = showLogin;
