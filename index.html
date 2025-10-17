@@ -1070,29 +1070,56 @@
     };
 
     window.viewContract = async function(referrerId) {
-      try {
-        const { data: profile } = await supabaseClient
-          .from('profiles')
-          .select('contract_file_url')
-          .eq('id', referrerId)
-          .single();
-        
-        if (profile && profile.contract_file_url) {
-          const fileName = profile.contract_file_url.split('/').pop();
-          
-          const { data } = supabaseClient.storage
-            .from('Contracts')
-            .getPublicUrl(`${referrerId}/${fileName}`);
-          
-          window.open(data.publicUrl, '_blank');
-        } else {
-          alert('Aucun fichier de contrat trouvé');
-        }
-      } catch (error) {
-        console.error('Error viewing contract:', error);
-        alert('Erreur lors de la visualisation du contrat: ' + error.message);
-      }
-    };
+  try {
+    // 1. Récupérer les infos du profil
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('profiles')
+      .select('contract_file_url, name')
+      .eq('id', referrerId)
+      .single();
+    
+    if (profileError) throw profileError;
+    
+    if (!profile || !profile.contract_file_url) {
+      alert('Aucun fichier de contrat trouvé');
+      return;
+    }
+    
+    // 2. Extraire le chemin du fichier depuis l'URL publique
+    // L'URL est du type: https://...supabase.co/storage/v1/object/public/Contracts/{referrerId}/contract_xxx.pdf
+    const urlParts = profile.contract_file_url.split('/Contracts/');
+    if (urlParts.length < 2) {
+      alert('URL du contrat invalide');
+      return;
+    }
+    const filePath = urlParts[1];
+    
+    // 3. Créer une URL signée (valide 60 secondes)
+    const { data: signedUrlData, error: urlError } = await supabaseClient.storage
+      .from('Contracts')
+      .createSignedUrl(filePath, 60);
+    
+    if (urlError) {
+      console.error('Error creating signed URL:', urlError);
+      throw urlError;
+    }
+    
+    // 4. Télécharger automatiquement le fichier
+    const link = document.createElement('a');
+    link.href = signedUrlData.signedUrl;
+    link.download = `contract_${profile.name || referrerId}.pdf`;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    alert('Téléchargement du contrat lancé !');
+    
+  } catch (error) {
+    console.error('Error viewing contract:', error);
+    alert('Erreur lors de l\'ouverture du contrat: ' + error.message);
+  }
+};
 
     window.validateContract = async function(referrerId) {
       if (!confirm('Valider ce contrat ?')) return;
