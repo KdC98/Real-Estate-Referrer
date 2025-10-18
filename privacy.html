@@ -1,399 +1,646 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Politique de Confidentialité - Programme d'Apporteurs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #d97706 100%);
-            min-height: 100vh;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Politique de confidentialité - Real Estate Referrer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+:root{
+--brand-navy: #1e3a8a;
+--brand-blue: #2563eb;
+--brand-purple: #7c3aed;
+--brand-gold: #fbbf24;
+}
+
+.brand-gradient{
+  background-image: linear-gradient(135deg, var(--brand-navy), var(--brand-blue), var(--brand-purple));
+}
+
+.brand-text{
+  background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass-card{
+  background:rgba(255,255,255,.98);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.3);
+  box-shadow:0 8px 32px rgba(0,0,0,.08)
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+.section-card{
+  scroll-margin-top: 100px;
+}
+</style>
 </head>
-<body class="font-sans text-white">
-    <!-- Header -->
-    <header class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-yellow-400">Karyne de Clercq</h1>
-            <a href="index.html" class="bg-white text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">
-                Retour
-            </a>
-        </div>
-    </header>
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50">
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12">
-        <div class="bg-white text-gray-800 rounded-3xl p-8 md:p-12 max-w-5xl mx-auto shadow-2xl">
-            <h1 class="text-4xl font-bold mb-4 text-blue-900">Politique de Confidentialité</h1>
-            <p class="text-gray-600 mb-8">Dernière mise à jour : 17 octobre 2025</p>
+<!-- Header -->
+<header class="bg-white shadow-sm sticky top-0 z-50 border-b border-blue-100">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+<div class="flex justify-between items-center">
+<a href="index.html" class="text-2xl font-bold brand-text">
+<i class="fas fa-building mr-2"></i>Real Estate Referrer
+</a>
+<nav class="flex gap-4 items-center text-sm font-medium">
+<a href="index.html" class="text-gray-600 hover:text-[#1e3a8a] transition"><i class="fas fa-home mr-1"></i>Accueil</a>
+<a href="how-it-works.html" class="text-gray-600 hover:text-[#1e3a8a] transition"><i class="fas fa-question-circle mr-1"></i>Comment ça marche</a>
+<a href="login.html" class="bg-[#1e3a8a] hover:bg-[#7c3aed] text-white px-6 py-2 rounded-lg transition">
+<i class="fas fa-sign-in-alt mr-1"></i>Login
+</a>
+</nav>
+</div>
+</div>
+</header>
 
-            <!-- Introduction -->
-            <section class="mb-12">
-                <p class="text-lg leading-relaxed mb-4">
-                    Chez Real Estate Referrer, nous accordons une grande importance à la protection de vos données personnelles. 
-                    Cette Politique de Confidentialité explique comment nous collectons, utilisons, stockons et protégeons vos informations 
-                    lorsque vous utilisez notre plateforme.
-                </p>
-                <p class="text-lg leading-relaxed">
-                    En utilisant notre plateforme, vous acceptez les pratiques décrites dans cette politique.
-                </p>
-            </section>
+<!-- Hero Section -->
+<section class="py-12 px-4 brand-gradient text-white relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+<div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+</div>
+<div class="max-w-4xl mx-auto text-center relative z-10">
+<i class="fas fa-shield-alt text-5xl mb-4"></i>
+<h1 class="text-4xl md:text-5xl font-bold mb-4">Politique de confidentialité</h1>
+<p class="text-lg text-blue-100">Protection de vos données personnelles - Conformité RGPD</p>
+<p class="text-sm text-blue-200 mt-4">Dernière mise à jour : 19 octobre 2025</p>
+</div>
+</section>
 
-            <!-- Article 1 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">1. Responsable du Traitement des Données</h2>
-                <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded">
-                    <p class="text-lg mb-2"><strong>Nom :</strong> Karyne de Clercq</p>
-                    <p class="text-lg mb-2"><strong>Activité :</strong> Agent immobilier</p>
-                    <p class="text-lg mb-2"><strong>Localisation :</strong> Dubai, Émirats Arabes Unis</p>
-                    <p class="text-lg mb-2"><strong>Email :</strong> <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline">contact@real-estate-referrer.com</a></p>
-                    <p class="text-lg"><strong>Site web :</strong> <a href="https://real-estate-referrer.com" class="text-blue-600 hover:underline">real-estate-referrer.com</a></p>
-                </div>
-            </section>
+<!-- Content -->
+<div class="max-w-5xl mx-auto px-4 py-12">
 
-            <!-- Article 2 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">2. Données Collectées</h2>
-                <p class="text-lg mb-4">Nous collectons les types de données suivants :</p>
+<!-- Préambule -->
+<div class="glass-card rounded-xl p-8 mb-6 border-l-4 border-[#1e3a8a]">
+<div class="flex items-start">
+<i class="fas fa-info-circle text-3xl text-[#1e3a8a] mr-4 mt-1"></i>
+<div>
+<h2 class="text-2xl font-bold text-gray-900 mb-3">Introduction</h2>
+<p class="text-gray-700 leading-relaxed mb-3">
+<strong>Karyne de Clercq</strong>, agent immobilier à Dubai (ci-après "nous", "notre"), accorde une grande importance à la protection de vos données personnelles.
+</p>
+<p class="text-gray-700 leading-relaxed">
+La présente Politique de confidentialité décrit comment nous collectons, utilisons, partageons et protégeons vos données personnelles dans le cadre de la plateforme <strong>Real Estate Referrer</strong> et du programme d'apporteurs d'affaires.
+</p>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">2.1 Données d'inscription des apporteurs</h3>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4 mb-6">
-                    <li>Nom complet</li>
-                    <li>Adresse email</li>
-                    <li>Numéro de téléphone</li>
-                    <li>Informations bancaires (pour le versement des commissions)</li>
-                    <li>Contrat d'apporteur signé (document PDF)</li>
-                    <li>Mot de passe (hashé et sécurisé)</li>
-                </ul>
+<!-- Section 1 : Responsable du traitement -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-[#2563eb]">
+<div class="flex items-start mb-4">
+<i class="fas fa-user-shield text-3xl text-[#2563eb] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">1. Responsable du traitement</h2>
+</div>
+<div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+<div class="grid md:grid-cols-2 gap-4">
+<div>
+<p class="font-bold text-gray-900 mb-1 flex items-center"><i class="fas fa-user text-[#2563eb] mr-2"></i>Nom</p>
+<p class="text-gray-700">Karyne de Clercq</p>
+</div>
+<div>
+<p class="font-bold text-gray-900 mb-1 flex items-center"><i class="fas fa-briefcase text-[#2563eb] mr-2"></i>Activité</p>
+<p class="text-gray-700">Agent immobilier - Dubai, UAE</p>
+</div>
+<div>
+<p class="font-bold text-gray-900 mb-1 flex items-center"><i class="fas fa-envelope text-[#2563eb] mr-2"></i>Email</p>
+<a href="mailto:contact@real-estate-referrer.com" class="text-[#2563eb] hover:underline">contact@real-estate-referrer.com</a>
+</div>
+<div>
+<p class="font-bold text-gray-900 mb-1 flex items-center"><i class="fas fa-globe text-[#2563eb] mr-2"></i>Site web</p>
+<a href="https://real-estate-referrer-3kp6.vercel.app" class="text-[#2563eb] hover:underline text-sm">real-estate-referrer-3kp6.vercel.app</a>
+</div>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">2.2 Données des leads soumis</h3>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4 mb-6">
-                    <li>Nom du client potentiel</li>
-                    <li>Email du client</li>
-                    <li>Téléphone du client</li>
-                    <li>Type de bien recherché</li>
-                    <li>Budget ou loyer annuel</li>
-                    <li>Type de lead (achat, vente, location)</li>
-                </ul>
+<!-- Section 2 : Données collectées -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-[#7c3aed]">
+<div class="flex items-start mb-4">
+<i class="fas fa-database text-3xl text-[#7c3aed] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">2. Données collectées</h2>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">2.3 Données de navigation</h3>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4 mb-6">
-                    <li>Adresse IP</li>
-                    <li>Type de navigateur et appareil</li>
-                    <li>Pages visitées sur la plateforme</li>
-                    <li>Date et heure de connexion</li>
-                    <li>Cookies techniques (voir section 7)</li>
-                </ul>
+<div class="space-y-6">
+<!-- Apporteurs -->
+<div>
+<h3 class="font-bold text-gray-900 mb-3 text-lg flex items-center">
+<i class="fas fa-users text-[#2563eb] mr-2"></i>2.1. Données des apporteurs d'affaires
+</h3>
+<div class="bg-blue-50 p-5 rounded-lg border-2 border-blue-200">
+<p class="text-gray-700 font-semibold mb-3">Lorsque vous vous inscrivez en tant qu'apporteur, nous collectons :</p>
+<div class="grid md:grid-cols-2 gap-3">
+<div class="flex items-start">
+<i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Données d'identité</p>
+<p class="text-gray-600 text-sm">Nom, prénom</p>
+</div>
+</div>
+<div class="flex items-start">
+<i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Coordonnées</p>
+<p class="text-gray-600 text-sm">Email, téléphone</p>
+</div>
+</div>
+<div class="flex items-start">
+<i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Données de connexion</p>
+<p class="text-gray-600 text-sm">Adresse IP, logs</p>
+</div>
+</div>
+<div class="flex items-start">
+<i class="fas fa-check-circle text-green-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Données financières</p>
+<p class="text-gray-600 text-sm">Coordonnées bancaires (paiement)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">2.4 Données de transaction</h3>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-                    <li>Historique des leads soumis</li>
-                    <li>Statut des leads (nouveau, visite, offre, vendu/loué)</li>
-                    <li>Commissions calculées et versées</li>
-                    <li>Dates de transactions</li>
-                </ul>
-            </section>
+<!-- Leads -->
+<div>
+<h3 class="font-bold text-gray-900 mb-3 text-lg flex items-center">
+<i class="fas fa-user-plus text-[#7c3aed] mr-2"></i>2.2. Données des leads (clients potentiels)
+</h3>
+<div class="bg-purple-50 p-5 rounded-lg border-2 border-purple-200">
+<div class="bg-red-50 border-2 border-red-500 p-3 rounded-lg mb-4">
+<p class="text-red-900 font-bold text-sm flex items-center">
+<i class="fas fa-exclamation-triangle mr-2"></i>Ces données ne peuvent être collectées QUE si la personne a donné son consentement explicite
+</p>
+</div>
+<p class="text-gray-700 font-semibold mb-3">Données transmises par les apporteurs :</p>
+<div class="grid md:grid-cols-2 gap-3">
+<div class="flex items-start">
+<i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Identité du client</p>
+<p class="text-gray-600 text-sm">Nom, prénom</p>
+</div>
+</div>
+<div class="flex items-start">
+<i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Coordonnées</p>
+<p class="text-gray-600 text-sm">Email, téléphone</p>
+</div>
+</div>
+<div class="flex items-start">
+<i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Projet immobilier</p>
+<p class="text-gray-600 text-sm">Type de bien, budget</p>
+</div>
+</div>
+<div class="flex items-start">
+<i class="fas fa-check-circle text-purple-600 mr-2 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Consentement</p>
+<p class="text-gray-600 text-sm">Preuve d'autorisation</p>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-            <!-- Article 3 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">3. Base Légale et Finalités du Traitement</h2>
-                <p class="text-lg mb-4">Nous traitons vos données personnelles pour les finalités suivantes :</p>
+<!-- Techniques -->
+<div>
+<h3 class="font-bold text-gray-900 mb-3 text-lg flex items-center">
+<i class="fas fa-cog text-gray-600 mr-2"></i>2.3. Données techniques
+</h3>
+<div class="bg-gray-50 p-5 rounded-lg border-2 border-gray-200">
+<p class="text-gray-700 mb-2">Collectées automatiquement lors de votre navigation :</p>
+<ul class="list-disc list-inside text-gray-700 space-y-1 ml-4 text-sm">
+<li>Adresse IP et géolocalisation approximative</li>
+<li>Type de navigateur et appareil</li>
+<li>Pages visitées et durée de navigation</li>
+<li>Cookies (si vous les acceptez)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.1 Gestion du programme d'apporteurs</h3>
-                <p class="text-lg mb-4">
-                    <strong>Base légale :</strong> Exécution du contrat d'apporteur<br>
-                    <strong>Finalité :</strong> Créer et gérer votre compte, valider votre contrat, suivre vos leads
-                </p>
+<!-- Section 3 : Finalités -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-green-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-bullseye text-3xl text-green-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">3. Pourquoi utilisons-nous vos données ?</h2>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.2 Communication</h3>
-                <p class="text-lg mb-4">
-                    <strong>Base légale :</strong> Intérêt légitime et consentement<br>
-                    <strong>Finalité :</strong> Vous envoyer des notifications sur l'avancement de vos leads, des mises à jour du programme, et des informations importantes
-                </p>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-green-50 p-5 rounded-lg border-2 border-green-200">
+<div class="flex items-center mb-3">
+<i class="fas fa-handshake text-green-600 text-2xl mr-3"></i>
+<h4 class="font-bold text-gray-900">Gestion du programme</h4>
+</div>
+<ul class="text-sm text-gray-700 space-y-1 ml-2">
+<li>• Création et gestion de votre compte</li>
+<li>• Traitement des leads</li>
+<li>• Suivi des transactions</li>
+</ul>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.3 Calcul et paiement des commissions</h3>
-                <p class="text-lg mb-4">
-                    <strong>Base légale :</strong> Exécution du contrat et obligation légale (comptabilité)<br>
-                    <strong>Finalité :</strong> Calculer les commissions dues et effectuer les virements bancaires
-                </p>
+<div class="bg-blue-50 p-5 rounded-lg border-2 border-blue-200">
+<div class="flex items-center mb-3">
+<i class="fas fa-comments text-blue-600 text-2xl mr-3"></i>
+<h4 class="font-bold text-gray-900">Communication</h4>
+</div>
+<ul class="text-sm text-gray-700 space-y-1 ml-2">
+<li>• Envoi d'emails de notification</li>
+<li>• Support client</li>
+<li>• Informations importantes</li>
+</ul>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.4 Respect des obligations légales</h3>
-                <p class="text-lg mb-4">
-                    <strong>Base légale :</strong> Obligation légale<br>
-                    <strong>Finalité :</strong> Conformité RERA, obligations fiscales et comptables
-                </p>
+<div class="bg-yellow-50 p-5 rounded-lg border-2 border-yellow-200">
+<div class="flex items-center mb-3">
+<i class="fas fa-dollar-sign text-yellow-600 text-2xl mr-3"></i>
+<h4 class="font-bold text-gray-900">Paiements</h4>
+</div>
+<ul class="text-sm text-gray-700 space-y-1 ml-2">
+<li>• Calcul des commissions</li>
+<li>• Versement des paiements</li>
+<li>• Historique financier</li>
+</ul>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.5 Sécurité et prévention de la fraude</h3>
-                <p class="text-lg">
-                    <strong>Base légale :</strong> Intérêt légitime<br>
-                    <strong>Finalité :</strong> Protéger la plateforme contre les abus, la fraude et les activités malveillantes
-                </p>
-            </section>
+<div class="bg-purple-50 p-5 rounded-lg border-2 border-purple-200">
+<div class="flex items-center mb-3">
+<i class="fas fa-chart-line text-purple-600 text-2xl mr-3"></i>
+<h4 class="font-bold text-gray-900">Amélioration</h4>
+</div>
+<ul class="text-sm text-gray-700 space-y-1 ml-2">
+<li>• Analyse de l'utilisation</li>
+<li>• Amélioration de la plateforme</li>
+<li>• Statistiques anonymisées</li>
+</ul>
+</div>
+</div>
 
-            <!-- Article 4 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">4. Partage des Données</h2>
-                <p class="text-lg mb-4">
-                    Nous ne vendons <strong>jamais</strong> vos données personnelles à des tiers.
-                </p>
-                <p class="text-lg mb-4">Vos données peuvent être partagées uniquement dans les cas suivants :</p>
+<div class="bg-orange-50 border-l-4 border-orange-500 p-4 rounded-r-lg mt-4">
+<p class="text-sm text-gray-800"><i class="fas fa-balance-scale text-orange-500 mr-2"></i><strong>Base légale :</strong> L'utilisation de vos données repose sur votre consentement, l'exécution du contrat, et nos obligations légales.</p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">4.1 Traitement des leads</h3>
-                <p class="text-lg mb-4">
-                    Les informations des leads (clients potentiels) que vous soumettez sont partagées avec l'agent immobilier 
-                    afin qu'il puisse contacter et suivre ces clients. C'est l'objectif principal du programme d'apporteurs.
-                </p>
+<!-- Section 4 : Partage -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-orange-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-share-alt text-3xl text-orange-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">4. Partage de vos données</h2>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">4.2 Prestataires techniques</h3>
-                <p class="text-lg mb-4">Nous utilisons des prestataires de services pour faire fonctionner la plateforme :</p>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4 mb-6">
-                    <li><strong>Supabase</strong> : Hébergement de la base de données et authentification (serveurs sécurisés)</li>
-                    <li><strong>Vercel</strong> : Hébergement du site web</li>
-                </ul>
-                <p class="text-lg mb-4">
-                    Ces prestataires sont contractuellement tenus de protéger vos données et ne peuvent les utiliser qu'aux fins pour lesquelles nous les engageons.
-                </p>
+<div class="space-y-4">
+<div class="bg-green-50 border-2 border-green-500 p-5 rounded-lg">
+<h4 class="font-bold text-green-900 mb-2 flex items-center text-lg">
+<i class="fas fa-shield-alt mr-2"></i>Principe général
+</h4>
+<p class="text-gray-700">
+Nous <strong>ne vendons JAMAIS</strong> vos données personnelles à des tiers. Vos données sont traitées avec la plus grande confidentialité.
+</p>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">4.3 Obligations légales</h3>
-                <p class="text-lg">
-                    Nous pouvons divulguer vos données si la loi nous y oblige (par exemple, en réponse à une ordonnance judiciaire ou une demande des autorités compétentes à Dubai).
-                </p>
-            </section>
+<div>
+<h4 class="font-bold text-gray-900 mb-3 flex items-center">
+<i class="fas fa-users text-[#2563eb] mr-2"></i>Partages nécessaires au service
+</h4>
+<div class="space-y-3">
+<div class="flex items-start bg-white p-4 rounded-lg border border-gray-200">
+<i class="fas fa-server text-[#2563eb] mr-3 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Hébergement technique</p>
+<p class="text-gray-600 text-sm">Vercel (hébergement), Supabase (base de données) - Conformes RGPD</p>
+</div>
+</div>
+<div class="flex items-start bg-white p-4 rounded-lg border border-gray-200">
+<i class="fas fa-credit-card text-[#2563eb] mr-3 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Paiements</p>
+<p class="text-gray-600 text-sm">Banques et prestataires de paiement pour le versement des commissions</p>
+</div>
+</div>
+<div class="flex items-start bg-white p-4 rounded-lg border border-gray-200">
+<i class="fas fa-gavel text-[#2563eb] mr-3 mt-1"></i>
+<div>
+<p class="font-bold text-gray-900 text-sm">Obligations légales</p>
+<p class="text-gray-600 text-sm">Autorités compétentes en cas de demande légale (RERA, tribunaux)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
-            <!-- Article 5 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">5. Sécurité des Données</h2>
-                <p class="text-lg mb-4">
-                    Nous mettons en œuvre des mesures de sécurité techniques et organisationnelles pour protéger vos données contre 
-                    la perte, l'accès non autorisé, la divulgation, l'altération ou la destruction.
-                </p>
+<!-- Section 5 : Sécurité -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-red-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-lock text-3xl text-red-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">5. Sécurité de vos données</h2>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">5.1 Mesures de sécurité techniques</h3>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4 mb-6">
-                    <li><strong>Chiffrement des données</strong> : Toutes les communications entre votre navigateur et notre serveur sont chiffrées via HTTPS (SSL/TLS)</li>
-                    <li><strong>Mots de passe sécurisés</strong> : Les mots de passe sont hashés avec bcrypt et ne sont jamais stockés en clair</li>
-                    <li><strong>Authentification sécurisée</strong> : Utilisation de tokens JWT pour les sessions utilisateurs</li>
-                    <li><strong>Stockage sécurisé</strong> : Les contrats signés sont stockés dans un bucket privé avec accès restreint</li>
-                    <li><strong>Sauvegardes régulières</strong> : Sauvegardes automatiques de la base de données</li>
-                </ul>
+<div class="grid md:grid-cols-3 gap-4 mb-4">
+<div class="bg-blue-50 p-4 rounded-lg text-center border-2 border-blue-200">
+<i class="fas fa-key text-[#2563eb] text-3xl mb-2"></i>
+<p class="font-bold text-gray-900 text-sm">Chiffrement</p>
+<p class="text-gray-600 text-xs mt-1">SSL/TLS pour toutes les connexions</p>
+</div>
+<div class="bg-green-50 p-4 rounded-lg text-center border-2 border-green-200">
+<i class="fas fa-shield-alt text-green-600 text-3xl mb-2"></i>
+<p class="font-bold text-gray-900 text-sm">Authentification</p>
+<p class="text-gray-600 text-xs mt-1">Mots de passe hashés (bcrypt)</p>
+</div>
+<div class="bg-purple-50 p-4 rounded-lg text-center border-2 border-purple-200">
+<i class="fas fa-database text-purple-600 text-3xl mb-2"></i>
+<p class="font-bold text-gray-900 text-sm">Sauvegardes</p>
+<p class="text-gray-600 text-xs mt-1">Backups réguliers et sécurisés</p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">5.2 Mesures organisationnelles</h3>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-                    <li>Accès limité aux données uniquement au personnel autorisé</li>
-                    <li>Surveillance des accès et des activités suspectes</li>
-                    <li>Politique de mots de passe stricts</li>
-                    <li>Formation du personnel sur la protection des données</li>
-                </ul>
-            </section>
+<p class="text-gray-700 text-sm">
+Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre tout accès non autorisé, perte, destruction ou divulgation.
+</p>
+</div>
 
-            <!-- Article 6 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">6. Conservation des Données</h2>
-                <p class="text-lg mb-4">Nous conservons vos données personnelles selon les durées suivantes :</p>
+<!-- Section 6 : Conservation -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-[#7c3aed]">
+<div class="flex items-start mb-4">
+<i class="fas fa-clock text-3xl text-[#7c3aed] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">6. Durée de conservation</h2>
+</div>
 
-                <div class="space-y-4">
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <p class="text-lg"><strong>Données de compte actif :</strong> Pendant toute la durée d'utilisation de la plateforme</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <p class="text-lg"><strong>Données après résiliation :</strong> 3 ans après la fermeture du compte (obligations comptables et fiscales)</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <p class="text-lg"><strong>Contrats signés :</strong> 10 ans (conformité juridique)</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <p class="text-lg"><strong>Données de transaction :</strong> 7 ans (obligations comptables UAE)</p>
-                    </div>
-                    <div class="bg-gray-100 p-4 rounded-lg">
-                        <p class="text-lg"><strong>Logs de sécurité :</strong> 1 an maximum</p>
-                    </div>
-                </div>
+<div class="space-y-3">
+<div class="flex items-start bg-blue-50 p-4 rounded-lg border-l-4 border-[#2563eb]">
+<i class="fas fa-user-check text-[#2563eb] mr-3 mt-1 text-xl"></i>
+<div>
+<p class="font-bold text-gray-900">Comptes actifs</p>
+<p class="text-gray-700 text-sm">Tant que votre compte est actif + 3 ans après inactivité</p>
+</div>
+</div>
 
-                <p class="text-lg mt-6">
-                    À l'expiration de ces délais, vos données sont supprimées de manière sécurisée ou anonymisées de façon irréversible.
-                </p>
-            </section>
+<div class="flex items-start bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+<i class="fas fa-file-invoice-dollar text-green-600 mr-3 mt-1 text-xl"></i>
+<div>
+<p class="font-bold text-gray-900">Données financières</p>
+<p class="text-gray-700 text-sm">10 ans (obligations comptables et fiscales)</p>
+</div>
+</div>
 
-            <!-- Article 7 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">7. Cookies et Technologies Similaires</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">7.1 Qu'est-ce qu'un cookie ?</h3>
-                <p class="text-lg mb-4">
-                    Un cookie est un petit fichier texte stocké sur votre appareil lorsque vous visitez notre site. 
-                    Il permet de mémoriser vos préférences et de faciliter votre navigation.
-                </p>
+<div class="flex items-start bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+<i class="fas fa-trash-alt text-yellow-600 mr-3 mt-1 text-xl"></i>
+<div>
+<p class="font-bold text-gray-900">Suppression de compte</p>
+<p class="text-gray-700 text-sm">Suppression immédiate sauf données légalement obligatoires</p>
+</div>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">7.2 Types de cookies utilisés</h3>
-                <div class="space-y-4 mb-6">
-                    <div class="bg-green-50 border-l-4 border-green-600 p-4 rounded">
-                        <p class="text-lg font-semibold mb-2">Cookies strictement nécessaires (obligatoires)</p>
-                        <p class="text-lg">
-                            Ces cookies sont essentiels au fonctionnement de la plateforme. Ils permettent l'authentification, 
-                            la gestion de votre session, et la sécurité. Vous ne pouvez pas les refuser.
-                        </p>
-                    </div>
-                </div>
+<!-- Section 7 : VOS DROITS (MISE EN VALEUR) -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-4 border-[#fbbf24] bg-gradient-to-br from-yellow-50 to-orange-50">
+<div class="flex items-start mb-4">
+<i class="fas fa-user-shield text-4xl text-[#fbbf24] mr-4"></i>
+<div>
+<h2 class="text-3xl font-bold text-gray-900 mb-2">7. Vos droits RGPD</h2>
+<p class="text-gray-700 font-semibold">Vous avez le contrôle total sur vos données personnelles</p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">7.3 Gestion des cookies</h3>
-                <p class="text-lg">
-                    Vous pouvez configurer votre navigateur pour refuser tous les cookies ou pour être averti lorsqu'un cookie est déposé. 
-                    Notez cependant que le refus des cookies strictement nécessaires empêchera l'utilisation de la plateforme.
-                </p>
-            </section>
+<div class="grid md:grid-cols-2 gap-4 mt-6">
+<!-- Droit d'accès -->
+<div class="bg-white p-5 rounded-lg shadow-lg border-2 border-blue-200 hover:border-blue-400 transition">
+<div class="flex items-center mb-3">
+<div class="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mr-3">
+<i class="fas fa-eye text-[#2563eb] text-xl"></i>
+</div>
+<h4 class="font-bold text-gray-900">Droit d'accès</h4>
+</div>
+<p class="text-gray-700 text-sm">Consulter toutes les données que nous détenons sur vous</p>
+</div>
 
-            <!-- Article 8 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">8. Vos Droits</h2>
-                <p class="text-lg mb-4">
-                    Conformément au RGPD (Règlement Général sur la Protection des Données) et à la législation des Émirats Arabes Unis, 
-                    vous disposez des droits suivants :
-                </p>
+<!-- Droit de rectification -->
+<div class="bg-white p-5 rounded-lg shadow-lg border-2 border-green-200 hover:border-green-400 transition">
+<div class="flex items-center mb-3">
+<div class="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mr-3">
+<i class="fas fa-edit text-green-600 text-xl"></i>
+</div>
+<h4 class="font-bold text-gray-900">Droit de rectification</h4>
+</div>
+<p class="text-gray-700 text-sm">Corriger les données inexactes ou incomplètes</p>
+</div>
 
-                <div class="space-y-6">
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="text-xl font-semibold mb-2">🔍 Droit d'accès</h3>
-                        <p class="text-lg">Vous pouvez demander une copie de toutes les données personnelles que nous détenons sur vous.</p>
-                    </div>
+<!-- Droit à l'effacement -->
+<div class="bg-white p-5 rounded-lg shadow-lg border-2 border-red-200 hover:border-red-400 transition">
+<div class="flex items-center mb-3">
+<div class="bg-red-100 w-12 h-12 rounded-full flex items-center justify-center mr-3">
+<i class="fas fa-trash-alt text-red-600 text-xl"></i>
+</div>
+<h4 class="font-bold text-gray-900">Droit à l'effacement</h4>
+</div>
+<p class="text-gray-700 text-sm">Demander la suppression de vos données ("droit à l'oubli")</p>
+</div>
 
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="text-xl font-semibold mb-2">✏️ Droit de rectification</h3>
-                        <p class="text-lg">Vous pouvez demander la correction de données inexactes ou incomplètes vous concernant.</p>
-                    </div>
+<!-- Droit d'opposition -->
+<div class="bg-white p-5 rounded-lg shadow-lg border-2 border-orange-200 hover:border-orange-400 transition">
+<div class="flex items-center mb-3">
+<div class="bg-orange-100 w-12 h-12 rounded-full flex items-center justify-center mr-3">
+<i class="fas fa-hand-paper text-orange-600 text-xl"></i>
+</div>
+<h4 class="font-bold text-gray-900">Droit d'opposition</h4>
+</div>
+<p class="text-gray-700 text-sm">Vous opposer au traitement de vos données (sauf obligations légales)</p>
+</div>
 
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="text-xl font-semibold mb-2">🗑️ Droit à l'effacement ("droit à l'oubli")</h3>
-                        <p class="text-lg">Vous pouvez demander la suppression de vos données dans certaines conditions (sauf obligations légales de conservation).</p>
-                    </div>
+<!-- Droit à la limitation -->
+<div class="bg-white p-5 rounded-lg shadow-lg border-2 border-purple-200 hover:border-purple-400 transition">
+<div class="flex items-center mb-3">
+<div class="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mr-3">
+<i class="fas fa-pause-circle text-[#7c3aed] text-xl"></i>
+</div>
+<h4 class="font-bold text-gray-900">Droit à la limitation</h4>
+</div>
+<p class="text-gray-700 text-sm">Limiter temporairement l'utilisation de vos données</p>
+</div>
 
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="text-xl font-semibold mb-2">⛔ Droit d'opposition</h3>
-                        <p class="text-lg">Vous pouvez vous opposer au traitement de vos données à des fins de prospection commerciale.</p>
-                    </div>
+<!-- Droit à la portabilité -->
+<div class="bg-white p-5 rounded-lg shadow-lg border-2 border-teal-200 hover:border-teal-400 transition">
+<div class="flex items-center mb-3">
+<div class="bg-teal-100 w-12 h-12 rounded-full flex items-center justify-center mr-3">
+<i class="fas fa-download text-teal-600 text-xl"></i>
+</div>
+<h4 class="font-bold text-gray-900">Droit à la portabilité</h4>
+</div>
+<p class="text-gray-700 text-sm">Recevoir vos données dans un format structuré et lisible</p>
+</div>
+</div>
 
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="text-xl font-semibold mb-2">⏸️ Droit à la limitation du traitement</h3>
-                        <p class="text-lg">Vous pouvez demander la limitation du traitement de vos données dans certaines circonstances.</p>
-                    </div>
+<div class="bg-[#2563eb] text-white p-5 rounded-lg mt-6">
+<p class="font-bold mb-2 text-lg flex items-center">
+<i class="fas fa-envelope mr-2"></i>Comment exercer vos droits ?
+</p>
+<p class="text-sm mb-3">
+Envoyez-nous un email à <a href="mailto:contact@real-estate-referrer.com" class="underline font-semibold">contact@real-estate-referrer.com</a> avec votre demande.
+</p>
+<p class="text-xs text-blue-100">
+Nous vous répondrons dans un délai maximum de 30 jours. Si votre demande est complexe, ce délai peut être prolongé de 2 mois supplémentaires.
+</p>
+</div>
+</div>
 
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="text-xl font-semibold mb-2">📦 Droit à la portabilité</h3>
-                        <p class="text-lg">Vous pouvez recevoir vos données dans un format structuré et lisible par machine, et les transmettre à un autre responsable de traitement.</p>
-                    </div>
+<!-- Section 8 : Cookies -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-[#2563eb]">
+<div class="flex items-start mb-4">
+<i class="fas fa-cookie-bite text-3xl text-[#2563eb] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">8. Cookies</h2>
+</div>
 
-                    <div class="border-l-4 border-blue-600 pl-4">
-                        <h3 class="text-xl font-semibold mb-2">🚫 Droit de retirer votre consentement</h3>
-                        <p class="text-lg">Lorsque le traitement est basé sur votre consentement, vous pouvez le retirer à tout moment.</p>
-                    </div>
-                </div>
+<div class="space-y-4">
+<p class="text-gray-700">La plateforme utilise des cookies pour améliorer votre expérience :</p>
 
-                <h3 class="text-xl font-semibold mb-3 mt-8">Comment exercer vos droits ?</h3>
-                <p class="text-lg mb-4">
-                    Pour exercer l'un de ces droits, envoyez-nous un email à :
-                </p>
-                <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded">
-                    <p class="text-lg font-semibold">
-                        📧 <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline">contact@real-estate-referrer.com</a>
-                    </p>
-                    <p class="text-lg mt-2">
-                        Objet : "Exercice de mes droits RGPD"
-                    </p>
-                </div>
-                <p class="text-lg mt-4">
-                    Nous nous engageons à répondre à votre demande dans un délai de <strong>30 jours</strong>.
-                </p>
-            </section>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+<h4 class="font-bold text-gray-900 mb-2 flex items-center">
+<i class="fas fa-cog text-[#2563eb] mr-2"></i>Cookies essentiels
+</h4>
+<p class="text-sm text-gray-700 mb-2">Nécessaires au fonctionnement (connexion, session)</p>
+<span class="inline-block bg-blue-200 text-blue-900 text-xs px-3 py-1 rounded-full font-bold">Obligatoires</span>
+</div>
 
-            <!-- Article 9 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">9. Transferts Internationaux de Données</h2>
-                <p class="text-lg mb-4">
-                    Vos données sont principalement hébergées et traitées sur des serveurs situés dans l'Union Européenne et aux États-Unis, 
-                    via nos prestataires techniques (Supabase, Vercel).
-                </p>
-                <p class="text-lg mb-4">
-                    Ces prestataires respectent les normes internationales de protection des données et sont conformes au RGPD. 
-                    Des garanties appropriées (clauses contractuelles types de l'UE) sont mises en place pour protéger vos données 
-                    lors de ces transferts.
-                </p>
-            </section>
+<div class="bg-gray-50 p-4 rounded-lg border-2 border-gray-200">
+<h4 class="font-bold text-gray-900 mb-2 flex items-center">
+<i class="fas fa-chart-bar text-gray-600 mr-2"></i>Cookies analytiques
+</h4>
+<p class="text-sm text-gray-700 mb-2">Statistiques d'utilisation (anonymes)</p>
+<span class="inline-block bg-gray-200 text-gray-900 text-xs px-3 py-1 rounded-full font-bold">Avec consentement</span>
+</div>
+</div>
 
-            <!-- Article 10 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">10. Protection des Mineurs</h2>
-                <p class="text-lg">
-                    Notre plateforme n'est pas destinée aux personnes de moins de 18 ans. 
-                    Nous ne collectons pas sciemment de données personnelles auprès de mineurs. 
-                    Si nous apprenons qu'un mineur a fourni des données personnelles, nous supprimerons ces informations immédiatement.
-                </p>
-            </section>
+<p class="text-sm text-gray-600 italic">
+Vous pouvez gérer vos préférences de cookies dans les paramètres de votre navigateur.
+</p>
+</div>
+</div>
 
-            <!-- Article 11 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">11. Modifications de la Politique de Confidentialité</h2>
-                <p class="text-lg mb-4">
-                    Nous nous réservons le droit de modifier cette Politique de Confidentialité à tout moment pour refléter 
-                    les changements dans nos pratiques ou les évolutions législatives.
-                </p>
-                <p class="text-lg">
-                    Toute modification substantielle vous sera notifiée par email et/ou via une notification sur la plateforme. 
-                    La version mise à jour sera publiée avec une nouvelle date de "Dernière mise à jour" en haut de cette page.
-                </p>
-            </section>
+<!-- Section 9 : Transferts internationaux -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-green-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-globe text-3xl text-green-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">9. Transferts internationaux</h2>
+</div>
+<p class="text-gray-700 mb-3">
+Vos données sont principalement stockées sur des serveurs situés dans l'Union Européenne et aux États-Unis (prestataires conformes RGPD).
+</p>
+<div class="bg-green-50 border-2 border-green-500 p-4 rounded-lg">
+<p class="text-sm text-gray-800">
+<i class="fas fa-check-circle text-green-600 mr-2"></i>
+<strong>Garanties :</strong> Tous nos prestataires sont soumis à des clauses contractuelles types approuvées par la Commission Européenne ou sont certifiés Privacy Shield.
+</p>
+</div>
+</div>
 
-            <!-- Article 12 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">12. Réclamations</h2>
-                <p class="text-lg mb-4">
-                    Si vous estimez que vos droits en matière de protection des données ne sont pas respectés, 
-                    vous avez le droit de déposer une réclamation auprès de l'autorité de contrôle compétente.
-                </p>
-                <p class="text-lg">
-                    Pour les résidents de l'Union Européenne, vous pouvez contacter la Commission Nationale de l'Informatique 
-                    et des Libertés (CNIL) en France ou l'autorité équivalente dans votre pays.
-                </p>
-            </section>
+<!-- Section 10 : Réclamation -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-orange-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-balance-scale text-3xl text-orange-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">10. Réclamation</h2>
+</div>
+<p class="text-gray-700 mb-3">
+Si vous estimez que vos droits ne sont pas respectés, vous pouvez déposer une réclamation auprès de l'autorité de contrôle compétente :
+</p>
+<div class="bg-orange-50 border-2 border-orange-500 p-5 rounded-lg">
+<p class="font-bold text-gray-900 mb-2">Dubai - TDRA (Telecommunications and Digital Government Regulatory Authority)</p>
+<div class="space-y-1 text-sm text-gray-700">
+<p><i class="fas fa-globe mr-2 text-orange-600"></i>Site web : <a href="https://tdra.gov.ae" class="text-[#2563eb] hover:underline">tdra.gov.ae</a></p>
+<p><i class="fas fa-envelope mr-2 text-orange-600"></i>Email : info@tdra.gov.ae</p>
+</div>
+</div>
+</div>
 
-            <!-- Contact -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">13. Nous Contacter</h2>
-                <p class="text-lg mb-4">
-                    Pour toute question concernant cette Politique de Confidentialité ou le traitement de vos données personnelles, 
-                    n'hésitez pas à nous contacter :
-                </p>
-                <div class="bg-gradient-to-r from-blue-50 to-blue-100 border-2 border-blue-300 rounded-lg p-6">
-                    <p class="text-lg mb-2"><strong>📧 Email :</strong> <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline font-semibold">contact@real-estate-referrer.com</a></p>
-                    <p class="text-lg mb-2"><strong>👤 Nom :</strong> Karyne de Clercq</p>
-                    <p class="text-lg mb-2"><strong>🏢 Activité :</strong> Agent immobilier</p>
-                    <p class="text-lg mb-2"><strong>📍 Localisation :</strong> Dubai, Émirats Arabes Unis</p>
-                    <p class="text-lg"><strong>🌐 Site web :</strong> <a href="https://real-estate-referrer.com" class="text-blue-600 hover:underline">real-estate-referrer.com</a></p>
-                </div>
-                <p class="text-lg mt-4">
-                    <strong>Délai de réponse :</strong> Nous nous engageons à vous répondre sous 24 heures ouvrées.
-                </p>
-            </section>
+<!-- Section 11 : Modifications -->
+<div class="section-card glass-card rounded-xl p-8 mb-6 border-l-4 border-[#7c3aed]">
+<div class="flex items-start mb-4">
+<i class="fas fa-sync-alt text-3xl text-[#7c3aed] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">11. Modifications de la politique</h2>
+</div>
+<p class="text-gray-700 mb-3">
+Nous pouvons modifier cette Politique de confidentialité à tout moment. Les modifications seront publiées sur cette page avec une nouvelle date de mise à jour.
+</p>
+<p class="text-gray-700">
+En cas de modification substantielle, nous vous informerons par email au moins 30 jours avant l'entrée en vigueur.
+</p>
+<p class="text-sm text-gray-600 italic mt-3">
+<i class="fas fa-calendar-alt mr-2"></i>Dernière mise à jour : 19 octobre 2025
+</p>
+</div>
 
-            <div class="border-t-2 border-gray-300 pt-6 mt-12">
-                <p class="text-center text-gray-600 font-semibold">
-                    En utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu et compris cette Politique de Confidentialité.
-                </p>
-            </div>
-        </div>
-    </main>
+<!-- Contact -->
+<div class="glass-card rounded-xl p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-[#2563eb]">
+<div class="flex items-start">
+<i class="fas fa-envelope text-4xl text-[#2563eb] mr-4"></i>
+<div>
+<h3 class="text-2xl font-bold text-gray-900 mb-3">Des questions sur vos données ?</h3>
+<p class="text-gray-700 mb-4">
+N'hésitez pas à nous contacter pour toute question concernant le traitement de vos données personnelles.
+</p>
+<a href="mailto:contact@real-estate-referrer.com" class="inline-block bg-[#2563eb] hover:bg-[#7c3aed] text-white px-6 py-3 rounded-lg font-bold transition">
+<i class="fas fa-paper-plane mr-2"></i>Nous contacter
+</a>
+</div>
+</div>
+</div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-900 bg-opacity-90 text-gray-400 py-8 mt-16">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-4">© 2025 Karyne de Clercq. Tous droits réservés.</p>
-            <div class="flex justify-center gap-6 flex-wrap">
-                <a href="terms.html" class="hover:text-white transition">CGU</a>
-                <a href="privacy.html" class="hover:text-white transition">Confidentialité</a>
-                <a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a>
-                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">Contact</a>
-            </div>
-        </div>
-    </footer>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-400 py-10 px-4 mt-12">
+<div class="max-w-6xl mx-auto">
+<div class="grid md:grid-cols-4 gap-8 mb-6">
+<div>
+<h3 class="text-white font-bold mb-4">Real Estate Referrer</h3>
+<p class="text-sm">Gagnez des commissions en partageant des informations clients à notre agence immobilière à Dubai.</p>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Navigation</h4>
+<ul class="space-y-2 text-sm">
+<li><a href="index.html" class="hover:text-white transition">Accueil</a></li>
+<li><a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a></li>
+<li><a href="login.html" class="hover:text-white transition">Connexion</a></li>
+<li><a href="signup.html" class="hover:text-white transition">Inscription</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Légal</h4>
+<ul class="space-y-2 text-sm">
+<li><a href="terms.html" class="hover:text-white transition">CGU</a></li>
+<li><a href="privacy.html" class="hover:text-white transition">Confidentialité</a></li>
+<li><a href="contract-template.html" class="hover:text-white transition">Template Contrat</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Contact</h4>
+<ul class="space-y-2 text-sm">
+<li><i class="fas fa-envelope mr-2"></i>contact@real-estate-referrer.com</li>
+<li><i class="fas fa-phone mr-2"></i>+971 XX XXX XXXX</li>
+<li><i class="fas fa-map-marker-alt mr-2"></i>Dubai, UAE</li>
+</ul>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-6 text-center text-sm">
+<p>&copy; 2025 Karyne de Clercq. Tous droits réservés.</p>
+</div>
+</div>
+</footer>
+
 </body>
 </html>
