@@ -18,8 +18,21 @@
             }
         }
         
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
         .fade-in-up {
             animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s ease-in-out infinite;
         }
         
         .delay-100 { animation-delay: 0.1s; }
@@ -80,15 +93,18 @@
             <div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full filter blur-3xl"></div>
         </div>
         <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-block bg-green-500 text-white px-4 py-2 rounded-full text-sm font-bold mb-4 animate-pulse">
+                ✨ C'est super simple !
+            </div>
             <h1 class="text-4xl md:text-5xl font-bold mb-6 fade-in-up text-white drop-shadow-lg">
-                Comment ça marche ?
+                Comment ça marche ? 🚀
             </h1>
             <p class="text-lg md:text-xl mb-6 fade-in-up delay-100 text-white/95">
-                Devenez apporteur d'affaires et gagnez jusqu'à <span class="font-bold text-yellow-300">20,000 AED par vente</span>
+                Gagnez jusqu'à <span class="font-bold text-yellow-300 text-2xl">20,000 AED 💰</span> par vente en <strong>5 étapes faciles</strong>
             </p>
             <div class="inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-full font-medium fade-in-up delay-200 shadow-xl">
                 <i class="fas fa-check-circle"></i>
-                <span>100% Gratuit · Sans engagement · Paiement garanti</span>
+                <span>100% Gratuit · Aucune compétence requise · Ça prend 2 minutes !</span>
             </div>
         </div>
     </section>
@@ -96,109 +112,147 @@
     <!-- Timeline des étapes -->
     <section class="py-12 px-4 bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 gradient-text">
-                <i class="fas fa-route mr-3"></i>Votre parcours en 5 étapes
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-3 gradient-text">
+                🎯 5 Étapes Simples
             </h2>
+            <p class="text-center text-gray-600 mb-10 text-lg">Suivez le guide, c'est facile comme bonjour ! 😊</p>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Étape 1 -->
-                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-purple-100">
+                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-purple-100 relative">
+                    <div class="absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                        2 min ⚡
+                    </div>
                     <div class="flex items-center mb-4">
                         <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">
-                            1
+                            1️⃣
                         </div>
                         <h3 class="text-xl font-bold text-gray-900">
-                            <i class="fas fa-user-plus text-blue-600 mr-2"></i>Inscription
+                            Inscription
                         </h3>
                     </div>
-                    <p class="text-gray-700 mb-3 font-medium text-sm">Créez votre compte en 2 minutes</p>
+                    <p class="text-gray-700 mb-3 font-bold text-base">📝 Créez votre compte en 2 minutes chrono !</p>
                     <ul class="text-gray-700 space-y-1 text-sm">
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Nom et prénom</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Email et téléphone</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Mot de passe sécurisé</li>
+                        <li>✅ Votre nom</li>
+                        <li>✅ Votre email</li>
+                        <li>✅ Un mot de passe</li>
                     </ul>
+                    <div class="mt-3 text-xs text-green-600 font-bold">
+                        👉 Même votre grand-mère pourrait le faire !
+                    </div>
                 </div>
 
                 <!-- Étape 2 -->
-                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-pink-100">
+                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-pink-100 relative">
+                    <div class="absolute -top-3 -right-3 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                        Facile 👍
+                    </div>
                     <div class="flex items-center mb-4">
                         <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">
-                            2
+                            2️⃣
                         </div>
                         <h3 class="text-xl font-bold text-gray-900">
-                            <i class="fas fa-users text-purple-600 mr-2"></i>Trouvez des clients
+                            Trouvez des clients
                         </h3>
                     </div>
-                    <p class="text-gray-700 mb-3 font-medium text-sm">Partagez avec votre réseau</p>
+                    <p class="text-gray-700 mb-3 font-bold text-base">🗣️ Parlez-en autour de vous !</p>
                     <ul class="text-gray-700 space-y-1 text-sm">
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Famille et amis</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Collègues de travail</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Réseaux sociaux</li>
+                        <li>👨‍👩‍👧 Famille et amis</li>
+                        <li>💼 Collègues</li>
+                        <li>📱 Sur les réseaux sociaux</li>
                     </ul>
+                    <div class="mt-3 text-xs text-purple-600 font-bold">
+                        💡 Vous connaissez sûrement quelqu'un intéressé !
+                    </div>
                 </div>
 
                 <!-- Étape 3 -->
-                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-green-100">
+                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-green-100 relative">
+                    <div class="absolute -top-3 -right-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                        Simple 🎯
+                    </div>
                     <div class="flex items-center mb-4">
                         <div class="bg-gradient-to-r from-green-600 to-teal-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">
-                            3
+                            3️⃣
                         </div>
                         <h3 class="text-xl font-bold text-gray-900">
-                            <i class="fas fa-plus-circle text-green-600 mr-2"></i>Ajoutez vos leads
+                            Ajoutez le lead
                         </h3>
                     </div>
-                    <p class="text-gray-700 mb-3 font-medium text-sm">Simple depuis votre dashboard</p>
+                    <p class="text-gray-700 mb-3 font-bold text-base">➕ Un simple formulaire à remplir</p>
                     <ul class="text-gray-700 space-y-1 text-sm">
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Nom du client</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Contact (email/tél)</li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Type de propriété</li>
+                        <li>👤 Nom du client</li>
+                        <li>📧 Email ou téléphone</li>
+                        <li>🏠 Type de bien recherché</li>
                     </ul>
+                    <div class="mt-3 text-xs text-green-600 font-bold">
+                        ⏱️ 30 secondes top chrono !
+                    </div>
                 </div>
 
                 <!-- Étape 4 -->
-                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-orange-100">
+                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-2 border-orange-100 relative">
+                    <div class="absolute -top-3 -right-3 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                        Auto 🤖
+                    </div>
                     <div class="flex items-center mb-4">
                         <div class="bg-gradient-to-r from-orange-600 to-red-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">
-                            4
+                            4️⃣
                         </div>
                         <h3 class="text-xl font-bold text-gray-900">
-                            <i class="fas fa-chart-line text-orange-600 mr-2"></i>Suivi en temps réel
+                            Suivez en direct
                         </h3>
                     </div>
-                    <p class="text-gray-700 mb-3 font-medium text-sm">Suivez vos leads 24/7</p>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-medium">
+                    <p class="text-gray-700 mb-3 font-bold text-base">📊 On s'occupe de TOUT !</p>
+                    <div class="grid grid-cols-2 gap-2 text-xs font-medium mb-2">
                         <div class="bg-blue-50 p-2 rounded-lg border border-blue-200">
-                            <i class="fas fa-file-alt text-blue-600"></i> Nouveau
+                            📄 Nouveau
                         </div>
                         <div class="bg-yellow-50 p-2 rounded-lg border border-yellow-200">
-                            <i class="fas fa-home text-yellow-600"></i> Visite
+                            🏠 Visite
                         </div>
                         <div class="bg-purple-50 p-2 rounded-lg border border-purple-200">
-                            <i class="fas fa-handshake text-purple-600"></i> Offre
+                            🤝 Offre
                         </div>
                         <div class="bg-green-50 p-2 rounded-lg border border-green-200">
-                            <i class="fas fa-check-circle text-green-600"></i> Vendu
+                            ✅ Vendu
                         </div>
+                    </div>
+                    <div class="mt-3 text-xs text-orange-600 font-bold">
+                        🛋️ Vous n'avez qu'à regarder !
                     </div>
                 </div>
 
                 <!-- Étape 5 -->
-                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-4 border-yellow-300 md:col-span-2 lg:col-span-1">
+                <div class="glass-card p-6 rounded-2xl shadow-2xl hover:shadow-3xl transition transform hover:-translate-y-1 border-4 border-yellow-300 md:col-span-2 lg:col-span-1 relative bg-gradient-to-br from-yellow-50 to-orange-50">
+                    <div class="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
+                        💰 Jackpot !
+                    </div>
                     <div class="flex items-center mb-4">
                         <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">
-                            5
+                            5️⃣
                         </div>
                         <h3 class="text-xl font-bold text-gray-900">
-                            <i class="fas fa-money-bill-wave text-yellow-600 mr-2"></i>Recevez vos commissions
+                            Touchez l'argent ! 💸
                         </h3>
                     </div>
-                    <p class="text-gray-700 mb-3 font-medium text-sm">Paiement sous 45-60 jours</p>
-                    <div class="bg-yellow-50 border-2 border-yellow-300 p-3 rounded-lg">
+                    <p class="text-gray-700 mb-3 font-bold text-base">🎉 Recevez votre commission</p>
+                    <div class="bg-yellow-100 border-2 border-yellow-400 p-3 rounded-lg">
                         <p class="font-bold text-yellow-900 text-sm mb-1">
-                            <i class="fas fa-star mr-1"></i>20% de la commission agent
+                            ⭐ 20% de la commission agent
                         </p>
-                        <p class="text-xs text-gray-700 font-medium">Transparence · Calcul auto · Historique</p>
+                        <p class="text-xs text-gray-700 font-medium">Paiement sous 45-60 jours</p>
                     </div>
+                    <div class="mt-3 text-xs text-green-600 font-bold">
+                        🏆 Vous n'avez RIEN d'autre à faire !
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10 text-center">
+                <div class="inline-block bg-gradient-to-r from-green-400 to-blue-500 text-white px-8 py-4 rounded-2xl shadow-xl">
+                    <p class="text-2xl font-bold mb-2">🎊 C'est VRAIMENT aussi simple que ça !</p>
+                    <p class="text-sm">Aucune expérience requise · Aucune compétence technique · Juste votre réseau</p>
                 </div>
             </div>
         </div>
@@ -207,10 +261,10 @@
     <!-- Calculs de gains -->
     <section class="py-12 px-4 bg-gradient-to-br from-purple-900 to-blue-900 text-white">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-3">
-                <i class="fas fa-calculator mr-3"></i>Combien puis-je gagner ?
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-2">
+                💰 Combien je vais gagner ?
             </h2>
-            <p class="text-center text-purple-200 mb-10 text-lg">Exemples concrets de commissions</p>
+            <p class="text-center text-yellow-300 mb-10 text-xl font-bold">Spoiler : BEAUCOUP ! 😱</p>
             
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- Exemple 1 -->
@@ -295,80 +349,96 @@
     <!-- Critères d'un bon lead -->
     <section class="py-12 px-4 bg-gradient-to-br from-green-50 via-white to-red-50">
         <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl md:text-4xl font-bold text-center mb-10 gradient-text">
-                <i class="fas fa-clipboard-check mr-3"></i>Critères d'un bon lead
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-3 gradient-text">
+                🎯 C'est quoi un BON client ?
             </h2>
+            <p class="text-center text-gray-600 mb-10 text-lg">Pas de panique, c'est simple à reconnaître ! 😊</p>
             
             <div class="grid md:grid-cols-2 gap-8">
                 <!-- Lead qualifié -->
                 <div class="glass-card p-8 rounded-2xl shadow-2xl border-4 border-green-500">
                     <div class="flex items-center mb-6">
-                        <div class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl mr-4 shadow-lg">
-                            <i class="fas fa-check"></i>
+                        <div class="bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl mr-4 shadow-lg">
+                            ✅
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900">Lead qualifié</h3>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">Client TOP ! 🌟</h3>
+                            <p class="text-green-600 text-sm font-bold">= Commission assurée 💰</p>
+                        </div>
                     </div>
                     <ul class="space-y-4">
                         <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Personne <strong>réellement intéressée</strong> par un achat ou location</span>
+                            <span class="text-green-600 mr-3 mt-1 text-2xl">👍</span>
+                            <span class="text-gray-800 font-medium">Il <strong>veut vraiment</strong> acheter ou louer</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium"><strong>Budget défini</strong> et réaliste</span>
+                            <span class="text-green-600 mr-3 mt-1 text-2xl">💵</span>
+                            <span class="text-gray-800 font-medium">Il a un <strong>budget clair</strong> en tête</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Recherche <strong>active</strong> (0-3 mois)</span>
+                            <span class="text-green-600 mr-3 mt-1 text-2xl">⏰</span>
+                            <span class="text-gray-800 font-medium">Il cherche <strong>maintenant</strong> (pas dans 2 ans !)</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Coordonnées <strong>complètes et exactes</strong></span>
+                            <span class="text-green-600 mr-3 mt-1 text-2xl">📞</span>
+                            <span class="text-gray-800 font-medium">Vous pouvez le <strong>joindre facilement</strong></span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-check-circle text-green-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Motivation claire et <strong>besoin identifié</strong></span>
+                            <span class="text-green-600 mr-3 mt-1 text-2xl">🎯</span>
+                            <span class="text-gray-800 font-medium">Il sait <strong>ce qu'il veut</strong></span>
                         </li>
                     </ul>
+                    <div class="mt-6 bg-green-100 border-2 border-green-400 p-4 rounded-lg">
+                        <p class="text-green-800 font-bold text-center">
+                            💡 En gros : quelqu'un de SÉRIEUX qui cherche VRAIMENT !
+                        </p>
+                    </div>
                 </div>
 
                 <!-- Lead non qualifié -->
                 <div class="glass-card p-8 rounded-2xl shadow-2xl border-4 border-red-500">
                     <div class="flex items-center mb-6">
-                        <div class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl mr-4 shadow-lg">
-                            <i class="fas fa-times"></i>
+                        <div class="bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl mr-4 shadow-lg">
+                            ❌
                         </div>
-                        <h3 class="text-2xl font-bold text-gray-900">Lead non qualifié</h3>
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-900">Pas terrible... 😬</h3>
+                            <p class="text-red-600 text-sm font-bold">= Perte de temps 🚫</p>
+                        </div>
                     </div>
                     <ul class="space-y-4">
                         <li class="flex items-start">
-                            <i class="fas fa-times-circle text-red-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Simple <strong>curiosité</strong> sans projet concret</span>
+                            <span class="text-red-600 mr-3 mt-1 text-2xl">🤷</span>
+                            <span class="text-gray-800 font-medium">Juste <strong>curieux</strong>, pas vraiment intéressé</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-times-circle text-red-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Pas de budget défini ou <strong>budget irréaliste</strong></span>
+                            <span class="text-red-600 mr-3 mt-1 text-2xl">💸</span>
+                            <span class="text-gray-800 font-medium">Aucune idée de son budget (ou <strong>irréaliste</strong>)</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-times-circle text-red-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Projet à <strong>très long terme</strong> (1+ an)</span>
+                            <span class="text-red-600 mr-3 mt-1 text-2xl">📅</span>
+                            <span class="text-gray-800 font-medium">Cherche dans <strong>très longtemps</strong> (1 an+)</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-times-circle text-red-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium">Coordonnées <strong>fausses ou incomplètes</strong></span>
+                            <span class="text-red-600 mr-3 mt-1 text-2xl">📵</span>
+                            <span class="text-gray-800 font-medium"><strong>Injoignable</strong> ou coordonnées fausses</span>
                         </li>
                         <li class="flex items-start">
-                            <i class="fas fa-times-circle text-red-600 mr-3 mt-1 text-lg"></i>
-                            <span class="text-gray-800 font-medium"><strong>Pas joignable</strong> ou ne répond pas</span>
+                            <span class="text-red-600 mr-3 mt-1 text-2xl">🤔</span>
+                            <span class="text-gray-800 font-medium">Ne sait <strong>pas du tout</strong> ce qu'il veut</span>
                         </li>
                     </ul>
+                    <div class="mt-6 bg-red-100 border-2 border-red-400 p-4 rounded-lg">
+                        <p class="text-red-800 font-bold text-center">
+                            🚨 En gros : quelqu'un qui "verra plus tard" !
+                        </p>
+                    </div>
                 </div>
             </div>
 
             <div class="mt-6 bg-gradient-to-r from-blue-500 to-purple-500 border-l-4 border-blue-700 p-5 rounded-r-lg shadow-lg">
-                <p class="text-white font-medium">
-                    <i class="fas fa-lightbulb text-yellow-300 mr-2"></i>
-                    <strong>Astuce :</strong> Un lead qualifié augmente vos chances de commission. Privilégiez la qualité à la quantité !
+                <p class="text-white font-bold text-lg text-center">
+                    🎓 La règle d'or : <span class="text-yellow-300">1 client SÉRIEUX</span> vaut mieux que <span class="text-red-300">10 curieux</span> !
                 </p>
             </div>
         </div>
@@ -542,19 +612,23 @@
     <!-- CTA Final -->
     <section class="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
         <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-4">Prêt à commencer ?</h2>
-            <p class="text-lg md:text-xl mb-6 text-blue-100">Créez votre compte gratuitement et commencez à gagner des commissions dès aujourd'hui</p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="signup.html" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition transform hover:scale-105 inline-flex items-center justify-center">
-                    <i class="fas fa-user-plus mr-2"></i>Créer mon compte
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">🚀 Alors, on commence ?</h2>
+            <p class="text-lg md:text-xl mb-6 text-blue-100">C'est <strong>gratuit</strong>, <strong>facile</strong>, et vous pouvez commencer en <strong>2 minutes</strong> !</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
+                <a href="signup.html" class="bg-yellow-400 text-blue-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition transform hover:scale-105 inline-flex items-center justify-center shadow-2xl">
+                    <i class="fas fa-rocket mr-2"></i>Je me lance ! 🎉
                 </a>
                 <a href="login.html" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-blue-600 transition inline-flex items-center justify-center">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
+                    <i class="fas fa-sign-in-alt mr-2"></i>J'ai déjà un compte
                 </a>
             </div>
-            <p class="mt-6 text-blue-100 text-sm">
-                <i class="fas fa-shield-alt mr-2"></i>
-                100% gratuit · Sans engagement · Paiement garanti
+            <div class="inline-block bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
+                <p class="text-white text-sm font-medium">
+                    ✅ Aucune carte bancaire · ✅ Aucun engagement · ✅ Résiliable quand vous voulez
+                </p>
+            </div>
+            <p class="mt-6 text-blue-200 text-sm italic">
+                💬 "J'ai gagné 4,000 AED en 2 mois sans rien faire de compliqué !" - Sarah, apporteuse depuis 3 mois
             </p>
         </div>
     </section>
