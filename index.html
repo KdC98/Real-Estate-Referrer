@@ -1,4 +1,10 @@
-<!DOCTYPE html>
+<invoke name="artifacts">
+<parameter name="command">create</parameter>
+<parameter name="type">application/vnd.ant.code</parameter>
+<parameter name="language">html</parameter>
+<parameter name="title">index.html - Version Finale Corrigée</parameter>
+<parameter name="id">final_complete_index</parameter>
+<parameter name="content"><!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
@@ -19,172 +25,145 @@
     let currentUser = null;
     let currentProfile = null;
 
-
-// ============================================
-// SYSTÈME DE VALIDATION DU MOT DE PASSE
-// ============================================
-
-function validatePassword(password) {
-  const requirements = {
-    length: password.length >= 12,
-    uppercase: /[A-Z]/.test(password),
-    lowercase: /[a-z]/.test(password),
-    number: /[0-9]/.test(password),
-    special: /[@#$%^&*!?.]/.test(password)
-  };
-  
-  const score = Object.values(requirements).filter(Boolean).length;
-  const strength = score === 5 ? 'excellent' : 
-                   score === 4 ? 'fort' : 
-                   score === 3 ? 'moyen' : 'faible';
-  
-  return {
-    isValid: score === 5,
-    requirements,
-    score,
-    strength
-  };
-}
-
-function getPasswordStrengthHTML(validation) {
-  const colors = {
-    faible: '#EF4444',
-    moyen: '#F59E0B',
-    fort: '#10B981',
-    excellent: '#059669'
-  };
-  
-  const widths = {
-    faible: '25%',
-    moyen: '50%',
-    fort: '75%',
-    excellent: '100%'
-  };
-  
-  return `
-    <div class="mt-2">
-      <div class="flex justify-between items-center mb-2">
-        <span class="text-sm text-gray-400">Force du mot de passe:</span>
-        <span class="text-sm font-semibold" style="color: ${colors[validation.strength]}">${validation.strength.toUpperCase()}</span>
-      </div>
-      <div class="w-full bg-gray-700 rounded-full h-2">
-        <div class="h-2 rounded-full transition-all duration-300" 
-             style="width: ${widths[validation.strength]}; background-color: ${colors[validation.strength]}"></div>
-      </div>
-      <div class="mt-3 space-y-1 text-xs">
-        <div class="${validation.requirements.length ? 'text-green-400' : 'text-gray-500'}">
-          ${validation.requirements.length ? '✓' : '○'} Au moins 12 caractères
-        </div>
-        <div class="${validation.requirements.uppercase ? 'text-green-400' : 'text-gray-500'}">
-          ${validation.requirements.uppercase ? '✓' : '○'} Au moins 1 majuscule (A-Z)
-        </div>
-        <div class="${validation.requirements.lowercase ? 'text-green-400' : 'text-gray-500'}">
-          ${validation.requirements.lowercase ? '✓' : '○'} Au moins 1 minuscule (a-z)
-        </div>
-        <div class="${validation.requirements.number ? 'text-green-400' : 'text-gray-500'}">
-          ${validation.requirements.number ? '✓' : '○'} Au moins 1 chiffre (0-9)
-        </div>
-        <div class="${validation.requirements.special ? 'text-green-400' : 'text-gray-500'}">
-          ${validation.requirements.special ? '✓' : '○'} Au moins 1 caractère spécial (@#$%^&*!?.)
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-async function init() {
-const urlParams = new URLSearchParams(window.location.search);
-  const isRecovery = urlParams.get('type') === 'recovery';
-  
-  if (isRecovery) {
-    showPasswordReset();
-    return;
-  }
-
-  const { data: { session } } = await supabaseClient.auth.getSession();
-
-  if (session) {
-    currentUser = session.user;
-    await loadProfile();
-    if (currentProfile && currentProfile.role === 'admin') {
-      showAdminDashboard();
-    } else if (currentProfile) {
-      showReferrerDashboard();
-    }
-  } else {
-    showLandingPage();
-  }
-}
-
-async function loadProfile() {
-try {
-    const { data, error } = await supabaseClient
-      .from('profiles')
-      .select('*')
-      .eq('id', currentUser.id)
-      .single();
+    function validatePassword(password) {
+      const requirements = {
+        length: password.length >= 12,
+        uppercase: /[A-Z]/.test(password),
+        lowercase: /[a-z]/.test(password),
+        number: /[0-9]/.test(password),
+        special: /[@#$%^&*!?.]/.test(password)
+      };
       
-    if (error && error.code !== 'PGRST116') {
-      console.error('Error loading profile:', error);
-      alert('Error loading profile. Creating...');
-    }
-    
-    if (data) {
-      currentProfile = data;
-    } else {
-      console.log('Profile not found, creating automatically...');
+      const score = Object.values(requirements).filter(Boolean).length;
+      const strength = score === 5 ? 'excellent' : 
+                       score === 4 ? 'fort' : 
+                       score === 3 ? 'moyen' : 'faible';
       
-      const { data: newProfile, error: createError } = await supabaseClient
-        .from('profiles')
-        .insert([{
-          id: currentUser.id,
-          name: currentUser.user_metadata?.name || 'User',
-          phone: currentUser.user_metadata?.phone || '',
-          role: currentUser.user_metadata?.role || 'referrer',
-          contract_status: 'pending'
-        }])
-        .select()
-        .single();
-        
-      if (createError) {
-        console.error('Error creating profile:', createError);
-        alert('Error creating profile. Please try again or contact support.');
-        logout();
+      return {
+        isValid: score === 5,
+        requirements,
+        score,
+        strength
+      };
+    }
+
+    function getPasswordStrengthHTML(validation) {
+      const colors = {
+        faible: '#EF4444',
+        moyen: '#F59E0B',
+        fort: '#10B981',
+        excellent: '#059669'
+      };
+      
+      const widths = {
+        faible: '25%',
+        moyen: '50%',
+        fort: '75%',
+        excellent: '100%'
+      };
+      
+      return `
+        <div class="mt-2">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-sm text-gray-400">Force du mot de passe:</span>
+            <span class="text-sm font-semibold" style="color: ${colors[validation.strength]}">${validation.strength.toUpperCase()}</span>
+          </div>
+          <div class="w-full bg-gray-700 rounded-full h-2">
+            <div class="h-2 rounded-full transition-all duration-300" 
+                 style="width: ${widths[validation.strength]}; background-color: ${colors[validation.strength]}"></div>
+          </div>
+          <div class="mt-3 space-y-1 text-xs">
+            <div class="${validation.requirements.length ? 'text-green-400' : 'text-gray-500'}">
+              ${validation.requirements.length ? '✓' : '○'} Au moins 12 caractères
+            </div>
+            <div class="${validation.requirements.uppercase ? 'text-green-400' : 'text-gray-500'}">
+              ${validation.requirements.uppercase ? '✓' : '○'} Au moins 1 majuscule (A-Z)
+            </div>
+            <div class="${validation.requirements.lowercase ? 'text-green-400' : 'text-gray-500'}">
+              ${validation.requirements.lowercase ? '✓' : '○'} Au moins 1 minuscule (a-z)
+            </div>
+            <div class="${validation.requirements.number ? 'text-green-400' : 'text-gray-500'}">
+              ${validation.requirements.number ? '✓' : '○'} Au moins 1 chiffre (0-9)
+            </div>
+            <div class="${validation.requirements.special ? 'text-green-400' : 'text-gray-500'}">
+              ${validation.requirements.special ? '✓' : '○'} Au moins 1 caractère spécial (@#$%^&*!?.)
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function init() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isRecovery = urlParams.get('type') === 'recovery';
+      
+      if (isRecovery) {
+        showPasswordReset();
         return;
       }
-      
-      currentProfile = newProfile;
-      console.log('Profile created successfully:', currentProfile);
+
+      const { data: { session } } = await supabaseClient.auth.getSession();
+
+      if (session) {
+        currentUser = session.user;
+        await loadProfile();
+        if (currentProfile && currentProfile.role === 'admin') {
+          showAdminDashboard();
+        } else if (currentProfile) {
+          showReferrerDashboard();
+        }
+      } else {
+        showLandingPage();
+      }
     }
-  } catch (err) {
-    console.error('Error:', err);
-    alert('Error loading profile');
-    logout();
-  }
-}
-  const urlParams = new URLSearchParams(window.location.search);
-  const isRecovery = urlParams.get('type') === 'recovery';
-  
-  if (isRecovery) {
-    showPasswordReset();
-    return;
-  }
 
-  const { data: { session } } = await supabaseClient.auth.getSession();
+    async function loadProfile() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('profiles')
+          .select('*')
+          .eq('id', currentUser.id)
+          .single();
+          
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error loading profile:', error);
+          alert('Error loading profile. Creating...');
+        }
+        
+        if (data) {
+          currentProfile = data;
+        } else {
+          console.log('Profile not found, creating automatically...');
+          
+          const { data: newProfile, error: createError } = await supabaseClient
+            .from('profiles')
+            .insert([{
+              id: currentUser.id,
+              name: currentUser.user_metadata?.name || 'User',
+              phone: currentUser.user_metadata?.phone || '',
+              role: currentUser.user_metadata?.role || 'referrer',
+              contract_status: 'pending'
+            }])
+            .select()
+            .single();
+            
+          if (createError) {
+            console.error('Error creating profile:', createError);
+            alert('Error creating profile. Please try again or contact support.');
+            logout();
+            return;
+          }
+          
+          currentProfile = newProfile;
+          console.log('Profile created successfully:', currentProfile);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        alert('Error loading profile');
+        logout();
+      }
+    }
 
- if (session) {
-  currentUser = session.user;
-  await loadProfile();
-
-  if (currentProfile && currentProfile.role === 'admin') {
-    showAdminDashboard();
-  } else if (currentProfile) {
-    showReferrerDashboard();
-  }
-} else {
-  showLandingPage();
-}
-}
     function showLandingPage() {
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
@@ -321,96 +300,95 @@ try {
       });
     }
 
-   function showSignup() {
-  document.getElementById('app').innerHTML = `
-    <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
-      <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
-        <h2 class="text-3xl font-bold text-white mb-6 text-center">Inscription</h2>
-        <form id="signupForm" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Nom Complet</label>
-            <input type="text" id="signupName" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+    function showSignup() {
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
+          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Inscription</h2>
+            <form id="signupForm" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Nom Complet</label>
+                <input type="text" id="signupName" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone</label>
+                <input type="tel" id="signupPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                <input type="email" id="signupEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+                <input type="password" id="signupPassword" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <div id="passwordStrength"></div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
+                <input type="password" id="signupPasswordConfirm" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
+                S'inscrire
+              </button>
+            </form>
+            <div class="mt-4 text-center">
+              <span class="text-gray-400 text-sm">Déjà un compte ? </span>
+              <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
+                Se connecter
+              </button>
+            </div>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone</label>
-            <input type="tel" id="signupPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-            <input type="email" id="signupEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
-            <input type="password" id="signupPassword" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-            <div id="passwordStrength"></div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
-            <input type="password" id="signupPasswordConfirm" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-          </div>
-          <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-            S'inscrire
-          </button>
-        </form>
-        <div class="mt-4 text-center">
-          <span class="text-gray-400 text-sm">Déjà un compte ? </span>
-          <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
-            Se connecter
-          </button>
         </div>
-      </div>
-    </div>
-  `;
+      `;
 
-  // Validation en temps réel
-  const passwordInput = document.getElementById('signupPassword');
-  const strengthDiv = document.getElementById('passwordStrength');
-  
-  passwordInput.addEventListener('input', function() {
-    const validation = validatePassword(this.value);
-    strengthDiv.innerHTML = getPasswordStrengthHTML(validation);
-  });
+      const passwordInput = document.getElementById('signupPassword');
+      const strengthDiv = document.getElementById('passwordStrength');
+      
+      passwordInput.addEventListener('input', function() {
+        const validation = validatePassword(this.value);
+        strengthDiv.innerHTML = getPasswordStrengthHTML(validation);
+      });
 
-  document.getElementById('signupForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('signupName').value;
-    const phone = document.getElementById('signupPhone').value;
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+      document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value;
+        const phone = document.getElementById('signupPhone').value;
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
 
-    if (password !== passwordConfirm) {
-      alert('Les mots de passe ne correspondent pas');
-      return;
-    }
-
-    // Validation du mot de passe
-    const validation = validatePassword(password);
-    if (!validation.isValid) {
-      alert('Le mot de passe ne respecte pas les critères de sécurité requis. Veuillez vérifier tous les critères ci-dessous.');
-      return;
-    }
-
-    const { data, error} = await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          name,
-          phone,
-          role: 'referrer'
+        if (password !== passwordConfirm) {
+          alert('Les mots de passe ne correspondent pas');
+          return;
         }
-      }
-    });
 
-    if (error) {
-      alert('Erreur d\'inscription: ' + error.message);
-    } else {
-      alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-      showLogin();
+        const validation = validatePassword(password);
+        if (!validation.isValid) {
+          alert('Le mot de passe ne respecte pas les critères de sécurité requis. Veuillez vérifier tous les critères ci-dessous.');
+          return;
+        }
+
+        const { data, error} = await supabaseClient.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              name,
+              phone,
+              role: 'referrer'
+            }
+          }
+        });
+
+        if (error) {
+          alert('Erreur d\'inscription: ' + error.message);
+        } else {
+          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+          showLogin();
+        }
+      });
     }
-  });
-}
+
     function showReset() {
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
@@ -439,8 +417,8 @@ try {
         const email = document.getElementById('resetEmail').value;
 
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-  redirectTo: 'https://real-estate-referrer-3kp6.vercel.app/reset-password.html'
-});
+          redirectTo: 'https://real-estate-referrer-3kp6.vercel.app/reset-password.html'
+        });
 
         if (error) {
           alert('Erreur: ' + error.message);
@@ -450,79 +428,79 @@ try {
         }
       });
     }
-function showPasswordReset() {
-  document.getElementById('app').innerHTML = `
-    <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
-      <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
-        <h2 class="text-3xl font-bold text-white mb-6 text-center">Nouveau mot de passe</h2>
-        <p class="text-gray-300 text-sm mb-6 text-center">
-          Entrez votre nouveau mot de passe ci-dessous
-        </p>
-        <form id="passwordResetForm" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Nouveau mot de passe</label>
-            <input type="password" id="newPassword" required minlength="12"
-                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-            <div id="passwordStrengthReset"></div>
+
+    function showPasswordReset() {
+      document.getElementById('app').innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
+          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
+            <h2 class="text-3xl font-bold text-white mb-6 text-center">Nouveau mot de passe</h2>
+            <p class="text-gray-300 text-sm mb-6 text-center">
+              Entrez votre nouveau mot de passe ci-dessous
+            </p>
+            <form id="passwordResetForm" class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Nouveau mot de passe</label>
+                <input type="password" id="newPassword" required minlength="12"
+                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <div id="passwordStrengthReset"></div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
+                <input type="password" id="confirmPassword" required minlength="12"
+                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
+                Changer le mot de passe
+              </button>
+            </form>
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
-            <input type="password" id="confirmPassword" required minlength="12"
-                   class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-          </div>
-          <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-            Changer le mot de passe
-          </button>
-        </form>
-      </div>
-    </div>
-  `;
+        </div>
+      `;
 
-  // Validation en temps réel
-  const passwordInput = document.getElementById('newPassword');
-  const strengthDiv = document.getElementById('passwordStrengthReset');
-  
-  passwordInput.addEventListener('input', function() {
-    const validation = validatePassword(this.value);
-    strengthDiv.innerHTML = getPasswordStrengthHTML(validation);
-  });
-
-  document.getElementById('passwordResetForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const newPassword = document.getElementById('newPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-
-    if (newPassword !== confirmPassword) {
-      alert('Les mots de passe ne correspondent pas');
-      return;
-    }
-
-    // Validation du mot de passe
-    const validation = validatePassword(newPassword);
-    if (!validation.isValid) {
-      alert('Le mot de passe ne respecte pas les critères de sécurité requis. Veuillez vérifier tous les critères ci-dessous.');
-      return;
-    }
-
-    try {
-      const { error } = await supabaseClient.auth.updateUser({
-        password: newPassword
+      const passwordInput = document.getElementById('newPassword');
+      const strengthDiv = document.getElementById('passwordStrengthReset');
+      
+      passwordInput.addEventListener('input', function() {
+        const validation = validatePassword(this.value);
+        strengthDiv.innerHTML = getPasswordStrengthHTML(validation);
       });
 
-      if (error) throw error;
+      document.getElementById('passwordResetForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
 
-      alert('Mot de passe changé avec succès ! Vous pouvez maintenant vous connecter.');
-      
-      await supabaseClient.auth.signOut();
-      window.history.replaceState({}, document.title, '/');
-      showLogin();
-      
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Erreur lors du changement de mot de passe: ' + error.message);
+        if (newPassword !== confirmPassword) {
+          alert('Les mots de passe ne correspondent pas');
+          return;
+        }
+
+        const validation = validatePassword(newPassword);
+        if (!validation.isValid) {
+          alert('Le mot de passe ne respecte pas les critères de sécurité requis. Veuillez vérifier tous les critères ci-dessous.');
+          return;
+        }
+
+        try {
+          const { error } = await supabaseClient.auth.updateUser({
+            password: newPassword
+          });
+
+          if (error) throw error;
+
+          alert('Mot de passe changé avec succès ! Vous pouvez maintenant vous connecter.');
+          
+          await supabaseClient.auth.signOut();
+          window.history.replaceState({}, document.title, '/');
+          showLogin();
+          
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Erreur lors du changement de mot de passe: ' + error.message);
+        }
+      });
     }
-  });
-}
+
     async function logout() {
       await supabaseClient.auth.signOut();
       currentUser = null;
@@ -1432,4 +1410,4 @@ function showPasswordReset() {
     init();
   </script>
 </body>
-</html>
+</html></parameter>
