@@ -101,19 +101,19 @@ async function init() {
 
 Après ton ajout, ça devrait ressembler à ça :
 ```
-Ligne 18: const supabaseClient = createClient(supabaseUrl, supabaseKey);
-Ligne 19: let currentUser = null;
-Ligne 20: let currentProfile = null;
-Ligne 21: (vide)
-Ligne 22: // ============================================
-Ligne 23: // SYSTÈME DE VALIDATION DU MOT DE PASSE
-Ligne 24: // ============================================
-Ligne 25: (vide)
-Ligne 26: function validatePassword(password) {
+const supabaseClient = createClient(supabaseUrl, supabaseKey);
+let currentUser = null;
+let currentProfile = null;
+
+// ============================================
+// SYSTÈME DE VALIDATION DU MOT DE PASSE
+// ============================================
+
+function validatePassword(password) {
 ...
 (les fonctions)
 ...
-Ligne ~90: async function init() {
+async function init() {
 
    async function init() {
   // Vérifier si c'est un lien de réinitialisation de mot de passe
