@@ -1,13 +1,8 @@
-<invoke name="artifacts">
-<parameter name="command">create</parameter>
-<parameter name="type">text/markdown</parameter>
-<parameter name="title">README - Real Estate Referrer v4.3.0</parameter>
-<parameter name="id">readme_final_v4_3</parameter>
-<parameter name="content"># 📋 README - Real Estate Referrer Application
+# 📋 README - Real Estate Referrer Application
 
-**Dernière mise à jour** : 18 octobre 2025 - 14h00  
-**Version** : 4.3.0  
-**Status** : 🟢 **Production - Fonctionnel et sécurisé**
+**Dernière mise à jour** : 18 octobre 2025 - 23h30  
+**Version** : 5.0.0  
+**Status** : 🟢 **Production - Domaine Personnalisé Actif**
 
 ---
 
@@ -15,28 +10,31 @@
 
 Application web complète de gestion d'apporteurs d'affaires pour agent immobilier à Dubai. Permet de recruter des apporteurs, gérer les leads clients (ventes ET locations), suivre les transactions, valider les contrats et calculer automatiquement les commissions.
 
-**⚠️ IMPORTANT** : Tous les fichiers sont édités directement sur **GitHub** (pas de VSCode local). Les déploiements sont automatiques via **Vercel**.
-
 ---
 
 ## 🌐 Accès et URLs
 
-### URLs Actuelles
-- **Site web** : https://real-estate-referrer-3kp6.vercel.app
+### **URLs Actuelles (ACTIVES)**
+
+- **Site web principal** : https://real-estate-referrer.com ✅
+- **Site web www** : https://www.real-estate-referrer.com ✅
+- **Ancien domaine Vercel** : https://real-estate-referrer-3kp6.vercel.app (toujours actif)
 - **GitHub** : https://github.com/KdC98/Real-Estate-Referrer
 - **Supabase** : https://cgizcgwhwxswvoodqver.supabase.co
 
-### Domaine personnalisé (à configurer)
-- **Domaine acheté** : real-estate-referrer.com
+### **Domaine Personnalisé**
+
+- **Domaine acheté** : real-estate-referrer.com ✅
 - **Registrar** : OVH
-- **Status** : ⏳ En attente de configuration DNS
+- **DNS configurés** : ✅ Actif
+- **Certificats SSL** : ✅ Générés automatiquement par Vercel
 
 ---
 
 ## 🔑 Compte Admin
 
 - **Email** : admin@realestate-referrer.com ⚠️ **(Email fictif - à changer)**
-- **Mot de passe** : Défini dans Supabase Auth
+- **Mot de passe** : **MODIFIÉ - Sécurisé** ✅
 - **UUID** : e9a7f64f-49e2-41fd-86ef-2a37f63e5bf0
 - **Contract Status** : validated (automatiquement validé)
 
@@ -46,13 +44,13 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 
 ```
 Real-Estate-Referrer/ (GitHub Repository)
-├── index.html                    ← Application principale (SPA) - FR ✅
-├── reset-password.html           ← Page de réinitialisation mot de passe ✅
-├── contract-template.html        ← Template de contrat téléchargeable
-├── how-it-works.html            ← Page "Comment ça marche" - FR ✅
-├── terms.html                    ← CGU - FR ✅
-├── privacy.html                  ← Politique de confidentialité - FR ✅
-└── README.md                     ← Ce fichier
+├── index.html                 ← Application principale (SPA) - FR ✅ (DOMAINE MIS À JOUR)
+├── reset-password.html        ← Page reset password ✅ (À METTRE À JOUR)
+├── contract-template.html     ← Template de contrat téléchargeable
+├── how-it-works.html          ← Page "Comment ça marche" - FR ✅
+├── terms.html                 ← CGU - FR ✅
+├── privacy.html               ← Politique de confidentialité - FR ✅
+└── README.md                  ← Ce fichier
 ```
 
 ---
@@ -63,268 +61,184 @@ Real-Estate-Referrer/ (GitHub Repository)
 - **Styling** : Tailwind CSS (via CDN)
 - **Backend/Auth** : Supabase (PostgreSQL + Auth + Storage)
 - **Hébergement** : Vercel
-- **Contrôle de version** : GitHub (édition directe sur GitHub)
+- **Domaine** : OVH (real-estate-referrer.com)
+- **Contrôle de version** : GitHub (édition directe)
 - **Déploiement** : Automatique via GitHub → Vercel
 
 ---
 
-## ✅ ÉTAT ACTUEL DU PROJET (Version 4.3.0)
+## ✅ ÉTAT ACTUEL DU PROJET (Version 5.0.0)
 
-### 🔒 Sécurité des Mots de Passe - 100% COMPLET ✅
+### **🌐 Configuration Domaine - 100% COMPLET ✅**
 
-**Validation stricte implémentée partout :**
-- ✅ Minimum 12 caractères (au lieu de 6)
+**DNS OVH configurés :**
+- ✅ Record A : `real-estate-referrer.com` → `76.76.21.21`
+- ✅ Record CNAME : `www.real-estate-referrer.com` → `cname.vercel-dns.com.`
+- ✅ Propagation DNS : **COMPLÈTE** (< 30 minutes)
+
+**Vercel :**
+- ✅ Domaine `real-estate-referrer.com` ajouté et actif
+- ✅ Domaine `www.real-estate-referrer.com` ajouté et actif
+- ✅ Certificats SSL générés automatiquement
+- ✅ HTTPS actif sur les deux domaines
+
+**Résultat :**
+- ✅ https://real-estate-referrer.com fonctionne parfaitement
+- ✅ https://www.real-estate-referrer.com fonctionne parfaitement
+
+---
+
+### **🔐 Supabase Configuration - 100% COMPLET ✅**
+
+**Authentication → URL Configuration :**
+- ✅ **Site URL** : `https://real-estate-referrer.com`
+- ✅ **Redirect URLs** :
+  - `https://real-estate-referrer.com/**`
+  - `https://www.real-estate-referrer.com/**`
+  - `https://real-estate-referrer.com/reset-password.html`
+
+**Résultat :**
+- ✅ L'authentification fonctionne avec le nouveau domaine
+- ✅ Le reset password est configuré pour le nouveau domaine
+
+---
+
+### **📝 Fichiers Application - PARTIELLEMENT MIS À JOUR**
+
+- ✅ **index.html** : Domaine mis à jour (`real-estate-referrer.com`)
+- ⏳ **reset-password.html** : **À METTRE À JOUR** (contient encore l'ancien domaine Vercel)
+
+---
+
+### **🔒 Sécurité des Mots de Passe - 100% COMPLET ✅**
+
+**Validation stricte implémentée :**
+- ✅ Minimum 12 caractères
 - ✅ 1 majuscule minimum (A-Z)
 - ✅ 1 minuscule minimum (a-z)
 - ✅ 1 chiffre minimum (0-9)
 - ✅ 1 caractère spécial minimum (@#$%^&*!?.)
-- ✅ Indicateur visuel de force du mot de passe (barre de progression colorée)
-- ✅ Vérification en temps réel pendant la saisie
-- ✅ Messages d'erreur clairs en français
+- ✅ Indicateur visuel de force du mot de passe
+- ✅ Appliqué sur inscription + reset password
 
-**Appliqué sur :**
-- ✅ Page d'inscription (index.html)
-- ✅ Page de reset password dans l'app (index.html)
-- ✅ Page de reset password externe (reset-password.html)
+---
 
-### 🔐 Authentification & Sécurité - 100% COMPLET ✅
+### **📋 Système de Validation de Contrat - 100% COMPLET ✅**
 
-- ✅ Système d'authentification sécurisé Supabase Auth
-- ✅ Mots de passe hashés automatiquement (bcrypt)
-- ✅ Sessions sécurisées avec JWT tokens
-- ✅ Inscription avec confirmation du mot de passe
-- ✅ Connexion sécurisée (admin + apporteurs)
-- ✅ Déconnexion sécurisée avec nettoyage de session
-- ✅ Création automatique du profil utilisateur
-- ✅ **RLS (Row Level Security) ACTIVÉ** avec politiques optimisées
+**Flux complet :**
+1. ✅ Nouvel apporteur s'inscrit → Status pending
+2. ✅ Dashboard bloqué → Écran d'upload de contrat
+3. ✅ Télécharge template → Bouton "Download Contract Template"
+4. ✅ Upload PDF signé → Formulaire (max 5MB)
+5. ✅ Status uploaded → Badge jaune "En attente validation"
+6. ✅ Admin voit notification → Badge rouge sur onglet "Contracts"
+7. ✅ Admin télécharge PDF → Bouton "View" (compatible Safari)
+8. ✅ Admin valide/rejette → Boutons "Validate" / "Reject"
+9. ✅ Si validé → Badge vert "✓ Contract Validated"
+10. ✅ Si rejeté → Doit re-uploader
 
-### 🔄 Système "Mot de passe oublié" - 100% COMPLET ✅
+---
 
-**Flux complet fonctionnel :**
-1. ✅ Utilisateur clique sur "Mot de passe oublié ?"
-2. ✅ Entre son email
-3. ✅ Reçoit un email avec lien sécurisé
-4. ✅ Clique sur le lien → Page reset-password.html
-5. ✅ Entre et confirme le nouveau mot de passe (12+ caractères avec critères)
-6. ✅ Validation stricte en temps réel
-7. ✅ Déconnexion automatique
-8. ✅ Redirection vers page de connexion
-9. ✅ Reconnexion avec nouveau mot de passe
+### **🏠 4 Types de Leads - 100% COMPLET ✅**
 
-### 📊 Système de Validation de Contrat - 100% COMPLET ✅
-
-**Flux complet implémenté et testé :**
-1. Nouvel apporteur s'inscrit → Status pending
-2. Dashboard bloqué → Message "Contract Required"
-3. Télécharge le template → Bouton "Download Contract Template"
-4. Signe le contrat → Imprime, remplit, signe
-5. Upload le PDF signé → Formulaire d'upload (max 5MB)
-6. Status change → uploaded (en attente validation admin)
-7. Admin reçoit notification → Badge rouge sur onglet "Contracts"
-8. Admin voit le contrat → Bouton "View" télécharge le PDF
-9. Admin valide ou rejette → Boutons "Validate" / "Reject"
-10. Si validé → Apporteur peut ajouter des leads
-11. Si rejeté → Apporteur doit re-uploader
-
-**Sécurité Storage :**
-- ✅ Bucket Contracts (privé)
-- ✅ Policies RLS configurées et testées
-- ✅ Fichiers stockés par UUID : {user_id}/contract_{timestamp}.pdf
-- ✅ Téléchargement via blob (compatible Safari)
-
-### 🏠 4 Types de Leads - 100% COMPLET ✅
-
-L'application gère 4 types de leads distincts :
-
-**Ventes :**
+**Types disponibles :**
 - 🏠 **Sale - Buyer** : Client cherche à acheter
 - 🏡 **Sale - Seller** : Propriétaire cherche à vendre
-
-**Locations :**
 - 🏢 **Rental - Landlord** : Cherche à louer son bien
 - 🔑 **Rental - Tenant** : Client cherche à louer
 
-### 📈 Statuts Distincts - 100% COMPLET ✅
+**Statuts distincts :**
+- **Ventes** : nouveau → visite → offre → **vendu**
+- **Locations** : nouveau → visite → offre → **loué**
 
-- **Pour les ventes** : nouveau → visite → offre → **vendu**
-- **Pour les locations** : nouveau → visite → offre → **loué**
-- ✅ Dropdown adapté selon le type de lead
-- ✅ Badges colorés pour chaque statut
-- ✅ Boutons adaptés ("Mark Sold" / "Mark Rented")
-- ✅ Affichage correct des commissions pour leads vendus/loués
+---
 
-### 💰 Système de Commissions - 100% COMPLET ✅
+### **💰 Système de Commissions - 100% COMPLET ✅**
 
-**Structure :**
-```
-Transaction immobilière (vente ou location)
-└─ Commission totale (2% vente / 5% location)
-   ├─ Agence : 50%
-   └─ Agent (vous) : 50%
-      ├─ Apporteur : 20% de la part agent
-      └─ Vous : 80% de la part agent
-```
-
-**Taux de commission :**
-- **Ventes** : 2% du prix de vente
-  - Commission apporteur : 0.2% du prix de vente
-- **Locations** : 5% du loyer annuel
-  - Commission apporteur : 0.5% du loyer annuel
-
-**Exemples concrets :**
-- Villa vendue 5M AED → Apporteur : **10,000 AED**
-- Appartement loué 150K AED/an → Apporteur : **750 AED**
+**Taux :**
+- **Ventes** : 2% du prix → Commission apporteur : 0.2%
+- **Locations** : 5% du loyer annuel → Commission apporteur : 0.5%
 
 **Délais de paiement :**
-- **Ventes** : 45-60 jours après émission du Title Deed
-- **Locations** : 7-14 jours après signature du Tenancy Contract
+- **Ventes** : 45-60 jours après Title Deed
+- **Locations** : 7-14 jours après Tenancy Contract
 
-### 📊 Base de données PostgreSQL - 100% COMPLET ✅
+---
 
-**Table profiles :**
-```sql
-- id UUID PRIMARY KEY (référence auth.users)
-- name TEXT
-- phone TEXT
-- role TEXT ('admin' ou 'referrer')
-- created_at TIMESTAMP
-- contract_status TEXT DEFAULT 'pending'
-- contract_validated_at TIMESTAMP
-- contract_file_url TEXT
-```
+### **📊 Base de données PostgreSQL - 100% COMPLET ✅**
 
-**Table leads :**
-```sql
-- id BIGSERIAL PRIMARY KEY
-- referrer_id UUID (référence auth.users)
-- lead_type TEXT ('sale_buyer', 'sale_seller', 'rent_landlord', 'rent_tenant')
-- client_name TEXT
-- client_email TEXT
-- client_phone TEXT
-- property_type TEXT
-- budget NUMERIC (nullable - pour ventes et location locataire)
-- annual_rent NUMERIC (nullable - pour location propriétaire)
-- status TEXT ('nouveau', 'visite', 'offre', 'vendu', 'loué')
-- sale_price NUMERIC
-- agent_commission NUMERIC
-- referrer_commission NUMERIC
-- created_at TIMESTAMP
-- closed_at TIMESTAMP
-```
+**Tables :**
+- ✅ `profiles` (avec contract_status, contract_file_url)
+- ✅ `leads` (avec lead_type, budget, annual_rent)
+- ✅ RLS (Row Level Security) **ACTIVÉ** avec politiques optimisées
 
-### 💾 Supabase Storage - 100% COMPLET ✅
+---
 
-- ✅ Bucket "Contracts" créé (PRIVÉ)
-- ✅ Policies de sécurité configurées et testées
-- ✅ Upload de fichiers PDF (max 5MB)
-- ✅ Lecture sécurisée par UUID
-- ✅ Téléchargement via blob (compatible Safari)
+### **📄 Pages Juridiques - 100% COMPLÈTES ✅**
 
-### 🎨 Interface Utilisateur - 100% en Français ✅
-
-**Landing Page :**
-- Design premium "Dubai Real Estate"
-- Gradient bleu/or élégant
-- Call-to-action clair
-- Exemples de gains (6K, 10K, 20K AED)
-- Stats du programme (20%, 24/7, délais réalistes)
-- Footer avec liens juridiques
-- Responsive mobile
-
-**Dashboard Apporteur :**
-- **Si contrat non validé** : Écran de blocage avec instructions d'upload
-- **Si contrat validé** : Dashboard complet avec :
-  - Badge vert "✓ Contract Validated"
-  - Statistiques personnelles (gains, leads actifs, ventes)
-  - Bouton "Add Lead"
-  - Formulaire dynamique selon le type de lead
-  - Table de tous les leads avec type, statut, commission
-
-**Dashboard Admin :**
-- Vue d'ensemble globale :
-  - Nombre d'apporteurs
-  - Leads actifs
-  - Ventes/Locations totales
-  - Commissions versées
-- **Onglet "Leads"** :
-  - Table de tous les leads
-  - Dropdown pour changer le statut
-  - Affichage correct : Commission en vert pour leads vendus/loués
-  - Calcul automatique des commissions
-- **Onglet "Contracts"** :
-  - Badge de notification pour contrats en attente
-  - Liste de tous les apporteurs avec leur statut de contrat
-  - Boutons "View" / "Validate" / "Reject"
-  - Téléchargement PDF fonctionnel (compatible Safari)
-
-### 📄 Pages Juridiques - 100% COMPLÈTES ✅
-
-Toutes les pages sont en français avec design harmonisé :
+Toutes en français avec design harmonisé :
 - ✅ **how-it-works.html** - Comment ça marche
-- ✅ **terms.html** - Conditions Générales d'Utilisation (13 articles)
+- ✅ **terms.html** - CGU (13 articles)
 - ✅ **privacy.html** - Politique de Confidentialité (13 sections)
-- ✅ **reset-password.html** - Page de réinitialisation du mot de passe
-- ✅ Footer cohérent sur toutes les pages
 
 ---
 
 ## 🎯 NEXT STEPS
 
-### 🔴 PRIORITÉ 1 - Configuration Domaine (Quand actif chez OVH)
+### **🔴 PRIORITÉ 1 - Finaliser Migration Domaine (15 minutes)**
 
-**1. Configurer DNS sur OVH**
+**1. Mettre à jour reset-password.html**
 
-Créer ces enregistrements DNS :
-```
-Type: A Record
-Host: @
-Value: 76.76.21.21
-TTL: Automatic
+Aller sur GitHub → reset-password.html → Éditer :
 
-Type: CNAME Record
-Host: www
-Value: cname.vercel-dns.com
-TTL: Automatic
-```
+Rechercher : `real-estate-referrer-3kp6.vercel.app`  
+Remplacer par : `real-estate-referrer.com`
 
-**2. Configurer Vercel**
-- Aller sur Vercel → Settings → Domains
-- Ajouter : real-estate-referrer.com
-- Ajouter : www.real-estate-referrer.com
-- Attendre la propagation DNS (10-30 min)
-
-**3. Mettre à jour Supabase**
-
-Dans Supabase → Authentication → URL Configuration :
-- **Site URL** : https://real-estate-referrer.com
-- **Redirect URLs** :
-  - https://real-estate-referrer.com/**
-  - https://www.real-estate-referrer.com/**
-  - https://real-estate-referrer.com/reset-password.html
-
-**4. Mettre à jour les fichiers**
-- Changer tous les `https://real-estate-referrer-3kp6.vercel.app` en `https://real-estate-referrer.com`
-- Fichiers concernés : index.html, reset-password.html
+Commit : `fix: Update reset-password.html to use custom domain`
 
 ---
 
-### 🟡 PRIORITÉ 2 - Sécurité Avancée (1 heure)
+**2. Vérifier que tout fonctionne**
 
-**Changer le mot de passe admin :**
-- Utiliser un mot de passe fort (12+ caractères avec tous les critères)
-- Le stocker dans un gestionnaire de mots de passe
-- Ne jamais le partager
+Tester :
+- ✅ Landing page : https://real-estate-referrer.com
+- ✅ Landing page www : https://www.real-estate-referrer.com
+- ⏳ Connexion admin
+- ⏳ Connexion apporteur
+- ⏳ Ajout de lead
+- ⏳ "Mot de passe oublié" (flux complet)
+- ⏳ Reset password depuis email
+
+---
+
+**3. Supprimer les références à l'ancien domaine Vercel**
+
+Une fois que tout fonctionne, tu peux :
+- Retirer l'ancien domaine Vercel des Redirect URLs Supabase (optionnel)
+- Garder l'ancien domaine Vercel actif comme backup (recommandé)
+
+---
+
+### **🟡 PRIORITÉ 2 - Sécurité Avancée (30 minutes)**
 
 **Changer l'email admin vers un email réel :**
+
+Sur Supabase SQL Editor :
+
 ```sql
-UPDATE auth.users 
-SET email = 'votre-email@reel.com'
+UPDATE auth.users
+SET email = 'votre-email@reel.com',
+    raw_user_meta_data = jsonb_set(
+      COALESCE(raw_user_meta_data, '{}'::jsonb),
+      '{email}',
+      '"votre-email@reel.com"'
+    )
 WHERE id = 'e9a7f64f-49e2-41fd-86ef-2a37f63e5bf0';
 ```
 
 ---
 
-### 🟢 PRIORITÉ 3 - Configuration Email Professionnelle (1 jour)
+### **🟢 PRIORITÉ 3 - Email Professionnel (1 jour)**
 
 **Options recommandées :**
 - Google Workspace (6 USD/mois) - Recommandé
@@ -338,45 +252,42 @@ WHERE id = 'e9a7f64f-49e2-41fd-86ef-2a37f63e5bf0';
 
 ---
 
-### 🟢 PRIORITÉ 4 - Système Multilingue (1-2 semaines)
+### **🟢 PRIORITÉ 4 - Système Multilingue (1-2 semaines)**
 
 Ajouter traductions Anglais + Arabe avec :
-- ✅ Sélecteur de langue dans le header (drapeaux)
-- ✅ 3 langues : Français 🇫🇷 / English 🇬🇧 / العربية 🇦🇪
-- ✅ Stockage localStorage (la langue choisie reste après refresh)
-- ✅ Support RTL pour l'arabe (texte de droite à gauche)
-- ✅ Fichiers JSON de traduction (facile à maintenir)
-- ✅ Traduction complète : Landing, Login, Dashboards, Formulaires, Messages
+- Sélecteur de langue (drapeaux FR 🇫🇷 / EN 🇬🇧 / AR 🇦🇪)
+- localStorage (langue persiste après refresh)
+- Support RTL pour l'arabe
+- Fichiers JSON de traduction
 
 ---
 
-### 🟢 PRIORITÉ 5 - Conformité RERA Dubai (2-4 semaines)
+### **🟢 PRIORITÉ 5 - Conformité RERA Dubai (2-4 semaines)**
 
-**⚠️ AMENDES JUSQU'À 50,000 AED EN CAS DE NON-CONFORMITÉ**
+**⚠️ AMENDES JUSQU'À 50,000 AED**
 
-**Requis obligatoires :**
-- **Licence RERA** (Real Estate Regulatory Agency)
-- **Examen DREI** (Dubai Real Estate Institute)
-- **Permis publicitaire Trakheesi** (5,000 AED)
-- **Form A** avec propriétaires (pour chaque bien)
+**Requis :**
+- Licence RERA (Real Estate Regulatory Agency)
+- Examen DREI (Dubai Real Estate Institute)
+- Permis publicitaire Trakheesi (5,000 AED)
+- Form A avec propriétaires
 
 **Ressources :**
 - Site RERA : https://www.reraproperty.ae
 - Contact : +971 4 362 2222
-- Email : info@reraproperty.ae
 
 ---
 
-### 🟢 PRIORITÉ 6 - Personnalisation (1-2 jours)
+### **🟢 PRIORITÉ 6 - Personnalisation (1-2 jours)**
 
 - Remplacer "Dubai Real Estate" par votre nom d'agence
 - Ajouter votre logo
 - Ajouter vos coordonnées (téléphone, adresse)
-- Mettre à jour les CGU avec vos informations réelles
+- Mettre à jour les CGU avec vos informations
 
 ---
 
-### 🟢 PRIORITÉ 7 - Tests Utilisateurs (1 semaine)
+### **🟢 PRIORITÉ 7 - Tests Utilisateurs (1 semaine)**
 
 - Inviter 2-3 apporteurs bêta
 - Tester le cycle complet
@@ -385,78 +296,56 @@ Ajouter traductions Anglais + Arabe avec :
 
 ---
 
-### 🟢 PRIORITÉ 8 - Fonctionnalités Avancées (Optionnel)
+### **🟢 PRIORITÉ 8 - Fonctionnalités Avancées (Optionnel)**
 
 - Notifications par Email
 - Dashboard Analytics
 - Système de Parrainage
-- 2FA (Two-Factor Authentication) avec Authenticator App
+- 2FA (Two-Factor Authentication)
 
 ---
 
 ## 🛠️ MÉTHODE DE TRAVAIL
 
-### ⚠️ RÈGLES CRITIQUES POUR TRAVAILLER AVEC CLAUDE
+### **⚠️ RÈGLES CRITIQUES**
 
 **1. Validation étape par étape**
-- ✅ **TOUJOURS** faire une seule modification à la fois
-- ✅ **TOUJOURS** valider avec une capture d'écran avant de passer à l'étape suivante
-- ✅ **NE JAMAIS** enchaîner plusieurs modifications sans validation intermédiaire
-- ❌ **NE JAMAIS** supposer qu'une modification fonctionne sans l'avoir testée
+- ✅ **UNE seule modification à la fois**
+- ✅ **Toujours valider avec une capture d'écran**
+- ❌ Ne JAMAIS enchaîner plusieurs modifications sans validation
 
 **2. Modifications de code HTML**
-- ✅ **TOUJOURS** demander le code complet dans un artifact
-- ✅ **TOUJOURS** remplacer TOUT le contenu du fichier
-- ❌ **NE JAMAIS** accepter de code avec des commentaires du type "// reste du code ici" ou "..."
-- ❌ **NE JAMAIS** accepter de code avec des annotations "Ligne XX:" dans l'artifact
-- ❌ **NE JAMAIS** faire de modifications partielles ou par sections
+- ✅ Toujours demander le code complet dans un artifact
+- ✅ Remplacer TOUT le contenu du fichier
+- ❌ Ne JAMAIS accepter de code partiel avec "..." ou "// reste ici"
 
 **3. Édition sur GitHub**
-- ✅ Tous les fichiers sont édités directement sur GitHub (pas de VSCode local)
-- ✅ Attendre 2-3 minutes après chaque commit pour que Vercel déploie
-- ✅ Toujours faire Cmd+Shift+R (Mac) pour vider le cache après un déploiement
-- ✅ Envoyer une capture d'écran après chaque modification pour validation
+- ✅ Tous les fichiers sont édités directement sur GitHub
+- ✅ Attendre 2-3 minutes après commit pour déploiement Vercel
+- ✅ Faire Cmd+Shift+R (Mac) pour vider le cache
+- ✅ Envoyer une capture après chaque modification
 
-**4. Gestion des erreurs**
-- ✅ Si une erreur survient, envoyer IMMÉDIATEMENT une capture de la console
-- ✅ Ne pas essayer de corriger soi-même sans comprendre l'erreur
-- ✅ Demander à Claude d'analyser l'erreur avant toute correction
-- ❌ Ne JAMAIS enchaîner plusieurs tentatives de correction sans validation
-
-**5. Messages de commit**
-- ✅ Utiliser des messages clairs et descriptifs
-- ✅ Format recommandé : `fix:` / `feat:` / `docs:` / `refactor:`
-- Exemple : `fix: Add 12-character password validation to reset page`
+**4. Messages de commit**
+- Format : `fix:` / `feat:` / `docs:` / `refactor:`
+- Exemple : `fix: Update domain URLs in reset-password.html`
 
 ---
 
 ## 📝 Commandes SQL Utiles
 
-### Voir tous les profils
+**Voir tous les profils :**
 ```sql
 SELECT * FROM profiles;
 ```
 
-### Voir tous les leads avec noms d'apporteurs
+**Voir tous les leads avec noms d'apporteurs :**
 ```sql
 SELECT l.*, p.name as referrer_name
 FROM leads l
 LEFT JOIN profiles p ON l.referrer_id = p.id;
 ```
 
-### Changer l'email admin
-```sql
-UPDATE auth.users
-SET email = 'votre-email@reel.com',
-    raw_user_meta_data = jsonb_set(
-      COALESCE(raw_user_meta_data, '{}'::jsonb),
-      '{email}',
-      '"votre-email@reel.com"'
-    )
-WHERE id = 'e9a7f64f-49e2-41fd-86ef-2a37f63e5bf0';
-```
-
-### Statistiques globales
+**Statistiques globales :**
 ```sql
 SELECT
   COUNT(*) as total_leads,
@@ -470,96 +359,87 @@ FROM leads;
 
 ## 🆘 Support & Ressources
 
-**Documentation Officielle**
-- **Supabase** : https://docs.supabase.com
-- **Vercel** : https://vercel.com/docs
-- **Tailwind CSS** : https://tailwindcss.com/docs
+**Documentation :**
+- Supabase : https://docs.supabase.com
+- Vercel : https://vercel.com/docs
+- Tailwind CSS : https://tailwindcss.com/docs
 
-**RERA Dubai**
-- **Site officiel** : https://www.reraproperty.ae
-- **Contact** : +971 4 362 2222
+**RERA Dubai :**
+- Site officiel : https://www.reraproperty.ae
+- Contact : +971 4 362 2222
 
 ---
 
 ## 🎉 Historique du Projet
 
-### **18 octobre 2025 - Après-midi (14h00)**
-- ✅ **SYSTÈME DE SÉCURITÉ MOT DE PASSE RENFORCÉ**
-- Validation stricte : 12 caractères minimum
-- Indicateur visuel de force du mot de passe
-- Validation en temps réel
-- Messages d'erreur clairs
-- Appliqué sur inscription ET reset password (index.html + reset-password.html)
-- **Version 4.3.0 - PRODUCTION SÉCURISÉE** ✅
+### **18 octobre 2025 - Soir (23h00)**
+- ✅ **MIGRATION DOMAINE PERSONNALISÉ COMPLÈTE**
+- Configuration DNS OVH (records A + CNAME)
+- Ajout domaines sur Vercel
+- Configuration Supabase URL Configuration
+- Mise à jour index.html avec nouveau domaine
+- **Version 5.0.0 - DOMAINE CUSTOM ACTIF** 🎉
 
-### **18 octobre 2025 - Soir (22h00-23h00)**
-- ✅ **SYSTÈME "MOT DE PASSE OUBLIÉ" 100% COMPLET**
-- Création de reset-password.html avec formulaire complet
-- Modification de index.html pour ajouter redirectTo
-- Configuration Supabase Redirect URLs
-- Changement email admin
-- **Version 4.2.0 - COMPLÈTE** ✅
+### **18 octobre 2025 - Après-midi (14h00)**
+- ✅ Système de sécurité mot de passe renforcé
+- Validation stricte : 12 caractères minimum
+- Indicateur visuel de force
+- **Version 4.3.0 - Production Sécurisée**
 
 ### **18 octobre 2025 - Matin**
-- ✅ **RÉACTIVATION RLS AVEC POLITIQUES OPTIMISÉES**
-- ✅ **CORRECTION VISUALISATION PDF (SAFARI)**
-- ✅ **CORRECTION AFFICHAGE COMMISSIONS**
-- **Version 4.1.0 - PRODUCTION SÉCURISÉE** ✅
+- ✅ Réactivation RLS avec politiques optimisées
+- ✅ Correction visualisation PDF (Safari)
+- ✅ Correction affichage commissions
+- **Version 4.1.0 - Production Sécurisée**
 
 ### **17 octobre 2025 - Soir**
-- ✅ **CRÉATION PAGES JURIDIQUES COMPLÈTES**
-- **Version 4.0.0 - PRODUCTION COMPLÈTE** ✅
+- ✅ Création pages juridiques complètes
+- **Version 4.0.0 - Production Complète**
 
 ### **17 octobre 2025 - Après-midi**
-- ✅ **SYSTÈME DE VALIDATION DE CONTRAT COMPLET**
-- **Version 3.1.0 - SYSTÈME COMPLET** ✅
+- ✅ Système de validation de contrat complet
+- **Version 3.1.0 - Système Complet**
 
 ### **17 octobre 2025 - Matin**
-- ✅ **AJOUT DES 4 TYPES DE LEADS**
-- **Version 3.0.0 - PLEINEMENT FONCTIONNEL** ✅
+- ✅ Ajout des 4 types de leads
+- **Version 3.0.0 - Pleinement Fonctionnel**
 
 ---
 
 ## 🏆 Conclusion
 
-### ✅ Ce qui fonctionne parfaitement
+### **✅ Ce qui fonctionne parfaitement**
 
-1. ✅ Authentification complète (signup, login, logout)
-2. ✅ **Sécurité des mots de passe renforcée (12 caractères + critères)**
-3. ✅ **Système "Mot de passe oublié" 100% opérationnel**
-4. ✅ Système de contrat de A à Z
-5. ✅ 4 types de leads (vente/location × 2)
-6. ✅ Calcul automatique des commissions
-7. ✅ Dashboard admin et apporteur complets
-8. ✅ Storage sécurisé (téléchargement PDF compatible Safari)
-9. ✅ Design premium Dubai
-10. ✅ Pages juridiques complètes (CGU, Confidentialité, Comment ça marche)
-11. ✅ RLS (Row Level Security) activé et fonctionnel
+1. ✅ **Domaine personnalisé actif** (real-estate-referrer.com)
+2. ✅ Authentification complète (signup, login, logout)
+3. ✅ Sécurité des mots de passe renforcée (12 caractères + critères)
+4. ✅ Système "Mot de passe oublié" configuré
+5. ✅ Système de contrat de A à Z
+6. ✅ 4 types de leads (vente/location × 2)
+7. ✅ Calcul automatique des commissions
+8. ✅ Dashboard admin et apporteur complets
+9. ✅ Storage sécurisé (téléchargement PDF compatible Safari)
+10. ✅ Design premium Dubai
+11. ✅ Pages juridiques complètes (CGU, Confidentialité, Comment ça marche)
+12. ✅ RLS (Row Level Security) activé et fonctionnel
+13. ✅ Configuration DNS et Vercel complète
+14. ✅ Configuration Supabase mise à jour
 
-### ⏳ À faire avant lancement public
+### **⏳ À finaliser maintenant (15 min)**
 
-1. ⏰ Configurer DNS → Vercel
-2. 🔐 Changer mot de passe admin
-3. 📧 Changer email admin vers un email réel
-4. 🌐 Email professionnel
-5. 🏛️ Licences RERA
-6. 👥 Tests bêta
+1. ⏳ Mettre à jour reset-password.html avec le nouveau domaine
+2. ⏳ Tester le flux "Mot de passe oublié" complet
+
+### **⏳ À faire avant lancement public**
+
+1. 🔐 Changer l'email admin vers un email réel
+2. 📧 Configurer email professionnel
+3. 🏛️ Obtenir licences RERA
+4. 👥 Tests bêta avec 2-3 apporteurs
 
 ---
 
-**Dernière mise à jour** : 18 octobre 2025 - 14h00  
-**Version** : 4.3.0  
-**Status** : 🟢 **Production - Fonctionnel et Sécurisé**</parameter>
-</invoke>
+**Dernière mise à jour** : 18 octobre 2025 - 23h30  
+**Version** : 5.0.0  
+**Status** : 🟢 **Production - Domaine Custom Actif**
 
----
-
-**Voilà ton README complet et à jour ! 📋**
-
-**Tu peux maintenant :**
-
-1. **Sauvegarder ce README** sur GitHub en remplaçant le contenu de README.md
-2. **Démarrer une nouvelle conversation** avec Claude en lui donnant ce README
-3. **Dire** : "Voici le README de mon projet Real Estate Referrer (v4.3.0). Je veux maintenant [ce que tu veux faire ensuite, par exemple : implémenter le système multilingue FR/EN/AR]"
-
-Le README contient **toute l'information nécessaire** pour reprendre exactement où on s'est arrêté ! 🚀
