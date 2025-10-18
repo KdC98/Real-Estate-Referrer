@@ -1,371 +1,563 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conditions Générales d'Utilisation - Programme d'Apporteurs</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #d97706 100%);
-            min-height: 100vh;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Conditions Générales d'Utilisation - Real Estate Referrer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+:root{
+--brand-navy: #1e3a8a;
+--brand-blue: #2563eb;
+--brand-purple: #7c3aed;
+--brand-gold: #fbbf24;
+}
+
+.brand-gradient{
+  background-image: linear-gradient(135deg, var(--brand-navy), var(--brand-blue), var(--brand-purple));
+}
+
+.brand-text{
+  background: linear-gradient(135deg, var(--brand-navy), var(--brand-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glass-card{
+  background:rgba(255,255,255,.98);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.3);
+  box-shadow:0 8px 32px rgba(0,0,0,.08)
+}
+
+.toc-link{
+  transition: all 0.2s ease;
+}
+
+.toc-link.active{
+  color: var(--brand-blue);
+  font-weight: 600;
+  border-left: 3px solid var(--brand-blue);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+html{
+  scroll-behavior: smooth;
+}
+
+.section-card{
+  scroll-margin-top: 100px;
+}
+</style>
 </head>
-<body class="font-sans text-white">
-    <!-- Header -->
-    <header class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-yellow-400">Karyne de Clercq</h1>
-            <a href="index.html" class="bg-white text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">
-                Retour
-            </a>
-        </div>
-    </header>
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50">
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12">
-        <div class="bg-white text-gray-800 rounded-3xl p-8 md:p-12 max-w-5xl mx-auto shadow-2xl">
-            <h1 class="text-4xl font-bold mb-4 text-blue-900">Conditions Générales d'Utilisation</h1>
-            <p class="text-gray-600 mb-8">Dernière mise à jour : 17 octobre 2025</p>
+<!-- Header -->
+<header class="bg-white shadow-sm sticky top-0 z-50 border-b border-blue-100">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+<div class="flex justify-between items-center">
+<a href="index.html" class="text-2xl font-bold brand-text">
+<i class="fas fa-building mr-2"></i>Real Estate Referrer
+</a>
+<nav class="flex gap-4 items-center text-sm font-medium">
+<a href="index.html" class="text-gray-600 hover:text-[#1e3a8a] transition"><i class="fas fa-home mr-1"></i>Accueil</a>
+<a href="how-it-works.html" class="text-gray-600 hover:text-[#1e3a8a] transition"><i class="fas fa-question-circle mr-1"></i>Comment ça marche</a>
+<a href="login.html" class="bg-[#1e3a8a] hover:bg-[#7c3aed] text-white px-6 py-2 rounded-lg transition">
+<i class="fas fa-sign-in-alt mr-1"></i>Login
+</a>
+</nav>
+</div>
+</div>
+</header>
 
-            <!-- Introduction -->
-            <section class="mb-12">
-                <p class="text-lg leading-relaxed mb-4">
-                    Bienvenue sur la plateforme Real Estate Referrer, exploitée par Karyne de Clercq, agent immobilier à Dubai. 
-                    En utilisant cette plateforme, vous acceptez les présentes Conditions Générales d'Utilisation (CGU).
-                </p>
-                <p class="text-lg leading-relaxed">
-                    Ces CGU régissent votre participation au programme d'apporteurs d'affaires immobiliers et définissent les droits et obligations de chaque partie.
-                </p>
-            </section>
+<!-- Hero Section -->
+<section class="py-12 px-4 brand-gradient text-white relative overflow-hidden">
+<div class="absolute inset-0 opacity-10">
+<div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+<div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+</div>
+<div class="max-w-4xl mx-auto text-center relative z-10">
+<i class="fas fa-file-contract text-5xl mb-4"></i>
+<h1 class="text-4xl md:text-5xl font-bold mb-4">Conditions Générales d'Utilisation</h1>
+<p class="text-lg text-blue-100">Programme d'apporteurs d'affaires immobiliers - Dubai, UAE</p>
+<p class="text-sm text-blue-200 mt-4">Dernière mise à jour : 19 octobre 2025</p>
+</div>
+</section>
 
-            <!-- Article 1 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">1. Définitions</h2>
-                <div class="space-y-3 text-lg">
-                    <p><strong>« Apporteur »</strong> : Toute personne inscrite sur la plateforme qui apporte des clients potentiels (leads) à l'agent immobilier.</p>
-                    <p><strong>« Lead »</strong> : Contact d'un client potentiel intéressé par l'achat ou la location d'un bien immobilier à Dubai.</p>
-                    <p><strong>« Lead qualifié »</strong> : Lead répondant aux critères suivants : personne réellement intéressée, budget défini, recherche active (0-3 mois), coordonnées complètes et exactes, accord du client pour être contacté.</p>
-                    <p><strong>« Commission »</strong> : Rémunération versée à l'apporteur suite à la conclusion d'une vente immobilière.</p>
-                    <p><strong>« Agent »</strong> ou <strong>« Nous »</strong> : Karyne de Clercq, agent immobilier agréé RERA à Dubai.</p>
-                    <p><strong>« Plateforme »</strong> : Le site web et l'application accessible à l'adresse real-estate-referrer.com</p>
-                </div>
-            </section>
+<!-- Content avec TOC -->
+<div class="max-w-7xl mx-auto px-4 py-12">
+<div class="grid lg:grid-cols-4 gap-8">
 
-            <!-- Article 2 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">2. Inscription et Validation du Compte</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">2.1 Conditions d'éligibilité</h3>
-                <p class="text-lg mb-4">Pour devenir apporteur, vous devez :</p>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-                    <li>Être majeur (18 ans minimum)</li>
-                    <li>Fournir des informations exactes et complètes lors de l'inscription</li>
-                    <li>Accepter les présentes CGU et la Politique de Confidentialité</li>
-                    <li>Signer et retourner le contrat d'apporteur d'affaires</li>
-                </ul>
+<!-- Table des matières (Sticky) -->
+<aside class="lg:col-span-1">
+<div class="glass-card rounded-xl p-6 sticky top-24">
+<h3 class="font-bold text-gray-900 mb-4 text-lg flex items-center">
+<i class="fas fa-list text-[#1e3a8a] mr-2"></i>Sommaire
+</h3>
+<nav class="space-y-2">
+<a href="#definitions" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">1. Définitions</a>
+<a href="#inscription" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">2. Inscription</a>
+<a href="#programme" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">3. Programme</a>
+<a href="#commissions" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">4. Commissions</a>
+<a href="#obligations-apporteur" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">5. Vos obligations</a>
+<a href="#obligations-agent" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">6. Nos obligations</a>
+<a href="#propriete" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">7. Propriété intellectuelle</a>
+<a href="#resiliation" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">8. Résiliation</a>
+<a href="#responsabilite" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">9. Responsabilité</a>
+<a href="#donnees" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">10. Données personnelles</a>
+<a href="#loi" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">11. Loi applicable</a>
+<a href="#modifications" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">12. Modifications</a>
+<a href="#contact" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">13. Contact</a>
+</nav>
+</div>
+</aside>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">2.2 Processus d'inscription</h3>
-                <ol class="list-decimal list-inside space-y-2 text-lg ml-4">
-                    <li>Créer un compte sur la plateforme</li>
-                    <li>Télécharger le contrat d'apporteur d'affaires</li>
-                    <li>Imprimer, remplir et signer le contrat</li>
-                    <li>Uploader le contrat signé (PDF, max 5MB)</li>
-                    <li>Attendre la validation par l'agent (sous 48h ouvrées)</li>
-                </ol>
+<!-- Contenu principal -->
+<main class="lg:col-span-3 space-y-6">
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">2.3 Validation du compte</h3>
-                <p class="text-lg">
-                    Votre compte sera activé uniquement après validation de votre contrat signé par l'agent. 
-                    En cas de rejet, vous devrez soumettre un nouveau contrat conforme.
-                </p>
-            </section>
+<!-- Préambule -->
+<div class="glass-card rounded-xl p-8 border-l-4 border-[#1e3a8a]">
+<div class="flex items-start mb-4">
+<i class="fas fa-info-circle text-3xl text-[#1e3a8a] mr-4"></i>
+<div>
+<h2 class="text-2xl font-bold text-gray-900 mb-3">Préambule</h2>
+<p class="text-gray-700 leading-relaxed mb-3">
+Les présentes Conditions Générales d'Utilisation (ci-après "CGU") régissent l'utilisation de la plateforme <strong>Real Estate Referrer</strong> et le programme d'apporteurs d'affaires immobiliers opéré par <strong>Karyne de Clercq</strong>, agent immobilier à Dubai, UAE.
+</p>
+<p class="text-gray-700 leading-relaxed">
+En vous inscrivant sur la plateforme, vous acceptez sans réserve les présentes CGU.
+</p>
+</div>
+</div>
+</div>
 
-            <!-- Article 3 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">3. Programme de Référencement</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.1 Fonctionnement</h3>
-                <p class="text-lg mb-4">
-                    L'apporteur identifie des clients potentiels intéressés par l'achat ou la location de biens immobiliers à Dubai 
-                    et soumet leurs coordonnées via la plateforme. L'agent prend ensuite en charge le suivi commercial.
-                </p>
+<!-- Section 1 -->
+<div id="definitions" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
+<div class="flex items-start mb-4">
+<i class="fas fa-book text-3xl text-[#2563eb] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">1. Définitions</h2>
+</div>
+<div class="space-y-3 text-gray-700">
+<p><strong>Apporteur d'affaires :</strong> Toute personne physique inscrite sur la plateforme dans le but de référer des clients potentiels.</p>
+<p><strong>Lead qualifié :</strong> Contact d'un client potentiel réellement intéressé par un achat ou une location immobilière, avec un budget défini et un projet à court terme (0-6 mois).</p>
+<p><strong>Commission :</strong> Rémunération versée à l'apporteur lors de la conclusion d'une transaction immobilière initiée par son lead.</p>
+<p><strong>Agent :</strong> Karyne de Clercq, agent immobilier titulaire d'une licence RERA à Dubai.</p>
+<p><strong>Plateforme :</strong> Le site web et l'application Real Estate Referrer accessible à l'adresse <a href="https://real-estate-referrer-3kp6.vercel.app" class="text-[#2563eb] hover:underline">real-estate-referrer-3kp6.vercel.app</a></p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.2 Critères de qualification des leads</h3>
-                <p class="text-lg mb-4">Pour être qualifié, un lead doit respecter les critères suivants :</p>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-                    <li>Personne réellement intéressée par un achat ou une location</li>
-                    <li>Budget défini et réaliste</li>
-                    <li>Recherche active dans un délai de 0 à 3 mois</li>
-                    <li>Coordonnées complètes (nom, email, téléphone)</li>
-                    <li>Accord explicite du client pour être contacté par l'agent</li>
-                </ul>
+<!-- Section 2 -->
+<div id="inscription" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
+<div class="flex items-start mb-4">
+<i class="fas fa-user-plus text-3xl text-[#7c3aed] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">2. Inscription</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>2.1. Conditions d'éligibilité</h3>
+<p class="text-gray-700">Pour devenir apporteur d'affaires, vous devez :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li>Être majeur (18 ans minimum)</li>
+<li>Fournir des informations exactes et à jour</li>
+<li>Disposer d'une adresse email valide</li>
+<li>Accepter les présentes CGU</li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-shield-alt text-blue-500 mr-2"></i>2.2. Validation du compte</h3>
+<p class="text-gray-700">Votre inscription sera validée après vérification de vos informations. Nous nous réservons le droit de refuser toute inscription sans justification.</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-tasks text-orange-500 mr-2"></i>2.3. Responsabilités</h3>
+<p class="text-gray-700">Vous êtes responsable de la confidentialité de vos identifiants de connexion et de toutes les activités effectuées depuis votre compte.</p>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.3 Types de leads acceptés</h3>
-                <p class="text-lg mb-4">La plateforme accepte 4 types de leads :</p>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-                    <li><strong>Vente - Acheteur</strong> : Client cherchant à acheter un bien</li>
-                    <li><strong>Vente - Vendeur</strong> : Propriétaire cherchant à vendre son bien</li>
-                    <li><strong>Location - Propriétaire</strong> : Propriétaire cherchant à louer son bien</li>
-                    <li><strong>Location - Locataire</strong> : Client cherchant à louer un bien</li>
-                </ul>
+<!-- Section 3 -->
+<div id="programme" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#fbbf24]">
+<div class="flex items-start mb-4">
+<i class="fas fa-handshake text-3xl text-[#fbbf24] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">3. Programme de référencement</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-cogs text-[#1e3a8a] mr-2"></i>3.1. Fonctionnement</h3>
+<p class="text-gray-700 mb-2">Le programme fonctionne selon les étapes suivantes :</p>
+<ol class="list-decimal list-inside text-gray-700 ml-4 space-y-2">
+<li>L'apporteur identifie un client potentiel</li>
+<li>L'apporteur soumet le lead via la plateforme</li>
+<li>L'agent contacte le client et gère la transaction</li>
+<li>En cas de vente ou location, l'apporteur perçoit sa commission</li>
+</ol>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-star text-yellow-500 mr-2"></i>3.2. Critères de qualification</h3>
+<p class="text-gray-700 mb-2">Un lead est considéré comme qualifié s'il remplit les critères suivants :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
+<li>Intérêt réel et actuel pour un achat ou une location</li>
+<li>Budget défini et réaliste</li>
+<li>Projet à court terme (moins de 6 mois)</li>
+<li>Coordonnées valides et vérifiables</li>
+<li>Le client n'est pas déjà en contact avec l'agent</li>
+</ul>
+</div>
+<div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded">
+<p class="text-sm text-gray-700"><i class="fas fa-exclamation-triangle text-[#2563eb] mr-2"></i><strong>Important :</strong> Vous n'êtes PAS autorisé à faire visiter les biens. Seuls les agents avec licence RERA peuvent le faire. Votre rôle se limite à transmettre les informations du client.</p>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">3.4 Exclusivité du lead</h3>
-                <p class="text-lg">
-                    Chaque lead soumis est exclusif et ne peut être apporté qu'une seule fois. 
-                    Si le même client est déjà enregistré par un autre apporteur ou est déjà connu de l'agent, 
-                    le lead sera refusé sans commission.
-                </p>
-            </section>
+<!-- Section 4 -->
+<div id="commissions" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-money-bill-wave text-3xl text-green-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">4. Commissions</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-calculator text-[#1e3a8a] mr-2"></i>4.1. Taux de commission</h3>
+<p class="text-gray-700 mb-3">Vous percevez <strong class="text-green-600 text-xl">20%</strong> de la commission agent sur toute transaction conclue.</p>
+<div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+<p class="font-bold text-gray-900 mb-2">Exemple de calcul :</p>
+<ul class="text-sm text-gray-700 space-y-1">
+<li>• Vente d'un bien à 5,000,000 AED</li>
+<li>• Commission totale (2%) : 100,000 AED</li>
+<li>• Commission agent (50%) : 50,000 AED</li>
+<li>• <strong class="text-green-600">Votre commission (20%) : 10,000 AED</strong></li>
+</ul>
+</div>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-hourglass-half text-orange-500 mr-2"></i>4.2. Délai de paiement</h3>
+<p class="text-gray-700">Les commissions sont versées sous <strong>45 à 60 jours</strong> après la signature définitive du contrat de vente ou de location et la réception de la commission par l'agent.</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-credit-card text-[#2563eb] mr-2"></i>4.3. Mode de paiement</h3>
+<p class="text-gray-700">Les paiements sont effectués par virement bancaire sur le compte bancaire que vous aurez renseigné dans votre profil.</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-ban text-red-500 mr-2"></i>4.4. Conditions de non-paiement</h3>
+<p class="text-gray-700">Aucune commission n'est due dans les cas suivants :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li>Lead non qualifié ou informations erronées</li>
+<li>Client déjà en contact avec l'agent</li>
+<li>Lead dupliqué (déjà soumis par un autre apporteur)</li>
+<li>Transaction annulée ou non finalisée</li>
+</ul>
+</div>
+</div>
+</div>
 
-            <!-- Article 4 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">4. Commissions</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">4.1 Taux de commission</h3>
-                <p class="text-lg mb-4">Les commissions sont calculées comme suit :</p>
-                
-                <div class="bg-blue-50 border-l-4 border-blue-600 p-6 mb-4">
-                    <p class="text-lg font-semibold mb-2">Pour les ventes :</p>
-                    <ul class="list-disc list-inside space-y-1 ml-4">
-                        <li>Commission totale : 2% du prix de vente</li>
-                        <li>Part de l'agent : 50% (1% du prix de vente)</li>
-                        <li>Part de l'apporteur : 20% de la part agent</li>
-                        <li><strong>Commission finale apporteur : 0.2% du prix de vente</strong></li>
-                    </ul>
-                </div>
+<!-- Section 5 -->
+<div id="obligations-apporteur" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-user-shield text-3xl text-red-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">5. Obligations de l'apporteur</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-balance-scale text-[#1e3a8a] mr-2"></i>5.1. Respect des lois RERA</h3>
+<p class="text-gray-700">Vous vous engagez à respecter toutes les réglementations de la Real Estate Regulatory Agency (RERA) de Dubai, notamment :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li><strong>Interdiction formelle de faire visiter des biens</strong></li>
+<li>Interdiction de négocier directement avec les propriétaires</li>
+<li>Interdiction de représenter l'agent sans autorisation écrite</li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-lock text-purple-500 mr-2"></i>5.2. Confidentialité</h3>
+<p class="text-gray-700">Vous vous engagez à ne pas divulguer les informations confidentielles concernant l'agent, ses clients, ou les biens immobiliers.</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-user-check text-green-500 mr-2"></i>5.3. Exclusivité du lead</h3>
+<p class="text-gray-700">Chaque lead soumis doit être exclusif. Vous ne pouvez pas soumettre le même lead à plusieurs agents ou agences simultanément.</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-check-double text-[#2563eb] mr-2"></i>5.4. Véracité des informations</h3>
+<p class="text-gray-700">Vous garantissez l'exactitude et la véracité de toutes les informations que vous fournissez concernant les leads.</p>
+</div>
+</div>
+</div>
 
-                <div class="bg-green-50 border-l-4 border-green-600 p-6 mb-4">
-                    <p class="text-lg font-semibold mb-2">Pour les locations :</p>
-                    <ul class="list-disc list-inside space-y-1 ml-4">
-                        <li>Commission totale : 5% du loyer annuel</li>
-                        <li>Part de l'agent : 50% (2.5% du loyer annuel)</li>
-                        <li>Part de l'apporteur : 20% de la part agent</li>
-                        <li><strong>Commission finale apporteur : 0.5% du loyer annuel</strong></li>
-                    </ul>
-                </div>
+<!-- Section 6 -->
+<div id="obligations-agent" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
+<div class="flex items-start mb-4">
+<i class="fas fa-building text-3xl text-[#2563eb] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">6. Obligations de l'agent</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-headset text-[#1e3a8a] mr-2"></i>6.1. Suivi des leads</h3>
+<p class="text-gray-700">L'agent s'engage à contacter chaque lead qualifié dans un délai raisonnable (48-72h) et à assurer un suivi professionnel.</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-chart-line text-green-500 mr-2"></i>6.2. Transparence</h3>
+<p class="text-gray-700">L'agent s'engage à tenir l'apporteur informé de l'avancement de chaque lead via la plateforme (statuts : nouveau, visite, offre, vendu).</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-coins text-yellow-500 mr-2"></i>6.3. Paiement des commissions</h3>
+<p class="text-gray-700">L'agent s'engage à verser les commissions dues dans les délais stipulés (45-60 jours après signature).</p>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">4.2 Conditions de versement</h3>
-                <p class="text-lg mb-4">La commission est versée à l'apporteur uniquement si :</p>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-                    <li>La transaction est finalisée (signature du contrat de vente ou bail)</li>
-                    <li>Le lead respectait les critères de qualification</li>
-                    <li>Le contrat d'apporteur est valide et signé</li>
-                    <li>L'apporteur n'a pas violé les présentes CGU</li>
-                </ul>
+<!-- Section 7 -->
+<div id="propriete" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
+<div class="flex items-start mb-4">
+<i class="fas fa-copyright text-3xl text-[#7c3aed] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">7. Propriété intellectuelle</h2>
+</div>
+<div class="space-y-3 text-gray-700">
+<p>La plateforme Real Estate Referrer, son contenu, sa structure, et tous les éléments qui la composent sont la propriété exclusive de Karyne de Clercq.</p>
+<p>Vous disposez d'un droit d'utilisation personnel, non exclusif et non transférable de la plateforme, uniquement dans le cadre du programme d'apporteurs d'affaires.</p>
+<p>Toute reproduction, représentation, modification ou exploitation de tout ou partie de la plateforme est strictement interdite sans autorisation préalable écrite.</p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">4.3 Délai de paiement</h3>
-                <p class="text-lg mb-4">
-                    <strong>Pour les ventes :</strong> La commission est versée dans les 45 à 60 jours suivant l'émission du Title Deed (acte de propriété).
-                </p>
-                <p class="text-lg">
-                    <strong>Pour les locations :</strong> La commission est versée dans les 7 à 14 jours suivant la signature du Tenancy Contract (contrat de location).
-                </p>
+<!-- Section 8 -->
+<div id="resiliation" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-times-circle text-3xl text-orange-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">8. Résiliation</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-user-times text-red-500 mr-2"></i>8.1. Résiliation par l'apporteur</h3>
+<p class="text-gray-700">Vous pouvez résilier votre compte à tout moment depuis votre dashboard ou en contactant le support. Les commissions sur les leads en cours restent acquises.</p>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-gavel text-[#1e3a8a] mr-2"></i>8.2. Résiliation par l'agent</h3>
+<p class="text-gray-700">L'agent se réserve le droit de suspendre ou résilier votre compte en cas de :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li>Non-respect des présentes CGU</li>
+<li>Soumission répétée de leads non qualifiés</li>
+<li>Comportement frauduleux ou contraire à l'éthique</li>
+<li>Violation des lois RERA</li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-exchange-alt text-green-500 mr-2"></i>8.3. Effets de la résiliation</h3>
+<p class="text-gray-700">En cas de résiliation, vous conservez le droit aux commissions sur les transactions déjà conclues. Les leads en cours sont transférés à l'agent sans droit à commission sauf accord contraire.</p>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">4.4 Mode de paiement</h3>
-                <p class="text-lg">
-                    Les commissions sont versées par virement bancaire sur le compte fourni par l'apporteur lors de son inscription.
-                </p>
-            </section>
+<!-- Section 9 -->
+<div id="responsabilite" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-exclamation-triangle text-3xl text-red-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">9. Responsabilité</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-shield-alt text-[#1e3a8a] mr-2"></i>9.1. Limitations de responsabilité</h3>
+<p class="text-gray-700">L'agent ne peut être tenu responsable :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li>Des interruptions temporaires de la plateforme</li>
+<li>De la non-conclusion d'une transaction avec un lead</li>
+<li>Des pertes de données dues à un cas de force majeure</li>
+<li>Des actions ou comportements des clients référés</li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-ban text-red-500 mr-2"></i>9.2. Exclusions de garantie</h3>
+<p class="text-gray-700">La plateforme est fournie "en l'état". L'agent ne garantit pas que la plateforme sera exempte d'erreurs ou fonctionnera sans interruption.</p>
+</div>
+</div>
+</div>
 
-            <!-- Article 5 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">5. Obligations de l'Apporteur</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">5.1 Respect de la réglementation RERA</h3>
-                <p class="text-lg mb-4">
-                    L'apporteur s'engage à respecter toutes les lois et réglementations en vigueur à Dubai, notamment celles de la 
-                    Real Estate Regulatory Agency (RERA). L'apporteur ne doit en aucun cas se présenter comme un agent immobilier agréé.
-                </p>
+<!-- Section 10 -->
+<div id="donnees" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
+<div class="flex items-start mb-4">
+<i class="fas fa-database text-3xl text-[#2563eb] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">10. Données personnelles (RGPD)</h2>
+</div>
+<div class="space-y-4">
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-clipboard-list text-[#1e3a8a] mr-2"></i>10.1. Collecte des données</h3>
+<p class="text-gray-700">Nous collectons les données suivantes :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li>Nom, prénom, email, téléphone</li>
+<li>Informations des leads soumis</li>
+<li>Historique des commissions</li>
+<li>Données de connexion et d'utilisation</li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-tasks text-green-500 mr-2"></i>10.2. Utilisation des données</h3>
+<p class="text-gray-700">Vos données sont utilisées pour :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li>Gestion du programme d'apporteurs</li>
+<li>Communication et support</li>
+<li>Calcul et paiement des commissions</li>
+<li>Amélioration de la plateforme</li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-user-shield text-purple-500 mr-2"></i>10.3. Droits des utilisateurs</h3>
+<p class="text-gray-700">Conformément au RGPD, vous disposez des droits suivants :</p>
+<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+<li>Droit d'accès à vos données</li>
+<li>Droit de rectification</li>
+<li>Droit à l'effacement ("droit à l'oubli")</li>
+<li>Droit d'opposition au traitement</li>
+<li>Droit à la portabilité</li>
+</ul>
+<p class="text-gray-700 mt-2">Pour exercer vos droits, contactez-nous à <a href="mailto:contact@real-estate-referrer.com" class="text-[#2563eb] hover:underline">contact@real-estate-referrer.com</a></p>
+</div>
+<div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded">
+<p class="text-sm text-gray-700"><i class="fas fa-info-circle text-[#2563eb] mr-2"></i>Pour plus de détails, consultez notre <a href="privacy.html" class="text-[#2563eb] hover:underline font-semibold">Politique de confidentialité</a>.</p>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">5.2 Interdiction de démarchage direct</h3>
-                <p class="text-lg mb-4">
-                    L'apporteur n'est pas autorisé à négocier, visiter des biens ou signer des contrats au nom de l'agent. 
-                    Son rôle se limite à apporter des contacts qualifiés.
-                </p>
+<!-- Section 11 -->
+<div id="loi" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
+<div class="flex items-start mb-4">
+<i class="fas fa-gavel text-3xl text-[#7c3aed] mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">11. Loi applicable et juridiction</h2>
+</div>
+<div class="space-y-3 text-gray-700">
+<p>Les présentes CGU sont régies par le droit des <strong>Émirats Arabes Unis</strong> et les réglementations de la <strong>RERA (Real Estate Regulatory Agency)</strong> de Dubai.</p>
+<p>Tout litige relatif à l'interprétation ou à l'exécution des présentes CGU relève de la compétence exclusive des <strong>tribunaux de Dubai</strong>.</p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">5.3 Confidentialité</h3>
-                <p class="text-lg mb-4">
-                    L'apporteur s'engage à garder confidentielles toutes les informations commerciales, stratégiques ou personnelles 
-                    dont il aurait connaissance dans le cadre de sa collaboration avec l'agent.
-                </p>
+<!-- Section 12 -->
+<div id="modifications" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-edit text-3xl text-orange-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">12. Modifications des CGU</h2>
+</div>
+<div class="space-y-3 text-gray-700">
+<p>Nous nous réservons le droit de modifier les présentes CGU à tout moment. Les modifications prennent effet dès leur publication sur la plateforme.</p>
+<p>Vous serez informé par email de toute modification substantielle. La poursuite de l'utilisation de la plateforme après modification vaut acceptation des nouvelles CGU.</p>
+<p class="text-sm text-gray-600 italic">Dernière modification : 19 octobre 2025</p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">5.4 Véracité des informations</h3>
-                <p class="text-lg mb-4">
-                    L'apporteur garantit l'exactitude et la véracité des informations fournies concernant les leads. 
-                    Toute fausse déclaration peut entraîner la résiliation immédiate du compte et la perte de toute commission due.
-                </p>
+<!-- Section 13 -->
+<div id="contact" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
+<div class="flex items-start mb-4">
+<i class="fas fa-envelope text-3xl text-green-500 mr-4"></i>
+<h2 class="text-2xl font-bold text-gray-900">13. Contact</h2>
+</div>
+<div class="space-y-4">
+<p class="text-gray-700">Pour toute question concernant les présentes CGU, vous pouvez nous contacter :</p>
+<div class="grid md:grid-cols-3 gap-4">
+<div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+<p class="font-bold text-gray-900 mb-2"><i class="fas fa-envelope text-[#2563eb] mr-2"></i>Email</p>
+<a href="mailto:contact@real-estate-referrer.com" class="text-[#2563eb] hover:underline text-sm">contact@real-estate-referrer.com</a>
+</div>
+<div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+<p class="font-bold text-gray-900 mb-2"><i class="fas fa-user text-[#7c3aed] mr-2"></i>Nom</p>
+<p class="text-gray-700 text-sm">Karyne de Clercq</p>
+</div>
+<div class="bg-green-50 p-4 rounded-lg border border-green-200">
+<p class="font-bold text-gray-900 mb-2"><i class="fas fa-briefcase text-green-600 mr-2"></i>Activité</p>
+<p class="text-gray-700 text-sm">Agent immobilier - Dubai, UAE</p>
+</div>
+</div>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">5.5 Accord du client</h3>
-                <p class="text-lg">
-                    L'apporteur doit obtenir l'accord explicite de chaque client avant de soumettre ses coordonnées sur la plateforme.
-                </p>
-            </section>
+<!-- Acceptation -->
+<div class="glass-card rounded-xl p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-[#2563eb]">
+<div class="flex items-start">
+<i class="fas fa-check-circle text-4xl text-green-500 mr-4"></i>
+<div>
+<h3 class="text-xl font-bold text-gray-900 mb-3">Acceptation des CGU</h3>
+<p class="text-gray-700 leading-relaxed">
+En utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu, compris et accepté les présentes Conditions Générales d'Utilisation.
+</p>
+</div>
+</div>
+</div>
 
-            <!-- Article 6 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">6. Obligations de l'Agent</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">6.1 Suivi des leads</h3>
-                <p class="text-lg mb-4">
-                    L'agent s'engage à contacter et suivre les leads soumis dans un délai raisonnable (généralement sous 48h ouvrées).
-                </p>
+</main>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">6.2 Transparence sur les transactions</h3>
-                <p class="text-lg mb-4">
-                    L'agent informera l'apporteur de l'avancement de chaque lead via le dashboard (statuts : nouveau, visite, offre, vendu/loué).
-                </p>
+</div>
+</div>
 
-                <h3 class="text-xl font-semibold mb-3 mt-6">6.3 Paiement des commissions</h3>
-                <p class="text-lg">
-                    L'agent s'engage à verser les commissions dues dans les délais indiqués à l'article 4.3, 
-                    à condition que toutes les conditions de versement soient remplies.
-                </p>
-            </section>
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-400 py-10 px-4 mt-12">
+<div class="max-w-6xl mx-auto">
+<div class="grid md:grid-cols-4 gap-8 mb-6">
+<div>
+<h3 class="text-white font-bold mb-4">Real Estate Referrer</h3>
+<p class="text-sm">Gagnez des commissions en apportant des clients à notre agence immobilière à Dubai.</p>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Navigation</h4>
+<ul class="space-y-2 text-sm">
+<li><a href="index.html" class="hover:text-white transition">Accueil</a></li>
+<li><a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a></li>
+<li><a href="login.html" class="hover:text-white transition">Connexion</a></li>
+<li><a href="signup.html" class="hover:text-white transition">Inscription</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Légal</h4>
+<ul class="space-y-2 text-sm">
+<li><a href="terms.html" class="hover:text-white transition">CGU</a></li>
+<li><a href="privacy.html" class="hover:text-white transition">Confidentialité</a></li>
+<li><a href="contract-template.html" class="hover:text-white transition">Template Contrat</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-4">Contact</h4>
+<ul class="space-y-2 text-sm">
+<li><i class="fas fa-envelope mr-2"></i>contact@real-estate-referrer.com</li>
+<li><i class="fas fa-phone mr-2"></i>+971 XX XXX XXXX</li>
+<li><i class="fas fa-map-marker-alt mr-2"></i>Dubai, UAE</li>
+</ul>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-6 text-center text-sm">
+<p>&copy; 2025 Karyne de Clercq. Tous droits réservés.</p>
+</div>
+</div>
+</footer>
 
-            <!-- Article 7 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">7. Propriété Intellectuelle</h2>
-                <p class="text-lg mb-4">
-                    Tous les éléments de la plateforme (design, logo, textes, code) sont la propriété exclusive de l'agent et sont protégés 
-                    par les lois sur la propriété intellectuelle.
-                </p>
-                <p class="text-lg">
-                    L'apporteur dispose d'un droit d'utilisation limité de la plateforme dans le cadre strict de son activité d'apporteur. 
-                    Toute reproduction, distribution ou utilisation commerciale non autorisée est interdite.
-                </p>
-            </section>
+<script>
+// Smooth scroll avec mise à jour TOC
+document.querySelectorAll('.toc-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href');
+    const targetSection = document.querySelector(targetId);
+    
+    // Scroll vers la section
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+    
+    // Mise à jour active link
+    document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
 
-            <!-- Article 8 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">8. Données Personnelles (RGPD/GDPR)</h2>
-                <p class="text-lg mb-4">
-                    L'agent collecte et traite les données personnelles des apporteurs et des leads conformément au Règlement Général 
-                    sur la Protection des Données (RGPD) et à la législation des Émirats Arabes Unis.
-                </p>
-                <p class="text-lg mb-4">
-                    <strong>Données collectées :</strong> Nom, email, téléphone, informations bancaires, contrats signés, historique des leads.
-                </p>
-                <p class="text-lg mb-4">
-                    <strong>Utilisation des données :</strong> Gestion du programme d'apporteurs, communication, calcul et paiement des commissions.
-                </p>
-                <p class="text-lg mb-4">
-                    <strong>Droits des utilisateurs :</strong> Droit d'accès, de rectification, d'effacement et d'opposition. 
-                    Pour exercer vos droits, contactez : <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline">contact@real-estate-referrer.com</a>
-                </p>
-                <p class="text-lg">
-                    Pour plus d'informations, consultez notre <a href="privacy.html" class="text-blue-600 hover:underline font-semibold">Politique de Confidentialité</a>.
-                </p>
-            </section>
+// Mise à jour automatique du TOC lors du scroll
+window.addEventListener('scroll', function() {
+  let current = '';
+  document.querySelectorAll('.section-card').forEach(section => {
+    const sectionTop = section.offsetTop;
+    const sectionHeight = section.clientHeight;
+    if (pageYOffset >= (sectionTop - 150)) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  document.querySelectorAll('.toc-link').forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) {
+      link.classList.add('active');
+    }
+  });
+});
+</script>
 
-            <!-- Article 9 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">9. Résiliation</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">9.1 Résiliation par l'apporteur</h3>
-                <p class="text-lg mb-4">
-                    L'apporteur peut résilier son compte à tout moment en envoyant une demande écrite à 
-                    <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline">contact@real-estate-referrer.com</a>. 
-                    Les commissions dues pour les transactions en cours restent acquises.
-                </p>
-
-                <h3 class="text-xl font-semibold mb-3 mt-6">9.2 Résiliation par l'agent</h3>
-                <p class="text-lg mb-4">L'agent peut résilier le compte d'un apporteur immédiatement et sans préavis en cas de :</p>
-                <ul class="list-disc list-inside space-y-2 text-lg ml-4">
-                    <li>Violation des présentes CGU</li>
-                    <li>Soumission de leads non qualifiés ou frauduleux de manière répétée</li>
-                    <li>Comportement inapproprié ou contraire à l'éthique</li>
-                    <li>Non-respect de la réglementation RERA</li>
-                </ul>
-
-                <h3 class="text-xl font-semibold mb-3 mt-6">9.3 Effets de la résiliation</h3>
-                <p class="text-lg">
-                    En cas de résiliation, l'accès à la plateforme est immédiatement supprimé. 
-                    Les commissions pour les transactions déjà finalisées restent dues, 
-                    sauf en cas de résiliation pour violation grave des CGU.
-                </p>
-            </section>
-
-            <!-- Article 10 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">10. Responsabilité</h2>
-                
-                <h3 class="text-xl font-semibold mb-3 mt-6">10.1 Limitation de responsabilité</h3>
-                <p class="text-lg mb-4">
-                    L'agent ne peut être tenu responsable des dommages indirects (perte de revenus, de clientèle, de données) 
-                    résultant de l'utilisation ou de l'impossibilité d'utiliser la plateforme.
-                </p>
-
-                <h3 class="text-xl font-semibold mb-3 mt-6">10.2 Disponibilité de la plateforme</h3>
-                <p class="text-lg mb-4">
-                    L'agent s'efforce de maintenir la plateforme accessible 24/7, mais ne garantit pas une disponibilité ininterrompue. 
-                    Des interruptions pour maintenance ou mises à jour peuvent survenir.
-                </p>
-
-                <h3 class="text-xl font-semibold mb-3 mt-6">10.3 Exclusion de garantie</h3>
-                <p class="text-lg">
-                    La plateforme est fournie "en l'état". L'agent ne garantit pas que la plateforme sera exempte d'erreurs ou que 
-                    tous les leads soumis aboutiront à une transaction.
-                </p>
-            </section>
-
-            <!-- Article 11 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">11. Modifications des CGU</h2>
-                <p class="text-lg mb-4">
-                    L'agent se réserve le droit de modifier les présentes CGU à tout moment. 
-                    Les modifications seront notifiées aux apporteurs par email et prendront effet 15 jours après leur publication.
-                </p>
-                <p class="text-lg">
-                    La poursuite de l'utilisation de la plateforme après la notification vaut acceptation des nouvelles CGU.
-                </p>
-            </section>
-
-            <!-- Article 12 -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">12. Loi Applicable et Juridiction</h2>
-                <p class="text-lg mb-4">
-                    Les présentes CGU sont régies par le droit des <strong>Émirats Arabes Unis</strong>.
-                </p>
-                <p class="text-lg">
-                    Tout litige relatif à l'interprétation ou à l'exécution des présentes CGU relève de la compétence exclusive 
-                    des tribunaux de <strong>Dubai</strong>.
-                </p>
-            </section>
-
-            <!-- Contact -->
-            <section class="mb-10">
-                <h2 class="text-3xl font-bold mb-4 text-blue-900">13. Contact</h2>
-                <p class="text-lg mb-4">
-                    Pour toute question concernant les présentes CGU, vous pouvez nous contacter :
-                </p>
-                <ul class="text-lg space-y-2">
-                    <li><strong>Email :</strong> <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline">contact@real-estate-referrer.com</a></li>
-                    <li><strong>Nom :</strong> Karyne de Clercq</li>
-                    <li><strong>Activité :</strong> Agent immobilier - Dubai, UAE</li>
-                </ul>
-            </section>
-
-            <div class="border-t-2 border-gray-300 pt-6 mt-12">
-                <p class="text-center text-gray-600 font-semibold">
-                    En utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu, compris et accepté les présentes Conditions Générales d'Utilisation.
-                </p>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 bg-opacity-90 text-gray-400 py-8 mt-16">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-4">© 2025 Karyne de Clercq. Tous droits réservés.</p>
-            <div class="flex justify-center gap-6 flex-wrap">
-                <a href="terms.html" class="hover:text-white transition">CGU</a>
-                <a href="privacy.html" class="hover:text-white transition">Confidentialité</a>
-                <a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a>
-                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">Contact</a>
-            </div>
-        </div>
-    </footer>
 </body>
 </html>
