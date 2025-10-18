@@ -19,6 +19,102 @@
     let currentUser = null;
     let currentProfile = null;
 
+
+// ============================================
+// SYSTÈME DE VALIDATION DU MOT DE PASSE
+// ============================================
+
+function validatePassword(password) {
+  const requirements = {
+    length: password.length >= 12,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    special: /[@#$%^&*!?.]/.test(password)
+  };
+  
+  const score = Object.values(requirements).filter(Boolean).length;
+  const strength = score === 5 ? 'excellent' : 
+                   score === 4 ? 'fort' : 
+                   score === 3 ? 'moyen' : 'faible';
+  
+  return {
+    isValid: score === 5,
+    requirements,
+    score,
+    strength
+  };
+}
+
+function getPasswordStrengthHTML(validation) {
+  const colors = {
+    faible: '#EF4444',
+    moyen: '#F59E0B',
+    fort: '#10B981',
+    excellent: '#059669'
+  };
+  
+  const widths = {
+    faible: '25%',
+    moyen: '50%',
+    fort: '75%',
+    excellent: '100%'
+  };
+  
+  return `
+    <div class="mt-2">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-sm text-gray-400">Force du mot de passe:</span>
+        <span class="text-sm font-semibold" style="color: ${colors[validation.strength]}">${validation.strength.toUpperCase()}</span>
+      </div>
+      <div class="w-full bg-gray-700 rounded-full h-2">
+        <div class="h-2 rounded-full transition-all duration-300" 
+             style="width: ${widths[validation.strength]}; background-color: ${colors[validation.strength]}"></div>
+      </div>
+      <div class="mt-3 space-y-1 text-xs">
+        <div class="${validation.requirements.length ? 'text-green-400' : 'text-gray-500'}">
+          ${validation.requirements.length ? '✓' : '○'} Au moins 12 caractères
+        </div>
+        <div class="${validation.requirements.uppercase ? 'text-green-400' : 'text-gray-500'}">
+          ${validation.requirements.uppercase ? '✓' : '○'} Au moins 1 majuscule (A-Z)
+        </div>
+        <div class="${validation.requirements.lowercase ? 'text-green-400' : 'text-gray-500'}">
+          ${validation.requirements.lowercase ? '✓' : '○'} Au moins 1 minuscule (a-z)
+        </div>
+        <div class="${validation.requirements.number ? 'text-green-400' : 'text-gray-500'}">
+          ${validation.requirements.number ? '✓' : '○'} Au moins 1 chiffre (0-9)
+        </div>
+        <div class="${validation.requirements.special ? 'text-green-400' : 'text-gray-500'}">
+          ${validation.requirements.special ? '✓' : '○'} Au moins 1 caractère spécial (@#$%^&*!?.)
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function init() {
+```
+
+---
+
+## 📸 RÉSULTAT ATTENDU :
+
+Après ton ajout, ça devrait ressembler à ça :
+```
+Ligne 18: const supabaseClient = createClient(supabaseUrl, supabaseKey);
+Ligne 19: let currentUser = null;
+Ligne 20: let currentProfile = null;
+Ligne 21: (vide)
+Ligne 22: // ============================================
+Ligne 23: // SYSTÈME DE VALIDATION DU MOT DE PASSE
+Ligne 24: // ============================================
+Ligne 25: (vide)
+Ligne 26: function validatePassword(password) {
+...
+(les fonctions)
+...
+Ligne ~90: async function init() {
+
    async function init() {
   // Vérifier si c'est un lien de réinitialisation de mot de passe
   const urlParams = new URLSearchParams(window.location.search);
