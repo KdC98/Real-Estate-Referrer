@@ -322,80 +322,96 @@ Ligne ~90: async function init() {
       });
     }
 
-    function showSignup() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
-          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">Inscription</h2>
-            <form id="signupForm" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Nom Complet</label>
-                <input type="text" id="signupName" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone</label>
-                <input type="tel" id="signupPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                <input type="email" id="signupEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
-                <input type="password" id="signupPassword" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
-                <input type="password" id="signupPasswordConfirm" required minlength="6" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-                S'inscrire
-              </button>
-            </form>
-            <div class="mt-4 text-center">
-              <span class="text-gray-400 text-sm">Déjà un compte ? </span>
-              <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
-                Se connecter
-              </button>
-            </div>
+   function showSignup() {
+  document.getElementById('app').innerHTML = `
+    <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
+      <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
+        <h2 class="text-3xl font-bold text-white mb-6 text-center">Inscription</h2>
+        <form id="signupForm" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Nom Complet</label>
+            <input type="text" id="signupName" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
           </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone</label>
+            <input type="tel" id="signupPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+            <input type="email" id="signupEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
+            <input type="password" id="signupPassword" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+            <div id="passwordStrength"></div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
+            <input type="password" id="signupPasswordConfirm" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+          </div>
+          <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
+            S'inscrire
+          </button>
+        </form>
+        <div class="mt-4 text-center">
+          <span class="text-gray-400 text-sm">Déjà un compte ? </span>
+          <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
+            Se connecter
+          </button>
         </div>
-      `;
+      </div>
+    </div>
+  `;
 
-      document.getElementById('signupForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const phone = document.getElementById('signupPhone').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+  // Validation en temps réel
+  const passwordInput = document.getElementById('signupPassword');
+  const strengthDiv = document.getElementById('passwordStrength');
+  
+  passwordInput.addEventListener('input', function() {
+    const validation = validatePassword(this.value);
+    strengthDiv.innerHTML = getPasswordStrengthHTML(validation);
+  });
 
-        if (password !== passwordConfirm) {
-          alert('Les mots de passe ne correspondent pas');
-          return;
-        }
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value;
+    const phone = document.getElementById('signupPhone').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
 
-        const { data, error} = await supabaseClient.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              name,
-              phone,
-              role: 'referrer'
-            }
-          }
-        });
-
-        if (error) {
-          alert('Erreur d\'inscription: ' + error.message);
-        } else {
-          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-          showLogin();
-        }
-      });
+    if (password !== passwordConfirm) {
+      alert('Les mots de passe ne correspondent pas');
+      return;
     }
 
+    // Validation du mot de passe
+    const validation = validatePassword(password);
+    if (!validation.isValid) {
+      alert('Le mot de passe ne respecte pas les critères de sécurité requis. Veuillez vérifier tous les critères ci-dessous.');
+      return;
+    }
+
+    const { data, error} = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+          phone,
+          role: 'referrer'
+        }
+      }
+    });
+
+    if (error) {
+      alert('Erreur d\'inscription: ' + error.message);
+    } else {
+      alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+      showLogin();
+    }
+  });
+}
     function showReset() {
       document.getElementById('app').innerHTML = `
         <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
