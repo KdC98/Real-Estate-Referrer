@@ -1,237 +1,153 @@
-<invoke name="artifacts">
-<parameter name="command">create</parameter>
-<parameter name="type">application/vnd.ant.code</parameter>
-<parameter name="language">html</parameter>
-<parameter name="title">index.html - Version Finale Corrigée</parameter>
-<parameter name="id">final_complete_index</parameter>
-<parameter name="content"><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real Estate Referrer - Dubai</title>
+  <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom": "https://esm.sh/react-dom@18.2.0",
+        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
+      min-height: 100vh;
+    }
+  </style>
 </head>
-<body class="bg-gray-900">
+<body class="text-white">
   <div id="app"></div>
+
   <script type="module">
-    const { createClient } = supabase;
+    import { createClient } from '@supabase/supabase-js';
+
+    const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
     
-    const supabaseUrl = 'https://cgizcgwhwxswvoodqver.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
-    
-    const supabaseClient = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
     let currentUser = null;
-    let currentProfile = null;
+    let userProfile = null;
+    let currentPage = 'landing';
 
-    function validatePassword(password) {
-      const requirements = {
-        length: password.length >= 12,
-        uppercase: /[A-Z]/.test(password),
-        lowercase: /[a-z]/.test(password),
-        number: /[0-9]/.test(password),
-        special: /[@#$%^&*!?.]/.test(password)
-      };
-      
-      const score = Object.values(requirements).filter(Boolean).length;
-      const strength = score === 5 ? 'excellent' : 
-                       score === 4 ? 'fort' : 
-                       score === 3 ? 'moyen' : 'faible';
-      
-      return {
-        isValid: score === 5,
-        requirements,
-        score,
-        strength
-      };
-    }
-
-    function getPasswordStrengthHTML(validation) {
-      const colors = {
-        faible: '#EF4444',
-        moyen: '#F59E0B',
-        fort: '#10B981',
-        excellent: '#059669'
-      };
-      
-      const widths = {
-        faible: '25%',
-        moyen: '50%',
-        fort: '75%',
-        excellent: '100%'
-      };
-      
+    function renderLandingPage() {
       return `
-        <div class="mt-2">
-          <div class="flex justify-between items-center mb-2">
-            <span class="text-sm text-gray-400">Force du mot de passe:</span>
-            <span class="text-sm font-semibold" style="color: ${colors[validation.strength]}">${validation.strength.toUpperCase()}</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="h-2 rounded-full transition-all duration-300" 
-                 style="width: ${widths[validation.strength]}; background-color: ${colors[validation.strength]}"></div>
-          </div>
-          <div class="mt-3 space-y-1 text-xs">
-            <div class="${validation.requirements.length ? 'text-green-400' : 'text-gray-500'}">
-              ${validation.requirements.length ? '✓' : '○'} Au moins 12 caractères
-            </div>
-            <div class="${validation.requirements.uppercase ? 'text-green-400' : 'text-gray-500'}">
-              ${validation.requirements.uppercase ? '✓' : '○'} Au moins 1 majuscule (A-Z)
-            </div>
-            <div class="${validation.requirements.lowercase ? 'text-green-400' : 'text-gray-500'}">
-              ${validation.requirements.lowercase ? '✓' : '○'} Au moins 1 minuscule (a-z)
-            </div>
-            <div class="${validation.requirements.number ? 'text-green-400' : 'text-gray-500'}">
-              ${validation.requirements.number ? '✓' : '○'} Au moins 1 chiffre (0-9)
-            </div>
-            <div class="${validation.requirements.special ? 'text-green-400' : 'text-gray-500'}">
-              ${validation.requirements.special ? '✓' : '○'} Au moins 1 caractère spécial (@#$%^&*!?.)
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    async function init() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isRecovery = urlParams.get('type') === 'recovery';
-      
-      if (isRecovery) {
-        showPasswordReset();
-        return;
-      }
-
-      const { data: { session } } = await supabaseClient.auth.getSession();
-
-      if (session) {
-        currentUser = session.user;
-        await loadProfile();
-        if (currentProfile && currentProfile.role === 'admin') {
-          showAdminDashboard();
-        } else if (currentProfile) {
-          showReferrerDashboard();
-        }
-      } else {
-        showLandingPage();
-      }
-    }
-
-    async function loadProfile() {
-      try {
-        const { data, error } = await supabaseClient
-          .from('profiles')
-          .select('*')
-          .eq('id', currentUser.id)
-          .single();
-          
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error loading profile:', error);
-          alert('Error loading profile. Creating...');
-        }
-        
-        if (data) {
-          currentProfile = data;
-        } else {
-          console.log('Profile not found, creating automatically...');
-          
-          const { data: newProfile, error: createError } = await supabaseClient
-            .from('profiles')
-            .insert([{
-              id: currentUser.id,
-              name: currentUser.user_metadata?.name || 'User',
-              phone: currentUser.user_metadata?.phone || '',
-              role: currentUser.user_metadata?.role || 'referrer',
-              contract_status: 'pending'
-            }])
-            .select()
-            .single();
-            
-          if (createError) {
-            console.error('Error creating profile:', createError);
-            alert('Error creating profile. Please try again or contact support.');
-            logout();
-            return;
-          }
-          
-          currentProfile = newProfile;
-          console.log('Profile created successfully:', currentProfile);
-        }
-      } catch (err) {
-        console.error('Error:', err);
-        alert('Error loading profile');
-        logout();
-      }
-    }
-
-    function showLandingPage() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
-          <nav class="bg-gray-900/50 backdrop-blur-sm">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center h-16">
-                <h1 class="text-2xl font-bold text-yellow-500">Dubai Real Estate</h1>
-                <button onclick="showAuthPage()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-2 rounded-lg font-semibold">
-                  Login
-                </button>
+        <div class="min-h-screen">
+          <header class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+              <h1 class="text-2xl font-bold text-yellow-400">Dubai Real Estate</h1>
+              <div class="flex gap-4">
+                <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition">Comment ça marche</a>
+                <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition">Login</button>
+                <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">Sign Up</button>
               </div>
             </div>
-          </nav>
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-            <div class="text-center mb-16">
-              <h2 class="text-5xl font-bold text-white mb-6">
+          </header>
+
+          <main class="container mx-auto px-4 py-20">
+            <div class="text-center mb-12">
+              <h2 class="text-5xl md:text-6xl font-bold mb-6">
                 Gagnez des Commissions en Apportant des Clients
               </h2>
               <p class="text-xl text-gray-300 mb-8">
                 Devenez apporteur d'affaires et gagnez jusqu'à 20% de commission sur chaque vente
               </p>
-              <button onclick="showAuthPage()" class="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 px-8 py-4 rounded-lg text-lg font-bold shadow-lg">
+              <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
                 Rejoindre le Programme
               </button>
             </div>
-            <div class="grid md:grid-cols-3 gap-8 mb-16">
-              <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center">
+
+            <div class="grid md:grid-cols-3 gap-6 my-16">
+              <div class="rounded-xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" 
+                     alt="Burj Khalifa Dubai" 
+                     class="w-full h-64 object-cover">
+              </div>
+              <div class="rounded-xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" 
+                     alt="Dubai Marina" 
+                     class="w-full h-64 object-cover">
+              </div>
+              <div class="rounded-xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" 
+                     alt="Dubai Skyline" 
+                     class="w-full h-64 object-cover">
+              </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 mt-20">
+              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">20%</div>
                 <div class="text-gray-300">Commission sur chaque vente</div>
               </div>
-              <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center">
+              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">24/7</div>
                 <div class="text-gray-300">Suivi des leads en temps réel</div>
               </div>
-              <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 text-center">
+              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                 <div class="text-4xl font-bold text-yellow-500 mb-2">48h</div>
                 <div class="text-gray-300">Paiement après signature</div>
               </div>
             </div>
-            <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8">
-              <h3 class="text-2xl font-bold text-white mb-6">Exemples de Gains</h3>
-              <div class="space-y-4">
-                <div class="flex justify-between items-center border-b border-gray-700 pb-4">
-                  <span class="text-gray-300">Villa à 3,000,000 AED</span>
-                  <span class="text-2xl font-bold text-yellow-500">6,000 AED</span>
+
+            <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
+              <h3 class="text-3xl font-bold text-center mb-12">Exemples de Gains</h3>
+              <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
+                  <div class="text-yellow-500 text-xl font-bold mb-4">💰 Vente Immobilière</div>
+                  <div class="space-y-3 text-gray-300">
+                    <div class="flex justify-between">
+                      <span>Villa à 3,000,000 AED</span>
+                      <span class="font-bold text-yellow-500">6,000 AED</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Appartement à 5,000,000 AED</span>
+                      <span class="font-bold text-yellow-500">10,000 AED</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Penthouse à 10,000,000 AED</span>
+                      <span class="font-bold text-yellow-500">20,000 AED</span>
+                    </div>
+                  </div>
                 </div>
-                <div class="flex justify-between items-center border-b border-gray-700 pb-4">
-                  <span class="text-gray-300">Appartement à 5,000,000 AED</span>
-                  <span class="text-2xl font-bold text-yellow-500">10,000 AED</span>
-                </div>
-                <div class="flex justify-between items-center">
-                  <span class="text-gray-300">Penthouse à 10,000,000 AED</span>
-                  <span class="text-2xl font-bold text-yellow-500">20,000 AED</span>
+
+                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
+                  <div class="text-yellow-500 text-xl font-bold mb-4">🏠 Location Immobilière</div>
+                  <div class="space-y-3 text-gray-300">
+                    <div class="flex justify-between">
+                      <span>Studio à 60,000 AED/an</span>
+                      <span class="font-bold text-yellow-500">300 AED</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Appartement à 120,000 AED/an</span>
+                      <span class="font-bold text-yellow-500">600 AED</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Villa à 200,000 AED/an</span>
+                      <span class="font-bold text-yellow-500">1,000 AED</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <footer class="bg-gray-900 bg-opacity-90 text-gray-400 py-8 mt-16">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="text-center mb-4">
-                <p class="text-sm">© 2025 Karyne de Clercq. Tous droits réservés.</p>
-              </div>
-              <div class="flex justify-center gap-6 flex-wrap text-sm">
+          </main>
+
+          <footer class="bg-gray-900 bg-opacity-50 backdrop-blur-md py-8 mt-20">
+            <div class="container mx-auto px-4">
+              <div class="flex justify-center gap-8 flex-wrap text-sm text-gray-400">
                 <a href="terms.html" class="hover:text-white transition">CGU</a>
                 <a href="privacy.html" class="hover:text-white transition">Confidentialité</a>
                 <a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a>
                 <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">Contact</a>
+              </div>
+              <div class="text-center text-gray-500 text-sm mt-4">
+                © 2025 Karyne de Clercq. Tous droits réservés.
               </div>
             </div>
           </footer>
@@ -239,1175 +155,735 @@
       `;
     }
 
-    function showAuthPage() {
-      showLogin();
-    }
-
-    function showLogin() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
-          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">Connexion</h2>
-            <form id="loginForm" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                <input type="email" id="loginEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
-                <input type="password" id="loginPassword" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-                Se Connecter
-              </button>
-            </form>
-            <div class="mt-4 text-center space-y-2">
-              <button onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">
-                Mot de passe oublié ?
-              </button>
-              <div>
-                <span class="text-gray-400 text-sm">Pas encore de compte ? </span>
-                <button onclick="showSignup()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
-                  S'inscrire
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) {
-          alert('Erreur de connexion: ' + error.message);
-        } else {
-          currentUser = data.user;
-          await loadProfile();
-          if (currentProfile && currentProfile.role === 'admin') {
-            showAdminDashboard();
-          } else if (currentProfile) {
-            showReferrerDashboard();
-          }
-        }
-      });
-    }
-
-    function showSignup() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
-          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">Inscription</h2>
-            <form id="signupForm" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Nom Complet</label>
-                <input type="text" id="signupName" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone</label>
-                <input type="tel" id="signupPhone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                <input type="email" id="signupEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Mot de passe</label>
-                <input type="password" id="signupPassword" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                <div id="passwordStrength"></div>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
-                <input type="password" id="signupPasswordConfirm" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-                S'inscrire
-              </button>
-            </form>
-            <div class="mt-4 text-center">
-              <span class="text-gray-400 text-sm">Déjà un compte ? </span>
-              <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm font-semibold">
-                Se connecter
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      const passwordInput = document.getElementById('signupPassword');
-      const strengthDiv = document.getElementById('passwordStrength');
+    function renderAuthPage(mode) {
+      const isLogin = mode === 'login';
+      const isReset = mode === 'reset';
       
-      passwordInput.addEventListener('input', function() {
-        const validation = validatePassword(this.value);
-        strengthDiv.innerHTML = getPasswordStrengthHTML(validation);
-      });
-
-      document.getElementById('signupForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const phone = document.getElementById('signupPhone').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
-
-        if (password !== passwordConfirm) {
-          alert('Les mots de passe ne correspondent pas');
-          return;
-        }
-
-        const validation = validatePassword(password);
-        if (!validation.isValid) {
-          alert('Le mot de passe ne respecte pas les critères de sécurité requis. Veuillez vérifier tous les critères ci-dessous.');
-          return;
-        }
-
-        const { data, error} = await supabaseClient.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              name,
-              phone,
-              role: 'referrer'
-            }
-          }
-        });
-
-        if (error) {
-          alert('Erreur d\'inscription: ' + error.message);
-        } else {
-          alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-          showLogin();
-        }
-      });
-    }
-
-    function showReset() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
-          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">Mot de passe oublié</h2>
-            <form id="resetForm" class="space-y-4">
+      return `
+        <div class="min-h-screen flex items-center justify-center px-4">
+          <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
+            <h2 class="text-3xl font-bold text-center mb-8">
+              ${isReset ? 'Réinitialiser le mot de passe' : (isLogin ? 'Connexion' : 'Inscription')}
+            </h2>
+            
+            ${!isReset ? `
+            <form id="authForm" class="space-y-6">
+              ${!isLogin ? `
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                <input type="email" id="resetEmail" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <label class="block text-sm font-medium mb-2">Nom complet</label>
+                <input type="text" name="name" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
               </div>
-              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
+              <div>
+                <label class="block text-sm font-medium mb-2">Téléphone</label>
+                <input type="tel" name="phone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              ` : ''}
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Email</label>
+                <input type="email" name="email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              
+              <div>
+                <label class="block text-sm font-medium mb-2">Mot de passe</label>
+                <input type="password" name="password" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <p class="text-xs text-gray-400 mt-1">Minimum 12 caractères</p>
+              </div>
+              
+              ${!isLogin ? `
+              <div>
+                <label class="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
+                <input type="password" name="confirmPassword" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              ` : ''}
+              
+              <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                ${isLogin ? 'Se connecter' : 'S\'inscrire'}
+              </button>
+              
+              ${isLogin ? `
+              <div class="text-center">
+                <button type="button" onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">Mot de passe oublié ?</button>
+              </div>
+              ` : ''}
+            </form>
+            ` : `
+            <form id="resetForm" class="space-y-6">
+              <div>
+                <label class="block text-sm font-medium mb-2">Email</label>
+                <input type="email" name="email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+              </div>
+              <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
                 Envoyer le lien
               </button>
             </form>
-            <div class="mt-4 text-center">
-              <button onclick="showLogin()" class="text-yellow-500 hover:text-yellow-400 text-sm">
-                Retour à la connexion
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('resetForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('resetEmail').value;
-
-        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-          redirectTo: 'https://real-estate-referrer.com/reset-password.html'
-        });
-
-        if (error) {
-          alert('Erreur: ' + error.message);
-        } else {
-          alert('Email de réinitialisation envoyé ! Vérifiez votre boîte mail.');
-          showLogin();
-        }
-      });
-    }
-
-    function showPasswordReset() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900 flex items-center justify-center px-4">
-          <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-full max-w-md">
-            <h2 class="text-3xl font-bold text-white mb-6 text-center">Nouveau mot de passe</h2>
-            <p class="text-gray-300 text-sm mb-6 text-center">
-              Entrez votre nouveau mot de passe ci-dessous
-            </p>
-            <form id="passwordResetForm" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Nouveau mot de passe</label>
-                <input type="password" id="newPassword" required minlength="12"
-                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                <div id="passwordStrengthReset"></div>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Confirmer le mot de passe</label>
-                <input type="password" id="confirmPassword" required minlength="12"
-                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-                Changer le mot de passe
-              </button>
-            </form>
-          </div>
-        </div>
-      `;
-
-      const passwordInput = document.getElementById('newPassword');
-      const strengthDiv = document.getElementById('passwordStrengthReset');
-      
-      passwordInput.addEventListener('input', function() {
-        const validation = validatePassword(this.value);
-        strengthDiv.innerHTML = getPasswordStrengthHTML(validation);
-      });
-
-      document.getElementById('passwordResetForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-
-        if (newPassword !== confirmPassword) {
-          alert('Les mots de passe ne correspondent pas');
-          return;
-        }
-
-        const validation = validatePassword(newPassword);
-        if (!validation.isValid) {
-          alert('Le mot de passe ne respecte pas les critères de sécurité requis. Veuillez vérifier tous les critères ci-dessous.');
-          return;
-        }
-
-        try {
-          const { error } = await supabaseClient.auth.updateUser({
-            password: newPassword
-          });
-
-          if (error) throw error;
-
-          alert('Mot de passe changé avec succès ! Vous pouvez maintenant vous connecter.');
-          
-          await supabaseClient.auth.signOut();
-          window.history.replaceState({}, document.title, '/');
-          showLogin();
-          
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Erreur lors du changement de mot de passe: ' + error.message);
-        }
-      });
-    }
-
-    async function logout() {
-      await supabaseClient.auth.signOut();
-      currentUser = null;
-      currentProfile = null;
-      showLandingPage();
-    }
-    
-    async function showReferrerDashboard() {
-      if (currentProfile.contract_status === 'pending') {
-        showContractUploadScreen();
-        return;
-      } else if (currentProfile.contract_status === 'rejected') {
-        showContractRejectedScreen();
-        return;
-      }
-
-      const { data: leads } = await supabaseClient
-        .from('leads')
-        .select('*')
-        .eq('referrer_id', currentUser.id)
-        .order('created_at', { ascending: false });
-
-      const totalEarnings = leads ? leads.reduce((sum, lead) => sum + (lead.referrer_commission || 0), 0) : 0;
-      const activeLeads = leads ? leads.filter(l => l.status !== 'vendu' && l.status !== 'loué').length : 0;
-      const completedDeals = leads ? leads.filter(l => l.status === 'vendu' || l.status === 'loué').length : 0;
-
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
-          <nav class="bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center h-16">
-                <h1 class="text-xl font-bold text-yellow-500">Dashboard Apporteur</h1>
-                <div class="flex items-center gap-4">
-                  <span class="text-green-400 text-sm">✓ Contrat Validé</span>
-                  <span class="text-gray-300">${currentProfile.name}</span>
-                  <button onclick="logout()" class="text-gray-300 hover:text-white">Déconnexion</button>
-                </div>
-              </div>
-            </div>
-          </nav>
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="grid md:grid-cols-3 gap-6 mb-8">
-              <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-sm text-gray-400 mb-1">Gains Totaux</div>
-                <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-              </div>
-              <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-sm text-gray-400 mb-1">Leads Actifs</div>
-                <div class="text-3xl font-bold text-blue-400">${activeLeads}</div>
-              </div>
-              <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-sm text-gray-400 mb-1">Ventes Conclues</div>
-                <div class="text-3xl font-bold text-green-400">${completedDeals}</div>
-              </div>
-            </div>
-            <button onclick="showAddLeadForm()" class="mb-6 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 px-6 py-3 rounded-lg font-semibold">
-              + Ajouter un Lead
-            </button>
-            <div class="bg-gray-800 rounded-xl overflow-hidden">
-              <div class="px-6 py-4 border-b border-gray-700">
-                <h3 class="text-lg font-semibold text-white">Mes Leads</h3>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="w-full">
-                  <thead class="bg-gray-700">
-                    <tr>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Client</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type Lead</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Propriété</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Budget/Loyer</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Statut</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Commission</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-gray-700">
-                    ${leads && leads.length > 0 ? leads.map(lead => {
-                      const leadTypeLabel = lead.lead_type === 'sale_buyer' ? '🏠 Acheteur' : 
-                                           lead.lead_type === 'sale_seller' ? '🏡 Vendeur' :
-                                           lead.lead_type === 'rent_landlord' ? '🏢 Propriétaire' : 
-                                           lead.lead_type === 'rent_tenant' ? '🔑 Locataire' : 
-                                           '🏠 Acheteur';
-                      const budgetDisplay = lead.lead_type === 'rent_landlord' ? 
-                                           (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' AED/an' : '-') :
-                                           (lead.budget ? lead.budget.toLocaleString() + ' AED' : '-');
-                      
-                      let statusBadge = '';
-                      if (lead.status === 'nouveau') statusBadge = '<span class="px-3 py-1 bg-blue-600 text-white rounded-full text-sm">nouveau</span>';
-                      else if (lead.status === 'visite') statusBadge = '<span class="px-3 py-1 bg-yellow-600 text-white rounded-full text-sm">visite</span>';
-                      else if (lead.status === 'offre') statusBadge = '<span class="px-3 py-1 bg-orange-600 text-white rounded-full text-sm">offre</span>';
-                      else if (lead.status === 'vendu') statusBadge = '<span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">vendu</span>';
-                      else if (lead.status === 'loué') statusBadge = '<span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">loué</span>';
-                      
-                      return `
-                        <tr class="hover:bg-gray-700">
-                          <td class="px-6 py-4">
-                            <div class="font-medium text-white">${lead.client_name}</div>
-                            <div class="text-sm text-gray-400">${lead.client_phone}</div>
-                          </td>
-                          <td class="px-6 py-4 text-gray-300 text-sm">${leadTypeLabel}</td>
-                          <td class="px-6 py-4 text-gray-300">${lead.property_type}</td>
-                          <td class="px-6 py-4 text-gray-300">${budgetDisplay}</td>
-                          <td class="px-6 py-4">${statusBadge}</td>
-                          <td class="px-6 py-4 text-yellow-500 font-semibold">
-                            ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
-                          </td>
-                        </tr>
-                      `;
-                    }).join('') : '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Pas encore de leads</td></tr>'}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="addLeadModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-gray-800">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-xl font-bold text-white">Ajouter un Nouveau Lead</h3>
-              <button onclick="closeAddLeadModal()" class="text-gray-400 hover:text-gray-200">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-              </button>
+            `}
+            
+            <div class="mt-6 text-center">
+              <button onclick="render()" class="text-gray-400 hover:text-white transition">← Retour</button>
             </div>
             
-            <form id="addLeadForm" class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Type de Lead *</label>
-                <select id="leadType" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                  <option value="">Sélectionner un type</option>
-                  <option value="sale_buyer">🏠 Vente - Acheteur</option>
-                  <option value="sale_seller">🏡 Vente - Vendeur</option>
-                  <option value="rent_landlord">🏢 Location - Propriétaire</option>
-                  <option value="rent_tenant">🔑 Location - Locataire</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Nom du Client *</label>
-                <input type="text" id="clientName" required 
-                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                       placeholder="ex: Ahmed Al Mansouri">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Email *</label>
-                <input type="email" id="clientEmail" required 
-                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                       placeholder="ex: ahmed@email.com">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Téléphone *</label>
-                <input type="tel" id="clientPhone" required 
-                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                       placeholder="ex: +971 50 123 4567">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Type de Propriété *</label>
-                <select id="propertyType" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                  <option value="">Sélectionner un type</option>
-                  <option value="Appartement">Appartement</option>
-                  <option value="Villa">Villa</option>
-                  <option value="Townhouse">Townhouse</option>
-                  <option value="Penthouse">Penthouse</option>
-                  <option value="Studio">Studio</option>
-                  <option value="Bureau">Bureau</option>
-                  <option value="Commercial">Commercial</option>
-                </select>
-              </div>
-              <div id="budgetField" class="hidden">
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  <span id="budgetLabel">Budget *</span>
-                </label>
-                <input type="number" id="budget" 
-                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                       placeholder="ex: 1000000">
-                <p class="mt-1 text-sm text-gray-400" id="budgetHelper">Montant en AED</p>
-              </div>
-              <div id="rentField" class="hidden">
-                <label class="block text-sm font-medium text-gray-300 mb-2">Loyer Annuel Souhaité *</label>
-                <input type="number" id="annualRent" 
-                       class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                       placeholder="ex: 150000">
-                <p class="mt-1 text-sm text-gray-400">Montant en AED par an</p>
-              </div>
-              <div class="flex justify-end space-x-3 pt-4">
-                <button type="button" onclick="closeAddLeadModal()"
-                        class="px-6 py-2 border border-gray-600 rounded-lg text-gray-300 hover:bg-gray-700">
-                  Annuler
-                </button>
-                <button type="submit"
-                        class="px-6 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 rounded-lg font-semibold">
-                  Ajouter Lead
-                </button>
-              </div>
-            </form>
+            ${!isReset ? `
+            <div class="mt-4 text-center">
+              <button onclick="${isLogin ? 'showSignup()' : 'showLogin()'}" class="text-yellow-500 hover:text-yellow-400">
+                ${isLogin ? 'Pas de compte ? S\'inscrire' : 'Déjà un compte ? Se connecter'}
+              </button>
+            </div>
+            ` : ''}
           </div>
         </div>
       `;
-
-      document.getElementById('leadType').addEventListener('change', function() {
-        const leadType = this.value;
-        const budgetField = document.getElementById('budgetField');
-        const rentField = document.getElementById('rentField');
-        const budgetInput = document.getElementById('budget');
-        const rentInput = document.getElementById('annualRent');
-        const budgetLabel = document.getElementById('budgetLabel');
-        const budgetHelper = document.getElementById('budgetHelper');
-
-        budgetField.classList.add('hidden');
-        rentField.classList.add('hidden');
-        budgetInput.removeAttribute('required');
-        rentInput.removeAttribute('required');
-
-        if (leadType === 'sale_buyer') {
-          budgetField.classList.remove('hidden');
-          budgetInput.setAttribute('required', 'required');
-          budgetLabel.textContent = "Budget d'Achat *";
-          budgetHelper.textContent = "Budget d'achat en AED";
-        } else if (leadType === 'sale_seller') {
-          budgetField.classList.remove('hidden');
-          budgetInput.setAttribute('required', 'required');
-          budgetLabel.textContent = "Prix de Vente Souhaité *";
-          budgetHelper.textContent = "Prix de vente en AED";
-        } else if (leadType === 'rent_tenant') {
-          budgetField.classList.remove('hidden');
-          budgetInput.setAttribute('required', 'required');
-          budgetLabel.textContent = "Budget de Loyer Annuel *";
-          budgetHelper.textContent = "Budget de loyer en AED par an";
-        } else if (leadType === 'rent_landlord') {
-          rentField.classList.remove('hidden');
-          rentInput.setAttribute('required', 'required');
-        }
-      });
-
-      document.getElementById('addLeadForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const leadType = document.getElementById('leadType').value;
-        const clientName = document.getElementById('clientName').value;
-        const clientEmail = document.getElementById('clientEmail').value;
-        const clientPhone = document.getElementById('clientPhone').value;
-        const propertyType = document.getElementById('propertyType').value;
-        const budget = document.getElementById('budget').value || null;
-        const annualRent = document.getElementById('annualRent').value || null;
-        
-        try {
-          const leadData = {
-            referrer_id: currentUser.id,
-            lead_type: leadType,
-            client_name: clientName,
-            client_email: clientEmail,
-            client_phone: clientPhone,
-            property_type: propertyType,
-            status: 'nouveau'
-          };
-
-          if (leadType === 'sale_buyer' || leadType === 'sale_seller' || leadType === 'rent_tenant') {
-            leadData.budget = parseFloat(budget);
-          } else if (leadType === 'rent_landlord') {
-            leadData.annual_rent = parseFloat(annualRent);
-          }
-          
-          const { error } = await supabaseClient
-            .from('leads')
-            .insert([leadData]);
-          
-          if (error) throw error;
-          
-          alert('Lead ajouté avec succès !');
-          closeAddLeadModal();
-          showReferrerDashboard();
-          
-        } catch (error) {
-          console.error('Error:', error);
-          alert('Erreur lors de l\'ajout du lead');
-        }
-      });
     }
 
-    function showContractUploadScreen() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
-          <nav class="bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center h-16">
-                <h1 class="text-xl font-bold text-yellow-500">Dashboard Apporteur</h1>
-                <div class="flex items-center gap-4">
-                  <span class="text-gray-300">${currentProfile.name}</span>
-                  <button onclick="logout()" class="text-gray-300 hover:text-white">Déconnexion</button>
-                </div>
+    function renderDashboard() {
+      const isAdmin = userProfile?.role === 'admin';
+      const contractStatus = userProfile?.contract_status || 'pending';
+      
+      if (!isAdmin && contractStatus !== 'validated') {
+        return renderContractUploadPage();
+      }
+      
+      return `
+        <div class="min-h-screen">
+          <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md py-4">
+            <div class="container mx-auto px-4 flex justify-between items-center">
+              <h1 class="text-2xl font-bold text-yellow-400">Dashboard ${isAdmin ? 'Admin' : 'Apporteur'}</h1>
+              <div class="flex gap-4 items-center">
+                <span class="text-gray-300">${userProfile?.name}</span>
+                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">Déconnexion</button>
               </div>
             </div>
-          </nav>
-          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="bg-yellow-900/30 border-2 border-yellow-500 rounded-xl p-8 mb-8">
-              <div class="flex items-start gap-4">
-                <div class="text-4xl">⚠️</div>
-                <div>
-                  <h2 class="text-2xl font-bold text-yellow-500 mb-2">Contrat Requis</h2>
-                  <p class="text-gray-300 mb-4">
-                    Avant de pouvoir ajouter des leads, vous devez télécharger, signer et uploader le Contrat d'Apporteur d'Affaires. Ceci est requis pour la conformité RERA.
-                  </p>
-                </div>
+          </header>
+          <main class="container mx-auto px-4 py-8">
+            <div id="dashboardContent"></div>
+          </main>
+        </div>
+      `;
+    }
+
+    function renderContractUploadPage() {
+      const contractStatus = userProfile?.contract_status || 'pending';
+      
+      return `
+        <div class="min-h-screen flex items-center justify-center px-4">
+          <div class="max-w-2xl w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
+            <h2 class="text-3xl font-bold text-center mb-6">📋 Contrat d'Apporteur</h2>
+            
+            ${contractStatus === 'pending' ? `
+              <div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded-lg p-6 mb-6">
+                <p class="text-yellow-300 text-center">
+                  ⚠️ Téléchargez et signez le contrat
+                </p>
               </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-xl p-8">
-              <h3 class="text-xl font-bold text-white mb-6">📋 Étapes à Suivre</h3>
-              
-              <div class="space-y-6 mb-8">
-                <div class="flex gap-4">
-                  <div class="flex-shrink-0 w-8 h-8 bg-yellow-500 text-gray-900 rounded-full flex items-center justify-center font-bold">1</div>
-                  <div>
-                    <h4 class="text-white font-semibold mb-2">Télécharger le Contrat</h4>
-                    <p class="text-gray-400 text-sm mb-3">Téléchargez le modèle de Contrat d'Apporteur d'Affaires ci-dessous</p>
-                    <a href="./contract-template.html" target="_blank" 
-                       class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm">
-                      📄 Télécharger le Modèle de Contrat
-                    </a>
-                  </div>
+              <div class="space-y-6">
+                <div class="text-center">
+                  <a href="contract-template.html" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-lg">
+                    📥 Télécharger le contrat
+                  </a>
                 </div>
-
-                <div class="flex gap-4">
-                  <div class="flex-shrink-0 w-8 h-8 bg-yellow-500 text-gray-900 rounded-full flex items-center justify-center font-bold">2</div>
+                <form id="contractForm" class="space-y-4">
                   <div>
-                    <h4 class="text-white font-semibold mb-2">Imprimer et Signer</h4>
-                    <p class="text-gray-400 text-sm">Imprimez le contrat, remplissez vos informations et signez-le</p>
+                    <label class="block text-sm font-medium mb-2">Contrat signé (PDF)</label>
+                    <input type="file" name="contract" accept=".pdf" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
                   </div>
-                </div>
-
-                <div class="flex gap-4">
-                  <div class="flex-shrink-0 w-8 h-8 bg-yellow-500 text-gray-900 rounded-full flex items-center justify-center font-bold">3</div>
-                  <div>
-                    <h4 class="text-white font-semibold mb-2">Scanner en PDF</h4>
-                    <p class="text-gray-400 text-sm">Scannez ou photographiez le contrat signé et enregistrez-le en PDF</p>
-                  </div>
-                </div>
-
-                <div class="flex gap-4">
-                  <div class="flex-shrink-0 w-8 h-8 bg-yellow-500 text-gray-900 rounded-full flex items-center justify-center font-bold">4</div>
-                  <div>
-                    <h4 class="text-white font-semibold mb-2">Uploader Ci-Dessous</h4>
-                    <p class="text-gray-400 text-sm">Uploadez votre contrat signé en utilisant le formulaire ci-dessous</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="border-t border-gray-700 pt-8">
-                <h4 class="text-white font-semibold mb-4">📤 Uploader le Contrat Signé</h4>
-                <form id="uploadContractForm" class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">
-                      Sélectionner un Fichier PDF (Max 5MB)
-                    </label>
-                    <input type="file" id="contractFile" accept=".pdf" required
-                           class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-yellow-500 file:text-gray-900 file:font-semibold hover:file:bg-yellow-600">
-                    <p class="mt-2 text-sm text-gray-400">Seuls les fichiers PDF sont acceptés</p>
-                  </div>
-                  
-                  <button type="submit" 
-                          class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-                    Uploader le Contrat
+                  <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg">
+                    Envoyer
                   </button>
                 </form>
               </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('uploadContractForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const fileInput = document.getElementById('contractFile');
-        const file = fileInput.files[0];
-        
-        if (!file) {
-          alert('Veuillez sélectionner un fichier');
-          return;
-        }
-
-        if (file.type !== 'application/pdf') {
-          alert('Seuls les fichiers PDF sont acceptés');
-          return;
-        }
-
-        if (file.size > 5 * 1024 * 1024) {
-          alert('La taille du fichier doit être inférieure à 5MB');
-          return;
-        }
-
-        try {
-          const button = e.target.querySelector('button[type="submit"]');
-          button.disabled = true;
-          button.textContent = 'Upload en cours...';
-
-          const fileName = `${currentUser.id}/contract_${Date.now()}.pdf`;
-          
-          const { data: uploadData, error: uploadError } = await supabaseClient.storage
-            .from('Contracts')
-            .upload(fileName, file);
-
-          if (uploadError) throw uploadError;
-
-          const { data: urlData } = supabaseClient.storage
-            .from('Contracts')
-            .getPublicUrl(fileName);
-
-          const { error: updateError } = await supabaseClient
-            .from('profiles')
-            .update({
-              contract_status: 'uploaded',
-              contract_file_url: urlData.publicUrl
-            })
-            .eq('id', currentUser.id);
-
-          if (updateError) throw updateError;
-
-          alert('Contrat uploadé avec succès ! En attente de validation admin.');
-          await loadProfile();
-          showReferrerDashboard();
-
-        } catch (error) {
-          console.error('Upload error:', error);
-          alert('Erreur lors de l\'upload du contrat: ' + error.message);
-          const button = e.target.querySelector('button[type="submit"]');
-          button.disabled = false;
-          button.textContent = 'Uploader le Contrat';
-        }
-      });
-    }
-
-    function showContractRejectedScreen() {
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
-          <nav class="bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center h-16">
-                <h1 class="text-xl font-bold text-yellow-500">Dashboard Apporteur</h1>
-                <div class="flex items-center gap-4">
-                  <span class="text-gray-300">${currentProfile.name}</span>
-                  <button onclick="logout()" class="text-gray-300 hover:text-white">Déconnexion</button>
-                </div>
+            ` : contractStatus === 'uploaded' ? `
+              <div class="bg-blue-900 bg-opacity-30 border border-blue-600 rounded-lg p-6 text-center">
+                <p class="text-blue-300">📄 En attente de validation</p>
               </div>
-            </div>
-          </nav>
-          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="bg-red-900/30 border-2 border-red-500 rounded-xl p-8 mb-8">
-              <div class="flex items-start gap-4">
-                <div class="text-4xl">❌</div>
-                <div>
-                  <h2 class="text-2xl font-bold text-red-500 mb-2">Contrat Rejeté</h2>
-                  <p class="text-gray-300 mb-4">
-                    Malheureusement, votre contrat a été rejeté. Veuillez uploader un nouveau contrat signé avec les informations correctes.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="bg-gray-800 rounded-xl p-8">
-              <h4 class="text-white font-semibold mb-4">📤 Uploader un Nouveau Contrat</h4>
-              <form id="reuploadContractForm" class="space-y-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-300 mb-2">
-                    Sélectionner un Fichier PDF (Max 5MB)
-                  </label>
-                  <input type="file" id="contractFileReupload" accept=".pdf" required
-                         class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-yellow-500 file:text-gray-900 file:font-semibold hover:file:bg-yellow-600">
-                  <p class="mt-2 text-sm text-gray-400">Seuls les fichiers PDF sont acceptés</p>
-                </div>
-                
-                <button type="submit" 
-                        class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 py-3 rounded-lg font-semibold">
-                  Uploader un Nouveau Contrat
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      `;
-
-      document.getElementById('reuploadContractForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const fileInput = document.getElementById('contractFileReupload');
-        const file = fileInput.files[0];
-        
-        if (!file || file.type !== 'application/pdf' || file.size > 5 * 1024 * 1024) {
-          alert('Fichier invalide');
-          return;
-        }
-
-        try {
-          const button = e.target.querySelector('button[type="submit"]');
-          button.disabled = true;
-          button.textContent = 'Upload en cours...';
-
-          const fileName = `${currentUser.id}/contract_${Date.now()}.pdf`;
-          
-          const { data: uploadData, error: uploadError } = await supabaseClient.storage
-            .from('Contracts')
-            .upload(fileName, file);
-
-          if (uploadError) throw uploadError;
-
-          const { data: urlData } = supabaseClient.storage
-            .from('Contracts')
-            .getPublicUrl(fileName);
-
-          const { error: updateError } = await supabaseClient
-            .from('profiles')
-            .update({
-              contract_status: 'uploaded',
-              contract_file_url: urlData.publicUrl
-            })
-            .eq('id', currentUser.id);
-
-          if (updateError) throw updateError;
-
-          alert('Contrat uploadé avec succès ! En attente de validation admin.');
-          await loadProfile();
-          showReferrerDashboard();
-
-        } catch (error) {
-          console.error('Upload error:', error);
-          alert('Erreur lors de l\'upload du contrat: ' + error.message);
-          const button = e.target.querySelector('button[type="submit"]');
-          button.disabled = false;
-          button.textContent = 'Uploader un Nouveau Contrat';
-        }
-      });
-    }
-
-    async function showAdminDashboard() {
-      const { data: allLeads } = await supabaseClient
-        .from('leads')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      const { data: allProfiles } = await supabaseClient
-        .from('profiles')
-        .select('*');
-
-      const profileMap = {};
-      if (allProfiles) {
-        allProfiles.forEach(p => {
-          profileMap[p.id] = p;
-        });
-      }
-
-      const referrers = allProfiles ? allProfiles.filter(p => p.role === 'referrer') : [];
-      const pendingContracts = referrers.filter(r => r.contract_status === 'uploaded').length;
-      const activeLeads = allLeads ? allLeads.filter(l => l.status !== 'vendu' && l.status !== 'loué').length : 0;
-      const sales = allLeads ? allLeads.filter(l => l.status === 'vendu' || l.status === 'loué').length : 0;
-      const totalCommissions = allLeads ? allLeads.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) : 0;
-
-      document.getElementById('app').innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-gray-900">
-          <nav class="bg-gray-900">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div class="flex justify-between items-center h-16">
-                <h1 class="text-xl font-bold text-yellow-500">Dashboard Admin</h1>
-                <div class="flex items-center gap-4">
-                  <span class="text-gray-300">${currentProfile.name}</span>
-                  <button onclick="logout()" class="text-gray-300 hover:text-white">Déconnexion</button>
-                </div>
-              </div>
-            </div>
-          </nav>
-
-          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div class="flex gap-4 mb-8">
-              <button onclick="showAdminTab('leads')" id="tabLeads" class="px-6 py-3 bg-yellow-500 text-gray-900 rounded-lg font-semibold">
-                Leads
-              </button>
-              <button onclick="showAdminTab('contracts')" id="tabContracts" class="px-6 py-3 bg-gray-700 text-gray-300 rounded-lg font-semibold relative">
-                Contrats
-                ${pendingContracts > 0 ? `<span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">${pendingContracts}</span>` : ''}
-              </button>
-            </div>
-
-            <div id="leadsContent">
-              <div class="grid md:grid-cols-4 gap-6 mb-8">
-                <div class="bg-gray-800 rounded-xl p-6">
-                  <div class="text-sm text-gray-400 mb-1">Apporteurs</div>
-                  <div class="text-3xl font-bold text-blue-400">${referrers.length}</div>
-                </div>
-                <div class="bg-gray-800 rounded-xl p-6">
-                  <div class="text-sm text-gray-400 mb-1">Leads Actifs</div>
-                  <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
-                </div>
-                <div class="bg-gray-800 rounded-xl p-6">
-                  <div class="text-sm text-gray-400 mb-1">Ventes</div>
-                  <div class="text-3xl font-bold text-green-400">${sales}</div>
-                </div>
-                <div class="bg-gray-800 rounded-xl p-6">
-                  <div class="text-sm text-gray-400 mb-1">Commissions</div>
-                  <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
-                </div>
-              </div>
-
-              <div class="bg-gray-800 rounded-xl overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-700">
-                  <h3 class="text-lg font-semibold text-white">Tous les Leads</h3>
-                </div>
-                <div class="overflow-x-auto">
-                  <table class="w-full">
-                    <thead class="bg-gray-700">
-                      <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Apporteur</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Type Lead</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Client</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Propriété</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Budget/Loyer</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Statut</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-700">
-                      ${allLeads && allLeads.length > 0 ? allLeads.map(lead => {
-                        const referrer = profileMap[lead.referrer_id];
-                        const referrerName = referrer && referrer.name ? referrer.name : 'N/A';
-                        const leadTypeLabel = lead.lead_type === 'sale_buyer' ? '🏠 Acheteur' : 
-                                             lead.lead_type === 'sale_seller' ? '🏡 Vendeur' :
-                                             lead.lead_type === 'rent_landlord' ? '🏢 Propriétaire' : 
-                                             lead.lead_type === 'rent_tenant' ? '🔑 Locataire' : 
-                                             '🏠 Acheteur';
-                        const budgetDisplay = lead.lead_type === 'rent_landlord' ? 
-                                             (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' AED/an' : '-') :
-                                             (lead.budget ? lead.budget.toLocaleString() + ' AED' : '-');
-                        
-                        const isRental = lead.lead_type === 'rent_landlord' || lead.lead_type === 'rent_tenant';
-                        const buttonText = isRental ? 'Marquer Loué' : 'Marquer Vendu';
-                        
-                        return `
-                          <tr class="hover:bg-gray-700">
-                            <td class="px-6 py-4 text-gray-300">${referrerName}</td>
-                            <td class="px-6 py-4 text-gray-300 text-sm">${leadTypeLabel}</td>
-                            <td class="px-6 py-4">
-                              <div class="font-medium text-white">${lead.client_name}</div>
-                              <div class="text-sm text-gray-400">${lead.client_phone}</div>
-                            </td>
-                            <td class="px-6 py-4 text-gray-300">${lead.property_type}</td>
-                            <td class="px-6 py-4 text-gray-300">${budgetDisplay}</td>
-                            <td class="px-6 py-4">
-                              <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 bg-gray-700 border border-gray-600 rounded text-white text-sm">
-                                <option value="nouveau"${lead.status === 'nouveau' ? ' selected' : ''}>Nouveau</option>
-                                <option value="visite"${lead.status === 'visite' ? ' selected' : ''}>Visite</option>
-                                <option value="offre"${lead.status === 'offre' ? ' selected' : ''}>Offre</option>
-                                <option value="vendu"${lead.status === 'vendu' ? ' selected' : ''}>Vendu</option>
-                                <option value="loué"${lead.status === 'loué' ? ' selected' : ''}>Loué</option>
-                              </select>
-                            </td>
-                            <td class="px-6 py-4">
-                              ${(lead.status === 'vendu' || lead.status === 'loué') ? 
-                                `<div class="text-green-400 font-semibold">${(lead.referrer_commission?.toLocaleString() || 0)} AED</div>` : 
-                                `<button onclick="markAsCompleted(${lead.id}, '${lead.lead_type}')" class="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm font-semibold">${buttonText}</button>`
-                              }
-                            </td>
-                          </tr>
-                        `;
-                      }).join('') : '<tr><td colspan="7" class="px-6 py-4 text-center text-gray-400">Pas encore de leads</td></tr>'}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <div id="contractsContent" class="hidden">
-              <div class="bg-gray-800 rounded-xl overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-700">
-                  <h3 class="text-lg font-semibold text-white">Validations de Contrats</h3>
-                </div>
-                <div class="overflow-x-auto">
-                  <table class="w-full">
-                    <thead class="bg-gray-700">
-                      <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Apporteur</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Email</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Téléphone</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Statut</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-700">
-                      ${referrers.length > 0 ? referrers.map(ref => {
-                        let statusBadge = '';
-                        if (ref.contract_status === 'pending') statusBadge = '<span class="px-3 py-1 bg-gray-600 text-white rounded-full text-sm">En attente upload</span>';
-                        else if (ref.contract_status === 'uploaded') statusBadge = '<span class="px-3 py-1 bg-yellow-600 text-white rounded-full text-sm">En attente validation</span>';
-                        else if (ref.contract_status === 'validated') statusBadge = '<span class="px-3 py-1 bg-green-600 text-white rounded-full text-sm">Validé</span>';
-                        else if (ref.contract_status === 'rejected') statusBadge = '<span class="px-3 py-1 bg-red-600 text-white rounded-full text-sm">Rejeté</span>';
-                        
-                        return `
-                          <tr class="hover:bg-gray-700">
-                            <td class="px-6 py-4 text-white font-medium">${ref.name}</td>
-                            <td class="px-6 py-4 text-gray-300 text-sm">${ref.id}</td>
-                            <td class="px-6 py-4 text-gray-300">${ref.phone || '-'}</td>
-                            <td class="px-6 py-4">${statusBadge}</td>
-                            <td class="px-6 py-4">
-                              ${ref.contract_status === 'uploaded' ? `
-                                <div class="flex gap-2">
-                                  <button onclick="viewContract('${ref.id}')" class="text-blue-400 hover:text-blue-300 text-sm">Voir</button>
-                                  <button onclick="validateContract('${ref.id}')" class="text-green-400 hover:text-green-300 text-sm">Valider</button>
-                                  <button onclick="rejectContract('${ref.id}')" class="text-red-400 hover:text-red-300 text-sm">Rejeter</button>
-                                </div>
-                              ` : ref.contract_status === 'validated' ? `
-                                <span class="text-green-400 text-sm">✓ Validé</span>
-                              ` : '-'}
-                            </td>
-                          </tr>
-                        `;
-                      }).join('') : '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-400">Pas encore d\'apporteurs</td></tr>'}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            ` : ''}
+            
+            <div class="mt-6 text-center">
+              <button onclick="logout()" class="text-gray-400 hover:text-white">← Déconnexion</button>
             </div>
           </div>
         </div>
       `;
     }
 
-    window.showAdminTab = function(tab) {
-      if (tab === 'leads') {
-        document.getElementById('leadsContent').classList.remove('hidden');
-        document.getElementById('contractsContent').classList.add('hidden');
-        document.getElementById('tabLeads').className = 'px-6 py-3 bg-yellow-500 text-gray-900 rounded-lg font-semibold';
-        document.getElementById('tabContracts').className = 'px-6 py-3 bg-gray-700 text-gray-300 rounded-lg font-semibold relative';
+    async function loadDashboardContent() {
+      const isAdmin = userProfile?.role === 'admin';
+      const container = document.getElementById('dashboardContent');
+      if (!container) return;
+      
+      if (isAdmin) {
+        await loadAdminDashboard(container);
       } else {
-        document.getElementById('leadsContent').classList.add('hidden');
-        document.getElementById('contractsContent').classList.remove('hidden');
-        document.getElementById('tabLeads').className = 'px-6 py-3 bg-gray-700 text-gray-300 rounded-lg font-semibold';
-        document.getElementById('tabContracts').className = 'px-6 py-3 bg-yellow-500 text-gray-900 rounded-lg font-semibold relative';
+        await loadReferrerDashboard(container);
       }
-    };
+    }
 
-    window.viewContract = async function(referrerId) {
-      try {
-        const { data: profile, error: profileError } = await supabaseClient
-          .from('profiles')
-          .select('contract_file_url, name')
-          .eq('id', referrerId)
-          .single();
+    async function loadAdminDashboard(container) {
+      const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
+      const { data: allLeads } = await supabase.from('leads').select('*, referrer:referrer_id(id, name)').order('created_at', { ascending: false });
+      
+      const pendingContracts = profiles?.filter(p => p.contract_status === 'uploaded').length || 0;
+      const totalReferrers = profiles?.length || 0;
+      const activeLeads = allLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
+      const totalSales = allLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+      const totalCommissions = allLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
+      
+      container.innerHTML = `
+        <div class="mb-8">
+          <ul class="flex border-b border-gray-700">
+            <li class="mr-1">
+              <button onclick="switchTab('leads')" id="tab-leads" class="inline-block py-2 px-4 font-semibold border-b-2 border-yellow-500 text-yellow-500">Leads</button>
+            </li>
+            <li class="mr-1">
+              <button onclick="switchTab('contracts')" id="tab-contracts" class="inline-block py-2 px-4 font-semibold text-gray-400">
+                Contrats ${pendingContracts > 0 ? '<span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">' + pendingContracts + '</span>' : ''}
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div id="tab-content-leads">
+          <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gray-800 rounded-xl p-6">
+              <div class="text-gray-400 text-sm mb-2">Apporteurs</div>
+              <div class="text-3xl font-bold text-yellow-500">${totalReferrers}</div>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6">
+              <div class="text-gray-400 text-sm mb-2">Leads actifs</div>
+              <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6">
+              <div class="text-gray-400 text-sm mb-2">Transactions</div>
+              <div class="text-3xl font-bold text-green-500">${totalSales}</div>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6">
+              <div class="text-gray-400 text-sm mb-2">Commissions</div>
+              <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
+            </div>
+          </div>
+
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">Tous les leads</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-gray-700">
+                    <th class="text-left py-3 px-4">Apporteur</th>
+                    <th class="text-left py-3 px-4">Client</th>
+                    <th class="text-left py-3 px-4">Type</th>
+                    <th class="text-left py-3 px-4">Budget</th>
+                    <th class="text-left py-3 px-4">Statut</th>
+                    <th class="text-left py-3 px-4">Commission</th>
+                    <th class="text-left py-3 px-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${allLeads?.map(lead => `
+                    <tr class="border-b border-gray-700">
+                      <td class="py-3 px-4">${lead.referrer?.name || 'N/A'}</td>
+                      <td class="py-3 px-4">
+                        <div class="font-semibold">${lead.client_name}</div>
+                        <div class="text-sm text-gray-400">${lead.client_email}</div>
+                      </td>
+                      <td class="py-3 px-4">
+                        <div class="text-sm">${lead.lead_type}</div>
+                        <div class="text-xs text-gray-400">${lead.property_type}</div>
+                      </td>
+                      <td class="py-3 px-4">
+                        ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
+                      </td>
+                      <td class="py-3 px-4">
+                        <select onchange="updateLeadStatus('${lead.id}', this.value)" class="bg-gray-700 rounded px-2 py-1 text-sm">
+                          <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
+                          <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
+                          <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
+                          <option value="${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}" ${(lead.status === 'vendu' || lead.status === 'loué') ? 'selected' : ''}>${lead.lead_type.includes('Sale') ? 'Vendu' : 'Loué'}</option>
+                        </select>
+                      </td>
+                      <td class="py-3 px-4">
+                        ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
+                      </td>
+                      <td class="py-3 px-4">
+                        ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Marquer ${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}</button>` : ''}
+                      </td>
+                    </tr>
+                  `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-content-contracts" style="display: none;">
+          <div class="bg-gray-800 rounded-xl p-6">
+            <h3 class="text-xl font-bold mb-4">Contrats</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b border-gray-700">
+                    <th class="text-left py-3 px-4">Nom</th>
+                    <th class="text-left py-3 px-4">Téléphone</th>
+                    <th class="text-left py-3 px-4">Statut</th>
+                    <th class="text-left py-3 px-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${profiles?.map(profile => `
+                    <tr class="border-b border-gray-700">
+                      <td class="py-3 px-4">${profile.name}</td>
+                      <td class="py-3 px-4">${profile.phone}</td>
+                      <td class="py-3 px-4">
+                        ${profile.contract_status === 'pending' ? '<span class="px-2 py-1 bg-gray-600 rounded text-xs">Pending</span>' : ''}
+                        ${profile.contract_status === 'uploaded' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">À valider</span>' : ''}
+                        ${profile.contract_status === 'validated' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Validé</span>' : ''}
+                      </td>
+                      <td class="py-3 px-4">
+                        ${profile.contract_status === 'uploaded' || profile.contract_status === 'validated' ? `<button onclick="viewContract('${profile.contract_file_url}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm mr-2">Voir</button>` : ''}
+                        ${profile.contract_status === 'uploaded' ? `<button onclick="validateContract('${profile.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm mr-2">Valider</button><button onclick="rejectContract('${profile.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Rejeter</button>` : ''}
+                      </td>
+                    </tr>
+                  `).join('') || '<tr><td colspan="4" class="text-center py-8 text-gray-400">Aucun apporteur</td></tr>'}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadReferrerDashboard(container) {
+      const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
+      
+      const totalEarnings = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
+      const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
+      const closedDeals = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+      
+      container.innerHTML = `
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+          <div class="bg-gray-800 rounded-xl p-6">
+            <div class="text-gray-400 text-sm mb-2">Gains totaux</div>
+            <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+          </div>
+          <div class="bg-gray-800 rounded-xl p-6">
+            <div class="text-gray-400 text-sm mb-2">Leads en cours</div>
+            <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
+          </div>
+          <div class="bg-gray-800 rounded-xl p-6">
+            <div class="text-gray-400 text-sm mb-2">Transactions</div>
+            <div class="text-3xl font-bold text-green-500">${closedDeals}</div>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg">+ Ajouter un lead</button>
+        </div>
+
+        <div class="bg-gray-800 rounded-xl p-6">
+          <h3 class="text-xl font-bold mb-4">Mes leads</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead>
+                <tr class="border-b border-gray-700">
+                  <th class="text-left py-3 px-4">Client</th>
+                  <th class="text-left py-3 px-4">Type</th>
+                  <th class="text-left py-3 px-4">Budget</th>
+                  <th class="text-left py-3 px-4">Statut</th>
+                  <th class="text-left py-3 px-4">Commission</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${myLeads?.map(lead => `
+                  <tr class="border-b border-gray-700">
+                    <td class="py-3 px-4">
+                      <div class="font-semibold">${lead.client_name}</div>
+                      <div class="text-sm text-gray-400">${lead.client_email}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                      <div class="text-sm">${lead.lead_type}</div>
+                      <div class="text-xs text-gray-400">${lead.property_type}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                      ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
+                    </td>
+                    <td class="py-3 px-4">
+                      ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">Nouveau</span>' : ''}
+                      ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">Visite</span>' : ''}
+                      ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">Offre</span>' : ''}
+                      ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Vendu</span>' : ''}
+                      ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Loué</span>' : ''}
+                    </td>
+                    <td class="py-3 px-4">
+                      ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
+                    </td>
+                  </tr>
+                `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function showAddLeadForm() {
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50';
+      modal.innerHTML = `
+        <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full max-h-screen overflow-y-auto">
+          <h3 class="text-2xl font-bold mb-6">Ajouter un lead</h3>
+          <form id="addLeadForm" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium mb-2">Type</label>
+              <select name="leadType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg" onchange="toggleFields(this.value)">
+                <option value="">Sélectionner...</option>
+                <option value="Sale - Buyer">Vente - Acheteur</option>
+                <option value="Sale - Seller">Vente - Vendeur</option>
+                <option value="Rental - Tenant">Location - Locataire</option>
+                <option value="Rental - Landlord">Location - Propriétaire</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Nom</label>
+              <input type="text" name="clientName" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Email</label>
+              <input type="email" name="clientEmail" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Téléphone</label>
+              <input type="tel" name="clientPhone" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-2">Type de propriété</label>
+              <select name="propertyType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                <option value="Appartement">Appartement</option>
+                <option value="Villa">Villa</option>
+                <option value="Townhouse">Townhouse</option>
+                <option value="Penthouse">Penthouse</option>
+                <option value="Studio">Studio</option>
+              </select>
+            </div>
+            <div id="budgetField">
+              <label class="block text-sm font-medium mb-2">Budget (AED)</label>
+              <input type="number" name="budget" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+            </div>
+            <div id="rentField" style="display: none;">
+              <label class="block text-sm font-medium mb-2">Loyer annuel (AED)</label>
+              <input type="number" name="annualRent" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+            </div>
+            <div class="flex gap-4">
+              <button type="submit" class="flex-1 bg-yellow-500 text-gray-900 font-bold py-3 rounded-lg">Ajouter</button>
+              <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-lg">Annuler</button>
+            </div>
+          </form>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      document.getElementById('addLeadForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const leadType = formData.get('leadType');
+        const isSale = leadType.includes('Sale');
         
-        if (profileError) throw profileError;
+        const { error } = await supabase.from('leads').insert([{
+          referrer_id: currentUser.id,
+          lead_type: leadType,
+          client_name: formData.get('clientName'),
+          client_email: formData.get('clientEmail'),
+          client_phone: formData.get('clientPhone'),
+          property_type: formData.get('propertyType'),
+          budget: isSale ? formData.get('budget') : null,
+          annual_rent: !isSale ? formData.get('annualRent') : null,
+          status: 'nouveau'
+        }]);
         
-        if (!profile || !profile.contract_file_url) {
-          alert('Aucun fichier de contrat trouvé');
-          return;
+        if (error) {
+          alert('Erreur : ' + error.message);
+        } else {
+          alert('Lead ajouté !');
+          modal.remove();
+          render();
         }
-        
-        const urlParts = profile.contract_file_url.split('/Contracts/');
-        if (urlParts.length < 2) {
-          alert('URL du contrat invalide');
-          return;
-        }
-        const filePath = urlParts[1];
-        
-        const { data: fileData, error: downloadError } = await supabaseClient.storage
-          .from('Contracts')
-          .download(filePath);
-        
-        if (downloadError) {
-          console.error('Error downloading contract:', downloadError);
-          throw downloadError;
-        }
-        
-        const blob = new Blob([fileData], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `contract_${profile.name || referrerId}.pdf`;
-        
-        document.body.appendChild(a);
-        a.click();
-        
-        setTimeout(() => {
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }, 100);
-        
-        alert('Téléchargement du contrat lancé ! Vérifiez vos téléchargements.');
-        
-      } catch (error) {
-        console.error('Error viewing contract:', error);
-        alert('Erreur lors de l\'ouverture du contrat: ' + error.message);
+      };
+    }
+
+    window.toggleFields = function(leadType) {
+      const budgetField = document.getElementById('budgetField');
+      const rentField = document.getElementById('rentField');
+      const isSale = leadType.includes('Sale');
+      
+      if (isSale) {
+        budgetField.style.display = 'block';
+        budgetField.querySelector('input').required = true;
+        rentField.style.display = 'none';
+        rentField.querySelector('input').required = false;
+      } else {
+        budgetField.style.display = 'none';
+        budgetField.querySelector('input').required = false;
+        rentField.style.display = 'block';
+        rentField.querySelector('input').required = true;
       }
-    };
-
-    window.validateContract = async function(referrerId) {
-      if (!confirm('Valider ce contrat ?')) return;
-
-      try {
-        const { error } = await supabaseClient
-          .from('profiles')
-          .update({
-            contract_status: 'validated',
-            contract_validated_at: new Date().toISOString()
-          })
-          .eq('id', referrerId);
-
-        if (error) throw error;
-
-        alert('Contrat validé avec succès !');
-        showAdminDashboard();
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors de la validation du contrat');
-      }
-    };
-
-    window.rejectContract = async function(referrerId) {
-      if (!confirm('Rejeter ce contrat ? L\'apporteur devra en uploader un nouveau.')) return;
-
-      try {
-        const { error } = await supabaseClient
-          .from('profiles')
-          .update({
-            contract_status: 'rejected'
-          })
-          .eq('id', referrerId);
-
-        if (error) throw error;
-
-        alert('Contrat rejeté. L\'apporteur sera notifié.');
-        showAdminDashboard();
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors du rejet du contrat');
-      }
-    };
-
-    window.showAddLeadForm = function() {
-      document.getElementById('addLeadModal').classList.remove('hidden');
-    };
-
-    window.closeAddLeadModal = function() {
-      document.getElementById('addLeadModal').classList.add('hidden');
-      document.getElementById('addLeadForm').reset();
-      document.getElementById('budgetField').classList.add('hidden');
-      document.getElementById('rentField').classList.add('hidden');
     };
 
     async function updateLeadStatus(leadId, newStatus) {
-      const { error } = await supabaseClient
-        .from('leads')
-        .update({ status: newStatus })
-        .eq('id', leadId);
-
-      if (error) {
-        alert('Erreur lors de la mise à jour du statut');
-        console.error(error);
-      }
+      const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+      if (error) alert('Erreur : ' + error.message);
+      else render();
     }
 
-    async function markAsCompleted(leadId, leadType) {
-      const isRental = leadType === 'rent_landlord' || leadType === 'rent_tenant';
-      
-      let priceLabel = '';
-      let commissionRate = 0;
-      let newStatus = '';
-      
-      if (isRental) {
-        priceLabel = 'Montant du loyer annuel (AED):';
-        commissionRate = 0.05;
-        newStatus = 'loué';
-      } else {
-        priceLabel = 'Prix de vente final (AED):';
-        commissionRate = 0.02;
-        newStatus = 'vendu';
-      }
-      
+    async function markAsSold(leadId, leadType) {
+      const isSale = leadType.includes('Sale');
+      const priceLabel = isSale ? 'Prix de vente (AED)' : 'Loyer annuel (AED)';
       const price = prompt(priceLabel);
       if (!price) return;
-
-      const priceValue = parseFloat(price);
-      const totalCommission = priceValue * commissionRate;
-      const agentCommission = totalCommission * 0.5;
+      
+      const numPrice = parseFloat(price);
+      const commissionRate = isSale ? 0.02 : 0.05;
+      const agentCommission = numPrice * commissionRate * 0.5;
       const referrerCommission = agentCommission * 0.2;
-
-      const { error } = await supabaseClient
-        .from('leads')
-        .update({
-          status: newStatus,
-          sale_price: priceValue,
-          agent_commission: agentCommission,
-          referrer_commission: referrerCommission,
-          closed_at: new Date().toISOString()
-        })
-        .eq('id', leadId);
-
-      if (error) {
-        alert('Erreur lors de la mise à jour du statut');
-        console.error(error);
-      } else {
-        showAdminDashboard();
+      
+      const { error } = await supabase.from('leads').update({
+        status: isSale ? 'vendu' : 'loué',
+        sale_price: isSale ? numPrice : null,
+        annual_rent: !isSale ? numPrice : null,
+        agent_commission: agentCommission,
+        referrer_commission: referrerCommission,
+        closed_at: new Date().toISOString()
+      }).eq('id', leadId);
+      
+      if (error) alert('Erreur : ' + error.message);
+      else {
+        alert('Commission : ' + referrerCommission.toLocaleString() + ' AED');
+        render();
       }
     }
 
-    window.showAuthPage = showAuthPage;
+    window.switchTab = function(tab) {
+      document.getElementById('tab-leads').classList.toggle('border-yellow-500', tab === 'leads');
+      document.getElementById('tab-leads').classList.toggle('text-yellow-500', tab === 'leads');
+      document.getElementById('tab-leads').classList.toggle('text-gray-400', tab !== 'leads');
+      document.getElementById('tab-contracts').classList.toggle('border-yellow-500', tab === 'contracts');
+      document.getElementById('tab-contracts').classList.toggle('text-yellow-500', tab === 'contracts');
+      document.getElementById('tab-contracts').classList.toggle('text-gray-400', tab !== 'contracts');
+      document.getElementById('tab-content-leads').style.display = tab === 'leads' ? 'block' : 'none';
+      document.getElementById('tab-content-contracts').style.display = tab === 'contracts' ? 'block' : 'none';
+    };
+
+    window.viewContract = function(url) {
+      if (!url) {
+        alert('Aucun contrat');
+        return;
+      }
+      window.open(url, '_blank');
+    };
+
+    window.validateContract = async function(userId) {
+      if (!confirm('Valider ?')) return;
+      const { error } = await supabase.from('profiles').update({ contract_status: 'validated' }).eq('id', userId);
+      if (error) alert('Erreur : ' + error.message);
+      else {
+        alert('Validé !');
+        render();
+      }
+    };
+
+    window.rejectContract = async function(userId) {
+      if (!confirm('Rejeter ?')) return;
+      const { error } = await supabase.from('profiles').update({ contract_status: 'rejected' }).eq('id', userId);
+      if (error) alert('Erreur : ' + error.message);
+      else {
+        alert('Rejeté');
+        render();
+      }
+    };
+
+    async function handleAuth(mode) {
+      const form = document.getElementById('authForm');
+      if (!form) return;
+      
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const email = formData.get('email');
+        const password = formData.get('password');
+        
+        if (mode === 'signup') {
+          const confirmPassword = formData.get('confirmPassword');
+          if (password !== confirmPassword) {
+            alert('Les mots de passe ne correspondent pas');
+            return;
+          }
+          
+          const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?.])[A-Za-z\d@#$%^&*!?.]{12,}$/;
+          if (!passwordRegex.test(password)) {
+            alert('Mot de passe invalide');
+            return;
+          }
+          
+          const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              data: {
+                name: formData.get('name'),
+                phone: formData.get('phone')
+              }
+            }
+          });
+          
+          if (error) alert('Erreur : ' + error.message);
+          else {
+            alert('Compte créé !');
+            showLogin();
+          }
+        } else {
+          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+          if (error) alert('Erreur : ' + error.message);
+          else {
+            currentUser = data.user;
+            await loadUserProfile();
+            render();
+          }
+        }
+      };
+    }
+
+    async function handleReset() {
+      const form = document.getElementById('resetForm');
+      if (!form) return;
+      
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const email = formData.get('email');
+        
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: 'https://real-estate-referrer.com/reset-password.html'
+        });
+        
+        if (error) alert('Erreur : ' + error.message);
+        else {
+          alert('Email envoyé !');
+          showLogin();
+        }
+      };
+    }
+
+    async function handleContractUpload() {
+      const form = document.getElementById('contractForm');
+      if (!form) return;
+      
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const fileInput = form.querySelector('input[type="file"]');
+        const file = fileInput.files[0];
+        
+        if (!file) {
+          alert('Fichier manquant');
+          return;
+        }
+        
+        if (file.size > 5 * 1024 * 1024) {
+          alert('Fichier trop volumineux');
+          return;
+        }
+        
+        const fileName = `${currentUser.id}_${Date.now()}.pdf`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage.from('contracts').upload(fileName, file);
+        
+        if (uploadError) {
+          alert('Erreur : ' + uploadError.message);
+          return;
+        }
+        
+        const { data: urlData } = supabase.storage.from('contracts').getPublicUrl(fileName);
+        
+        const { error: updateError } = await supabase.from('profiles').update({
+          contract_status: 'uploaded',
+          contract_file_url: urlData.publicUrl
+        }).eq('id', currentUser.id);
+        
+        if (updateError) alert('Erreur : ' + updateError.message);
+        else {
+          alert('Contrat envoyé !');
+          await loadUserProfile();
+          render();
+        }
+      };
+    }
+
+    async function loadUserProfile() {
+      const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+      userProfile = data;
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      currentUser = null;
+      userProfile = null;
+      render();
+    }
+
+    function showLogin() {
+      currentPage = 'auth-login';
+      render();
+    }
+
+    function showSignup() {
+      currentPage = 'auth-signup';
+      render();
+    }
+
+    function showReset() {
+      currentPage = 'auth-reset';
+      render();
+    }
+
+    async function render() {
+      const app = document.getElementById('app');
+      
+      if (currentUser) {
+        app.innerHTML = renderDashboard();
+        await loadDashboardContent();
+        handleContractUpload();
+      } else if (currentPage === 'auth-login') {
+        app.innerHTML = renderAuthPage('login');
+        handleAuth('login');
+      } else if (currentPage === 'auth-signup') {
+        app.innerHTML = renderAuthPage('signup');
+        handleAuth('signup');
+      } else if (currentPage === 'auth-reset') {
+        app.innerHTML = renderAuthPage('reset');
+        handleReset();
+      } else {
+        app.innerHTML = renderLandingPage();
+      }
+    }
+
     window.showLogin = showLogin;
     window.showSignup = showSignup;
     window.showReset = showReset;
     window.logout = logout;
+    window.showAddLeadForm = showAddLeadForm;
     window.updateLeadStatus = updateLeadStatus;
-    window.markAsCompleted = markAsCompleted;
+    window.markAsSold = markAsSold;
 
-    init();
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      currentUser = session?.user || null;
+      if (currentUser) await loadUserProfile();
+      render();
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      currentUser = session?.user || null;
+      if (currentUser) {
+        loadUserProfile().then(() => render());
+      } else {
+        render();
+      }
+    });
   </script>
 </body>
-</html></parameter>
+</html>
