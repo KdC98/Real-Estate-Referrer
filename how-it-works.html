@@ -3,364 +3,685 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comment ça marche - Programme d'Apporteurs d'Affaires</title>
+    <title>Comment ça marche - Real Estate Referrer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #d97706 100%);
-            min-height: 100vh;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .accordion-content.active {
+            max-height: 500px;
+        }
+        
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        @media (max-width: 768px) {
+            .timeline-line {
+                left: 20px;
+            }
         }
     </style>
 </head>
-<body class="font-sans text-white">
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    
     <!-- Header -->
-    <header class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-yellow-400">Karyne de Clercq</h1>
-            <a href="index.html" class="bg-white text-blue-900 px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition">
-                Retour
-            </a>
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center">
+                <a href="index.html" class="text-2xl font-bold gradient-text">
+                    <i class="fas fa-building mr-2"></i>Real Estate Referrer
+                </a>
+                <div class="flex gap-4 items-center">
+                    <a href="index.html" class="text-gray-600 hover:text-blue-600 transition font-medium">
+                        <i class="fas fa-home mr-1"></i>Accueil
+                    </a>
+                    <a href="login.html" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition font-medium">
+                        <i class="fas fa-sign-in-alt mr-1"></i>Login
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="container mx-auto px-4 py-12 text-center">
-        <h2 class="text-5xl font-bold mb-6">Comment ça marche ?</h2>
-        <p class="text-xl opacity-90 max-w-3xl mx-auto">
-            Devenez apporteur d'affaires et gagnez jusqu'à 20,000 AED par vente
-        </p>
-    </section>
-
-    <!-- 5 Étapes -->
-    <section class="container mx-auto px-4 py-16">
-        <h3 class="text-4xl font-bold text-center mb-12">
-            🎯 5 Étapes pour devenir apporteur
-        </h3>
-        
-        <div class="grid md:grid-cols-5 gap-6 max-w-7xl mx-auto">
-            <!-- Étape 1 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 text-center hover:bg-opacity-100 transition">
-                <div class="bg-blue-500 w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-                    1
-                </div>
-                <h4 class="text-xl font-bold mb-3">Inscription</h4>
-                <p class="text-gray-300 text-sm">
-                    Créez votre compte gratuitement en 2 minutes
-                </p>
-            </div>
-
-            <!-- Étape 2 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 text-center hover:bg-opacity-100 transition">
-                <div class="bg-blue-500 w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-                    2
-                </div>
-                <h4 class="text-xl font-bold mb-3">Trouvez des clients</h4>
-                <p class="text-gray-300 text-sm">
-                    Parlez du programme à votre réseau
-                </p>
-            </div>
-
-            <!-- Étape 3 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 text-center hover:bg-opacity-100 transition">
-                <div class="bg-blue-500 w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-                    3
-                </div>
-                <h4 class="text-xl font-bold mb-3">Ajoutez vos leads</h4>
-                <p class="text-gray-300 text-sm">
-                    Remplissez les informations client sur votre dashboard
-                </p>
-            </div>
-
-            <!-- Étape 4 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 text-center hover:bg-opacity-100 transition">
-                <div class="bg-blue-500 w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-                    4
-                </div>
-                <h4 class="text-xl font-bold mb-3">Suivi en temps réel</h4>
-                <p class="text-gray-300 text-sm">
-                    Suivez l'avancement de vos leads 24/7
-                </p>
-            </div>
-
-            <!-- Étape 5 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 text-center hover:bg-opacity-100 transition">
-                <div class="bg-green-500 w-20 h-20 rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4">
-                    5
-                </div>
-                <h4 class="text-xl font-bold mb-3">Recevez vos gains</h4>
-                <p class="text-gray-300 text-sm">
-                    Paiement selon délais légaux
-                </p>
+    <section class="py-20 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl font-bold mb-6 fade-in-up">
+                <span class="gradient-text">Comment ça marche ?</span>
+            </h1>
+            <p class="text-xl text-gray-600 mb-8 fade-in-up delay-100">
+                Devenez apporteur d'affaires et gagnez jusqu'à <span class="font-bold text-purple-600">20,000 AED par vente</span>
+            </p>
+            <div class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-6 py-3 rounded-full font-medium fade-in-up delay-200">
+                <i class="fas fa-check-circle"></i>
+                <span>100% Gratuit · Sans engagement · Paiement garanti</span>
             </div>
         </div>
     </section>
 
-    <!-- Combien puis-je gagner -->
-    <section class="container mx-auto px-4 py-16">
-        <div class="bg-gray-900 bg-opacity-70 rounded-3xl p-12 max-w-6xl mx-auto">
-            <h3 class="text-4xl font-bold text-center mb-12">
-                💰 Combien puis-je gagner ?
-            </h3>
+    <!-- Timeline des étapes -->
+    <section class="py-16 px-4 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-16 gradient-text">
+                <i class="fas fa-route mr-3"></i>Votre parcours en 5 étapes
+            </h2>
             
-            <div class="grid md:grid-cols-3 gap-8 mb-12">
-                <!-- Appartement -->
-                <div class="bg-gray-800 rounded-xl p-8 hover:scale-105 transition">
-                    <h4 class="text-2xl font-bold mb-4">Appartement</h4>
-                    <p class="text-gray-300 mb-2">Prix de vente: 1,000,000 AED</p>
-                    <p class="text-4xl font-bold text-yellow-400 mb-2">→ 2,000 AED</p>
-                    <p class="text-gray-400">Votre commission</p>
+            <div class="relative">
+                <div class="timeline-line hidden md:block"></div>
+                
+                <!-- Étape 1 -->
+                <div class="mb-16 md:flex items-center">
+                    <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 md:text-right">
+                        <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1">
+                            <div class="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4 md:float-right md:ml-4">
+                                1
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                <i class="fas fa-user-plus text-blue-600 mr-2"></i>Inscription (2 min)
+                            </h3>
+                            <p class="text-gray-600 mb-4">Créez votre compte gratuitement en quelques clics</p>
+                            <ul class="text-left text-gray-600 space-y-2">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Nom et prénom</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Email et téléphone</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Mot de passe sécurisé</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-8"></div>
+                    <div class="md:w-1/2"></div>
                 </div>
 
-                <!-- Villa -->
-                <div class="bg-gray-800 rounded-xl p-8 hover:scale-105 transition">
-                    <h4 class="text-2xl font-bold mb-4">Villa</h4>
-                    <p class="text-gray-300 mb-2">Prix de vente: 5,000,000 AED</p>
-                    <p class="text-4xl font-bold text-yellow-400 mb-2">→ 10,000 AED</p>
-                    <p class="text-gray-400">Votre commission</p>
+                <!-- Étape 2 -->
+                <div class="mb-16 md:flex items-center flex-row-reverse">
+                    <div class="md:w-1/2 md:pl-12 mb-8 md:mb-0">
+                        <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1">
+                            <div class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
+                                2
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                <i class="fas fa-users text-purple-600 mr-2"></i>Trouvez des clients
+                            </h3>
+                            <p class="text-gray-600 mb-4">Partagez le programme avec votre réseau</p>
+                            <ul class="text-gray-600 space-y-2">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Famille et amis</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Collègues de travail</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Réseaux sociaux</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Communauté locale</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-8"></div>
+                    <div class="md:w-1/2"></div>
                 </div>
 
-                <!-- Penthouse -->
-                <div class="bg-gray-800 rounded-xl p-8 hover:scale-105 transition">
-                    <h4 class="text-2xl font-bold mb-4">Penthouse</h4>
-                    <p class="text-gray-300 mb-2">Prix de vente: 10,000,000 AED</p>
-                    <p class="text-4xl font-bold text-yellow-400 mb-2">→ 20,000 AED</p>
-                    <p class="text-gray-400">Votre commission</p>
+                <!-- Étape 3 -->
+                <div class="mb-16 md:flex items-center">
+                    <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 md:text-right">
+                        <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1">
+                            <div class="inline-block bg-gradient-to-r from-green-600 to-teal-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4 md:float-right md:ml-4">
+                                3
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                <i class="fas fa-plus-circle text-green-600 mr-2"></i>Ajoutez vos leads
+                            </h3>
+                            <p class="text-gray-600 mb-4">Simple et rapide depuis votre dashboard</p>
+                            <ul class="text-left text-gray-600 space-y-2">
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Nom du client</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Contact (email/téléphone)</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Type de propriété recherchée</li>
+                                <li><i class="fas fa-check text-green-500 mr-2"></i>Budget estimé</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-8"></div>
+                    <div class="md:w-1/2"></div>
                 </div>
-            </div>
 
-            <!-- Détail du calcul -->
-            <div class="bg-gray-800 rounded-xl p-8">
-                <h4 class="text-2xl font-bold mb-6">📊 Détail du calcul</h4>
-                <div class="space-y-3 text-lg">
-                    <p>✓ Commission totale sur la vente: <span class="font-bold text-yellow-400">2% du prix</span></p>
-                    <p>✓ Part de l'agent: <span class="font-bold text-yellow-400">50%</span> de la commission totale</p>
-                    <p>✓ Votre part d'apporteur: <span class="font-bold text-yellow-400">20%</span> de la part agent</p>
-                    <p class="text-2xl font-bold text-yellow-400 pt-4">= 0.2% du prix de vente final</p>
+                <!-- Étape 4 -->
+                <div class="mb-16 md:flex items-center flex-row-reverse">
+                    <div class="md:w-1/2 md:pl-12 mb-8 md:mb-0">
+                        <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1">
+                            <div class="inline-block bg-gradient-to-r from-orange-600 to-red-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
+                                4
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                <i class="fas fa-chart-line text-orange-600 mr-2"></i>Suivi en temps réel
+                            </h3>
+                            <p class="text-gray-600 mb-4">Suivez l'avancement de vos leads 24/7</p>
+                            <div class="grid grid-cols-2 gap-3 text-sm">
+                                <div class="bg-blue-50 p-3 rounded-lg">
+                                    <i class="fas fa-file-alt text-blue-600"></i>
+                                    <span class="ml-2 font-medium">Nouveau</span>
+                                </div>
+                                <div class="bg-yellow-50 p-3 rounded-lg">
+                                    <i class="fas fa-home text-yellow-600"></i>
+                                    <span class="ml-2 font-medium">Visite</span>
+                                </div>
+                                <div class="bg-purple-50 p-3 rounded-lg">
+                                    <i class="fas fa-handshake text-purple-600"></i>
+                                    <span class="ml-2 font-medium">Offre</span>
+                                </div>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <i class="fas fa-check-circle text-green-600"></i>
+                                    <span class="ml-2 font-medium">Vendu</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-8"></div>
+                    <div class="md:w-1/2"></div>
+                </div>
+
+                <!-- Étape 5 -->
+                <div class="md:flex items-center">
+                    <div class="md:w-1/2 md:pr-12 mb-8 md:mb-0 md:text-right">
+                        <div class="glass-card p-8 rounded-2xl shadow-xl hover:shadow-2xl transition transform hover:-translate-y-1 border-2 border-yellow-400">
+                            <div class="inline-block bg-gradient-to-r from-yellow-500 to-orange-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mb-4 md:float-right md:ml-4">
+                                5
+                            </div>
+                            <h3 class="text-2xl font-bold mb-3 text-gray-800">
+                                <i class="fas fa-money-bill-wave text-yellow-600 mr-2"></i>Recevez vos commissions
+                            </h3>
+                            <p class="text-gray-600 mb-4">Paiement garanti sous 45-60 jours après signature</p>
+                            <div class="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-left">
+                                <p class="font-bold text-yellow-800 mb-2">
+                                    <i class="fas fa-star mr-1"></i>20% de la commission agent
+                                </p>
+                                <p class="text-sm text-gray-600">Transparence totale · Calcul automatique · Historique complet</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hidden md:block w-8"></div>
+                    <div class="md:w-1/2"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Qu'est-ce qu'un bon lead -->
-    <section class="container mx-auto px-4 py-16">
-        <h3 class="text-4xl font-bold text-center mb-12">
-            📋 Qu'est-ce qu'un bon lead ?
-        </h3>
-        
-        <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <!-- Lead qualifié -->
-            <div class="bg-green-900 bg-opacity-30 border-2 border-green-500 rounded-xl p-8 hover:bg-opacity-50 transition">
-                <h4 class="text-2xl font-bold mb-6 text-green-400">✅ Lead qualifié</h4>
-                <ul class="space-y-4">
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-3 text-xl">✓</span>
-                        <span>Personne <span class="font-bold">réellement intéressée</span> par un achat</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-3 text-xl">✓</span>
-                        <span><span class="font-bold">Budget défini</span> et réaliste</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-3 text-xl">✓</span>
-                        <span>Recherche <span class="font-bold">active</span> (0-3 mois)</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-3 text-xl">✓</span>
-                        <span><span class="font-bold">Coordonnées complètes</span> et exactes</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-green-400 mr-3 text-xl">✓</span>
-                        <span>Client qui a <span class="font-bold">donné son accord</span> pour être contacté</span>
-                    </li>
-                </ul>
+    <!-- Calculs de gains -->
+    <section class="py-16 px-4 bg-gradient-to-br from-purple-900 to-blue-900 text-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-4">
+                <i class="fas fa-calculator mr-3"></i>Combien puis-je gagner ?
+            </h2>
+            <p class="text-center text-purple-200 mb-12 text-lg">Exemples concrets de commissions</p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Exemple 1 -->
+                <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-home text-5xl mb-4 text-yellow-400"></i>
+                        <h3 class="text-2xl font-bold mb-2">Appartement</h3>
+                        <p class="text-purple-200">1,000,000 AED</p>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between border-b border-white/20 pb-2">
+                            <span>Commission totale (2%)</span>
+                            <span class="font-bold">20,000 AED</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/20 pb-2">
+                            <span>Commission agent (50%)</span>
+                            <span class="font-bold">10,000 AED</span>
+                        </div>
+                        <div class="flex justify-between bg-yellow-500/20 p-3 rounded-lg mt-4">
+                            <span class="font-bold">Votre commission (20%)</span>
+                            <span class="font-bold text-2xl text-yellow-400">2,000 AED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemple 2 -->
+                <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition transform scale-105">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-building text-5xl mb-4 text-green-400"></i>
+                        <h3 class="text-2xl font-bold mb-2">Villa</h3>
+                        <p class="text-purple-200">5,000,000 AED</p>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between border-b border-white/20 pb-2">
+                            <span>Commission totale (2%)</span>
+                            <span class="font-bold">100,000 AED</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/20 pb-2">
+                            <span>Commission agent (50%)</span>
+                            <span class="font-bold">50,000 AED</span>
+                        </div>
+                        <div class="flex justify-between bg-green-500/20 p-3 rounded-lg mt-4">
+                            <span class="font-bold">Votre commission (20%)</span>
+                            <span class="font-bold text-2xl text-green-400">10,000 AED</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemple 3 -->
+                <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition">
+                    <div class="text-center mb-6">
+                        <i class="fas fa-crown text-5xl mb-4 text-purple-400"></i>
+                        <h3 class="text-2xl font-bold mb-2">Penthouse</h3>
+                        <p class="text-purple-200">10,000,000 AED</p>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between border-b border-white/20 pb-2">
+                            <span>Commission totale (2%)</span>
+                            <span class="font-bold">200,000 AED</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/20 pb-2">
+                            <span>Commission agent (50%)</span>
+                            <span class="font-bold">100,000 AED</span>
+                        </div>
+                        <div class="flex justify-between bg-purple-500/20 p-3 rounded-lg mt-4">
+                            <span class="font-bold">Votre commission (20%)</span>
+                            <span class="font-bold text-2xl text-purple-400">20,000 AED</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Lead non qualifié -->
-            <div class="bg-red-900 bg-opacity-30 border-2 border-red-500 rounded-xl p-8 hover:bg-opacity-50 transition">
-                <h4 class="text-2xl font-bold mb-6 text-red-400">❌ Lead non qualifié</h4>
-                <ul class="space-y-4">
-                    <li class="flex items-start">
-                        <span class="text-red-400 mr-3 text-xl">✗</span>
-                        <span>Simple <span class="font-bold">curiosité</span> sans projet concret</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-400 mr-3 text-xl">✗</span>
-                        <span><span class="font-bold">Pas de budget</span> défini</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-400 mr-3 text-xl">✗</span>
-                        <span>Projet à <span class="font-bold">long terme</span> (1+ an)</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-400 mr-3 text-xl">✗</span>
-                        <span><span class="font-bold">Coordonnées fausses</span> ou incomplètes</span>
-                    </li>
-                    <li class="flex items-start">
-                        <span class="text-red-400 mr-3 text-xl">✗</span>
-                        <span>Client qui <span class="font-bold">n'a pas donné son accord</span></span>
-                    </li>
-                </ul>
+            <div class="text-center mt-12">
+                <p class="text-xl text-purple-200 mb-4">
+                    <i class="fas fa-infinity mr-2"></i>Aucune limite de gains !
+                </p>
+                <p class="text-purple-300">Plus vous apportez de clients, plus vous gagnez</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Critères d'un bon lead -->
+    <section class="py-16 px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">
+                <i class="fas fa-clipboard-check mr-3"></i>Critères d'un bon lead
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Lead qualifié -->
+                <div class="glass-card p-8 rounded-2xl shadow-xl border-2 border-green-400">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-green-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl mr-4">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Lead qualifié</h3>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Personne <strong>réellement intéressée</strong> par un achat ou location</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700"><strong>Budget défini</strong> et réaliste</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Recherche <strong>active</strong> (0-3 mois)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Coordonnées <strong>complètes et exactes</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Motivation claire et <strong>besoin identifié</strong></span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Lead non qualifié -->
+                <div class="glass-card p-8 rounded-2xl shadow-xl border-2 border-red-400">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-red-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-2xl mr-4">
+                            <i class="fas fa-times"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-800">Lead non qualifié</h3>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Simple <strong>curiosité</strong> sans projet concret</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Pas de budget défini ou <strong>budget irréaliste</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Projet à <strong>très long terme</strong> (1+ an)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700">Coordonnées <strong>fausses ou incomplètes</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mr-3 mt-1"></i>
+                            <span class="text-gray-700"><strong>Pas joignable</strong> ou ne répond pas</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg">
+                <p class="text-gray-700">
+                    <i class="fas fa-lightbulb text-blue-600 mr-2"></i>
+                    <strong>Astuce :</strong> Un lead qualifié augmente vos chances de commission. Privilégiez la qualité à la quantité !
+                </p>
             </div>
         </div>
     </section>
 
     <!-- Sécurité & Transparence -->
-    <section class="container mx-auto px-4 py-16">
-        <h3 class="text-4xl font-bold text-center mb-12">
-            🔒 Sécurité & Transparence
-        </h3>
-        
-        <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-8 hover:bg-opacity-100 transition">
-                <h4 class="text-2xl font-bold mb-4 text-yellow-400">Propriété de vos leads</h4>
-                <p class="text-gray-300">
-                    Vous gardez la propriété totale de vos leads. Ils sont liés à votre compte et personne d'autre ne peut les voir ou les modifier.
-                </p>
-            </div>
+    <section class="py-16 px-4 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">
+                <i class="fas fa-shield-alt mr-3"></i>Sécurité & Transparence
+            </h2>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-lock text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Propriété garantie</h3>
+                    <p class="text-sm text-gray-600">Vos leads vous appartiennent exclusivement</p>
+                </div>
 
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-8 hover:bg-opacity-100 transition">
-                <h4 class="text-2xl font-bold mb-4 text-yellow-400">Aucun vol possible</h4>
-                <p class="text-gray-300">
-                    Les leads ne peuvent pas être "volés" par d'autres apporteurs. Chaque lead est unique et tracé dans le système.
-                </p>
-            </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
+                    <div class="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-eye text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Transparence totale</h3>
+                    <p class="text-sm text-gray-600">Dashboard en temps réel 24/7</p>
+                </div>
 
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-8 hover:bg-opacity-100 transition">
-                <h4 class="text-2xl font-bold mb-4 text-yellow-400">Historique complet</h4>
-                <p class="text-gray-300">
-                    Consultez l'historique complet de chaque lead: création, visites, offres, et statut de vente en temps réel.
-                </p>
-            </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
+                    <div class="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-history text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Historique complet</h3>
+                    <p class="text-sm text-gray-600">Toutes vos transactions archivées</p>
+                </div>
 
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-8 hover:bg-opacity-100 transition">
-                <h4 class="text-2xl font-bold mb-4 text-yellow-400">Dashboard transparent</h4>
-                <p class="text-gray-300">
-                    Toutes vos statistiques en temps réel: gains totaux, leads actifs, ventes conclues. Aucune surprise.
-                </p>
+                <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition text-center">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calculator text-yellow-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Calcul automatique</h3>
+                    <p class="text-sm text-gray-600">Commissions calculées précisément</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- FAQ -->
-    <section class="container mx-auto px-4 py-16">
-        <h3 class="text-4xl font-bold text-center mb-12">
-            ❓ Questions fréquentes
-        </h3>
-        
-        <div class="max-w-4xl mx-auto space-y-6">
-            <!-- Question 1 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Combien de leads puis-je apporter ?</h4>
-                <p class="text-gray-300">
-                    Illimité ! Il n'y a aucune limite au nombre de leads que vous pouvez apporter. Plus vous apportez de clients qualifiés, plus vous gagnez.
-                </p>
-            </div>
+    <section class="py-16 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12 gradient-text">
+                <i class="fas fa-question-circle mr-3"></i>Questions fréquentes
+            </h2>
+            
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <div class="glass-card rounded-xl shadow-lg overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+                        <span class="font-bold text-gray-800 text-lg">
+                            <i class="fas fa-plus-circle text-blue-600 mr-3"></i>
+                            Combien de leads puis-je apporter ?
+                        </span>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="text-gray-600 leading-relaxed">
+                            <strong>Illimité !</strong> Il n'y a aucune restriction sur le nombre de leads que vous pouvez apporter. Plus vous apportez de clients qualifiés, plus vous augmentez vos chances de gains. Certains apporteurs gèrent 1-2 leads par mois, d'autres en apportent 10+. C'est vous qui décidez de votre niveau d'engagement.
+                        </p>
+                    </div>
+                </div>
 
-            <!-- Question 2 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Y a-t-il des frais d'inscription ?</h4>
-                <p class="text-gray-300">
-                    Non, l'inscription est 100% gratuite. Il n'y a aucun frais caché. Vous ne payez rien et gagnez uniquement sur les ventes réalisées.
-                </p>
-            </div>
+                <!-- FAQ 2 -->
+                <div class="glass-card rounded-xl shadow-lg overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+                        <span class="font-bold text-gray-800 text-lg">
+                            <i class="fas fa-id-card text-purple-600 mr-3"></i>
+                            Dois-je avoir une licence immobilière ?
+                        </span>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="text-gray-600 leading-relaxed">
+                            <strong>Non !</strong> Le programme d'apporteur d'affaires est ouvert à tous, sans licence requise. Vous n'avez pas besoin de connaissances particulières en immobilier. Votre rôle est simplement de mettre en relation des personnes intéressées avec notre agence. C'est nous qui nous occupons de toute la partie légale et technique.
+                        </p>
+                    </div>
+                </div>
 
-            <!-- Question 3 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Dois-je avoir une licence immobilière ?</h4>
-                <p class="text-gray-300">
-                    Non ! Le programme d'apporteurs est ouvert à tous, sans licence nécessaire. Vous apportez simplement des clients qualifiés et nous gérons tout le reste.
-                </p>
-            </div>
+                <!-- FAQ 3 -->
+                <div class="glass-card rounded-xl shadow-lg overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+                        <span class="font-bold text-gray-800 text-lg">
+                            <i class="fas fa-money-check-alt text-green-600 mr-3"></i>
+                            Quand suis-je payé ?
+                        </span>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="text-gray-600 leading-relaxed mb-3">
+                            <strong>45-60 jours après la signature</strong> du contrat de vente ou de location. Voici le processus :
+                        </p>
+                        <ol class="list-decimal list-inside text-gray-600 space-y-2 ml-4">
+                            <li>Le client signe le contrat</li>
+                            <li>La transaction est finalisée</li>
+                            <li>L'agence reçoit sa commission</li>
+                            <li>Votre commission est calculée automatiquement (20%)</li>
+                            <li>Paiement effectué sous 45-60 jours</li>
+                        </ol>
+                        <p class="text-gray-600 mt-3">Le délai permet de s'assurer que la transaction est définitive et que tous les paiements sont bien reçus.</p>
+                    </div>
+                </div>
 
-            <!-- Question 4 - CORRIGÉE -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Quand suis-je payé ?</h4>
-                <p class="text-gray-300">
-                    <strong>Pour les ventes :</strong> Vous êtes payé dans les 45 à 60 jours suivant l'émission du Title Deed (acte de propriété).<br><br>
-                    <strong>Pour les locations :</strong> Vous êtes payé dans les 7 à 14 jours suivant la signature du Tenancy Contract (contrat de location).<br><br>
-                    Le paiement est effectué par virement bancaire.
-                </p>
-            </div>
+                <!-- FAQ 4 -->
+                <div class="glass-card rounded-xl shadow-lg overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+                        <span class="font-bold text-gray-800 text-lg">
+                            <i class="fas fa-users text-orange-600 mr-3"></i>
+                            Puis-je parrainer d'autres apporteurs ?
+                        </span>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="text-gray-600 leading-relaxed">
+                            <strong>Oui !</strong> Nous avons un programme de parrainage qui vous permet de gagner des commissions supplémentaires en recrutant d'autres apporteurs. Contactez-nous à <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline">contact@real-estate-referrer.com</a> pour en savoir plus sur les conditions et avantages du programme de parrainage.
+                        </p>
+                    </div>
+                </div>
 
-            <!-- Question 5 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Puis-je apporter des clients pour la location ?</h4>
-                <p class="text-gray-300">
-                    Oui ! Le programme couvre à la fois les ventes immobilières ET les locations. Vous pouvez apporter des propriétaires cherchant à louer leur bien, ainsi que des locataires cherchant un logement.
-                </p>
-            </div>
+                <!-- FAQ 5 -->
+                <div class="glass-card rounded-xl shadow-lg overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+                        <span class="font-bold text-gray-800 text-lg">
+                            <i class="fas fa-times-circle text-red-600 mr-3"></i>
+                            Que se passe-t-il si le client n'achète pas ?
+                        </span>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="text-gray-600 leading-relaxed">
+                            <strong>Aucun problème !</strong> Vous ne perdez rien. Le lead reste dans votre historique et vous pouvez continuer à apporter d'autres clients. Il n'y a aucun engagement financier de votre part. Vous êtes payé uniquement quand une vente ou location se concrétise. Zéro risque pour vous !
+                        </p>
+                    </div>
+                </div>
 
-            <!-- Question 6 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Puis-je parrainer d'autres apporteurs ?</h4>
-                <p class="text-gray-300">
-                    Oui ! Contactez-nous pour en savoir plus sur notre programme de parrainage et gagner des commissions supplémentaires.
-                </p>
-            </div>
-
-            <!-- Question 7 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Que se passe-t-il si le client n'achète pas ?</h4>
-                <p class="text-gray-300">
-                    Aucun problème ! Vous ne perdez rien et pouvez continuer à apporter d'autres leads. Seuls les leads qui aboutissent à une vente ou location génèrent une commission.
-                </p>
-            </div>
-
-            <!-- Question 8 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Comment savoir si mon lead progresse ?</h4>
-                <p class="text-gray-300">
-                    Votre dashboard affiche le statut de chaque lead en temps réel: Nouveau, Visite planifiée, Offre en cours, Vendu ou Loué. Vous êtes toujours informé.
-                </p>
-            </div>
-
-            <!-- Question 9 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Comment protégez-vous mes données ?</h4>
-                <p class="text-gray-300">
-                    Toutes vos données sont chiffrées et stockées de manière sécurisée. Nous respectons le RGPD et ne partageons jamais vos informations avec des tiers.
-                </p>
-            </div>
-
-            <!-- Question 10 -->
-            <div class="bg-gray-800 bg-opacity-80 rounded-xl p-6 hover:bg-opacity-100 transition">
-                <h4 class="text-xl font-bold mb-3">Comment puis-je vous contacter ?</h4>
-                <p class="text-gray-300">
-                    Envoyez-nous un email à contact@real-estate-referrer.com. Nous répondons sous 24h.
-                </p>
+                <!-- FAQ 6 -->
+                <div class="glass-card rounded-xl shadow-lg overflow-hidden">
+                    <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+                        <span class="font-bold text-gray-800 text-lg">
+                            <i class="fas fa-clock text-teal-600 mr-3"></i>
+                            Combien de temps prend le processus ?
+                        </span>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+                    </button>
+                    <div class="accordion-content px-6 pb-6">
+                        <p class="text-gray-600 leading-relaxed mb-3">
+                            Cela dépend du client et du marché, mais voici une moyenne :
+                        </p>
+                        <ul class="text-gray-600 space-y-2 ml-4">
+                            <li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>1-2 semaines</strong> : Premier contact et visite</li>
+                            <li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>2-4 semaines</strong> : Recherche et sélection</li>
+                            <li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>1-2 mois</strong> : Négociation et offre</li>
+                            <li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>Total : 2-3 mois</strong> en moyenne</li>
+                        </ul>
+                        <p class="text-gray-600 mt-3">Certains clients décident en quelques jours, d'autres prennent plusieurs mois. Vous suivez tout en temps réel sur votre dashboard.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Final -->
-    <section class="container mx-auto px-4 py-16">
-        <div class="bg-gradient-to-r from-blue-600 to-yellow-600 rounded-3xl p-12 text-center max-w-4xl mx-auto">
-            <h3 class="text-4xl font-bold mb-6">Prêt à commencer ?</h3>
-            <p class="text-xl mb-8 opacity-90">
-                Inscrivez-vous maintenant et commencez à gagner dès aujourd'hui
-            </p>
-            <div class="flex gap-4 justify-center flex-wrap">
-                <a href="index.html" class="bg-white text-blue-900 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition">
-                    Créer mon compte
+    <section class="py-20 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-6">Prêt à commencer ?</h2>
+            <p class="text-xl mb-8 text-blue-100">Créez votre compte gratuitement et commencez à gagner des commissions dès aujourd'hui</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="signup.html" class="bg-white text-blue-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition transform hover:scale-105 inline-flex items-center justify-center">
+                    <i class="fas fa-user-plus mr-2"></i>Créer mon compte
                 </a>
-                <a href="index.html" class="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-900 transition">
-                    Se connecter
+                <a href="login.html" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-blue-600 transition inline-flex items-center justify-center">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Se connecter
                 </a>
             </div>
+            <p class="mt-8 text-blue-100 text-sm">
+                <i class="fas fa-shield-alt mr-2"></i>
+                100% gratuit · Sans engagement · Paiement garanti
+            </p>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 bg-opacity-90 text-gray-400 py-8 mt-16">
-        <div class="container mx-auto px-4 text-center">
-            <p class="mb-4">© 2025 Karyne de Clercq. Tous droits réservés.</p>
-            <div class="flex justify-center gap-6 flex-wrap">
-                <a href="terms.html" class="hover:text-white transition">CGU</a>
-                <a href="privacy.html" class="hover:text-white transition">Confidentialité</a>
-                <a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a>
-                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">Contact</a>
+    <footer class="bg-gray-900 text-gray-400 py-12 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-white font-bold mb-4 gradient-text">Real Estate Referrer</h3>
+                    <p class="text-sm">Gagnez des commissions en apportant des clients à notre agence immobilière à Dubai.</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Navigation</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="hover:text-white transition">Accueil</a></li>
+                        <li><a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a></li>
+                        <li><a href="login.html" class="hover:text-white transition">Connexion</a></li>
+                        <li><a href="signup.html" class="hover:text-white transition">Inscription</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Légal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="terms.html" class="hover:text-white transition">CGU</a></li>
+                        <li><a href="privacy.html" class="hover:text-white transition">Confidentialité</a></li>
+                        <li><a href="contract-template.html" class="hover:text-white transition">Template Contrat</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><i class="fas fa-envelope mr-2"></i>contact@real-estate-referrer.com</li>
+                        <li><i class="fas fa-phone mr-2"></i>+971 XX XXX XXXX</li>
+                        <li><i class="fas fa-map-marker-alt mr-2"></i>Dubai, UAE</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 text-center text-sm">
+                <p>&copy; 2025 Real Estate Referrer. Tous droits réservés.</p>
             </div>
         </div>
     </footer>
+
+    <script>
+        function toggleFAQ(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.fa-chevron-down');
+            const isActive = content.classList.contains('active');
+            
+            // Close all FAQs
+            document.querySelectorAll('.accordion-content').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelectorAll('.fa-chevron-down').forEach(item => {
+                item.style.transform = 'rotate(0deg)';
+            });
+            
+            // Open clicked FAQ if it wasn't active
+            if (!isActive) {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(30px)';
+                    setTimeout(() => {
+                        entry.target.style.transition = 'all 0.6s ease-out';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, 100);
+                }
+            });
+        }, observerOptions);
+
+        // Observe cards and sections
+        document.querySelectorAll('.glass-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
 </body>
 </html>
