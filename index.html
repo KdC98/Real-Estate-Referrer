@@ -62,11 +62,11 @@
         <div class="min-h-screen">
           <header class="container mx-auto px-4 py-6">
             <div class="flex justify-between items-center">
-              <h1 class="text-2xl font-bold text-yellow-400">Dubai Real Estate</h1>
+              <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
               <div class="flex items-center gap-3">
-                <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">Comment ça marche</a>
-                <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">Login</button>
-                <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">Sign Up</button>
+                <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
+                <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
+                <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
               </div>
             </div>
           </header>
@@ -74,13 +74,13 @@
           <main class="container mx-auto px-4 py-20">
             <div class="text-center mb-12">
               <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                Votre réseau vaut de l’or : chaque lead compte
+  ${t('hero.title')}
               </h2>
               <p class="text-xl text-gray-300 mb-8">
-                Devenez apporteur d'affaires et touchez 20 % de commission sur chaque transaction
+  ${t('hero.subtitle')}
               </p>
               <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
-                Rejoindre le Programme
+  ${t('hero.cta_button')}
               </button>
             </div>
 
