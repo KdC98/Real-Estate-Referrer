@@ -1,0 +1,49 @@
+{
+  "nav": {
+    "brand": "Real Estate Referrer",
+    "how_it_works": "How It Works",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  
+  "hero": {
+    "title": "Your network is worth gold: every lead counts",
+    "subtitle": "Become a business referrer and earn 20% commission on every transaction",
+    "cta_button": "Join the Program"
+  },
+  
+  "stats": {
+    "commission_value": "20%",
+    "commission_label": "Commission on sales and rentals",
+    "support_value": "24/7",
+    "support_label": "Real-time lead tracking",
+    "timeline_value": "45-60d",
+    "timeline_label": "Payment after Title Deed (sales)"
+  },
+  
+  "gains": {
+    "title": "Earning Examples",
+    "sale_title": "💰 Property Sale",
+    "sale_example_1_property": "Villa at 3,000,000 AED",
+    "sale_example_1_commission": "6,000 AED",
+    "sale_example_2_property": "Apartment at 5,000,000 AED",
+    "sale_example_2_commission": "10,000 AED",
+    "sale_example_3_property": "Penthouse at 10,000,000 AED",
+    "sale_example_3_commission": "20,000 AED",
+    "rental_title": "🏠 Property Rental",
+    "rental_example_1_property": "Studio at 60,000 AED/year",
+    "rental_example_1_commission": "300 AED",
+    "rental_example_2_property": "Apartment at 120,000 AED/year",
+    "rental_example_2_commission": "600 AED",
+    "rental_example_3_property": "Villa at 200,000 AED/year",
+    "rental_example_3_commission": "1,000 AED"
+  },
+  
+  "footer": {
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "how_it_works": "How It Works",
+    "contact": "Contact",
+    "copyright": "© 2025 Karyne de Clercq. All rights reserved."
+  }
+}
