@@ -12,37 +12,31 @@
     "cta_button": "Rejoindre le Programme"
   },
   
-  "images": {
-    "burj_khalifa_alt": "Burj Khalifa Dubai",
-    "dubai_marina_alt": "Dubai Marina",
-    "dubai_skyline_alt": "Dubai Skyline"
-  },
-  
   "stats": {
     "commission_value": "20%",
     "commission_label": "Commission sur ventes et locations",
-    "tracking_value": "24/7",
-    "tracking_label": "Suivi des leads en temps réel",
-    "payment_value": "45-60j",
-    "payment_label": "Paiement après Title Deed (ventes)"
+    "support_value": "24/7",
+    "support_label": "Suivi des leads en temps réel",
+    "timeline_value": "45-60j",
+    "timeline_label": "Paiement après Title Deed (ventes)"
   },
   
-  "earnings": {
-    "section_title": "Exemples de Gains",
-    "sales_title": "💰 Vente Immobilière",
-    "sales_villa": "Villa à 3,000,000 AED",
-    "sales_villa_commission": "6,000 AED",
-    "sales_apartment": "Appartement à 5,000,000 AED",
-    "sales_apartment_commission": "10,000 AED",
-    "sales_penthouse": "Penthouse à 10,000,000 AED",
-    "sales_penthouse_commission": "20,000 AED",
-    "rentals_title": "🏠 Location Immobilière",
-    "rentals_studio": "Studio à 60,000 AED/an",
-    "rentals_studio_commission": "300 AED",
-    "rentals_apartment": "Appartement à 120,000 AED/an",
-    "rentals_apartment_commission": "600 AED",
-    "rentals_villa": "Villa à 200,000 AED/an",
-    "rentals_villa_commission": "1,000 AED"
+  "gains": {
+    "title": "Exemples de Gains",
+    "sale_title": "💰 Vente Immobilière",
+    "sale_example_1_property": "Villa à 3,000,000 AED",
+    "sale_example_1_commission": "6,000 AED",
+    "sale_example_2_property": "Appartement à 5,000,000 AED",
+    "sale_example_2_commission": "10,000 AED",
+    "sale_example_3_property": "Penthouse à 10,000,000 AED",
+    "sale_example_3_commission": "20,000 AED",
+    "rental_title": "🏠 Location Immobilière",
+    "rental_example_1_property": "Studio à 60,000 AED/an",
+    "rental_example_1_commission": "300 AED",
+    "rental_example_2_property": "Appartement à 120,000 AED/an",
+    "rental_example_2_commission": "600 AED",
+    "rental_example_3_property": "Villa à 200,000 AED/an",
+    "rental_example_3_commission": "1,000 AED"
   },
   
   "footer": {
@@ -51,129 +45,5 @@
     "how_it_works": "Comment ça marche",
     "contact": "Contact",
     "copyright": "© 2025 Karyne de Clercq. Tous droits réservés."
-  },
-  
-  "auth": {
-    "reset_title": "Réinitialiser le mot de passe",
-    "login_title": "Connexion",
-    "signup_title": "Inscription",
-    "label_name": "Nom complet",
-    "label_phone": "Téléphone",
-    "label_email": "Email",
-    "label_password": "Mot de passe",
-    "password_hint": "Minimum 12 caractères",
-    "label_confirm_password": "Confirmer le mot de passe",
-    "button_login": "Se connecter",
-    "button_signup": "S'inscrire",
-    "button_send_link": "Envoyer le lien",
-    "link_forgot_password": "Mot de passe oublié ?",
-    "link_back": "← Retour",
-    "link_no_account": "Pas de compte ? S'inscrire",
-    "link_has_account": "Déjà un compte ? Se connecter"
-  },
-  
-  "dashboard": {
-    "title_admin": "Tableau de bord Admin",
-    "title_referrer": "Tableau de bord Apporteur",
-    "button_logout": "Déconnexion"
-  },
-  
-  "contract": {
-    "title": "📋 Contrat d'Apporteur",
-    "warning": "⚠️ Téléchargez et signez le contrat",
-    "button_download": "📥 Télécharger le contrat",
-    "label_upload": "Contrat signé (PDF)",
-    "button_submit": "Envoyer",
-    "status_uploaded": "📄 En attente de validation",
-    "link_logout": "← Déconnexion"
-  },
-  
-  "dashboard_admin": {
-    "tab_leads": "Leads",
-    "tab_contracts": "Contrats",
-    "stat_referrers": "Apporteurs",
-    "stat_active_leads": "Leads actifs",
-    "stat_transactions": "Transactions",
-    "stat_commissions": "Commissions",
-    "currency": "AED",
-    "per_year_suffix": "/an",
-    "all_leads_title": "Tous les leads",
-    "table_referrer": "Apporteur",
-    "table_client": "Client",
-    "table_type": "Type",
-    "table_budget": "Budget",
-    "table_status": "Statut",
-    "table_commission": "Commission",
-    "table_actions": "Actions",
-    "na": "N/A",
-    "status_new": "Nouveau",
-    "status_visit": "Visite",
-    "status_offer": "Offre",
-    "status_sold": "Vendu",
-    "status_rented": "Loué",
-    "button_mark_sold": "Marquer vendu",
-    "button_mark_rented": "Marquer loué",
-    "no_leads": "Aucun lead",
-    "contracts_title": "Contrats",
-    "table_name": "Nom",
-    "table_phone": "Téléphone",
-    "contract_status_pending": "En attente",
-    "contract_status_to_validate": "À valider",
-    "contract_status_validated": "Validé",
-    "button_view": "Voir",
-    "button_validate": "Valider",
-    "button_reject": "Rejeter",
-    "no_referrers": "Aucun apporteur"
-  },
-  
-  "dashboard_referrer": {
-    "stat_total_earnings": "Gains totaux",
-    "stat_active_leads": "Leads en cours",
-    "stat_closed_deals": "Transactions",
-    "button_add_lead": "+ Ajouter un lead",
-    "my_leads_title": "Mes leads"
-  },
-  
-  "add_lead_modal": {
-    "title": "Ajouter un lead",
-    "label_type": "Type",
-    "select_placeholder": "Sélectionner...",
-    "type_sale_buyer": "Vente - Acheteur",
-    "type_sale_seller": "Vente - Vendeur",
-    "type_rental_tenant": "Location - Locataire",
-    "type_rental_landlord": "Location - Propriétaire",
-    "label_name": "Nom",
-    "label_email": "Email",
-    "label_phone": "Téléphone",
-    "label_property_type": "Type de propriété",
-    "property_apartment": "Appartement",
-    "property_villa": "Villa",
-    "property_townhouse": "Townhouse",
-    "property_penthouse": "Penthouse",
-    "property_studio": "Studio",
-    "label_budget": "Budget (AED)",
-    "label_annual_rent": "Loyer annuel (AED)",
-    "button_add": "Ajouter",
-    "button_cancel": "Annuler"
-  },
-  
-  "alerts": {
-    "password_mismatch": "Les mots de passe ne correspondent pas",
-    "invalid_password": "Mot de passe invalide",
-    "error_prefix": "Erreur : ",
-    "account_created": "Compte créé !",
-    "lead_added": "Lead ajouté !",
-    "email_sent": "Email envoyé !",
-    "file_missing": "Fichier manquant",
-    "file_too_large": "Fichier trop volumineux",
-    "contract_sent": "Contrat envoyé !",
-    "commission_prefix": "Commission : ",
-    "no_contract": "Aucun contrat",
-    "validate_confirm": "Valider ?",
-    "validated": "Validé !",
-    "reject_confirm": "Rejeter ?",
-    "rejected": "Rejeté",
-    "prompt_sale_price": "Prix de vente (AED)",
-    "prompt_annual_rent": "Loyer annuel (AED)"
   }
 }
