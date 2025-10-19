@@ -109,7 +109,7 @@ function LanguageSelector() {
             <div class="flex justify-between items-center">
               <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
               <div class="flex items-center gap-3">
-              <LanguageSelector />
+              ${React.createElement(LanguageSelector)}
                 <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
                 <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
                 <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
