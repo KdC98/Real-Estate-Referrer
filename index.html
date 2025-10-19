@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
   <script type="importmap">
     {
       "imports": {
@@ -25,6 +28,24 @@
   <div id="app"></div>
 
   <script type="module">
+    // Initialisation i18next
+    await i18next
+      .use(i18nextHttpBackend)
+      .use(i18nextBrowserLanguageDetector)
+      .init({
+        fallbackLng: 'fr',
+        debug: false,
+        backend: {
+          loadPath: '/public/locales/{{lng}}/{{ns}}.json'
+        },
+        detection: {
+          order: ['localStorage', 'navigator'],
+          caches: ['localStorage']
+        }
+      });
+
+    // Fonction de traduction
+    const t = (key) => i18next.t(key);
     import { createClient } from '@supabase/supabase-js';
 
     const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
