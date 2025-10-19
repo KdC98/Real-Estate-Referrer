@@ -104,54 +104,54 @@
 
             <div class="grid md:grid-cols-3 gap-8 mt-20">
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                <div class="text-4xl font-bold text-yellow-500 mb-2">20%</div>
-                <div class="text-gray-300">Commission sur ventes et locations</div>
+                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
+<div class="text-gray-300">${t('stats.commission_label')}</div>
               </div>
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                <div class="text-4xl font-bold text-yellow-500 mb-2">24/7</div>
-                <div class="text-gray-300">Suivi des leads en temps réel</div>
+                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.support_value')}</div>
+<div class="text-gray-300">${t('stats.support_label')}</div>
               </div>
               <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-               <div class="text-4xl font-bold text-yellow-500 mb-2">45-60j</div>
-                <div class="text-gray-300">Paiement après Title Deed (ventes)</div>
+               <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.timeline_value')}</div>
+<div class="text-gray-300">${t('stats.timeline_label')}</div>
               </div>
             </div>
 
             <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
-              <h3 class="text-3xl font-bold text-center mb-12">Exemples de Gains</h3>
+              <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
               <div class="grid md:grid-cols-2 gap-8">
                 <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                  <div class="text-yellow-500 text-xl font-bold mb-4">💰 Vente Immobilière</div>
+                  <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
                   <div class="space-y-3 text-gray-300">
                     <div class="flex justify-between">
-                      <span>Villa à 3,000,000 AED</span>
-                      <span class="font-bold text-yellow-500">6,000 AED</span>
+                      <span>${t('gains.sale_example_1_property')}</span>
+<span class="font-bold text-yellow-500">${t('gains.sale_example_1_commission')}</span>
                     </div>
                     <div class="flex justify-between">
-                      <span>Appartement à 5,000,000 AED</span>
-                      <span class="font-bold text-yellow-500">10,000 AED</span>
+                      <span>${t('gains.sale_example_2_property')}</span>
+                      <span class="font-bold text-yellow-500">${t('gains.sale_example_2_commission')}</span>
                     </div>
                     <div class="flex justify-between">
-                      <span>Penthouse à 10,000,000 AED</span>
-                      <span class="font-bold text-yellow-500">20,000 AED</span>
+                      <span>${t('gains.sale_example_3_property')}</span>
+                      <span class="font-bold text-yellow-500">${t('gains.sale_example_3_commission')}</span>
                     </div>
                   </div>
                 </div>
 
                 <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                  <div class="text-yellow-500 text-xl font-bold mb-4">🏠 Location Immobilière</div>
+                  <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
                   <div class="space-y-3 text-gray-300">
                     <div class="flex justify-between">
-                      <span>Studio à 60,000 AED/an</span>
-                      <span class="font-bold text-yellow-500">300 AED</span>
+                      <span>${t('gains.rental_example_1_property')}</span>
+                      <span class="font-bold text-yellow-500">${t('gains.rental_example_1_commission')}</span>
                     </div>
                     <div class="flex justify-between">
-                      <span>Appartement à 120,000 AED/an</span>
-                      <span class="font-bold text-yellow-500">600 AED</span>
+                      <span>${t('gains.rental_example_2_property')}</span>
+                      <span class="font-bold text-yellow-500">${t('gains.rental_example_2_commission')}</span>
                     </div>
                     <div class="flex justify-between">
-                      <span>Villa à 200,000 AED/an</span>
-                      <span class="font-bold text-yellow-500">1,000 AED</span>
+                      <span>${t('gains.rental_example_3_property')}</span>
+                      <span class="font-bold text-yellow-500">${t('gains.rental_example_3_commission')}</span>
                     </div>
                   </div>
                 </div>
@@ -162,13 +162,13 @@
           <footer class="bg-gray-900 bg-opacity-50 backdrop-blur-md py-8 mt-20">
             <div class="container mx-auto px-4">
               <div class="flex justify-center gap-8 flex-wrap text-sm text-gray-400">
-                <a href="terms.html" class="hover:text-white transition">CGU</a>
-                <a href="privacy.html" class="hover:text-white transition">Confidentialité</a>
-                <a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a>
-                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">Contact</a>
+                <a href="terms.html" class="hover:text-white transition">${t('footer.terms')}</a>
+                <a href="privacy.html" class="hover:text-white transition">${t('footer.privacy')}</a>
+                <a href="how-it-works.html" class="hover:text-white transition">${t('footer.how_it_works')}</a>
+                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">${t('footer.contact')}</a>
               </div>
               <div class="text-center text-gray-500 text-sm mt-4">
-                © 2025 Karyne de Clercq. Tous droits réservés.
+               ${t('footer.copyright')}
               </div>
             </div>
           </footer>
