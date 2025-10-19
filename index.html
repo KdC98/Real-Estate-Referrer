@@ -58,7 +58,8 @@ async function changeLanguage(langCode) {
     console.error('Erreur changement de langue:', error);
   }
 }
-    
+  // Rendre la fonction accessible globalement
+window.changeLanguage = changeLanguage;  
     import { createClient } from '@supabase/supabase-js';
 
     const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
