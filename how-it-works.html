@@ -3,16 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Comment ça marche - Real Estate Referrer</title>
+<title data-i18n="meta.title">Comment ça marche - Real Estate Referrer</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<!-- i18next scripts -->
+<script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+
 <style>
 /* ------ Brand Colors (aligned with index.html) ------ */
 :root{
---brand-navy: #1e3a8a; /* Bleu marine foncé */
---brand-blue: #2563eb; /* Bleu intermédiaire */
---brand-purple: #7c3aed; /* Accent violet */
---brand-gold: #fbbf24; /* CTA jaune */
+--brand-navy: #1e3a8a;
+--brand-blue: #2563eb;
+--brand-purple: #7c3aed;
+--brand-gold: #fbbf24;
 }
 
 .brand-gradient{
@@ -56,6 +62,30 @@
 }
 
 .accordion-content.active{max-height:500px}
+
+/* Language selector */
+.lang-selector {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lang-flag {
+  cursor: pointer;
+  font-size: 24px;
+  transition: transform 0.2s;
+  opacity: 0.6;
+}
+
+.lang-flag:hover {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.lang-flag.active {
+  opacity: 1;
+  transform: scale(1.1);
+}
 </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
@@ -65,12 +95,24 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 <div class="flex justify-between items-center">
 <a href="index.html" class="text-2xl font-bold brand-text">
-<i class="fas fa-building mr-2"></i>Real Estate Referrer
+<i class="fas fa-building mr-2"></i><span data-i18n="header.brand">Real Estate Referrer</span>
 </a>
 <nav class="flex gap-4 items-center text-sm font-medium">
-<a href="index.html" class="text-gray-600 hover:text-[#1e3a8a] transition"><i class="fas fa-home mr-1"></i>Accueil</a>
+<!-- Language Selector -->
+<div class="lang-selector">
+<span class="lang-flag" onclick="changeLanguage('fr')" title="Français">🇫🇷</span>
+<span class="lang-flag" onclick="changeLanguage('en')" title="English">🇬🇧</span>
+<span class="lang-flag" onclick="changeLanguage('ar')" title="العربية">🇦🇪</span>
+<span class="lang-flag" onclick="changeLanguage('ru')" title="Русский">🇷🇺</span>
+<span class="lang-flag" onclick="changeLanguage('hi')" title="हिन्दी">🇮🇳</span>
+<span class="lang-flag" onclick="changeLanguage('ur')" title="اردو">🇵🇰</span>
+<span class="lang-flag" onclick="changeLanguage('zh')" title="中文">🇨🇳</span>
+</div>
+<a href="index.html" class="text-gray-600 hover:text-[#1e3a8a] transition">
+<i class="fas fa-home mr-1"></i><span data-i18n="header.home">Accueil</span>
+</a>
 <a href="login.html" class="bg-[#1e3a8a] hover:bg-[#7c3aed] text-white px-6 py-2 rounded-lg transition">
-<i class="fas fa-sign-in-alt mr-1"></i>Login
+<i class="fas fa-sign-in-alt mr-1"></i><span data-i18n="header.login">Login</span>
 </a>
 </nav>
 </div>
@@ -84,11 +126,14 @@
 <div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
 </div>
 <div class="max-w-4xl mx-auto text-center relative z-10">
-<span class="inline-block bg-[color:var(--brand-gold)] text-blue-900 px-4 py-2 rounded-full text-sm font-bold mb-4">👍 C'est super simple !</span>
-<h1 class="text-4xl md:text-5xl font-bold mb-6 fade-in-up drop-shadow-lg">Comment ça marche ? 🏙️</h1>
-<p class="text-lg md:text-xl mb-6 fade-in-up delay-100"><span class="font-bold text-[color:var(--brand-gold)] text-2xl">Empoche 20% sur chaque vente</span> - Ton info vaut de l'or ! 💰</p>
+<span class="inline-block bg-[color:var(--brand-gold)] text-blue-900 px-4 py-2 rounded-full text-sm font-bold mb-4" data-i18n="hero.badge">👍 C'est super simple !</span>
+<h1 class="text-4xl md:text-5xl font-bold mb-6 fade-in-up drop-shadow-lg" data-i18n="hero.title">Comment ça marche ? 🏙️</h1>
+<p class="text-lg md:text-xl mb-6 fade-in-up delay-100">
+<span class="font-bold text-[color:var(--brand-gold)] text-2xl" data-i18n="hero.subtitle_bold">Empoche 20% sur chaque vente</span>
+<span data-i18n="hero.subtitle_text"> - Ton info vaut de l'or ! 💰</span>
+</p>
 <div class="inline-flex items-center gap-2 bg-white text-blue-900 px-6 py-3 rounded-full font-medium fade-in-up delay-200 shadow-xl">
-<i class="fas fa-check-circle"></i><span>100% Gratuit · Aucune compétence requise · Ça prend 2 minutes !</span>
+<i class="fas fa-check-circle"></i><span data-i18n="hero.benefits">100% Gratuit · Aucune compétence requise · Ça prend 2 minutes !</span>
 </div>
 </div>
 </section>
@@ -96,86 +141,98 @@
 <!-- Timeline des étapes -->
 <section class="py-12 px-4 bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50">
 <div class="max-w-6xl mx-auto">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-3 brand-text">🎯 5 Étapes Simples</h2>
-<p class="text-center text-gray-600 mb-10 text-lg">Suivez le guide, c'est facile comme bonjour ! 😊</p>
+<h2 class="text-3xl md:text-4xl font-bold text-center mb-3 brand-text" data-i18n="timeline.section_title">🎯 5 Étapes Simples</h2>
+<p class="text-center text-gray-600 mb-10 text-lg" data-i18n="timeline.section_subtitle">Suivez le guide, c'est facile comme bonjour ! 😊</p>
 
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 <!-- Étape 1 -->
 <div class="glass-card p-6 rounded-2xl hover:shadow-2xl transition border-2 border-blue-100 relative">
-<div class="absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">2 min ⚡</div>
+<div class="absolute -top-3 -right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg" data-i18n="timeline.step1.badge">2 min ⚡</div>
 <div class="flex items-center mb-4">
 <div class="bg-[#1e3a8a] text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">1️⃣</div>
-<h3 class="text-xl font-bold text-gray-900">Inscription</h3>
+<h3 class="text-xl font-bold text-gray-900" data-i18n="timeline.step1.title">Inscription</h3>
 </div>
-<p class="text-gray-700 mb-3 font-bold text-base">📝 Créez votre compte en 2 minutes chrono !</p>
-<ul class="text-gray-700 space-y-1 text-sm"><li>✅ Votre nom</li><li>✅ Votre email</li><li>✅ Un mot de passe</li></ul>
-<div class="mt-3 text-xs text-green-600 font-bold">👉 Même votre grand-mère pourrait le faire !</div>
+<p class="text-gray-700 mb-3 font-bold text-base" data-i18n="timeline.step1.description">📝 Créez votre compte en 2 minutes chrono !</p>
+<ul class="text-gray-700 space-y-1 text-sm">
+<li>✅ <span data-i18n="timeline.step1.items.0">Votre nom</span></li>
+<li>✅ <span data-i18n="timeline.step1.items.1">Votre email</span></li>
+<li>✅ <span data-i18n="timeline.step1.items.2">Un mot de passe</span></li>
+</ul>
+<div class="mt-3 text-xs text-green-600 font-bold" data-i18n="timeline.step1.footer">👉 Même votre grand-mère pourrait le faire !</div>
 </div>
 
 <!-- Étape 2 -->
 <div class="glass-card p-6 rounded-2xl hover:shadow-2xl transition border-2 border-purple-100 relative">
-<div class="absolute -top-3 -right-3 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">Facile 👍</div>
+<div class="absolute -top-3 -right-3 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg" data-i18n="timeline.step2.badge">Facile 👍</div>
 <div class="flex items-center mb-4">
 <div class="bg-[color:var(--brand-purple)] text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">2️⃣</div>
-<h3 class="text-xl font-bold text-gray-900">Trouvez des clients</h3>
+<h3 class="text-xl font-bold text-gray-900" data-i18n="timeline.step2.title">Trouvez des clients</h3>
 </div>
-<p class="text-gray-700 mb-3 font-bold text-base">🗣️ Parlez-en autour de vous !</p>
-<ul class="text-gray-700 space-y-1 text-sm"><li>👨‍👩‍👧 Famille et amis</li><li>💼 Collègues</li><li>📱 Sur les réseaux sociaux</li></ul>
+<p class="text-gray-700 mb-3 font-bold text-base" data-i18n="timeline.step2.description">🗣️ Parlez-en autour de vous !</p>
+<ul class="text-gray-700 space-y-1 text-sm">
+<li>👨‍👩‍👧 <span data-i18n="timeline.step2.items.0">Famille et amis</span></li>
+<li>💼 <span data-i18n="timeline.step2.items.1">Collègues</span></li>
+<li>📱 <span data-i18n="timeline.step2.items.2">Sur les réseaux sociaux</span></li>
+</ul>
 <div class="mt-3 bg-orange-50 border-2 border-orange-400 p-2 rounded-lg">
-<p class="text-xs text-orange-900 font-bold">⚠️ Important : Demandez leur PERMISSION avant de partager leurs coordonnées !</p>
+<p class="text-xs text-orange-900 font-bold" data-i18n="timeline.step2.warning_title">⚠️ Important : Demandez leur PERMISSION avant de partager leurs coordonnées !</p>
 </div>
-<div class="mt-2 text-xs text-purple-600 font-bold">💡 Vous connaissez sûrement quelqu'un intéressé !</div>
+<div class="mt-2 text-xs text-purple-600 font-bold" data-i18n="timeline.step2.footer">💡 Vous connaissez sûrement quelqu'un intéressé !</div>
 </div>
 
 <!-- Étape 3 -->
 <div class="glass-card p-6 rounded-2xl hover:shadow-2xl transition border-2 border-green-100 relative">
-<div class="absolute -top-3 -right-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">Simple 🎯</div>
+<div class="absolute -top-3 -right-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg" data-i18n="timeline.step3.badge">Simple 🎯</div>
 <div class="flex items-center mb-4">
 <div class="bg-emerald-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">3️⃣</div>
-<h3 class="text-xl font-bold text-gray-900">Ajoutez le lead</h3>
+<h3 class="text-xl font-bold text-gray-900" data-i18n="timeline.step3.title">Ajoutez le lead</h3>
 </div>
-<p class="text-gray-700 mb-3 font-bold text-base">➕ Un simple formulaire à remplir</p>
-<ul class="text-gray-700 space-y-1 text-sm"><li>👤 Nom du client</li><li>📧 Email ou téléphone</li><li>🏠 Type de bien recherché</li></ul>
-<div class="mt-3 text-xs text-green-600 font-bold">⏱️ 30 secondes top chrono !</div>
+<p class="text-gray-700 mb-3 font-bold text-base" data-i18n="timeline.step3.description">➕ Un simple formulaire à remplir</p>
+<ul class="text-gray-700 space-y-1 text-sm">
+<li>👤 <span data-i18n="timeline.step3.items.0">Nom du client</span></li>
+<li>📧 <span data-i18n="timeline.step3.items.1">Email ou téléphone</span></li>
+<li>🏠 <span data-i18n="timeline.step3.items.2">Type de bien recherché</span></li>
+</ul>
+<div class="mt-3 text-xs text-green-600 font-bold" data-i18n="timeline.step3.footer">⏱️ 30 secondes top chrono !</div>
 </div>
 
 <!-- Étape 4 -->
 <div class="glass-card p-6 rounded-2xl hover:shadow-2xl transition border-2 border-orange-100 relative">
-<div class="absolute -top-3 -right-3 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">Auto 🤖</div>
+<div class="absolute -top-3 -right-3 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg" data-i18n="timeline.step4.badge">Auto 🤖</div>
 <div class="flex items-center mb-4">
 <div class="bg-orange-600 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">4️⃣</div>
-<h3 class="text-xl font-bold text-gray-900">Suivez en direct</h3>
+<h3 class="text-xl font-bold text-gray-900" data-i18n="timeline.step4.title">Suivez en direct</h3>
 </div>
-<p class="text-gray-700 mb-3 font-bold text-base">📊 On s'occupe de TOUT !</p>
+<p class="text-gray-700 mb-3 font-bold text-base" data-i18n="timeline.step4.description">📊 On s'occupe de TOUT !</p>
 <div class="grid grid-cols-2 gap-2 text-xs font-medium mb-2">
-<div class="bg-blue-50 p-2 rounded-lg border border-blue-200">📄 Nouveau</div>
-<div class="bg-yellow-50 p-2 rounded-lg border border-yellow-200">🏠 Visite</div>
-<div class="bg-purple-50 p-2 rounded-lg border border-purple-200">🤝 Offre</div>
-<div class="bg-green-50 p-2 rounded-lg border border-green-200">✅ Vendu</div>
+<div class="bg-blue-50 p-2 rounded-lg border border-blue-200" data-i18n="timeline.step4.status_new">📄 Nouveau</div>
+<div class="bg-yellow-50 p-2 rounded-lg border border-yellow-200" data-i18n="timeline.step4.status_visit">🏠 Visite</div>
+<div class="bg-purple-50 p-2 rounded-lg border border-purple-200" data-i18n="timeline.step4.status_offer">🤝 Offre</div>
+<div class="bg-green-50 p-2 rounded-lg border border-green-200" data-i18n="timeline.step4.status_sold">✅ Vendu</div>
 </div>
-<div class="mt-3 text-xs text-orange-600 font-bold">🛋️ Vous n'avez qu'à regarder !</div>
+<div class="mt-3 text-xs text-orange-600 font-bold" data-i18n="timeline.step4.footer">🛋️ Vous n'avez qu'à regarder !</div>
 </div>
 
 <!-- Étape 5 -->
 <div class="glass-card p-6 rounded-2xl hover:shadow-2xl transition border-4 border-[color:var(--brand-gold)] md:col-span-2 lg:col-span-1 relative bg-gradient-to-br from-yellow-50 to-orange-50">
-<div class="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">💰 Jackpot !</div>
+<div class="absolute -top-3 -right-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse" data-i18n="timeline.step5.badge">💰 Jackpot !</div>
 <div class="flex items-center mb-4">
 <div class="bg-gradient-to-r from-yellow-500 to-orange-500 text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold mr-4 shadow-lg">5️⃣</div>
-<h3 class="text-xl font-bold text-gray-900">Touchez l'argent ! 💸</h3>
+<h3 class="text-xl font-bold text-gray-900" data-i18n="timeline.step5.title">Touchez l'argent ! 💸</h3>
 </div>
-<p class="text-gray-700 mb-3 font-bold text-base">🎉 Recevez votre commission</p>
+<p class="text-gray-700 mb-3 font-bold text-base" data-i18n="timeline.step5.description">🎉 Recevez votre commission</p>
 <div class="bg-yellow-100 border-2 border-yellow-400 p-3 rounded-lg">
-<p class="font-bold text-yellow-900 text-sm mb-1">⭐ 20% de la commission agent</p>
-<p class="text-xs text-gray-700 font-medium">Paiement sous 45-60 jours</p>
+<p class="font-bold text-yellow-900 text-sm mb-1" data-i18n="timeline.step5.commission_text">⭐ 20% de la commission agent</p>
+<p class="text-xs text-gray-700 font-medium" data-i18n="timeline.step5.payment_delay">Paiement sous 45-60 jours</p>
 </div>
-<div class="mt-3 text-xs text-green-600 font-bold">🏆 Vous n'avez RIEN d'autre à faire !</div>
+<div class="mt-3 text-xs text-green-600 font-bold" data-i18n="timeline.step5.footer">🏆 Vous n'avez RIEN d'autre à faire !</div>
 </div>
 </div>
 
 <div class="mt-10 text-center">
 <div class="inline-block bg-gradient-to-r from-green-400 to-blue-500 text-white px-8 py-4 rounded-2xl shadow-xl">
-<p class="text-2xl font-bold mb-2">✅ C'est VRAIMENT aussi simple que ça !</p>
-<p class="text-sm">Aucune expérience requise · Aucune compétence technique · Juste votre réseau</p>
+<p class="text-2xl font-bold mb-2" data-i18n="timeline.conclusion.title">✅ C'est VRAIMENT aussi simple que ça !</p>
+<p class="text-sm" data-i18n="timeline.conclusion.subtitle">Aucune expérience requise · Aucune compétence technique · Juste votre réseau</p>
 </div>
 </div>
 </div>
@@ -184,29 +241,29 @@
 <!-- Calculs de gains -->
 <section class="py-12 px-4 brand-gradient text-white">
 <div class="max-w-6xl mx-auto">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-2">💰 Combien je vais gagner ?</h2>
-<p class="text-center text-[color:var(--brand-gold)] mb-10 text-xl font-bold">Spoiler : BEAUCOUP ! 😱</p>
+<h2 class="text-3xl md:text-4xl font-bold text-center mb-2" data-i18n="earnings.section_title">💰 Combien je vais gagner ?</h2>
+<p class="text-center text-[color:var(--brand-gold)] mb-10 text-xl font-bold" data-i18n="earnings.section_subtitle">Spoiler : BEAUCOUP ! 😱</p>
 
 <div class="grid md:grid-cols-3 gap-8">
 <!-- Exemple 1 -->
 <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition">
 <div class="text-center mb-6">
 <i class="fas fa-home text-5xl mb-4 text-[color:var(--brand-gold)]"></i>
-<h3 class="text-2xl font-bold mb-2">Appartement</h3>
-<p class="text-purple-200 whitespace-nowrap inline-block">1,000,000&nbsp;AED</p>
+<h3 class="text-2xl font-bold mb-2" data-i18n="earnings.example1.property_type">Appartement</h3>
+<p class="text-purple-200 whitespace-nowrap inline-block" data-i18n="earnings.example1.price">1,000,000 AED</p>
 </div>
 <div class="space-y-3 text-sm">
 <div class="flex justify-between border-b border-white/20 pb-2">
-<span>Commission totale (2%)</span>
-<span class="font-bold whitespace-nowrap tabular-nums">20,000&nbsp;AED</span>
+<span data-i18n="earnings.example1.total_commission">Commission totale (2%)</span>
+<span class="font-bold whitespace-nowrap tabular-nums" data-i18n="earnings.example1.total_amount">20,000 AED</span>
 </div>
 <div class="flex justify-between border-b border-white/20 pb-2">
-<span>Commission agent (50%)</span>
-<span class="font-bold whitespace-nowrap tabular-nums">10,000&nbsp;AED</span>
+<span data-i18n="earnings.example1.agent_commission">Commission agent (50%)</span>
+<span class="font-bold whitespace-nowrap tabular-nums" data-i18n="earnings.example1.agent_amount">10,000 AED</span>
 </div>
 <div class="flex justify-between items-center bg-yellow-500/20 p-3 rounded-lg mt-4">
-<span class="font-bold">Votre commission (20%)</span>
-<span class="font-bold text-2xl text-[color:var(--brand-gold)] whitespace-nowrap tabular-nums">2,000&nbsp;AED</span>
+<span class="font-bold" data-i18n="earnings.example1.your_commission">Votre commission (20%)</span>
+<span class="font-bold text-2xl text-[color:var(--brand-gold)] whitespace-nowrap tabular-nums" data-i18n="earnings.example1.your_amount">2,000 AED</span>
 </div>
 </div>
 </div>
@@ -215,13 +272,22 @@
 <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition transform md:scale-105">
 <div class="text-center mb-6">
 <i class="fas fa-building text-5xl mb-4 text-green-400"></i>
-<h3 class="text-2xl font-bold mb-2">Villa</h3>
-<p class="text-purple-200 whitespace-nowrap inline-block">5,000,000&nbsp;AED</p>
+<h3 class="text-2xl font-bold mb-2" data-i18n="earnings.example2.property_type">Villa</h3>
+<p class="text-purple-200 whitespace-nowrap inline-block" data-i18n="earnings.example2.price">5,000,000 AED</p>
 </div>
 <div class="space-y-3 text-sm">
-<div class="flex justify-between border-b border-white/20 pb-2"><span>Commission totale (2%)</span><span class="font-bold whitespace-nowrap tabular-nums">100,000&nbsp;AED</span></div>
-<div class="flex justify-between border-b border-white/20 pb-2"><span>Commission agent (50%)</span><span class="font-bold whitespace-nowrap tabular-nums">50,000&nbsp;AED</span></div>
-<div class="flex justify-between bg-green-500/20 p-3 rounded-lg mt-4"><span class="font-bold">Votre commission (20%)</span><span class="font-bold text-2xl text-green-400 whitespace-nowrap tabular-nums">10,000&nbsp;AED</span></div>
+<div class="flex justify-between border-b border-white/20 pb-2">
+<span data-i18n="earnings.example1.total_commission">Commission totale (2%)</span>
+<span class="font-bold whitespace-nowrap tabular-nums" data-i18n="earnings.example2.total_amount">100,000 AED</span>
+</div>
+<div class="flex justify-between border-b border-white/20 pb-2">
+<span data-i18n="earnings.example1.agent_commission">Commission agent (50%)</span>
+<span class="font-bold whitespace-nowrap tabular-nums" data-i18n="earnings.example2.agent_amount">50,000 AED</span>
+</div>
+<div class="flex justify-between bg-green-500/20 p-3 rounded-lg mt-4">
+<span class="font-bold" data-i18n="earnings.example1.your_commission">Votre commission (20%)</span>
+<span class="font-bold text-2xl text-green-400 whitespace-nowrap tabular-nums" data-i18n="earnings.example2.your_amount">10,000 AED</span>
+</div>
 </div>
 </div>
 
@@ -229,20 +295,29 @@
 <div class="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/15 transition">
 <div class="text-center mb-6">
 <i class="fas fa-crown text-5xl mb-4 text-purple-300"></i>
-<h3 class="text-2xl font-bold mb-2">Penthouse</h3>
-<p class="text-purple-200 whitespace-nowrap inline-block">10,000,000&nbsp;AED</p>
+<h3 class="text-2xl font-bold mb-2" data-i18n="earnings.example3.property_type">Penthouse</h3>
+<p class="text-purple-200 whitespace-nowrap inline-block" data-i18n="earnings.example3.price">10,000,000 AED</p>
 </div>
 <div class="space-y-3 text-sm">
-<div class="flex justify-between border-b border-white/20 pb-2"><span>Commission totale (2%)</span><span class="font-bold whitespace-nowrap tabular-nums">200,000&nbsp;AED</span></div>
-<div class="flex justify-between border-b border-white/20 pb-2"><span>Commission agent (50%)</span><span class="font-bold whitespace-nowrap tabular-nums">100,000&nbsp;AED</span></div>
-<div class="flex justify-between bg-purple-500/20 p-3 rounded-lg mt-4"><span class="font-bold">Votre commission (20%)</span><span class="font-bold text-2xl text-purple-300 whitespace-nowrap tabular-nums">20,000&nbsp;AED</span></div>
+<div class="flex justify-between border-b border-white/20 pb-2">
+<span data-i18n="earnings.example1.total_commission">Commission totale (2%)</span>
+<span class="font-bold whitespace-nowrap tabular-nums" data-i18n="earnings.example3.total_amount">200,000 AED</span>
+</div>
+<div class="flex justify-between border-b border-white/20 pb-2">
+<span data-i18n="earnings.example1.agent_commission">Commission agent (50%)</span>
+<span class="font-bold whitespace-nowrap tabular-nums" data-i18n="earnings.example3.agent_amount">100,000 AED</span>
+</div>
+<div class="flex justify-between bg-purple-500/20 p-3 rounded-lg mt-4">
+<span class="font-bold" data-i18n="earnings.example1.your_commission">Votre commission (20%)</span>
+<span class="font-bold text-2xl text-purple-300 whitespace-nowrap tabular-nums" data-i18n="earnings.example3.your_amount">20,000 AED</span>
+</div>
 </div>
 </div>
 </div>
 
 <div class="text-center mt-8">
-<p class="text-xl text-purple-200 mb-2"><i class="fas fa-infinity mr-2"></i>Aucune limite de gains !</p>
-<p class="text-purple-300">Plus vous apportez de clients, plus vous gagnez</p>
+<p class="text-xl text-purple-200 mb-2"><i class="fas fa-infinity mr-2"></i><span data-i18n="earnings.unlimited">Aucune limite de gains !</span></p>
+<p class="text-purple-300" data-i18n="earnings.unlimited_subtitle">Plus vous apportez de clients, plus vous gagnez</p>
 </div>
 </div>
 </section>
@@ -250,57 +325,139 @@
 <!-- Critères d'un bon lead -->
 <section class="py-12 px-4 bg-gradient-to-br from-green-50 via-white to-red-50">
 <div class="max-w-6xl mx-auto">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-3 brand-text">🎯 C'est quoi un BON lead ?</h2>
-<p class="text-center text-gray-600 mb-10 text-lg">Pas de panique, c'est simple à reconnaître ! 😊</p>
+<h2 class="text-3xl md:text-4xl font-bold text-center mb-3 brand-text" data-i18n="lead_criteria.section_title">🎯 C'est quoi un BON lead ?</h2>
+<p class="text-center text-gray-600 mb-10 text-lg" data-i18n="lead_criteria.section_subtitle">Pas de panique, c'est simple à reconnaître ! 😊</p>
 
 <div class="grid md:grid-cols-2 gap-8">
 <!-- Lead qualifié -->
 <div class="glass-card p-8 rounded-2xl shadow-2xl border-4 border-green-500">
-<div class="flex items-center mb-6"><div class="bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl mr-4 shadow-lg">✅</div><div><h3 class="text-2xl font-bold text-gray-900">Lead TOP ! 🌟</h3><p class="text-green-600 text-sm font-bold">= Commission assurée 💰</p></div></div>
+<div class="flex items-center mb-6">
+<div class="bg-green-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl mr-4 shadow-lg">✅</div>
+<div>
+<h3 class="text-2xl font-bold text-gray-900" data-i18n="lead_criteria.good_lead.title">Lead TOP ! 🌟</h3>
+<p class="text-green-600 text-sm font-bold" data-i18n="lead_criteria.good_lead.subtitle">= Commission assurée 💰</p>
+</div>
+</div>
 
 <div class="bg-red-50 border-2 border-red-500 p-4 rounded-lg mb-4">
-<p class="text-red-900 font-bold text-base mb-2 flex items-center"><i class="fas fa-exclamation-triangle mr-2"></i>OBLIGATOIRE : Consentement du client</p>
-<p class="text-red-800 text-sm">Avant de partager les coordonnées d'une personne, vous <strong>DEVEZ</strong> avoir son autorisation explicite. C'est la loi (RGPD) ! ⚖️</p>
-<p class="text-red-700 text-xs mt-2 italic">Exemple : "Je connais un agent super, je peux lui donner ton numéro ?" → Il dit OUI → OK ✅</p>
+<p class="text-red-900 font-bold text-base mb-2 flex items-center">
+<i class="fas fa-exclamation-triangle mr-2"></i>
+<span data-i18n="lead_criteria.good_lead.consent_title">OBLIGATOIRE : Consentement du client</span>
+</p>
+<p class="text-red-800 text-sm" data-i18n="lead_criteria.good_lead.consent_text">Avant de partager les coordonnées d'une personne, vous DEVEZ avoir son autorisation explicite. C'est la loi (RGPD) ! ⚖️</p>
+<p class="text-red-700 text-xs mt-2 italic" data-i18n="lead_criteria.good_lead.consent_example">Exemple : "Je connais un agent super, je peux lui donner ton numéro ?" → Il dit OUI → OK ✅</p>
 </div>
 
 <ul class="space-y-4">
-<li class="flex items-start"><span class="text-green-600 mr-3 mt-1 text-2xl">👍</span><span class="text-gray-800 font-medium">Il <strong>veut vraiment</strong> acheter ou louer</span></li>
-<li class="flex items-start"><span class="text-green-600 mr-3 mt-1 text-2xl">💵</span><span class="text-gray-800 font-medium">Il a un <strong>budget clair</strong> en tête</span></li>
-<li class="flex items-start"><span class="text-green-600 mr-3 mt-1 text-2xl">⏰</span><span class="text-gray-800 font-medium">Il cherche <strong>maintenant</strong> (pas dans 2 ans !)</span></li>
-<li class="flex items-start"><span class="text-green-600 mr-3 mt-1 text-2xl">📞</span><span class="text-gray-800 font-medium">Vous pouvez le <strong>joindre facilement</strong></span></li>
-<li class="flex items-start"><span class="text-green-600 mr-3 mt-1 text-2xl">🎯</span><span class="text-gray-800 font-medium">Il sait <strong>ce qu'il veut</strong></span></li>
+<li class="flex items-start">
+<span class="text-green-600 mr-3 mt-1 text-2xl">👍</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.good_lead.criteria.0">Il veut vraiment acheter ou louer</span>
+</li>
+<li class="flex items-start">
+<span class="text-green-600 mr-3 mt-1 text-2xl">💵</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.good_lead.criteria.1">Il a un budget clair en tête</span>
+</li>
+<li class="flex items-start">
+<span class="text-green-600 mr-3 mt-1 text-2xl">⏰</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.good_lead.criteria.2">Il cherche maintenant (pas dans 2 ans !)</span>
+</li>
+<li class="flex items-start">
+<span class="text-green-600 mr-3 mt-1 text-2xl">📞</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.good_lead.criteria.3">Vous pouvez le joindre facilement</span>
+</li>
+<li class="flex items-start">
+<span class="text-green-600 mr-3 mt-1 text-2xl">🎯</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.good_lead.criteria.4">Il sait ce qu'il veut</span>
+</li>
 </ul>
-<div class="mt-6 bg-green-100 border-2 border-green-400 p-4 rounded-lg"><p class="text-green-800 font-bold text-center">💡 En gros : quelqu'un de SÉRIEUX qui cherche VRAIMENT (et qui vous a donné sa permission !) !</p></div>
+<div class="mt-6 bg-green-100 border-2 border-green-400 p-4 rounded-lg">
+<p class="text-green-800 font-bold text-center" data-i18n="lead_criteria.good_lead.summary">💡 En gros : quelqu'un de SÉRIEUX qui cherche VRAIMENT (et qui vous a donné sa permission !) !</p>
+</div>
 </div>
 
 <!-- Lead non qualifié -->
 <div class="glass-card p-8 rounded-2xl shadow-2xl border-4 border-red-500">
-<div class="flex items-center mb-6"><div class="bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl mr-4 shadow-lg">❌</div><div><h3 class="text-2xl font-bold text-gray-900">Lead pas terrible... 😬</h3><p class="text-red-600 text-sm font-bold">= Perte de temps 🚫</p></div></div>
+<div class="flex items-center mb-6">
+<div class="bg-red-500 text-white w-16 h-16 rounded-full flex items-center justify-center text-3xl mr-4 shadow-lg">❌</div>
+<div>
+<h3 class="text-2xl font-bold text-gray-900" data-i18n="lead_criteria.bad_lead.title">Lead pas terrible... 😬</h3>
+<p class="text-red-600 text-sm font-bold" data-i18n="lead_criteria.bad_lead.subtitle">= Perte de temps 🚫</p>
+</div>
+</div>
 <ul class="space-y-4">
-<li class="flex items-start"><span class="text-red-600 mr-3 mt-1 text-2xl">🤷</span><span class="text-gray-800 font-medium">Juste <strong>curieux</strong>, pas vraiment intéressé</span></li>
-<li class="flex items-start"><span class="text-red-600 mr-3 mt-1 text-2xl">💸</span><span class="text-gray-800 font-medium">Aucune idée de son budget (ou <strong>irréaliste</strong>)</span></li>
-<li class="flex items-start"><span class="text-red-600 mr-3 mt-1 text-2xl">📅</span><span class="text-gray-800 font-medium">Cherche dans <strong>très longtemps</strong> (1 an+)</span></li>
-<li class="flex items-start"><span class="text-red-600 mr-3 mt-1 text-2xl">📵</span><span class="text-gray-800 font-medium"><strong>Injoignable</strong> ou coordonnées fausses</span></li>
-<li class="flex items-start"><span class="text-red-600 mr-3 mt-1 text-2xl">🤔</span><span class="text-gray-800 font-medium">Ne sait <strong>pas du tout</strong> ce qu'il veut</span></li>
+<li class="flex items-start">
+<span class="text-red-600 mr-3 mt-1 text-2xl">🤷</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.bad_lead.criteria.0">Juste curieux, pas vraiment intéressé</span>
+</li>
+<li class="flex items-start">
+<span class="text-red-600 mr-3 mt-1 text-2xl">💸</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.bad_lead.criteria.1">Aucune idée de son budget (ou irréaliste)</span>
+</li>
+<li class="flex items-start">
+<span class="text-red-600 mr-3 mt-1 text-2xl">📅</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.bad_lead.criteria.2">Cherche dans très longtemps (1 an+)</span>
+</li>
+<li class="flex items-start">
+<span class="text-red-600 mr-3 mt-1 text-2xl">📵</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.bad_lead.criteria.3">Injoignable ou coordonnées fausses</span>
+</li>
+<li class="flex items-start">
+<span class="text-red-600 mr-3 mt-1 text-2xl">🤔</span>
+<span class="text-gray-800 font-medium" data-i18n="lead_criteria.bad_lead.criteria.4">Ne sait pas du tout ce qu'il veut</span>
+</li>
 </ul>
-<div class="mt-6 bg-red-100 border-2 border-red-400 p-4 rounded-lg"><p class="text-red-800 font-bold text-center">🚨 En gros : quelqu'un qui "verra plus tard" !</p></div>
+<div class="mt-6 bg-red-100 border-2 border-red-400 p-4 rounded-lg">
+<p class="text-red-800 font-bold text-center" data-i18n="lead_criteria.bad_lead.summary">🚨 En gros : quelqu'un qui "verra plus tard" !</p>
+</div>
 </div>
 </div>
 
-<div class="mt-6 bg-gradient-to-r from-[#1e3a8a] to-[color:var(--brand-purple)] border-l-4 border-blue-700 p-5 rounded-r-lg shadow-lg"><p class="text-white font-bold text-lg text-center">🎓 La règle d'or : <span class="text-[color:var(--brand-gold)]">1 lead SÉRIEUX</span> vaut mieux que <span class="text-yellow-200">10 curieux</span> !</p></div>
+<div class="mt-6 bg-gradient-to-r from-[#1e3a8a] to-[color:var(--brand-purple)] border-l-4 border-blue-700 p-5 rounded-r-lg shadow-lg">
+<p class="text-white font-bold text-lg text-center">
+<span data-i18n="lead_criteria.golden_rule">🎓 La règle d'or :</span>
+<span class="text-[color:var(--brand-gold)]" data-i18n="lead_criteria.golden_rule_good"> 1 lead SÉRIEUX</span>
+<span data-i18n="lead_criteria.golden_rule_vs"> vaut mieux que</span>
+<span class="text-yellow-200" data-i18n="lead_criteria.golden_rule_bad"> 10 curieux</span> !
+</p>
+</div>
 </div>
 </section>
 
 <!-- Sécurité & Transparence -->
 <section class="py-12 px-4 bg-gradient-to-br from-blue-50 via-white to-purple-50">
 <div class="max-w-6xl mx-auto">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-10 brand-text"><i class="fas fa-shield-alt mr-3"></i>Sécurité & Transparence</h2>
+<h2 class="text-3xl md:text-4xl font-bold text-center mb-10 brand-text">
+<i class="fas fa-shield-alt mr-3"></i><span data-i18n="security.section_title">Sécurité & Transparence</span>
+</h2>
 <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-blue-100 hover:border-blue-400"><div class="bg-[#1e3a8a] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"><i class="fas fa-lock text-white text-2xl"></i></div><h3 class="font-bold text-gray-900 mb-2 text-lg">Propriété garantie</h3><p class="text-sm text-gray-700 font-medium">Vos leads vous appartiennent exclusivement</p></div>
-<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-green-100 hover:border-green-400"><div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"><i class="fas fa-eye text-white text-2xl"></i></div><h3 class="font-bold text-gray-900 mb-2 text-lg">Transparence totale</h3><p class="text-sm text-gray-700 font-medium">Dashboard en temps réel 24/7</p></div>
-<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-purple-100 hover:border-purple-400"><div class="bg-[color:var(--brand-purple)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"><i class="fas fa-history text-white text-2xl"></i></div><h3 class="font-bold text-gray-900 mb-2 text-lg">Historique complet</h3><p class="text-sm text-gray-700 font-medium">Toutes vos transactions archivées</p></div>
-<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-yellow-100 hover:border-yellow-400"><div class="bg-[color:var(--brand-gold)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"><i class="fas fa-calculator text-blue-900 text-2xl"></i></div><h3 class="font-bold text-gray-900 mb-2 text-lg">Calcul automatique</h3><p class="text-sm text-gray-700 font-medium">Commissions calculées précisément</p></div>
+<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-blue-100 hover:border-blue-400">
+<div class="bg-[#1e3a8a] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+<i class="fas fa-lock text-white text-2xl"></i>
+</div>
+<h3 class="font-bold text-gray-900 mb-2 text-lg" data-i18n="security.ownership.title">Propriété garantie</h3>
+<p class="text-sm text-gray-700 font-medium" data-i18n="security.ownership.description">Vos leads vous appartiennent exclusivement</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-green-100 hover:border-green-400">
+<div class="bg-green-500 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+<i class="fas fa-eye text-white text-2xl"></i>
+</div>
+<h3 class="font-bold text-gray-900 mb-2 text-lg" data-i18n="security.transparency.title">Transparence totale</h3>
+<p class="text-sm text-gray-700 font-medium" data-i18n="security.transparency.description">Dashboard en temps réel 24/7</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-purple-100 hover:border-purple-400">
+<div class="bg-[color:var(--brand-purple)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+<i class="fas fa-history text-white text-2xl"></i>
+</div>
+<h3 class="font-bold text-gray-900 mb-2 text-lg" data-i18n="security.history.title">Historique complet</h3>
+<p class="text-sm text-gray-700 font-medium" data-i18n="security.history.description">Toutes vos transactions archivées</p>
+</div>
+<div class="bg-white p-6 rounded-xl shadow-2xl transition text-center border-2 border-yellow-100 hover:border-yellow-400">
+<div class="bg-[color:var(--brand-gold)] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+<i class="fas fa-calculator text-blue-900 text-2xl"></i>
+</div>
+<h3 class="font-bold text-gray-900 mb-2 text-lg" data-i18n="security.calculation.title">Calcul automatique</h3>
+<p class="text-sm text-gray-700 font-medium" data-i18n="security.calculation.description">Commissions calculées précisément</p>
+</div>
 </div>
 </div>
 </section>
@@ -308,105 +465,153 @@
 <!-- FAQ -->
 <section class="py-12 px-4 bg-gradient-to-br from-purple-50 via-white to-blue-50">
 <div class="max-w-4xl mx-auto">
-<h2 class="text-3xl md:text-4xl font-bold text-center mb-10 brand-text"><i class="fas fa-question-circle mr-3"></i>Questions fréquentes</h2>
+<h2 class="text-3xl md:text-4xl font-bold text-center mb-10 brand-text">
+<i class="fas fa-question-circle mr-3"></i><span data-i18n="faq.section_title">Questions fréquentes</span>
+</h2>
 <div class="space-y-4">
 
-<!-- FAQ 0 (visites RERA) -->
+<!-- FAQ 0 -->
 <div class="glass-card rounded-xl shadow-lg overflow-hidden">
 <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-door-open text-red-600 mr-3"></i>Dois-je faire visiter les biens ?</span>
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-door-open text-red-600 mr-3"></i>
+<span data-i18n="faq.q0.question">Dois-je faire visiter les biens ?</span>
+</span>
 <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
 </button>
 <div class="accordion-content px-6 pb-6">
-<p class="text-gray-700 leading-relaxed mb-2"><strong>⚠️ NON ! SURTOUT PAS !</strong></p>
+<p class="text-gray-700 leading-relaxed mb-2"><strong data-i18n="faq.q0.answer_bold">⚠️ NON ! SURTOUT PAS !</strong></p>
 <ul class="list-disc list-inside text-gray-600 space-y-1">
-<li><strong>Explication :</strong> Seuls les agents avec licence <span class="font-semibold">RERA</span> peuvent faire visiter.</li>
-<li><strong>Votre rôle :</strong> Juste transmettre l'information (lead) à l'agence.</li>
-<li><strong>Bonne nouvelle :</strong> Vous n'avez <em>rien</em> d'autre à faire !</li>
+<li data-i18n="faq.q0.answer_items.0">Explication : Seuls les agents avec licence RERA peuvent faire visiter.</li>
+<li data-i18n="faq.q0.answer_items.1">Votre rôle : Juste transmettre l'information (lead) à l'agence.</li>
+<li data-i18n="faq.q0.answer_items.2">Bonne nouvelle : Vous n'avez rien d'autre à faire !</li>
 </ul>
 </div>
 </div>
 
-<!-- FAQ NEW: Consentement -->
+<!-- FAQ Consentement -->
 <div class="glass-card rounded-xl shadow-lg overflow-hidden border-2 border-orange-200">
 <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-user-check text-orange-600 mr-3"></i>Dois-je demander la permission avant de partager les coordonnées ?</span>
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-user-check text-orange-600 mr-3"></i>
+<span data-i18n="faq.q_consent.question">Dois-je demander la permission avant de partager les coordonnées ?</span>
+</span>
 <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
 </button>
 <div class="accordion-content px-6 pb-6">
-<p class="text-gray-700 leading-relaxed mb-3"><strong>OUI, ABSOLUMENT ! C'est OBLIGATOIRE. ⚖️</strong></p>
+<p class="text-gray-700 leading-relaxed mb-3"><strong data-i18n="faq.q_consent.answer_bold">OUI, ABSOLUMENT ! C'est OBLIGATOIRE. ⚖️</strong></p>
 <ul class="list-disc list-inside text-gray-600 space-y-2">
-<li><strong>La loi (RGPD) :</strong> Vous ne pouvez PAS partager les données personnelles d'une personne sans son consentement.</li>
-<li><strong>En pratique :</strong> Demandez simplement "Je peux transmettre tes coordonnées à un agent immobilier ?"</li>
-<li><strong>Si la personne dit OUI :</strong> Parfait, vous pouvez créer le lead ✅</li>
-<li><strong>Si la personne dit NON :</strong> Respectez son choix, ne partagez pas ❌</li>
+<li data-i18n="faq.q_consent.answer_items.0">La loi (RGPD) : Vous ne pouvez PAS partager les données personnelles d'une personne sans son consentement.</li>
+<li data-i18n="faq.q_consent.answer_items.1">En pratique : Demandez simplement "Je peux transmettre tes coordonnées à un agent immobilier ?"</li>
+<li data-i18n="faq.q_consent.answer_items.2">Si la personne dit OUI : Parfait, vous pouvez créer le lead ✅</li>
+<li data-i18n="faq.q_consent.answer_items.3">Si la personne dit NON : Respectez son choix, ne partagez pas ❌</li>
 </ul>
 <div class="bg-red-50 border-l-4 border-red-500 p-3 rounded mt-3">
-<p class="text-red-800 text-sm font-semibold">⚠️ Partager des coordonnées sans autorisation peut entraîner la fermeture de votre compte et des poursuites légales.</p>
+<p class="text-red-800 text-sm font-semibold" data-i18n="faq.q_consent.warning">⚠️ Partager des coordonnées sans autorisation peut entraîner la fermeture de votre compte et des poursuites légales.</p>
 </div>
 </div>
 </div>
 
-<!-- Existing FAQ 1..6 -->
+<!-- FAQ 1 -->
 <div class="glass-card rounded-xl shadow-lg overflow-hidden">
 <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-plus-circle text-blue-600 mr-3"></i>Combien de leads puis-je apporter ?</span>
-<i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
-</button>
-<div class="accordion-content px-6 pb-6"><p class="text-gray-600 leading-relaxed"><strong>Illimité !</strong> Il n'y a aucune restriction sur le nombre de leads que vous pouvez apporter. Plus vous apportez de clients qualifiés, plus vous augmentez vos chances de gains. Certains apporteurs gèrent 1-2 leads par mois, d'autres en apportent 10+. C'est vous qui décidez de votre niveau d'engagement.</p></div>
-</div>
-
-<div class="glass-card rounded-xl shadow-lg overflow-hidden">
-<button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-id-card text-purple-600 mr-3"></i>Dois-je avoir une licence immobilière ?</span>
-<i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
-</button>
-<div class="accordion-content px-6 pb-6"><p class="text-gray-600 leading-relaxed"><strong>Non !</strong> Le programme d'apporteur d'affaires est ouvert à tous, sans licence requise. Vous n'avez pas besoin de connaissances particulières en immobilier. Votre rôle est simplement de mettre en relation des personnes intéressées avec notre agence. C'est nous qui nous occupons de toute la partie légale et technique.</p></div>
-</div>
-
-<div class="glass-card rounded-xl shadow-lg overflow-hidden">
-<button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-money-check-alt text-green-600 mr-3"></i>Quand suis-je payé ?</span>
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-plus-circle text-blue-600 mr-3"></i>
+<span data-i18n="faq.q1.question">Combien de leads puis-je apporter ?</span>
+</span>
 <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
 </button>
 <div class="accordion-content px-6 pb-6">
-<p class="text-gray-600 leading-relaxed mb-3"><strong>45-60 jours après la signature</strong> du contrat de vente ou de location. Voici le processus :</p>
+<p class="text-gray-600 leading-relaxed" data-i18n="faq.q1.answer">Illimité ! Il n'y a aucune restriction sur le nombre de leads que vous pouvez apporter. Plus vous apportez de clients qualifiés, plus vous augmentez vos chances de gains. Certains apporteurs gèrent 1-2 leads par mois, d'autres en apportent 10+. C'est vous qui décidez de votre niveau d'engagement.</p>
+</div>
+</div>
+
+<!-- FAQ 2 -->
+<div class="glass-card rounded-xl shadow-lg overflow-hidden">
+<button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-id-card text-purple-600 mr-3"></i>
+<span data-i18n="faq.q2.question">Dois-je avoir une licence immobilière ?</span>
+</span>
+<i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+</button>
+<div class="accordion-content px-6 pb-6">
+<p class="text-gray-600 leading-relaxed" data-i18n="faq.q2.answer">Non ! Le programme d'apporteur d'affaires est ouvert à tous, sans licence requise. Vous n'avez pas besoin de connaissances particulières en immobilier. Votre rôle est simplement de mettre en relation des personnes intéressées avec notre agence. C'est nous qui nous occupons de toute la partie légale et technique.</p>
+</div>
+</div>
+
+<!-- FAQ 3 -->
+<div class="glass-card rounded-xl shadow-lg overflow-hidden">
+<button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-money-check-alt text-green-600 mr-3"></i>
+<span data-i18n="faq.q3.question">Quand suis-je payé ?</span>
+</span>
+<i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
+</button>
+<div class="accordion-content px-6 pb-6">
+<p class="text-gray-600 leading-relaxed mb-3" data-i18n="faq.q3.answer_intro">45-60 jours après la signature du contrat de vente ou de location. Voici le processus :</p>
 <ol class="list-decimal list-inside text-gray-600 space-y-2 ml-4">
-<li>Le client signe le contrat</li><li>La transaction est finalisée</li><li>L'agence reçoit sa commission</li><li>Votre commission est calculée automatiquement (20%)</li><li>Paiement effectué sous 45-60 jours</li>
+<li data-i18n="faq.q3.answer_steps.0">Le client signe le contrat</li>
+<li data-i18n="faq.q3.answer_steps.1">La transaction est finalisée</li>
+<li data-i18n="faq.q3.answer_steps.2">L'agence reçoit sa commission</li>
+<li data-i18n="faq.q3.answer_steps.3">Votre commission est calculée automatiquement (20%)</li>
+<li data-i18n="faq.q3.answer_steps.4">Paiement effectué sous 45-60 jours</li>
 </ol>
-<p class="text-gray-600 mt-3">Le délai permet de s'assurer que la transaction est définitive et que tous les paiements sont bien reçus.</p>
+<p class="text-gray-600 mt-3" data-i18n="faq.q3.answer_conclusion">Le délai permet de s'assurer que la transaction est définitive et que tous les paiements sont bien reçus.</p>
 </div>
 </div>
 
+<!-- FAQ 4 -->
 <div class="glass-card rounded-xl shadow-lg overflow-hidden">
 <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-users text-orange-600 mr-3"></i>Puis-je parrainer d'autres apporteurs ?</span>
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-users text-orange-600 mr-3"></i>
+<span data-i18n="faq.q4.question">Puis-je parrainer d'autres apporteurs ?</span>
+</span>
 <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
 </button>
-<div class="accordion-content px-6 pb-6"><p class="text-gray-600 leading-relaxed"><strong>Oui !</strong> Nous avons un programme de parrainage qui vous permet de gagner des commissions supplémentaires en recrutant d'autres apporteurs. Contactez-nous à <a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline">contact@real-estate-referrer.com</a> pour en savoir plus sur les conditions et avantages du programme de parrainage.</p></div>
+<div class="accordion-content px-6 pb-6">
+<p class="text-gray-600 leading-relaxed">
+<span data-i18n="faq.q4.answer_part1">Oui ! Nous avons un programme de parrainage qui vous permet de gagner des commissions supplémentaires en recrutant d'autres apporteurs. Contactez-nous à</span>
+<a href="mailto:contact@real-estate-referrer.com" class="text-blue-600 hover:underline" data-i18n="faq.q4.email">contact@real-estate-referrer.com</a>
+<span data-i18n="faq.q4.answer_part2"> pour en savoir plus sur les conditions et avantages du programme de parrainage.</span>
+</p>
+</div>
 </div>
 
+<!-- FAQ 5 -->
 <div class="glass-card rounded-xl shadow-lg overflow-hidden">
 <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-times-circle text-red-600 mr-3"></i>Que se passe-t-il si le client n'achète pas ?</span>
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-times-circle text-red-600 mr-3"></i>
+<span data-i18n="faq.q5.question">Que se passe-t-il si le client n'achète pas ?</span>
+</span>
 <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
 </button>
-<div class="accordion-content px-6 pb-6"><p class="text-gray-600 leading-relaxed"><strong>Aucun problème !</strong> Vous ne perdez rien. Le lead reste dans votre historique et vous pouvez continuer à apporter d'autres clients. Il n'y a aucun engagement financier de votre part. Vous êtes payé uniquement quand une vente ou location se concrétise. Zéro risque pour vous !</p></div>
+<div class="accordion-content px-6 pb-6">
+<p class="text-gray-600 leading-relaxed" data-i18n="faq.q5.answer">Aucun problème ! Vous ne perdez rien. Le lead reste dans votre historique et vous pouvez continuer à apporter d'autres clients. Il n'y a aucun engagement financier de votre part. Vous êtes payé uniquement quand une vente ou location se concrétise. Zéro risque pour vous !</p>
+</div>
 </div>
 
+<!-- FAQ 6 -->
 <div class="glass-card rounded-xl shadow-lg overflow-hidden">
 <button class="faq-button w-full text-left p-6 flex justify-between items-center hover:bg-gray-50 transition" onclick="toggleFAQ(this)">
-<span class="font-bold text-gray-800 text-lg"><i class="fas fa-clock text-teal-600 mr-3"></i>Combien de temps prend le processus ?</span>
+<span class="font-bold text-gray-800 text-lg">
+<i class="fas fa-clock text-teal-600 mr-3"></i>
+<span data-i18n="faq.q6.question">Combien de temps prend le processus ?</span>
+</span>
 <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
 </button>
-<div class="accordion-content px-6 pb-6"><p class="text-gray-600 leading-relaxed mb-3">Cela dépend du client et du marché, mais voici une moyenne :</p>
+<div class="accordion-content px-6 pb-6">
+<p class="text-gray-600 leading-relaxed mb-3" data-i18n="faq.q6.answer_intro">Cela dépend du client et du marché, mais voici une moyenne :</p>
 <ul class="text-gray-600 space-y-2 ml-4">
-<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>1-2 semaines</strong> : Premier contact et visite</li>
-<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>2-4 semaines</strong> : Recherche et sélection</li>
-<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>1-2 mois</strong> : Négociation et offre</li>
-<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><strong>Total : 2-3 mois</strong> en moyenne</li>
+<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><span data-i18n="faq.q6.answer_timeline.0">1-2 semaines : Premier contact et visite</span></li>
+<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><span data-i18n="faq.q6.answer_timeline.1">2-4 semaines : Recherche et sélection</span></li>
+<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><span data-i18n="faq.q6.answer_timeline.2">1-2 mois : Négociation et offre</span></li>
+<li><i class="fas fa-arrow-right text-blue-600 mr-2"></i><span data-i18n="faq.q6.answer_timeline.3">Total : 2-3 mois en moyenne</span></li>
 </ul>
-<p class="text-gray-600 mt-3">Certains clients décident en quelques jours, d'autres prennent plusieurs mois. Vous suivez tout en temps réel sur votre dashboard.</p>
+<p class="text-gray-600 mt-3" data-i18n="faq.q6.answer_conclusion">Certains clients décident en quelques jours, d'autres prennent plusieurs mois. Vous suivez tout en temps réel sur votre dashboard.</p>
 </div>
 </div>
 
@@ -417,14 +622,25 @@
 <!-- CTA Final -->
 <section class="py-16 px-4 brand-gradient text-white">
 <div class="max-w-4xl mx-auto text-center">
-<h2 class="text-3xl md:text-4xl font-bold mb-4">Alors, on commence ?</h2>
-<p class="text-lg md:text-xl mb-6 text-blue-100">C'est <strong>gratuit</strong>, <strong>facile</strong>, et vous pouvez commencer en <strong>2 minutes</strong> !</p>
+<h2 class="text-3xl md:text-4xl font-bold mb-4" data-i18n="cta.title">Alors, on commence ?</h2>
+<p class="text-lg md:text-xl mb-6 text-blue-100">
+<span data-i18n="cta.subtitle_part1">C'est</span>
+<strong data-i18n="cta.subtitle_free"> gratuit</strong><span data-i18n="cta.subtitle_part2">,</span>
+<strong data-i18n="cta.subtitle_easy"> facile</strong><span data-i18n="cta.subtitle_part3">, et vous pouvez commencer en</span>
+<strong data-i18n="cta.subtitle_time"> 2 minutes</strong><span data-i18n="cta.subtitle_part4"> !</span>
+</p>
 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-<a href="signup.html" class="bg-[color:var(--brand-gold)] text-blue-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition transform hover:scale-105 inline-flex items-center justify-center shadow-2xl"><i class="fas fa-rocket mr-2"></i>Je me lance !</a>
-<a href="login.html" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-[#1e3a8a] transition inline-flex items-center justify-center"><i class="fas fa-sign-in-alt mr-2"></i>J'ai déjà un compte</a>
+<a href="signup.html" class="bg-[color:var(--brand-gold)] text-blue-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition transform hover:scale-105 inline-flex items-center justify-center shadow-2xl">
+<i class="fas fa-rocket mr-2"></i><span data-i18n="cta.button_signup">Je me lance !</span>
+</a>
+<a href="login.html" class="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white hover:text-[#1e3a8a] transition inline-flex items-center justify-center">
+<i class="fas fa-sign-in-alt mr-2"></i><span data-i18n="cta.button_login">J'ai déjà un compte</span>
+</a>
 </div>
-<div class="inline-block bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full"><p class="text-white text-sm font-medium">✅ Aucune carte bancaire · ✅ Aucun engagement · ✅ Résiliable quand vous voulez</p></div>
-<p class="mt-6 text-blue-200 text-sm italic">💬 "J'ai gagné 4,000 AED en 2 mois sans rien faire de compliqué !" - Sarah, apporteuse depuis 3 mois</p>
+<div class="inline-block bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full">
+<p class="text-white text-sm font-medium" data-i18n="cta.benefits">✅ Aucune carte bancaire · ✅ Aucun engagement · ✅ Résiliable quand vous voulez</p>
+</div>
+<p class="mt-6 text-blue-200 text-sm italic" data-i18n="cta.testimonial">💬 "J'ai gagné 4,000 AED en 2 mois sans rien faire de compliqué !" - Sarah, apporteuse depuis 3 mois</p>
 </div>
 </section>
 
@@ -433,27 +649,27 @@
 <div class="max-w-6xl mx-auto">
 <div class="grid md:grid-cols-4 gap-8 mb-6">
 <div>
-<h3 class="text-white font-bold mb-4 brand-text">Real Estate Referrer</h3>
+<h3 class="text-white font-bold mb-4 brand-text" data-i18n="footer.brand">Real Estate Referrer</h3>
 </div>
 <div>
-<h4 class="text-white font-bold mb-4">Navigation</h4>
+<h4 class="text-white font-bold mb-4" data-i18n="footer.navigation_title">Navigation</h4>
 <ul class="space-y-2 text-sm">
-<li><a href="index.html" class="hover:text-white transition">Accueil</a></li>
-<li><a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a></li>
-<li><a href="login.html" class="hover:text-white transition">Connexion</a></li>
-<li><a href="signup.html" class="hover:text-white transition">Inscription</a></li>
+<li><a href="index.html" class="hover:text-white transition" data-i18n="footer.navigation_home">Accueil</a></li>
+<li><a href="how-it-works.html" class="hover:text-white transition" data-i18n="footer.navigation_how">Comment ça marche</a></li>
+<li><a href="login.html" class="hover:text-white transition" data-i18n="footer.navigation_login">Connexion</a></li>
+<li><a href="signup.html" class="hover:text-white transition" data-i18n="footer.navigation_signup">Inscription</a></li>
 </ul>
 </div>
 <div>
-<h4 class="text-white font-bold mb-4">Légal</h4>
+<h4 class="text-white font-bold mb-4" data-i18n="footer.legal_title">Légal</h4>
 <ul class="space-y-2 text-sm">
-<li><a href="terms.html" class="hover:text-white transition">CGU</a></li>
-<li><a href="privacy.html" class="hover:text-white transition">Confidentialité</a></li>
-<li><a href="contract-template.html" class="hover:text-white transition">Template Contrat</a></li>
+<li><a href="terms.html" class="hover:text-white transition" data-i18n="footer.legal_terms">CGU</a></li>
+<li><a href="privacy.html" class="hover:text-white transition" data-i18n="footer.legal_privacy">Confidentialité</a></li>
+<li><a href="contract-template.html" class="hover:text-white transition" data-i18n="footer.legal_contract">Template Contrat</a></li>
 </ul>
 </div>
 <div>
-<h4 class="text-white font-bold mb-4">Contact</h4>
+<h4 class="text-white font-bold mb-4" data-i18n="footer.contact_title">Contact</h4>
 <ul class="space-y-2 text-sm">
 <li><i class="fas fa-envelope mr-2"></i>contact@real-estate-referrer.com</li>
 <li><i class="fas fa-phone mr-2"></i>+971 XX XXX XXXX</li>
@@ -462,20 +678,85 @@
 </div>
 </div>
 <div class="border-t border-gray-800 pt-6 text-center text-sm">
-<p>&copy; 2025 Real Estate Referrer. Tous droits réservés.</p>
+<p data-i18n="footer.copyright">&copy; 2025 Real Estate Referrer. Tous droits réservés.</p>
 </div>
 </div>
 </footer>
 
 <script>
+// FAQ Toggle
 function toggleFAQ(button){
-const content = button.nextElementSibling;
-const icon = button.querySelector('.fa-chevron-down');
-const isActive = content.classList.contains('active');
-document.querySelectorAll('.accordion-content').forEach(i=>i.classList.remove('active'));
-document.querySelectorAll('.fa-chevron-down').forEach(i=>i.style.transform='rotate(0deg)');
-if(!isActive){content.classList.add('active');icon.style.transform='rotate(180deg)'}
+  const content = button.nextElementSibling;
+  const icon = button.querySelector('.fa-chevron-down');
+  const isActive = content.classList.contains('active');
+  document.querySelectorAll('.accordion-content').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.fa-chevron-down').forEach(i=>i.style.transform='rotate(0deg)');
+  if(!isActive){content.classList.add('active');icon.style.transform='rotate(180deg)'}
 }
+
+// Language Change Function (global)
+window.changeLanguage = async function(langCode) {
+  try {
+    await i18next.changeLanguage(langCode);
+    localStorage.setItem('i18nextLng', langCode);
+    window.location.reload();
+  } catch (error) {
+    console.error('Erreur changement de langue:', error);
+  }
+};
+
+// Initialize i18next and translate page
+async function initI18next() {
+  try {
+    await i18next
+      .use(i18nextHttpBackend)
+      .use(i18nextBrowserLanguageDetector)
+      .init({
+        fallbackLng: 'fr',
+        debug: false,
+        load: 'languageOnly',
+        backend: {
+          loadPath: '/locales/{{lng}}/how-it-works.json'
+        },
+        detection: {
+          order: ['localStorage', 'navigator'],
+          caches: ['localStorage']
+        }
+      });
+
+    // Update page title
+    document.title = i18next.t('meta.title');
+
+    // Translate all elements with data-i18n attribute
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+      const key = element.getAttribute('data-i18n');
+      const translation = i18next.t(key);
+      
+      if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+        element.placeholder = translation;
+      } else {
+        element.textContent = translation;
+      }
+    });
+
+    // Highlight active language flag
+    const currentLang = i18next.language;
+    document.querySelectorAll('.lang-flag').forEach(flag => {
+      flag.classList.remove('active');
+    });
+    const activeFlag = document.querySelector(`.lang-flag[onclick*="${currentLang}"]`);
+    if (activeFlag) {
+      activeFlag.classList.add('active');
+    }
+
+    console.log('i18next initialized successfully. Current language:', i18next.language);
+  } catch (error) {
+    console.error('Error initializing i18next:', error);
+  }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initI18next);
 </script>
 </body>
 </html>
