@@ -1,1 +1,328 @@
-
+{
+  "nav": {
+    "home": "Accueil",
+    "howItWorks": "Comment ça marche",
+    "login": "Login"
+  },
+  "hero": {
+    "title": "Conditions Générales d'Utilisation",
+    "subtitle": "Programme d'apporteurs d'affaires immobiliers - Dubai, UAE",
+    "lastUpdate": "Dernière mise à jour : 19 octobre 2025"
+  },
+  "toc": {
+    "title": "Sommaire",
+    "items": {
+      "definitions": "1. Définitions",
+      "inscription": "2. Inscription",
+      "programme": "3. Programme",
+      "commissions": "4. Commissions",
+      "obligationsReferrer": "5. Vos obligations",
+      "obligationsAgent": "6. Nos obligations",
+      "propriete": "7. Propriété intellectuelle",
+      "resiliation": "8. Résiliation",
+      "responsabilite": "9. Responsabilité",
+      "donnees": "10. Données personnelles",
+      "loi": "11. Loi applicable",
+      "modifications": "12. Modifications",
+      "contact": "13. Contact"
+    }
+  },
+  "preambule": {
+    "title": "Préambule",
+    "text1": "Les présentes Conditions Générales d'Utilisation (ci-après \"CGU\") régissent l'utilisation de la plateforme Real Estate Referrer et le programme d'apporteurs d'affaires immobiliers opéré par Karyne de Clercq, agent immobilier à Dubai, UAE.",
+    "text2": "En vous inscrivant sur la plateforme, vous acceptez sans réserve les présentes CGU."
+  },
+  "section1": {
+    "title": "1. Définitions",
+    "referrer": {
+      "label": "Apporteur d'affaires :",
+      "text": "Toute personne physique inscrite sur la plateforme dans le but de référer des clients potentiels."
+    },
+    "lead": {
+      "label": "Lead qualifié :",
+      "text": "Contact d'un client potentiel réellement intéressé par un achat ou une location immobilière, avec un budget défini et un projet à court terme (0-6 mois).",
+      "consent": "Le lead doit avoir donné son consentement explicite pour être contacté par l'agent."
+    },
+    "commission": {
+      "label": "Commission :",
+      "text": "Rémunération versée à l'apporteur lors de la conclusion d'une transaction immobilière initiée par son lead."
+    },
+    "agent": {
+      "label": "Agent :",
+      "text": "Karyne de Clercq, agent immobilier titulaire d'une licence RERA à Dubai."
+    },
+    "platform": {
+      "label": "Plateforme :",
+      "text": "Le site web et l'application Real Estate Referrer accessible à l'adresse"
+    }
+  },
+  "section2": {
+    "title": "2. Inscription",
+    "eligibility": {
+      "title": "2.1. Conditions d'éligibilité",
+      "intro": "Pour devenir apporteur d'affaires, vous devez :",
+      "items": [
+        "Être majeur (18 ans minimum)",
+        "Fournir des informations exactes et à jour",
+        "Disposer d'une adresse email valide",
+        "Accepter les présentes CGU"
+      ]
+    },
+    "validation": {
+      "title": "2.2. Validation du compte",
+      "text": "Votre inscription sera validée après vérification de vos informations. Nous nous réservons le droit de refuser toute inscription sans justification."
+    },
+    "responsibilities": {
+      "title": "2.3. Responsabilités",
+      "text": "Vous êtes responsable de la confidentialité de vos identifiants de connexion et de toutes les activités effectuées depuis votre compte."
+    }
+  },
+  "section3": {
+    "title": "3. Programme de référencement",
+    "functioning": {
+      "title": "3.1. Fonctionnement",
+      "intro": "Le programme fonctionne selon les étapes suivantes :",
+      "steps": [
+        "L'apporteur identifie un client potentiel",
+        "L'apporteur soumet le lead via la plateforme",
+        "L'agent contacte le client et gère la transaction",
+        "En cas de vente ou location, l'apporteur perçoit sa commission"
+      ]
+    },
+    "qualification": {
+      "title": "3.2. Critères de qualification",
+      "intro": "Un lead est considéré comme qualifié s'il remplit les critères suivants :",
+      "items": [
+        "Consentement explicite : La personne a autorisé le partage de ses coordonnées",
+        "Intérêt réel et actuel pour un achat ou une location",
+        "Budget défini et réaliste",
+        "Projet à court terme (moins de 6 mois)",
+        "Coordonnées valides et vérifiables",
+        "Le client n'est pas déjà en contact avec l'agent"
+      ],
+      "important": "Important :",
+      "note": "Vous n'êtes PAS autorisé à faire visiter les biens. Seuls les agents avec licence RERA peuvent le faire. Votre rôle se limite à transmettre les informations du client."
+    }
+  },
+  "section4": {
+    "title": "4. Commissions",
+    "rate": {
+      "title": "4.1. Taux de commission",
+      "text": "Vous percevez",
+      "percentage": "20%",
+      "text2": "de la commission agent sur toute transaction conclue.",
+      "exampleTitle": "Exemple de calcul :",
+      "exampleItems": [
+        "• Vente d'un bien à 5,000,000 AED",
+        "• Commission totale (2%) : 100,000 AED",
+        "• Commission agent (50%) : 50,000 AED",
+        "• Votre commission (20%) : 10,000 AED"
+      ]
+    },
+    "payment": {
+      "title": "4.2. Délai de paiement",
+      "text": "Les commissions sont versées sous 45 à 60 jours après la signature définitive du contrat de vente ou de location et la réception de la commission par l'agent."
+    },
+    "method": {
+      "title": "4.3. Mode de paiement",
+      "text": "Les paiements sont effectués par virement bancaire sur le compte bancaire que vous aurez renseigné dans votre profil."
+    },
+    "nonPayment": {
+      "title": "4.4. Conditions de non-paiement",
+      "intro": "Aucune commission n'est due dans les cas suivants :",
+      "items": [
+        "Absence de consentement : Le client n'avait pas autorisé le partage de ses coordonnées",
+        "Lead non qualifié ou informations erronées",
+        "Client déjà en contact avec l'agent",
+        "Lead dupliqué (déjà soumis par un autre apporteur)",
+        "Transaction annulée ou non finalisée"
+      ]
+    }
+  },
+  "section5": {
+    "title": "5. Obligations de l'apporteur",
+    "rera": {
+      "title": "5.1. Respect des lois RERA",
+      "intro": "Vous vous engagez à respecter toutes les réglementations de la Real Estate Regulatory Agency (RERA) de Dubai, notamment :",
+      "items": [
+        "Interdiction formelle de faire visiter des biens",
+        "Interdiction de négocier directement avec les propriétaires",
+        "Interdiction de représenter l'agent sans autorisation écrite"
+      ]
+    },
+    "confidentiality": {
+      "title": "5.2. Confidentialité",
+      "text": "Vous vous engagez à ne pas divulguer les informations confidentielles concernant l'agent, ses clients, ou les biens immobiliers."
+    },
+    "exclusivity": {
+      "title": "5.3. Exclusivité du lead",
+      "text": "Chaque lead soumis doit être exclusif. Vous ne pouvez pas soumettre le même lead à plusieurs agents ou agences simultanément."
+    },
+    "accuracy": {
+      "title": "5.4. Véracité des informations",
+      "text": "Vous garantissez l'exactitude et la véracité de toutes les informations que vous fournissez concernant les leads."
+    },
+    "consent": {
+      "title": "5.5. Consentement obligatoire (RGPD)",
+      "intro": "Vous vous engagez à obtenir le consentement explicite et préalable de chaque personne avant de partager ses données personnelles.",
+      "items": [
+        "La personne doit être informée que ses coordonnées seront transmises à un agent immobilier",
+        "La personne doit accepter explicitement d'être contactée",
+        "Vous ne pouvez PAS partager les coordonnées d'une personne sans son accord"
+      ],
+      "warning": "⚠️ Le non-respect de cette obligation peut entraîner la suspension immédiate de votre compte et des poursuites légales."
+    }
+  },
+  "section6": {
+    "title": "6. Obligations de l'agent",
+    "followUp": {
+      "title": "6.1. Suivi des leads",
+      "text": "L'agent s'engage à contacter chaque lead qualifié dans un délai raisonnable (48-72h) et à assurer un suivi professionnel."
+    },
+    "transparency": {
+      "title": "6.2. Transparence",
+      "text": "L'agent s'engage à tenir l'apporteur informé de l'avancement de chaque lead via la plateforme (statuts : nouveau, visite, offre, vendu)."
+    },
+    "commissionPayment": {
+      "title": "6.3. Paiement des commissions",
+      "text": "L'agent s'engage à verser les commissions dues dans les délais stipulés (45-60 jours après signature)."
+    }
+  },
+  "section7": {
+    "title": "7. Propriété intellectuelle",
+    "text1": "La plateforme Real Estate Referrer, son contenu, sa structure, et tous les éléments qui la composent sont la propriété exclusive de Karyne de Clercq.",
+    "text2": "Vous disposez d'un droit d'utilisation personnel, non exclusif et non transférable de la plateforme, uniquement dans le cadre du programme d'apporteurs d'affaires.",
+    "text3": "Toute reproduction, représentation, modification ou exploitation de tout ou partie de la plateforme est strictement interdite sans autorisation préalable écrite."
+  },
+  "section8": {
+    "title": "8. Résiliation",
+    "byReferrer": {
+      "title": "8.1. Résiliation par l'apporteur",
+      "text": "Vous pouvez résilier votre compte à tout moment depuis votre dashboard ou en contactant le support. Les commissions sur les leads en cours restent acquises."
+    },
+    "byAgent": {
+      "title": "8.2. Résiliation par l'agent",
+      "intro": "L'agent se réserve le droit de suspendre ou résilier votre compte en cas de :",
+      "items": [
+        "Partage de données sans consentement (violation du RGPD)",
+        "Non-respect des présentes CGU",
+        "Soumission répétée de leads non qualifiés",
+        "Comportement frauduleux ou contraire à l'éthique",
+        "Violation des lois RERA"
+      ]
+    },
+    "effects": {
+      "title": "8.3. Effets de la résiliation",
+      "text": "En cas de résiliation, vous conservez le droit aux commissions sur les transactions déjà conclues. Les leads en cours sont transférés à l'agent sans droit à commission sauf accord contraire."
+    }
+  },
+  "section9": {
+    "title": "9. Responsabilité",
+    "limitations": {
+      "title": "9.1. Limitations de responsabilité",
+      "intro": "L'agent ne peut être tenu responsable :",
+      "items": [
+        "Des interruptions temporaires de la plateforme",
+        "De la non-conclusion d'une transaction avec un lead",
+        "Des pertes de données dues à un cas de force majeure",
+        "Des actions ou comportements des clients référés"
+      ]
+    },
+    "exclusions": {
+      "title": "9.2. Exclusions de garantie",
+      "text": "La plateforme est fournie \"en l'état\". L'agent ne garantit pas que la plateforme sera exempte d'erreurs ou fonctionnera sans interruption."
+    }
+  },
+  "section10": {
+    "title": "10. Données personnelles (RGPD)",
+    "collection": {
+      "title": "10.1. Collecte des données",
+      "intro": "Nous collectons les données suivantes :",
+      "referrersLabel": "Concernant les apporteurs :",
+      "referrersItems": [
+        "Nom, prénom, email, téléphone",
+        "Historique des commissions",
+        "Données de connexion et d'utilisation"
+      ],
+      "leadsLabel": "Concernant les leads :",
+      "leadsItems": [
+        "Nom, email, téléphone des clients potentiels",
+        "Informations sur leur projet immobilier"
+      ],
+      "important": "Important :",
+      "note": "Les données des leads ne peuvent être collectées QUE si la personne concernée a donné son consentement explicite pour être contactée par l'agent immobilier."
+    },
+    "usage": {
+      "title": "10.2. Utilisation des données",
+      "intro": "Vos données sont utilisées pour :",
+      "items": [
+        "Gestion du programme d'apporteurs",
+        "Communication et support",
+        "Calcul et paiement des commissions",
+        "Amélioration de la plateforme"
+      ]
+    },
+    "rights": {
+      "title": "10.3. Droits des utilisateurs",
+      "intro": "Conformément au RGPD, vous disposez des droits suivants :",
+      "items": [
+        "Droit d'accès à vos données",
+        "Droit de rectification",
+        "Droit à l'effacement (\"droit à l'oubli\")",
+        "Droit d'opposition au traitement",
+        "Droit à la portabilité"
+      ],
+      "contact": "Pour exercer vos droits, contactez-nous à",
+      "moreInfo": "Pour plus de détails, consultez notre",
+      "privacyLink": "Politique de confidentialité"
+    }
+  },
+  "section11": {
+    "title": "11. Loi applicable et juridiction",
+    "text1": "Les présentes CGU sont régies par le droit des Émirats Arabes Unis et les réglementations de la RERA (Real Estate Regulatory Agency) de Dubai.",
+    "text2": "Tout litige relatif à l'interprétation ou à l'exécution des présentes CGU relève de la compétence exclusive des tribunaux de Dubai."
+  },
+  "section12": {
+    "title": "12. Modifications des CGU",
+    "text1": "Nous nous réservons le droit de modifier les présentes CGU à tout moment. Les modifications prennent effet dès leur publication sur la plateforme.",
+    "text2": "Vous serez informé par email de toute modification substantielle. La poursuite de l'utilisation de la plateforme après modification vaut acceptation des nouvelles CGU.",
+    "lastModified": "Dernière modification : 19 octobre 2025"
+  },
+  "section13": {
+    "title": "13. Contact",
+    "intro": "Pour toute question concernant les présentes CGU, vous pouvez nous contacter :",
+    "emailLabel": "Email",
+    "email": "contact@real-estate-referrer.com",
+    "nameLabel": "Nom",
+    "name": "Karyne de Clercq",
+    "activityLabel": "Activité",
+    "activity": "Agent immobilier - Dubai, UAE"
+  },
+  "acceptance": {
+    "title": "Acceptation des CGU",
+    "text": "En utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu, compris et accepté les présentes Conditions Générales d'Utilisation."
+  },
+  "footer": {
+    "title": "Real Estate Referrer",
+    "navigation": "Navigation",
+    "legal": "Légal",
+    "contact": "Contact",
+    "navItems": {
+      "home": "Accueil",
+      "howItWorks": "Comment ça marche",
+      "login": "Connexion",
+      "signup": "Inscription"
+    },
+    "legalItems": {
+      "terms": "CGU",
+      "privacy": "Confidentialité",
+      "contract": "Template Contrat"
+    },
+    "contactItems": {
+      "email": "contact@real-estate-referrer.com",
+      "phone": "+971 XX XXX XXXX",
+      "location": "Dubai, UAE"
+    },
+    "copyright": "© 2025 Karyne de Clercq. Tous droits réservés."
+  }
+}
