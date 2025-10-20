@@ -1,1 +1,328 @@
-
+{
+  "nav": {
+    "home": "Home",
+    "howItWorks": "Paano Gumagana",
+    "login": "Mag-login"
+  },
+  "hero": {
+    "title": "Mga Tuntunin at Kondisyon",
+    "subtitle": "Real Estate Referral Program - Dubai, UAE",
+    "lastUpdate": "Huling na-update: Oktubre 19, 2025"
+  },
+  "toc": {
+    "title": "Talaan ng Nilalaman",
+    "items": {
+      "definitions": "1. Mga Kahulugan",
+      "inscription": "2. Pagpaparehistro",
+      "programme": "3. Programa",
+      "commissions": "4. Komisyon",
+      "obligationsReferrer": "5. Mga Tungkulin Mo",
+      "obligationsAgent": "6. Mga Tungkulin Namin",
+      "propriete": "7. Intellectual Property",
+      "resiliation": "8. Pagtatapos",
+      "responsabilite": "9. Pananagutan",
+      "donnees": "10. Personal na Data",
+      "loi": "11. Naaangkop na Batas",
+      "modifications": "12. Mga Pagbabago",
+      "contact": "13. Makipag-ugnayan"
+    }
+  },
+  "preambule": {
+    "title": "Panimula",
+    "text1": "Ang mga Tuntunin at Kondisyon na ito (sa susunod ay \"Mga Tuntunin\") ay namamahala sa paggamit ng Real Estate Referrer platform at ang real estate referral program na pinatatakbo ni Karyne de Clercq, lisensyadong real estate agent sa Dubai, UAE.",
+    "text2": "Sa pamamagitan ng pagpaparehistro sa platform, tinatanggap mo nang walang pag-aalinlangan ang mga Tuntuning ito."
+  },
+  "section1": {
+    "title": "1. Mga Kahulugan",
+    "referrer": {
+      "label": "Referrer:",
+      "text": "Sinumang indibidwal na nakarehisto sa platform para sa layunin ng pag-refer ng mga potensyal na kliyente."
+    },
+    "lead": {
+      "label": "Kwalipikadong Lead:",
+      "text": "Contact ng isang potensyal na kliyente na tunay na interesado sa pagbili o pag-upa ng real estate, na may tiyak na badyet at maikling-termino na proyekto (0-6 na buwan).",
+      "consent": "Ang lead ay dapat magbigay ng malinaw na pahintulot na makipag-ugnayan sa kanya ang ahente."
+    },
+    "commission": {
+      "label": "Komisyon:",
+      "text": "Kabayaran na binabayad sa referrer sa pagkumpleto ng isang real estate transaction na sinimulan ng kanyang lead."
+    },
+    "agent": {
+      "label": "Ahente:",
+      "text": "Si Karyne de Clercq, lisensyadong RERA real estate agent sa Dubai."
+    },
+    "platform": {
+      "label": "Platform:",
+      "text": "Ang Real Estate Referrer website at application na maa-access sa"
+    }
+  },
+  "section2": {
+    "title": "2. Pagpaparehistro",
+    "eligibility": {
+      "title": "2.1. Mga Kinakailangan sa Pagiging Karapat-dapat",
+      "intro": "Para maging referrer, dapat mo:",
+      "items": [
+        "Nasa legal na edad (minimum 18 taong gulang)",
+        "Magbigay ng tumpak at pinakabagong impormasyon",
+        "Magkaroon ng valid na email address",
+        "Tanggapin ang mga Tuntuning ito"
+      ]
+    },
+    "validation": {
+      "title": "2.2. Pag-validate ng Account",
+      "text": "Ang iyong pagpaparehistro ay mapapatunayan pagkatapos ng pag-verify ng iyong impormasyon. Nakalaan namin ang karapatang tanggihan ang anumang pagpaparehistro nang walang paliwanag."
+    },
+    "responsibilities": {
+      "title": "2.3. Mga Pananagutan",
+      "text": "Ikaw ay responsable sa pagpapanatili ng pagiging kumpidensyal ng iyong mga login credentials at lahat ng aktibidad na ginagawa mula sa iyong account."
+    }
+  },
+  "section3": {
+    "title": "3. Referral Program",
+    "functioning": {
+      "title": "3.1. Paano Ito Gumagana",
+      "intro": "Ang programa ay tumatakbo ayon sa mga sumusunod na hakbang:",
+      "steps": [
+        "Kinikilala ng referrer ang isang potensyal na kliyente",
+        "Isinusumite ng referrer ang lead sa pamamagitan ng platform",
+        "Kinakausap ng ahente ang kliyente at pinamamahalaan ang transaksyon",
+        "Sa kaso ng pagbebenta o pag-upa, natatanggap ng referrer ang kanyang komisyon"
+      ]
+    },
+    "qualification": {
+      "title": "3.2. Mga Pamantayan sa Kwalipikasyon",
+      "intro": "Ang isang lead ay itinuturing na kwalipikado kung nakakatugon ito sa mga sumusunod na pamantayan:",
+      "items": [
+        "Malinaw na pahintulot: Pinahintulutan ng tao ang pagbabahagi ng kanyang contact information",
+        "Tunay at kasalukuyang interes sa pagbili o pag-upa",
+        "Tiyak at makatotohanang badyet",
+        "Maikling-termino na proyekto (wala pang 6 na buwan)",
+        "Valid at mave-verify na contact information",
+        "Ang kliyente ay hindi pa nakikipag-ugnayan sa ahente"
+      ],
+      "important": "Mahalaga:",
+      "note": "HINDI ka awtorisadong magsagawa ng property viewings. Ang mga ahente lamang na may RERA license ang maaaring gumawa nito. Ang iyong tungkulin ay limitado sa paghahatid ng impormasyon ng kliyente."
+    }
+  },
+  "section4": {
+    "title": "4. Komisyon",
+    "rate": {
+      "title": "4.1. Rate ng Komisyon",
+      "text": "Tumatanggap ka ng",
+      "percentage": "20%",
+      "text2": "ng agent commission sa anumang nakumpletong transaksyon.",
+      "exampleTitle": "Halimbawa ng kalkulasyon:",
+      "exampleItems": [
+        "• Pagbebenta ng property sa 5,000,000 AED",
+        "• Kabuuang komisyon (2%): 100,000 AED",
+        "• Komisyon ng ahente (50%): 50,000 AED",
+        "• Ang iyong komisyon (20%): 10,000 AED"
+      ]
+    },
+    "payment": {
+      "title": "4.2. Mga Tuntunin ng Pagbabayad",
+      "text": "Ang mga komisyon ay binabayaran sa loob ng 45 hanggang 60 araw pagkatapos ng panghuling pagpirma ng kontrata ng pagbebenta o pag-upa at pagtanggap ng komisyon ng ahente."
+    },
+    "method": {
+      "title": "4.3. Paraan ng Pagbabayad",
+      "text": "Ang mga pagbabayad ay ginagawa sa pamamagitan ng bank transfer sa bank account na ibinigay mo sa iyong profile."
+    },
+    "nonPayment": {
+      "title": "4.4. Mga Kondisyon ng Hindi Pagbabayad",
+      "intro": "Walang komisyon na dapat bayaran sa mga sumusunod na kaso:",
+      "items": [
+        "Kakulangan ng pahintulot: Hindi pinahintulutan ng kliyente ang pagbabahagi ng kanyang contact information",
+        "Hindi kwalipikadong lead o maling impormasyon",
+        "Ang kliyente ay nakikipag-ugnayan na sa ahente",
+        "Duplicate na lead (naisumite na ng ibang referrer)",
+        "Nakansela o hindi nakumpletong transaksyon"
+      ]
+    }
+  },
+  "section5": {
+    "title": "5. Mga Tungkulin ng Referrer",
+    "rera": {
+      "title": "5.1. Pagsunod sa mga Batas ng RERA",
+      "intro": "Sumasang-ayon kang sundin ang lahat ng regulasyon ng Real Estate Regulatory Agency (RERA) ng Dubai, kabilang ang:",
+      "items": [
+        "Pormal na pagbabawal sa pagsasagawa ng property viewings",
+        "Pagbabawal sa direktang negosasyon sa mga may-ari ng property",
+        "Pagbabawal sa pagrepresenta sa ahente nang walang nakasulat na pahintulot"
+      ]
+    },
+    "confidentiality": {
+      "title": "5.2. Pagiging Kumpidensyal",
+      "text": "Sumasang-ayon kang hindi ibubunyag ang kumpidensyal na impormasyon tungkol sa ahente, kanyang mga kliyente, o mga ari-arian."
+    },
+    "exclusivity": {
+      "title": "5.3. Eksklusibidad ng Lead",
+      "text": "Ang bawat isinumiteng lead ay dapat eksklusibo. Hindi mo maaaring isumite ang parehong lead sa maraming ahente o ahensya nang sabay-sabay."
+    },
+    "accuracy": {
+      "title": "5.4. Katumpakan ng Impormasyon",
+      "text": "Ginagarantiya mo ang katumpakan at katotohanan ng lahat ng impormasyong ibinibigay mo tungkol sa mga lead."
+    },
+    "consent": {
+      "title": "5.5. Mandatoryong Pahintulot (GDPR)",
+      "intro": "Sumasang-ayon kang makakuha ng malinaw at paunang pahintulot mula sa bawat tao bago ibahagi ang kanilang personal na data.",
+      "items": [
+        "Dapat na ipaalam sa tao na ang kanyang contact information ay ililipat sa isang real estate agent",
+        "Ang tao ay dapat na malinaw na sumang-ayon na makipag-ugnayan",
+        "HINDI mo maaaring ibahagi ang contact information ng isang tao nang walang kanyang pahintulot"
+      ],
+      "warning": "⚠️ Ang hindi pagsunod sa obligasyong ito ay maaaring magresulta sa agarang pagsuspinde ng account at legal na aksyon."
+    }
+  },
+  "section6": {
+    "title": "6. Mga Tungkulin ng Ahente",
+    "followUp": {
+      "title": "6.1. Pagsunod sa mga Lead",
+      "text": "Nangako ang ahente na makipag-ugnayan sa bawat kwalipikadong lead sa loob ng makatwirang panahon (48-72 oras) at tiyakin ang propesyonal na follow-up."
+    },
+    "transparency": {
+      "title": "6.2. Transparency",
+      "text": "Nangako ang ahente na panatilihing nakakaalam ang referrer tungkol sa pag-unlad ng bawat lead sa pamamagitan ng platform (mga status: bago, viewing, alok, nabenta)."
+    },
+    "commissionPayment": {
+      "title": "6.3. Pagbabayad ng Komisyon",
+      "text": "Nangako ang ahente na magbayad ng dapat bayaran na komisyon sa loob ng itinakdang panahon (45-60 araw pagkatapos ng pagpirma)."
+    }
+  },
+  "section7": {
+    "title": "7. Intellectual Property",
+    "text1": "Ang Real Estate Referrer platform, ang nilalaman nito, istruktura, at lahat ng elemento na bumubuo dito ay eksklusibong pag-aari ni Karyne de Clercq.",
+    "text2": "Mayroon kang personal, hindi eksklusibo, at hindi mailipat na karapatan na gamitin ang platform, lamang sa loob ng balangkas ng referral program.",
+    "text3": "Ang anumang reproduksyon, representasyon, pagbabago, o paggamit ng lahat o bahagi ng platform ay mahigpit na ipinagbabawal nang walang paunang nakasulat na pahintulot."
+  },
+  "section8": {
+    "title": "8. Pagtatapos",
+    "byReferrer": {
+      "title": "8.1. Pagtatapos ng Referrer",
+      "text": "Maaari mong tapusin ang iyong account anumang oras mula sa iyong dashboard o sa pamamagitan ng pakikipag-ugnayan sa suporta. Ang mga komisyon sa mga kasalukuyang lead ay nananatiling natanggap."
+    },
+    "byAgent": {
+      "title": "8.2. Pagtatapos ng Ahente",
+      "intro": "Nakalaan ang karapatan ng ahente na suspindihin o tapusin ang iyong account sa kaso ng:",
+      "items": [
+        "Pagbabahagi ng data nang walang pahintulot (paglabag sa GDPR)",
+        "Hindi pagsunod sa mga Tuntuning ito",
+        "Paulit-ulit na pagsusumite ng hindi kwalipikadong mga lead",
+        "Mapanlinlang o hindi etikal na pag-uugali",
+        "Paglabag sa mga batas ng RERA"
+      ]
+    },
+    "effects": {
+      "title": "8.3. Mga Epekto ng Pagtatapos",
+      "text": "Sa kaso ng pagtatapos, pinapanatili mo ang karapatan sa mga komisyon sa mga natapos na transaksyon. Ang mga kasalukuyang lead ay inililipat sa ahente nang walang karapatan sa komisyon maliban kung napagkasunduan."
+    }
+  },
+  "section9": {
+    "title": "9. Pananagutan",
+    "limitations": {
+      "title": "9.1. Mga Limitasyon ng Pananagutan",
+      "intro": "Ang ahente ay hindi maaaring managot para sa:",
+      "items": [
+        "Pansamantalang mga pagkaantala ng platform",
+        "Hindi pagkumpleto ng transaksyon sa isang lead",
+        "Pagkawala ng data dahil sa force majeure",
+        "Mga aksyon o pag-uugali ng mga nire-refer na kliyente"
+      ]
+    },
+    "exclusions": {
+      "title": "9.2. Mga Pagbubukod sa Warranty",
+      "text": "Ang platform ay ibinibigay \"as is\". Ang ahente ay hindi ginagarantiya na ang platform ay walang error o gagana nang walang pagkaantala."
+    }
+  },
+  "section10": {
+    "title": "10. Personal na Data (GDPR)",
+    "collection": {
+      "title": "10.1. Pagkolekta ng Data",
+      "intro": "Kinokolekta namin ang mga sumusunod na data:",
+      "referrersLabel": "Tungkol sa mga referrer:",
+      "referrersItems": [
+        "Pangalan, apelyido, email, telepono",
+        "Kasaysayan ng komisyon",
+        "Data ng login at paggamit"
+      ],
+      "leadsLabel": "Tungkol sa mga lead:",
+      "leadsItems": [
+        "Pangalan, email, telepono ng mga potensyal na kliyente",
+        "Impormasyon tungkol sa kanilang real estate project"
+      ],
+      "important": "Mahalaga:",
+      "note": "Ang data ng lead ay maaari LAMANG kolektahin kung ang taong apektado ay nagbigay ng malinaw na pahintulot na makipag-ugnayan ng real estate agent."
+    },
+    "usage": {
+      "title": "10.2. Paggamit ng Data",
+      "intro": "Ang iyong data ay ginagamit para sa:",
+      "items": [
+        "Pamamahala ng referral program",
+        "Komunikasyon at suporta",
+        "Pagkalkula at pagbabayad ng komisyon",
+        "Pagpapabuti ng platform"
+      ]
+    },
+    "rights": {
+      "title": "10.3. Mga Karapatan ng User",
+      "intro": "Alinsunod sa GDPR, mayroon kang mga sumusunod na karapatan:",
+      "items": [
+        "Karapatan sa access sa iyong data",
+        "Karapatan sa pagwawasto",
+        "Karapatan sa pagbubura (\"karapatan na makalimutan\")",
+        "Karapatan na tumutol sa processing",
+        "Karapatan sa portability"
+      ],
+      "contact": "Para gamitin ang iyong mga karapatan, makipag-ugnayan sa amin sa",
+      "moreInfo": "Para sa higit pang detalye, tingnan ang aming",
+      "privacyLink": "Privacy Policy"
+    }
+  },
+  "section11": {
+    "title": "11. Naaangkop na Batas at Hurisdiksyon",
+    "text1": "Ang mga Tuntuning ito ay pinamamahalaan ng batas ng United Arab Emirates at ang mga regulasyon ng RERA (Real Estate Regulatory Agency) ng Dubai.",
+    "text2": "Ang anumang alitan na may kaugnayan sa interpretasyon o pagpapatupad ng mga Tuntuning ito ay nasa ilalim ng eksklusibong hurisdiksyon ng mga korte ng Dubai."
+  },
+  "section12": {
+    "title": "12. Mga Pagbabago sa Mga Tuntunin",
+    "text1": "Nakalaan namin ang karapatan na baguhin ang mga Tuntuning ito anumang oras. Ang mga pagbabago ay magiging epektibo sa publikasyon sa platform.",
+    "text2": "Aabisuhan ka sa pamamagitan ng email tungkol sa anumang malaking pagbabago. Ang patuloy na paggamit ng platform pagkatapos ng pagbabago ay bumubuo ng pagtanggap sa mga bagong Tuntunin.",
+    "lastModified": "Huling binago: Oktubre 19, 2025"
+  },
+  "section13": {
+    "title": "13. Makipag-ugnayan",
+    "intro": "Para sa anumang mga tanong tungkol sa mga Tuntuning ito, maaari kang makipag-ugnayan sa amin:",
+    "emailLabel": "Email",
+    "email": "contact@real-estate-referrer.com",
+    "nameLabel": "Pangalan",
+    "name": "Karyne de Clercq",
+    "activityLabel": "Aktibidad",
+    "activity": "Real Estate Agent - Dubai, UAE"
+  },
+  "acceptance": {
+    "title": "Pagtanggap sa Mga Tuntunin",
+    "text": "Sa paggamit ng Real Estate Referrer platform, kinikilala mo na nabasa, naintindihan, at tinanggap mo ang mga Tuntunin at Kondisyon na ito."
+  },
+  "footer": {
+    "title": "Real Estate Referrer",
+    "navigation": "Nabigasyon",
+    "legal": "Legal",
+    "contact": "Makipag-ugnayan",
+    "navItems": {
+      "home": "Home",
+      "howItWorks": "Paano Gumagana",
+      "login": "Mag-login",
+      "signup": "Mag-sign Up"
+    },
+    "legalItems": {
+      "terms": "Mga Tuntunin",
+      "privacy": "Privacy",
+      "contract": "Contract Template"
+    },
+    "contactItems": {
+      "email": "contact@real-estate-referrer.com",
+      "phone": "+971 XX XXX XXXX",
+      "location": "Dubai, UAE"
+    },
+    "copyright": "© 2025 Karyne de Clercq. Lahat ng karapatan ay nakalaan."
+  }
+}
