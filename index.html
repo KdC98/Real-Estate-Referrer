@@ -28,7 +28,6 @@
   <div id="app"></div>
 
   <script type="module">
-    // Initialisation i18next
     await i18next
       .use(i18nextHttpBackend)
       .use(i18nextBrowserLanguageDetector)
@@ -36,6 +35,8 @@
         fallbackLng: 'fr',
         debug: false,
         load: 'languageOnly',
+        ns: ['translation', 'auth'],
+        defaultNS: 'translation',
         backend: {
         loadPath: '/locales/{{lng}}/{{ns}}.json'
         },
@@ -45,10 +46,8 @@
         }
       });
 
-    // Fonction de traduction
     const t = (key) => i18next.t(key);
 
-    // Fonction pour changer la langue
 async function changeLanguage(langCode) {
   try {
     await i18next.changeLanguage(langCode);
@@ -58,7 +57,6 @@ async function changeLanguage(langCode) {
     console.error('Erreur changement de langue:', error);
   }
 }
-  // Rendre la fonction accessible globalement
 window.changeLanguage = changeLanguage;  
     import { createClient } from '@supabase/supabase-js';
 
@@ -204,74 +202,91 @@ window.changeLanguage = changeLanguage;
       const isLogin = mode === 'login';
       const isReset = mode === 'reset';
       
+      const ta = (key) => i18next.t(`auth.${key}`);
+      
       return `
         <div class="min-h-screen flex items-center justify-center px-4">
           <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
-            <h2 class="text-3xl font-bold text-center mb-8">
-              ${isReset ? 'Réinitialiser le mot de passe' : (isLogin ? 'Connexion' : 'Inscription')}
+            
+            <div class="flex justify-center gap-2 mb-6 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+              <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform" title="Français">🇫🇷</button>
+              <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform" title="English">🇬🇧</button>
+              <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform" title="العربية">🇦🇪</button>
+              <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform" title="Русский">🇷🇺</button>
+              <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform" title="हिन्दी">🇮🇳</button>
+              <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform" title="اردو">🇵🇰</button>
+              <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform" title="中文">🇨🇳</button>
+              <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform" title="Tagalog">🇵🇭</button>
+            </div>
+
+            <h2 class="text-3xl font-bold text-center mb-2">
+              ${isReset ? ta('reset.title') : (isLogin ? ta('login.title') : ta('signup.title'))}
             </h2>
+            <p class="text-gray-400 text-center mb-8">
+              ${isReset ? ta('reset.subtitle') : (isLogin ? ta('login.subtitle') : ta('signup.subtitle'))}
+            </p>
             
             ${!isReset ? `
             <form id="authForm" class="space-y-6">
               ${!isLogin ? `
               <div>
-                <label class="block text-sm font-medium mb-2">Nom complet</label>
-                <input type="text" name="name" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <label class="block text-sm font-medium mb-2">${ta('signup.nameLabel')}</label>
+                <input type="text" name="name" required placeholder="${ta('signup.namePlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
               </div>
               <div>
-                <label class="block text-sm font-medium mb-2">Téléphone</label>
-                <input type="tel" name="phone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <label class="block text-sm font-medium mb-2">${ta('signup.phoneLabel')}</label>
+                <input type="tel" name="phone" required placeholder="${ta('signup.phonePlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
               </div>
               ` : ''}
               
               <div>
-                <label class="block text-sm font-medium mb-2">Email</label>
-                <input type="email" name="email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.emailLabel') : ta('signup.emailLabel')}</label>
+                <input type="email" name="email" required placeholder="${isLogin ? ta('login.emailPlaceholder') : ta('signup.emailPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
               </div>
               
               <div>
-                <label class="block text-sm font-medium mb-2">Mot de passe</label>
-                <input type="password" name="password" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                <p class="text-xs text-gray-400 mt-1">Minimum 12 caractères</p>
+                <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.passwordLabel') : ta('signup.passwordLabel')}</label>
+                <input type="password" name="password" required minlength="12" placeholder="${isLogin ? ta('login.passwordPlaceholder') : ta('signup.passwordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <p class="text-xs text-gray-400 mt-1">${isLogin ? ta('login.passwordHint') : ta('signup.passwordHint')}</p>
               </div>
               
               ${!isLogin ? `
               <div>
-                <label class="block text-sm font-medium mb-2">Confirmer le mot de passe</label>
-                <input type="password" name="confirmPassword" required minlength="12" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <label class="block text-sm font-medium mb-2">${ta('signup.confirmPasswordLabel')}</label>
+                <input type="password" name="confirmPassword" required minlength="12" placeholder="${ta('signup.confirmPasswordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
               </div>
               ` : ''}
               
               <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                ${isLogin ? 'Se connecter' : 'S\'inscrire'}
+                ${isLogin ? ta('login.submitButton') : ta('signup.submitButton')}
               </button>
               
               ${isLogin ? `
               <div class="text-center">
-                <button type="button" onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">Mot de passe oublié ?</button>
+                <button type="button" onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">${ta('login.forgotPassword')}</button>
               </div>
               ` : ''}
             </form>
             ` : `
             <form id="resetForm" class="space-y-6">
               <div>
-                <label class="block text-sm font-medium mb-2">Email</label>
-                <input type="email" name="email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                <label class="block text-sm font-medium mb-2">${ta('reset.emailLabel')}</label>
+                <input type="email" name="email" required placeholder="${ta('reset.emailPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
               </div>
               <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                Envoyer le lien
+                ${ta('reset.submitButton')}
               </button>
             </form>
             `}
             
             <div class="mt-6 text-center">
-              <button onclick="render()" class="text-gray-400 hover:text-white transition">← Retour</button>
+              <button onclick="render()" class="text-gray-400 hover:text-white transition">${ta('common.back')}</button>
             </div>
             
             ${!isReset ? `
             <div class="mt-4 text-center">
               <button onclick="${isLogin ? 'showSignup()' : 'showLogin()'}" class="text-yellow-500 hover:text-yellow-400">
-                ${isLogin ? 'Pas de compte ? S\'inscrire' : 'Déjà un compte ? Se connecter'}
+                ${isLogin ? ta('login.noAccount') + ' ' + ta('login.signupLink') : ta('signup.alreadyAccount') + ' ' + ta('signup.loginLink')}
               </button>
             </div>
             ` : ''}
@@ -747,6 +762,8 @@ window.changeLanguage = changeLanguage;
       const form = document.getElementById('authForm');
       if (!form) return;
       
+      const ta = (key) => i18next.t(`auth.${key}`);
+      
       form.onsubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
@@ -756,13 +773,13 @@ window.changeLanguage = changeLanguage;
         if (mode === 'signup') {
           const confirmPassword = formData.get('confirmPassword');
           if (password !== confirmPassword) {
-            alert('Les mots de passe ne correspondent pas');
+            alert(ta('signup.errors.passwordMismatch'));
             return;
           }
           
           const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?.])[A-Za-z\d@#$%^&*!?.]{12,}$/;
           if (!passwordRegex.test(password)) {
-            alert('Mot de passe invalide');
+            alert(ta('signup.errors.passwordInvalid'));
             return;
           }
           
@@ -777,15 +794,21 @@ window.changeLanguage = changeLanguage;
             }
           });
           
-          if (error) alert('Erreur : ' + error.message);
-          else {
-            alert('Compte créé !');
+          if (error) {
+            if (error.message.includes('already registered')) {
+              alert(ta('signup.errors.emailExists'));
+            } else {
+              alert(ta('signup.errors.networkError'));
+            }
+          } else {
+            alert(ta('signup.success.accountCreated'));
             showLogin();
           }
         } else {
           const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) alert('Erreur : ' + error.message);
-          else {
+          if (error) {
+            alert(ta('login.errors.invalidCredentials'));
+          } else {
             currentUser = data.user;
             await loadUserProfile();
             render();
@@ -798,6 +821,8 @@ window.changeLanguage = changeLanguage;
       const form = document.getElementById('resetForm');
       if (!form) return;
       
+      const ta = (key) => i18next.t(`auth.${key}`);
+      
       form.onsubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(form);
@@ -807,9 +832,10 @@ window.changeLanguage = changeLanguage;
           redirectTo: 'https://real-estate-referrer.com/reset-password.html'
         });
         
-        if (error) alert('Erreur : ' + error.message);
-        else {
-          alert('Email envoyé !');
+        if (error) {
+          alert(ta('reset.errors.networkError'));
+        } else {
+          alert(ta('reset.success.emailSent'));
           showLogin();
         }
       };
