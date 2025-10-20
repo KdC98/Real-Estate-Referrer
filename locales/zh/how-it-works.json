@@ -1,0 +1,241 @@
+{
+  "meta": {
+    "title": "如何运作 - 房地产推荐人"
+  },
+  "header": {
+    "brand": "房地产推荐人",
+    "home": "首页",
+    "login": "登录"
+  },
+  "hero": {
+    "badge": "👍 超级简单!",
+    "title": "如何运作？🏙️",
+    "subtitle_bold": "每笔销售赚取20%",
+    "subtitle_text": "- 你的信息是金子! 💰",
+    "benefits": "100%免费 · 无需技能 · 只需2分钟!"
+  },
+  "timeline": {
+    "section_title": "🎯 5个简单步骤",
+    "section_subtitle": "跟着指南走,非常简单! 😊",
+    "step1": {
+      "badge": "2分钟 ⚡",
+      "title": "注册",
+      "description": "📝 2分钟创建您的账户!",
+      "items": ["您的姓名", "您的电子邮件", "一个密码"],
+      "footer": "👉 连您的奶奶都能做到!"
+    },
+    "step2": {
+      "badge": "简单 👍",
+      "title": "寻找客户",
+      "description": "🗣️ 告诉身边的人!",
+      "items": ["家人和朋友", "同事", "社交媒体上"],
+      "warning_title": "⚠️ 重要:分享他们的联系方式之前,请征得他们的许可!",
+      "footer": "💡 您肯定认识感兴趣的人!"
+    },
+    "step3": {
+      "badge": "简单 🎯",
+      "title": "添加潜在客户",
+      "description": "➕ 一个简单的表单填写",
+      "items": ["客户姓名", "电子邮件或电话", "所需房产类型"],
+      "footer": "⏱️ 只需30秒!"
+    },
+    "step4": {
+      "badge": "自动 🤖",
+      "title": "实时跟踪",
+      "description": "📊 我们处理一切!",
+      "status_new": "📄 新",
+      "status_visit": "🏠 看房",
+      "status_offer": "🤝 报价",
+      "status_sold": "✅ 已售",
+      "footer": "🛋️ 您只需观看!"
+    },
+    "step5": {
+      "badge": "💰 大奖!",
+      "title": "获得金钱! 💸",
+      "description": "🎉 收到您的佣金",
+      "commission_text": "⭐ 代理佣金的20%",
+      "payment_delay": "45-60天内付款",
+      "footer": "🏆 您无需做其他事情!"
+    },
+    "conclusion": {
+      "title": "✅ 真的就这么简单!",
+      "subtitle": "无需经验 · 无需技术技能 · 只需您的人脉"
+    }
+  },
+  "earnings": {
+    "section_title": "💰 我能赚多少?",
+    "section_subtitle": "剧透:很多! 😱",
+    "example1": {
+      "property_type": "公寓",
+      "price": "1,000,000迪拉姆",
+      "total_commission": "总佣金(2%)",
+      "total_amount": "20,000迪拉姆",
+      "agent_commission": "代理佣金(50%)",
+      "agent_amount": "10,000迪拉姆",
+      "your_commission": "您的佣金(20%)",
+      "your_amount": "2,000迪拉姆"
+    },
+    "example2": {
+      "property_type": "别墅",
+      "price": "5,000,000迪拉姆",
+      "total_amount": "100,000迪拉姆",
+      "agent_amount": "50,000迪拉姆",
+      "your_amount": "10,000迪拉姆"
+    },
+    "example3": {
+      "property_type": "顶层公寓",
+      "price": "10,000,000迪拉姆",
+      "total_amount": "200,000迪拉姆",
+      "agent_amount": "100,000迪拉姆",
+      "your_amount": "20,000迪拉姆"
+    },
+    "unlimited": "收入无上限!",
+    "unlimited_subtitle": "带来的客户越多,赚得越多"
+  },
+  "lead_criteria": {
+    "section_title": "🎯 什么是好的潜在客户?",
+    "section_subtitle": "别担心,很容易识别! 😊",
+    "good_lead": {
+      "title": "顶级潜在客户! 🌟",
+      "subtitle": "= 保证佣金 💰",
+      "consent_title": "必须:客户同意",
+      "consent_text": "在分享某人的联系方式之前,您必须获得他们的明确许可。这是法律(GDPR)! ⚖️",
+      "consent_example": "例如:\"我认识一个很棒的代理,我可以把你的号码给他吗?\" → 他们说是 → 好的 ✅",
+      "criteria": [
+        "他们真的想买或租",
+        "他们有明确的预算",
+        "他们现在正在寻找(不是2年后!)",
+        "您可以轻松联系到他们",
+        "他们知道自己想要什么"
+      ],
+      "summary": "💡 简而言之:一个认真的人,真正在寻找(并给了您许可!)!"
+    },
+    "bad_lead": {
+      "title": "不太好的潜在客户... 😬",
+      "subtitle": "= 浪费时间 🚫",
+      "criteria": [
+        "只是好奇,并不真正感兴趣",
+        "不知道预算(或不现实)",
+        "在遥远的将来寻找(1年+)",
+        "无法联系或虚假联系方式",
+        "完全不知道想要什么"
+      ],
+      "summary": "🚨 简而言之:一个\"以后再看\"的人!"
+    },
+    "golden_rule": "🎓 黄金法则:",
+    "golden_rule_good": "1个认真的潜在客户",
+    "golden_rule_vs": "胜过",
+    "golden_rule_bad": "10个好奇的"
+  },
+  "security": {
+    "section_title": "安全与透明",
+    "ownership": {
+      "title": "保证所有权",
+      "description": "您的潜在客户专属于您"
+    },
+    "transparency": {
+      "title": "完全透明",
+      "description": "实时仪表板24/7"
+    },
+    "history": {
+      "title": "完整历史",
+      "description": "所有交易已存档"
+    },
+    "calculation": {
+      "title": "自动计算",
+      "description": "精确计算佣金"
+    }
+  },
+  "faq": {
+    "section_title": "常见问题",
+    "q0": {
+      "question": "我需要展示房产吗?",
+      "answer_bold": "⚠️ 不!绝对不!",
+      "answer_items": [
+        "说明:只有拥有RERA许可证的代理才能展示房产。",
+        "您的角色:只需将信息(潜在客户)传递给机构。",
+        "好消息:您无需做其他事情!"
+      ]
+    },
+    "q_consent": {
+      "question": "分享联系方式之前需要征得许可吗?",
+      "answer_bold": "是的,绝对!这是必须的。 ⚖️",
+      "answer_items": [
+        "法律(GDPR):未经他们同意,您不能分享某人的个人数据。",
+        "实际操作:简单地问\"我可以把你的详细信息给房地产代理吗?\"",
+        "如果他们说是:完美,您可以创建潜在客户 ✅",
+        "如果他们说不:尊重他们的选择,不要分享 ❌"
+      ],
+      "warning": "⚠️ 未经许可分享联系方式可能导致账户关闭和法律诉讼。"
+    },
+    "q1": {
+      "question": "我可以带来多少潜在客户?",
+      "answer": "无限!您可以带来的潜在客户数量没有限制。您带来的合格客户越多,赚钱的机会就越大。一些推荐人每月管理1-2个潜在客户,其他人带来10+。您决定自己的参与程度。"
+    },
+    "q2": {
+      "question": "我需要房地产执照吗?",
+      "answer": "不!推荐人计划对所有人开放,无需执照。您不需要特殊的房地产知识。您的角色只是将感兴趣的人与我们的机构联系起来。我们处理所有法律和技术部分。"
+    },
+    "q3": {
+      "question": "我什么时候收到付款?",
+      "answer_intro": "签订销售或租赁合同后45-60天。流程如下:",
+      "answer_steps": [
+        "客户签订合同",
+        "交易完成",
+        "机构收到佣金",
+        "您的佣金自动计算(20%)",
+        "45-60天内付款"
+      ],
+      "answer_conclusion": "延迟确保交易最终完成,所有付款已收到。"
+    },
+    "q4": {
+      "question": "我可以推荐其他推荐人吗?",
+      "answer_part1": "是的!我们有一个推荐计划,让您通过招募其他推荐人赚取额外佣金。联系我们",
+      "email": "contact@real-estate-referrer.com",
+      "answer_part2": "了解更多关于推荐计划的条款和好处。"
+    },
+    "q5": {
+      "question": "如果客户不买会怎样?",
+      "answer": "没问题!您不会失去任何东西。潜在客户留在您的历史记录中,您可以继续带来其他客户。您没有任何财务承诺。您只有在完成销售或租赁时才会获得报酬。对您零风险!"
+    },
+    "q6": {
+      "question": "流程需要多长时间?",
+      "answer_intro": "这取决于客户和市场,但这是平均值:",
+      "answer_timeline": [
+        "1-2周:首次联系和看房",
+        "2-4周:搜索和选择",
+        "1-2个月:谈判和报价",
+        "总计:平均2-3个月"
+      ],
+      "answer_conclusion": "有些客户在几天内做出决定,其他人需要几个月。您在仪表板上实时跟踪一切。"
+    }
+  },
+  "cta": {
+    "title": "那么,开始吧?",
+    "subtitle_part1": "它是",
+    "subtitle_free": "免费",
+    "subtitle_part2": "的,",
+    "subtitle_easy": "简单",
+    "subtitle_part3": "的,您可以在",
+    "subtitle_time": "2分钟",
+    "subtitle_part4": "内开始!",
+    "button_signup": "开始吧!",
+    "button_login": "我已有账户",
+    "benefits": "✅ 无需信用卡 · ✅ 无承诺 · ✅ 随时取消",
+    "testimonial": "💬 \"我在2个月内赚了4,000迪拉姆,没做任何复杂的事情!\" - 萨拉,推荐人3个月"
+  },
+  "footer": {
+    "brand": "房地产推荐人",
+    "navigation_title": "导航",
+    "navigation_home": "首页",
+    "navigation_how": "如何运作",
+    "navigation_login": "登录",
+    "navigation_signup": "注册",
+    "legal_title": "法律",
+    "legal_terms": "条款",
+    "legal_privacy": "隐私",
+    "legal_contract": "合同模板",
+    "contact_title": "联系",
+    "copyright": "© 2025 房地产推荐人。保留所有权利。"
+  }
+}
