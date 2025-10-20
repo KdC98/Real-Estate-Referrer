@@ -905,3 +905,44 @@ FROM leads;
 3. ⏳ **index.html modifié** (dans artifact précédent, si besoin)
 
 **C'EST TOUT ! Tu es prêt pour la suite ! 🎉**
+chore: trigger deployment with auth translations
+```
+
+**Extended description** (optionnel) :
+```
+Force Vercel to deploy all current files including auth.json translations
+```
+
+**Clique sur** : "Commit changes"
+
+---
+
+### **ÉTAPE 5 : Attends le déploiement** (2-3 min)
+
+1. **Vercel va automatiquement détecter ce nouveau commit**
+2. **Va déployer avec TOUS les fichiers actuels de GitHub**
+3. **Y compris les 8 fichiers auth.json** ✅
+
+**Tu peux suivre sur Vercel Dashboard** :
+- Onglet "Deployments"
+- Tu verras un nouveau déploiement "Building..."
+- Attends qu'il soit "Ready" (vert)
+
+---
+
+### **ÉTAPE 6 : Teste le site**
+
+Une fois "Ready" sur Vercel :
+
+1. Va sur https://real-estate-referrer.com
+2. Clique sur "Login"
+3. Change de langue avec les drapeaux
+4. **Le formulaire change-t-il de langue ?** ✅
+
+---
+
+## 📋 RÉSUMÉ EN 3 ACTIONS
+```
+1. Édite README.md sur GitHub (ajoute une ligne vide)
+2. Commit : "chore: trigger deployment with auth translations"
+
