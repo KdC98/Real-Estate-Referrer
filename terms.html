@@ -3,9 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Conditions Générales d'Utilisation - Real Estate Referrer</title>
+<title>Terms & Conditions - Real Estate Referrer</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<!-- i18next Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+
 <style>
 :root{
 --brand-navy: #1e3a8a;
@@ -50,6 +56,29 @@ html{
 .section-card{
   scroll-margin-top: 100px;
 }
+
+.lang-selector {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.lang-flag {
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  opacity: 0.6;
+}
+
+.lang-flag:hover {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.lang-flag.active {
+  opacity: 1;
+  transform: scale(1.1);
+}
 </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -61,13 +90,28 @@ html{
 <a href="index.html" class="text-2xl font-bold brand-text">
 <i class="fas fa-building mr-2"></i>Real Estate Referrer
 </a>
+<div class="flex items-center gap-6">
+<!-- Language Selector -->
+<div class="lang-selector">
+<span class="lang-flag" onclick="changeLanguage('fr')" title="Français">🇫🇷</span>
+<span class="lang-flag" onclick="changeLanguage('en')" title="English">🇬🇧</span>
+<span class="lang-flag" onclick="changeLanguage('ar')" title="العربية">🇦🇪</span>
+<span class="lang-flag" onclick="changeLanguage('ru')" title="Русский">🇷🇺</span>
+<span class="lang-flag" onclick="changeLanguage('hi')" title="हिन्दी">🇮🇳</span>
+<span class="lang-flag" onclick="changeLanguage('ur')" title="اردو">🇵🇰</span>
+<span class="lang-flag" onclick="changeLanguage('zh')" title="中文">🇨🇳</span>
+<span class="lang-flag" onclick="changeLanguage('tl')" title="Tagalog">🇵🇭</span>
+</div>
+
+<!-- Navigation -->
 <nav class="flex gap-4 items-center text-sm font-medium">
-<a href="index.html" class="text-gray-600 hover:text-[#1e3a8a] transition"><i class="fas fa-home mr-1"></i>Accueil</a>
-<a href="how-it-works.html" class="text-gray-600 hover:text-[#1e3a8a] transition"><i class="fas fa-question-circle mr-1"></i>Comment ça marche</a>
-<a href="login.html" class="bg-[#1e3a8a] hover:bg-[#7c3aed] text-white px-6 py-2 rounded-lg transition">
+<a href="index.html" class="text-gray-600 hover:text-[#1e3a8a] transition" data-i18n="nav.home"><i class="fas fa-home mr-1"></i>Home</a>
+<a href="how-it-works.html" class="text-gray-600 hover:text-[#1e3a8a] transition" data-i18n="nav.howItWorks"><i class="fas fa-question-circle mr-1"></i>How It Works</a>
+<a href="login.html" class="bg-[#1e3a8a] hover:bg-[#7c3aed] text-white px-6 py-2 rounded-lg transition" data-i18n="nav.login">
 <i class="fas fa-sign-in-alt mr-1"></i>Login
 </a>
 </nav>
+</div>
 </div>
 </div>
 </header>
@@ -80,424 +124,31 @@ html{
 </div>
 <div class="max-w-4xl mx-auto text-center relative z-10">
 <i class="fas fa-file-contract text-5xl mb-4"></i>
-<h1 class="text-4xl md:text-5xl font-bold mb-4">Conditions Générales d'Utilisation</h1>
-<p class="text-lg text-blue-100">Programme d'apporteurs d'affaires immobiliers - Dubai, UAE</p>
-<p class="text-sm text-blue-200 mt-4">Dernière mise à jour : 19 octobre 2025</p>
+<h1 class="text-4xl md:text-5xl font-bold mb-4" data-i18n="hero.title">Terms and Conditions</h1>
+<p class="text-lg text-blue-100" data-i18n="hero.subtitle">Real Estate Referral Program</p>
+<p class="text-sm text-blue-200 mt-4" data-i18n="hero.lastUpdate">Last updated: October 19, 2025</p>
 </div>
 </section>
 
-<!-- Content avec TOC -->
+<!-- Content -->
 <div class="max-w-7xl mx-auto px-4 py-12">
 <div class="grid lg:grid-cols-4 gap-8">
 
-<!-- Table des matières (Sticky) -->
+<!-- Table of Contents -->
 <aside class="lg:col-span-1">
 <div class="glass-card rounded-xl p-6 sticky top-24">
 <h3 class="font-bold text-gray-900 mb-4 text-lg flex items-center">
-<i class="fas fa-list text-[#1e3a8a] mr-2"></i>Sommaire
+<i class="fas fa-list text-[#1e3a8a] mr-2"></i><span data-i18n="toc.title">Table of Contents</span>
 </h3>
-<nav class="space-y-2">
-<a href="#definitions" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">1. Définitions</a>
-<a href="#inscription" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">2. Inscription</a>
-<a href="#programme" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">3. Programme</a>
-<a href="#commissions" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">4. Commissions</a>
-<a href="#obligations-apporteur" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">5. Vos obligations</a>
-<a href="#obligations-agent" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">6. Nos obligations</a>
-<a href="#propriete" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">7. Propriété intellectuelle</a>
-<a href="#resiliation" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">8. Résiliation</a>
-<a href="#responsabilite" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">9. Responsabilité</a>
-<a href="#donnees" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">10. Données personnelles</a>
-<a href="#loi" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">11. Loi applicable</a>
-<a href="#modifications" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">12. Modifications</a>
-<a href="#contact" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">13. Contact</a>
+<nav class="space-y-2" id="toc-nav">
+<!-- TOC items will be populated by JS -->
 </nav>
 </div>
 </aside>
 
-<!-- Contenu principal -->
-<main class="lg:col-span-3 space-y-6">
-
-<!-- Préambule -->
-<div class="glass-card rounded-xl p-8 border-l-4 border-[#1e3a8a]">
-<div class="flex items-start mb-4">
-<i class="fas fa-info-circle text-3xl text-[#1e3a8a] mr-4"></i>
-<div>
-<h2 class="text-2xl font-bold text-gray-900 mb-3">Préambule</h2>
-<p class="text-gray-700 leading-relaxed mb-3">
-Les présentes Conditions Générales d'Utilisation (ci-après "CGU") régissent l'utilisation de la plateforme <strong>Real Estate Referrer</strong> et le programme d'apporteurs d'affaires immobiliers opéré par <strong>Karyne de Clercq</strong>, agent immobilier à Dubai, UAE.
-</p>
-<p class="text-gray-700 leading-relaxed">
-En vous inscrivant sur la plateforme, vous acceptez sans réserve les présentes CGU.
-</p>
-</div>
-</div>
-</div>
-
-<!-- Section 1 -->
-<div id="definitions" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
-<div class="flex items-start mb-4">
-<i class="fas fa-book text-3xl text-[#2563eb] mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">1. Définitions</h2>
-</div>
-<div class="space-y-3 text-gray-700">
-<p><strong>Apporteur d'affaires :</strong> Toute personne physique inscrite sur la plateforme dans le but de référer des clients potentiels.</p>
-<p><strong>Lead qualifié :</strong> Contact d'un client potentiel réellement intéressé par un achat ou une location immobilière, avec un budget défini et un projet à court terme (0-6 mois). <span class="text-red-600 font-semibold">Le lead doit avoir donné son consentement explicite pour être contacté par l'agent.</span></p>
-<p><strong>Commission :</strong> Rémunération versée à l'apporteur lors de la conclusion d'une transaction immobilière initiée par son lead.</p>
-<p><strong>Agent :</strong> Karyne de Clercq, agent immobilier titulaire d'une licence RERA à Dubai.</p>
-<p><strong>Plateforme :</strong> Le site web et l'application Real Estate Referrer accessible à l'adresse <a href="https://real-estate-referrer.com" class="text-[#2563eb] hover:underline">real-estate-referrer.com</a></p>
-</div>
-</div>
-
-<!-- Section 2 -->
-<div id="inscription" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
-<div class="flex items-start mb-4">
-<i class="fas fa-user-plus text-3xl text-[#7c3aed] mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">2. Inscription</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i>2.1. Conditions d'éligibilité</h3>
-<p class="text-gray-700">Pour devenir apporteur d'affaires, vous devez :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li>Être majeur (18 ans minimum)</li>
-<li>Fournir des informations exactes et à jour</li>
-<li>Disposer d'une adresse email valide</li>
-<li>Accepter les présentes CGU</li>
-</ul>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-shield-alt text-blue-500 mr-2"></i>2.2. Validation du compte</h3>
-<p class="text-gray-700">Votre inscription sera validée après vérification de vos informations. Nous nous réservons le droit de refuser toute inscription sans justification.</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-tasks text-orange-500 mr-2"></i>2.3. Responsabilités</h3>
-<p class="text-gray-700">Vous êtes responsable de la confidentialité de vos identifiants de connexion et de toutes les activités effectuées depuis votre compte.</p>
-</div>
-</div>
-</div>
-
-<!-- Section 3 -->
-<div id="programme" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#fbbf24]">
-<div class="flex items-start mb-4">
-<i class="fas fa-handshake text-3xl text-[#fbbf24] mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">3. Programme de référencement</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-cogs text-[#1e3a8a] mr-2"></i>3.1. Fonctionnement</h3>
-<p class="text-gray-700 mb-2">Le programme fonctionne selon les étapes suivantes :</p>
-<ol class="list-decimal list-inside text-gray-700 ml-4 space-y-2">
-<li>L'apporteur identifie un client potentiel</li>
-<li>L'apporteur soumet le lead via la plateforme</li>
-<li>L'agent contacte le client et gère la transaction</li>
-<li>En cas de vente ou location, l'apporteur perçoit sa commission</li>
-</ol>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-star text-yellow-500 mr-2"></i>3.2. Critères de qualification</h3>
-<p class="text-gray-700 mb-2">Un lead est considéré comme qualifié s'il remplit les critères suivants :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-<li><strong class="text-red-600">Consentement explicite : La personne a autorisé le partage de ses coordonnées</strong></li>
-<li>Intérêt réel et actuel pour un achat ou une location</li>
-<li>Budget défini et réaliste</li>
-<li>Projet à court terme (moins de 6 mois)</li>
-<li>Coordonnées valides et vérifiables</li>
-<li>Le client n'est pas déjà en contact avec l'agent</li>
-</ul>
-</div>
-<div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded">
-<p class="text-sm text-gray-700"><i class="fas fa-exclamation-triangle text-[#2563eb] mr-2"></i><strong>Important :</strong> Vous n'êtes PAS autorisé à faire visiter les biens. Seuls les agents avec licence RERA peuvent le faire. Votre rôle se limite à transmettre les informations du client.</p>
-</div>
-</div>
-</div>
-
-<!-- Section 4 -->
-<div id="commissions" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
-<div class="flex items-start mb-4">
-<i class="fas fa-money-bill-wave text-3xl text-green-500 mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">4. Commissions</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-calculator text-[#1e3a8a] mr-2"></i>4.1. Taux de commission</h3>
-<p class="text-gray-700 mb-3">Vous percevez <strong class="text-green-600 text-xl">20%</strong> de la commission agent sur toute transaction conclue.</p>
-<div class="bg-green-50 border border-green-200 p-4 rounded-lg">
-<p class="font-bold text-gray-900 mb-2">Exemple de calcul :</p>
-<ul class="text-sm text-gray-700 space-y-1">
-<li>• Vente d'un bien à 5,000,000 AED</li>
-<li>• Commission totale (2%) : 100,000 AED</li>
-<li>• Commission agent (50%) : 50,000 AED</li>
-<li>• <strong class="text-green-600">Votre commission (20%) : 10,000 AED</strong></li>
-</ul>
-</div>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-hourglass-half text-orange-500 mr-2"></i>4.2. Délai de paiement</h3>
-<p class="text-gray-700">Les commissions sont versées sous <strong>45 à 60 jours</strong> après la signature définitive du contrat de vente ou de location et la réception de la commission par l'agent.</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-credit-card text-[#2563eb] mr-2"></i>4.3. Mode de paiement</h3>
-<p class="text-gray-700">Les paiements sont effectués par virement bancaire sur le compte bancaire que vous aurez renseigné dans votre profil.</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-ban text-red-500 mr-2"></i>4.4. Conditions de non-paiement</h3>
-<p class="text-gray-700">Aucune commission n'est due dans les cas suivants :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li><strong class="text-red-600">Absence de consentement : Le client n'avait pas autorisé le partage de ses coordonnées</strong></li>
-<li>Lead non qualifié ou informations erronées</li>
-<li>Client déjà en contact avec l'agent</li>
-<li>Lead dupliqué (déjà soumis par un autre apporteur)</li>
-<li>Transaction annulée ou non finalisée</li>
-</ul>
-</div>
-</div>
-</div>
-
-<!-- Section 5 -->
-<div id="obligations-apporteur" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
-<div class="flex items-start mb-4">
-<i class="fas fa-user-shield text-3xl text-red-500 mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">5. Obligations de l'apporteur</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-balance-scale text-[#1e3a8a] mr-2"></i>5.1. Respect des lois RERA</h3>
-<p class="text-gray-700">Vous vous engagez à respecter toutes les réglementations de la Real Estate Regulatory Agency (RERA) de Dubai, notamment :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li><strong>Interdiction formelle de faire visiter des biens</strong></li>
-<li>Interdiction de négocier directement avec les propriétaires</li>
-<li>Interdiction de représenter l'agent sans autorisation écrite</li>
-</ul>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-lock text-purple-500 mr-2"></i>5.2. Confidentialité</h3>
-<p class="text-gray-700">Vous vous engagez à ne pas divulguer les informations confidentielles concernant l'agent, ses clients, ou les biens immobiliers.</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-user-check text-green-500 mr-2"></i>5.3. Exclusivité du lead</h3>
-<p class="text-gray-700">Chaque lead soumis doit être exclusif. Vous ne pouvez pas soumettre le même lead à plusieurs agents ou agences simultanément.</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-check-double text-[#2563eb] mr-2"></i>5.4. Véracité des informations</h3>
-<p class="text-gray-700">Vous garantissez l'exactitude et la véracité de toutes les informations que vous fournissez concernant les leads.</p>
-</div>
-<div class="bg-red-50 border-2 border-red-500 p-4 rounded-lg">
-<h3 class="font-bold text-red-900 mb-2 flex items-center text-lg"><i class="fas fa-exclamation-circle mr-2"></i>5.5. Consentement obligatoire (RGPD)</h3>
-<p class="text-gray-800 font-semibold mb-2">Vous vous engagez à obtenir le <strong>consentement explicite et préalable</strong> de chaque personne avant de partager ses données personnelles.</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li>La personne doit être <strong>informée</strong> que ses coordonnées seront transmises à un agent immobilier</li>
-<li>La personne doit <strong>accepter explicitement</strong> d'être contactée</li>
-<li>Vous ne pouvez PAS partager les coordonnées d'une personne sans son accord</li>
-</ul>
-<p class="text-red-800 font-bold mt-3 text-sm">⚠️ Le non-respect de cette obligation peut entraîner la suspension immédiate de votre compte et des poursuites légales.</p>
-</div>
-</div>
-</div>
-
-<!-- Section 6 -->
-<div id="obligations-agent" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
-<div class="flex items-start mb-4">
-<i class="fas fa-building text-3xl text-[#2563eb] mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">6. Obligations de l'agent</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-headset text-[#1e3a8a] mr-2"></i>6.1. Suivi des leads</h3>
-<p class="text-gray-700">L'agent s'engage à contacter chaque lead qualifié dans un délai raisonnable (48-72h) et à assurer un suivi professionnel.</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-chart-line text-green-500 mr-2"></i>6.2. Transparence</h3>
-<p class="text-gray-700">L'agent s'engage à tenir l'apporteur informé de l'avancement de chaque lead via la plateforme (statuts : nouveau, visite, offre, vendu).</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-coins text-yellow-500 mr-2"></i>6.3. Paiement des commissions</h3>
-<p class="text-gray-700">L'agent s'engage à verser les commissions dues dans les délais stipulés (45-60 jours après signature).</p>
-</div>
-</div>
-</div>
-
-<!-- Section 7 -->
-<div id="propriete" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
-<div class="flex items-start mb-4">
-<i class="fas fa-copyright text-3xl text-[#7c3aed] mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">7. Propriété intellectuelle</h2>
-</div>
-<div class="space-y-3 text-gray-700">
-<p>La plateforme Real Estate Referrer, son contenu, sa structure, et tous les éléments qui la composent sont la propriété exclusive de Karyne de Clercq.</p>
-<p>Vous disposez d'un droit d'utilisation personnel, non exclusif et non transférable de la plateforme, uniquement dans le cadre du programme d'apporteurs d'affaires.</p>
-<p>Toute reproduction, représentation, modification ou exploitation de tout ou partie de la plateforme est strictement interdite sans autorisation préalable écrite.</p>
-</div>
-</div>
-
-<!-- Section 8 -->
-<div id="resiliation" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
-<div class="flex items-start mb-4">
-<i class="fas fa-times-circle text-3xl text-orange-500 mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">8. Résiliation</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-user-times text-red-500 mr-2"></i>8.1. Résiliation par l'apporteur</h3>
-<p class="text-gray-700">Vous pouvez résilier votre compte à tout moment depuis votre dashboard ou en contactant le support. Les commissions sur les leads en cours restent acquises.</p>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-gavel text-[#1e3a8a] mr-2"></i>8.2. Résiliation par l'agent</h3>
-<p class="text-gray-700">L'agent se réserve le droit de suspendre ou résilier votre compte en cas de :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li><strong class="text-red-600">Partage de données sans consentement (violation du RGPD)</strong></li>
-<li>Non-respect des présentes CGU</li>
-<li>Soumission répétée de leads non qualifiés</li>
-<li>Comportement frauduleux ou contraire à l'éthique</li>
-<li>Violation des lois RERA</li>
-</ul>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-exchange-alt text-green-500 mr-2"></i>8.3. Effets de la résiliation</h3>
-<p class="text-gray-700">En cas de résiliation, vous conservez le droit aux commissions sur les transactions déjà conclues. Les leads en cours sont transférés à l'agent sans droit à commission sauf accord contraire.</p>
-</div>
-</div>
-</div>
-
-<!-- Section 9 -->
-<div id="responsabilite" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
-<div class="flex items-start mb-4">
-<i class="fas fa-exclamation-triangle text-3xl text-red-500 mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">9. Responsabilité</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-shield-alt text-[#1e3a8a] mr-2"></i>9.1. Limitations de responsabilité</h3>
-<p class="text-gray-700">L'agent ne peut être tenu responsable :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li>Des interruptions temporaires de la plateforme</li>
-<li>De la non-conclusion d'une transaction avec un lead</li>
-<li>Des pertes de données dues à un cas de force majeure</li>
-<li>Des actions ou comportements des clients référés</li>
-</ul>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-ban text-red-500 mr-2"></i>9.2. Exclusions de garantie</h3>
-<p class="text-gray-700">La plateforme est fournie "en l'état". L'agent ne garantit pas que la plateforme sera exempte d'erreurs ou fonctionnera sans interruption.</p>
-</div>
-</div>
-</div>
-
-<!-- Section 10 -->
-<div id="donnees" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
-<div class="flex items-start mb-4">
-<i class="fas fa-database text-3xl text-[#2563eb] mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">10. Données personnelles (RGPD)</h2>
-</div>
-<div class="space-y-4">
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-clipboard-list text-[#1e3a8a] mr-2"></i>10.1. Collecte des données</h3>
-<p class="text-gray-700 mb-2">Nous collectons les données suivantes :</p>
-<p class="text-gray-700 font-semibold mb-2"><u>Concernant les apporteurs :</u></p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-<li>Nom, prénom, email, téléphone</li>
-<li>Historique des commissions</li>
-<li>Données de connexion et d'utilisation</li>
-</ul>
-<p class="text-gray-700 font-semibold mb-2 mt-3"><u>Concernant les leads :</u></p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
-<li>Nom, email, téléphone des clients potentiels</li>
-<li>Informations sur leur projet immobilier</li>
-</ul>
-<div class="bg-orange-50 border-l-4 border-orange-500 p-3 rounded mt-3">
-<p class="text-sm text-gray-800"><i class="fas fa-info-circle text-orange-500 mr-2"></i><strong>Important :</strong> Les données des leads ne peuvent être collectées QUE si la personne concernée a donné son consentement explicite pour être contactée par l'agent immobilier.</p>
-</div>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-tasks text-green-500 mr-2"></i>10.2. Utilisation des données</h3>
-<p class="text-gray-700">Vos données sont utilisées pour :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li>Gestion du programme d'apporteurs</li>
-<li>Communication et support</li>
-<li>Calcul et paiement des commissions</li>
-<li>Amélioration de la plateforme</li>
-</ul>
-</div>
-<div>
-<h3 class="font-bold text-gray-900 mb-2 flex items-center"><i class="fas fa-user-shield text-purple-500 mr-2"></i>10.3. Droits des utilisateurs</h3>
-<p class="text-gray-700">Conformément au RGPD, vous disposez des droits suivants :</p>
-<ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
-<li>Droit d'accès à vos données</li>
-<li>Droit de rectification</li>
-<li>Droit à l'effacement ("droit à l'oubli")</li>
-<li>Droit d'opposition au traitement</li>
-<li>Droit à la portabilité</li>
-</ul>
-<p class="text-gray-700 mt-2">Pour exercer vos droits, contactez-nous à <a href="mailto:contact@real-estate-referrer.com" class="text-[#2563eb] hover:underline">contact@real-estate-referrer.com</a></p>
-</div>
-<div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded">
-<p class="text-sm text-gray-700"><i class="fas fa-info-circle text-[#2563eb] mr-2"></i>Pour plus de détails, consultez notre <a href="privacy.html" class="text-[#2563eb] hover:underline font-semibold">Politique de confidentialité</a>.</p>
-</div>
-</div>
-</div>
-
-<!-- Section 11 -->
-<div id="loi" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
-<div class="flex items-start mb-4">
-<i class="fas fa-gavel text-3xl text-[#7c3aed] mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">11. Loi applicable et juridiction</h2>
-</div>
-<div class="space-y-3 text-gray-700">
-<p>Les présentes CGU sont régies par le droit des <strong>Émirats Arabes Unis</strong> et les réglementations de la <strong>RERA (Real Estate Regulatory Agency)</strong> de Dubai.</p>
-<p>Tout litige relatif à l'interprétation ou à l'exécution des présentes CGU relève de la compétence exclusive des <strong>tribunaux de Dubai</strong>.</p>
-</div>
-</div>
-
-<!-- Section 12 -->
-<div id="modifications" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
-<div class="flex items-start mb-4">
-<i class="fas fa-edit text-3xl text-orange-500 mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">12. Modifications des CGU</h2>
-</div>
-<div class="space-y-3 text-gray-700">
-<p>Nous nous réservons le droit de modifier les présentes CGU à tout moment. Les modifications prennent effet dès leur publication sur la plateforme.</p>
-<p>Vous serez informé par email de toute modification substantielle. La poursuite de l'utilisation de la plateforme après modification vaut acceptation des nouvelles CGU.</p>
-<p class="text-sm text-gray-600 italic">Dernière modification : 19 octobre 2025</p>
-</div>
-</div>
-
-<!-- Section 13 -->
-<div id="contact" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
-<div class="flex items-start mb-4">
-<i class="fas fa-envelope text-3xl text-green-500 mr-4"></i>
-<h2 class="text-2xl font-bold text-gray-900">13. Contact</h2>
-</div>
-<div class="space-y-4">
-<p class="text-gray-700">Pour toute question concernant les présentes CGU, vous pouvez nous contacter :</p>
-<div class="grid md:grid-cols-3 gap-4">
-<div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-<p class="font-bold text-gray-900 mb-2"><i class="fas fa-envelope text-[#2563eb] mr-2"></i>Email</p>
-<a href="mailto:contact@real-estate-referrer.com" class="text-[#2563eb] hover:underline text-sm">contact@real-estate-referrer.com</a>
-</div>
-<div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-<p class="font-bold text-gray-900 mb-2"><i class="fas fa-user text-[#7c3aed] mr-2"></i>Nom</p>
-<p class="text-gray-700 text-sm">Karyne de Clercq</p>
-</div>
-<div class="bg-green-50 p-4 rounded-lg border border-green-200">
-<p class="font-bold text-gray-900 mb-2"><i class="fas fa-briefcase text-green-600 mr-2"></i>Activité</p>
-<p class="text-gray-700 text-sm">Agent immobilier - Dubai, UAE</p>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Acceptation -->
-<div class="glass-card rounded-xl p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-[#2563eb]">
-<div class="flex items-start">
-<i class="fas fa-check-circle text-4xl text-green-500 mr-4"></i>
-<div>
-<h3 class="text-xl font-bold text-gray-900 mb-3">Acceptation des CGU</h3>
-<p class="text-gray-700 leading-relaxed">
-En utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu, compris et accepté les présentes Conditions Générales d'Utilisation.
-</p>
-</div>
-</div>
-</div>
-
+<!-- Main Content -->
+<main class="lg:col-span-3 space-y-6" id="main-content">
+<!-- Content will be populated by JS -->
 </main>
 
 </div>
@@ -508,74 +159,461 @@ En utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu, com
 <div class="max-w-6xl mx-auto">
 <div class="grid md:grid-cols-4 gap-8 mb-6">
 <div>
-<h3 class="text-white font-bold mb-4">Real Estate Referrer</h3>
+<h3 class="text-white font-bold mb-4" data-i18n="footer.title">Real Estate Referrer</h3>
 </div>
 <div>
-<h4 class="text-white font-bold mb-4">Navigation</h4>
+<h4 class="text-white font-bold mb-4" data-i18n="footer.navigation">Navigation</h4>
 <ul class="space-y-2 text-sm">
-<li><a href="index.html" class="hover:text-white transition">Accueil</a></li>
-<li><a href="how-it-works.html" class="hover:text-white transition">Comment ça marche</a></li>
-<li><a href="login.html" class="hover:text-white transition">Connexion</a></li>
-<li><a href="signup.html" class="hover:text-white transition">Inscription</a></li>
+<li><a href="index.html" class="hover:text-white transition" data-i18n="footer.navItems.home">Home</a></li>
+<li><a href="how-it-works.html" class="hover:text-white transition" data-i18n="footer.navItems.howItWorks">How It Works</a></li>
+<li><a href="login.html" class="hover:text-white transition" data-i18n="footer.navItems.login">Login</a></li>
+<li><a href="signup.html" class="hover:text-white transition" data-i18n="footer.navItems.signup">Sign Up</a></li>
 </ul>
 </div>
 <div>
-<h4 class="text-white font-bold mb-4">Légal</h4>
+<h4 class="text-white font-bold mb-4" data-i18n="footer.legal">Legal</h4>
 <ul class="space-y-2 text-sm">
-<li><a href="terms.html" class="hover:text-white transition">CGU</a></li>
-<li><a href="privacy.html" class="hover:text-white transition">Confidentialité</a></li>
-<li><a href="contract-template.html" class="hover:text-white transition">Template Contrat</a></li>
+<li><a href="terms.html" class="hover:text-white transition" data-i18n="footer.legalItems.terms">Terms</a></li>
+<li><a href="privacy.html" class="hover:text-white transition" data-i18n="footer.legalItems.privacy">Privacy</a></li>
+<li><a href="contract-template.html" class="hover:text-white transition" data-i18n="footer.legalItems.contract">Contract Template</a></li>
 </ul>
 </div>
 <div>
-<h4 class="text-white font-bold mb-4">Contact</h4>
+<h4 class="text-white font-bold mb-4" data-i18n="footer.contact">Contact</h4>
 <ul class="space-y-2 text-sm">
-<li><i class="fas fa-envelope mr-2"></i>contact@real-estate-referrer.com</li>
-<li><i class="fas fa-phone mr-2"></i>+971 XX XXX XXXX</li>
-<li><i class="fas fa-map-marker-alt mr-2"></i>Dubai, UAE</li>
+<li><i class="fas fa-envelope mr-2"></i><span data-i18n="footer.contactItems.email">contact@real-estate-referrer.com</span></li>
+<li><i class="fas fa-phone mr-2"></i><span data-i18n="footer.contactItems.phone">+971 XX XXX XXXX</span></li>
+<li><i class="fas fa-map-marker-alt mr-2"></i><span data-i18n="footer.contactItems.location">Dubai, UAE</span></li>
 </ul>
 </div>
 </div>
 <div class="border-t border-gray-800 pt-6 text-center text-sm">
-<p>&copy; 2025 Karyne de Clercq. Tous droits réservés.</p>
+<p data-i18n="footer.copyright">&copy; 2025 Karyne de Clercq. All rights reserved.</p>
 </div>
 </div>
 </footer>
 
 <script>
-// Smooth scroll avec mise à jour TOC
-document.querySelectorAll('.toc-link').forEach(link => {
-  link.addEventListener('click', function(e) {
-    e.preventDefault();
-    const targetId = this.getAttribute('href');
-    const targetSection = document.querySelector(targetId);
-    
-    // Scroll vers la section
-    targetSection.scrollIntoView({ behavior: 'smooth' });
-    
-    // Mise à jour active link
-    document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
-    this.classList.add('active');
-  });
-});
+// Initialize i18next
+async function initI18n() {
+  await i18next
+    .use(i18nextHttpBackend)
+    .use(i18nextBrowserLanguageDetector)
+    .init({
+      fallbackLng: 'fr',
+      debug: false,
+      load: 'languageOnly',
+      ns: ['terms'],
+      defaultNS: 'terms',
+      backend: {
+        loadPath: '/locales/{{lng}}/{{ns}}.json'
+      },
+      detection: {
+        order: ['localStorage', 'navigator'],
+        caches: ['localStorage']
+      }
+    });
 
-// Mise à jour automatique du TOC lors du scroll
-window.addEventListener('scroll', function() {
-  let current = '';
-  document.querySelectorAll('.section-card').forEach(section => {
-    const sectionTop = section.offsetTop;
-    const sectionHeight = section.clientHeight;
-    if (pageYOffset >= (sectionTop - 150)) {
-      current = section.getAttribute('id');
-    }
+  updateContent();
+}
+
+// Change language function
+window.changeLanguage = async function(langCode) {
+  try {
+    await i18next.changeLanguage(langCode);
+    localStorage.setItem('i18nextLng', langCode);
+    updateContent();
+    updateActiveFlag(langCode);
+  } catch (error) {
+    console.error('Error changing language:', error);
+  }
+};
+
+// Update active flag
+function updateActiveFlag(langCode) {
+  document.querySelectorAll('.lang-flag').forEach(flag => {
+    flag.classList.remove('active');
   });
+  const flags = {
+    'fr': 0, 'en': 1, 'ar': 2, 'ru': 3,
+    'hi': 4, 'ur': 5, 'zh': 6, 'tl': 7
+  };
+  const index = flags[langCode];
+  if (index !== undefined) {
+    document.querySelectorAll('.lang-flag')[index].classList.add('active');
+  }
+}
+
+// Translation helper
+function t(key) {
+  return i18next.t(key);
+}
+
+// Update all content
+function updateContent() {
+  // Update simple translations
+  document.querySelectorAll('[data-i18n]').forEach(element => {
+    const key = element.getAttribute('data-i18n');
+    element.innerHTML = t(key);
+  });
+
+  // Update TOC
+  updateTOC();
   
-  document.querySelectorAll('.toc-link').forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === '#' + current) {
-      link.classList.add('active');
+  // Update main content
+  updateMainContent();
+  
+  // Update active flag
+  updateActiveFlag(i18next.language);
+}
+
+// Update Table of Contents
+function updateTOC() {
+  const tocNav = document.getElementById('toc-nav');
+  const items = [
+    { id: 'definitions', key: 'toc.items.definitions' },
+    { id: 'inscription', key: 'toc.items.inscription' },
+    { id: 'programme', key: 'toc.items.programme' },
+    { id: 'commissions', key: 'toc.items.commissions' },
+    { id: 'obligations-referrer', key: 'toc.items.obligationsReferrer' },
+    { id: 'obligations-agent', key: 'toc.items.obligationsAgent' },
+    { id: 'propriete', key: 'toc.items.propriete' },
+    { id: 'resiliation', key: 'toc.items.resiliation' },
+    { id: 'responsabilite', key: 'toc.items.responsabilite' },
+    { id: 'donnees', key: 'toc.items.donnees' },
+    { id: 'loi', key: 'toc.items.loi' },
+    { id: 'modifications', key: 'toc.items.modifications' },
+    { id: 'contact', key: 'toc.items.contact' }
+  ];
+
+  tocNav.innerHTML = items.map(item => `
+    <a href="#${item.id}" class="toc-link block text-sm text-gray-600 hover:text-[#1e3a8a] py-2 px-3 rounded border-l-3 border-transparent">
+      ${t(item.key)}
+    </a>
+  `).join('');
+}
+
+// Update main content
+function updateMainContent() {
+  const mainContent = document.getElementById('main-content');
+  
+  mainContent.innerHTML = `
+    <!-- Preambule -->
+    <div class="glass-card rounded-xl p-8 border-l-4 border-[#1e3a8a]">
+      <div class="flex items-start mb-4">
+        <i class="fas fa-info-circle text-3xl text-[#1e3a8a] mr-4"></i>
+        <div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">${t('preambule.title')}</h2>
+          <p class="text-gray-700 leading-relaxed mb-3">${t('preambule.text1')}</p>
+          <p class="text-gray-700 leading-relaxed">${t('preambule.text2')}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 1: Definitions -->
+    <div id="definitions" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section1.title')}</h2>
+      <div class="space-y-3 text-gray-700">
+        <p><strong>${t('section1.referrer.label')}</strong> ${t('section1.referrer.text')}</p>
+        <p><strong>${t('section1.lead.label')}</strong> ${t('section1.lead.text')} <span class="text-red-600 font-semibold">${t('section1.lead.consent')}</span></p>
+        <p><strong>${t('section1.commission.label')}</strong> ${t('section1.commission.text')}</p>
+        <p><strong>${t('section1.agent.label')}</strong> ${t('section1.agent.text')}</p>
+        <p><strong>${t('section1.platform.label')}</strong> ${t('section1.platform.text')} <a href="https://real-estate-referrer.com" class="text-[#2563eb] hover:underline">real-estate-referrer.com</a></p>
+      </div>
+    </div>
+
+    <!-- Section 2: Registration -->
+    <div id="inscription" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section2.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section2.eligibility.title')}</h3>
+          <p class="text-gray-700">${t('section2.eligibility.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section2.eligibility.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section2.validation.title')}</h3>
+          <p class="text-gray-700">${t('section2.validation.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section2.responsibilities.title')}</h3>
+          <p class="text-gray-700">${t('section2.responsibilities.text')}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Continue with remaining sections... -->
+    ${generateRemainingContent()}
+
+    <!-- Acceptance -->
+    <div class="glass-card rounded-xl p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-[#2563eb]">
+      <div class="flex items-start">
+        <i class="fas fa-check-circle text-4xl text-green-500 mr-4"></i>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">${t('acceptance.title')}</h3>
+          <p class="text-gray-700 leading-relaxed">${t('acceptance.text')}</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Generate remaining content (sections 3-13)
+function generateRemainingContent() {
+  return `
+    <!-- Section 3: Program -->
+    <div id="programme" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#fbbf24]">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section3.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2"><i class="fas fa-cogs text-[#1e3a8a] mr-2"></i>${t('section3.functioning.title')}</h3>
+          <p class="text-gray-700 mb-2">${t('section3.functioning.intro')}</p>
+          <ol class="list-decimal list-inside text-gray-700 ml-4 space-y-2">
+            ${t('section3.functioning.steps', { returnObjects: true }).map(step => `<li>${step}</li>`).join('')}
+          </ol>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2"><i class="fas fa-star text-yellow-500 mr-2"></i>${t('section3.qualification.title')}</h3>
+          <p class="text-gray-700 mb-2">${t('section3.qualification.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
+            ${t('section3.qualification.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+          <div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded mt-3">
+            <p class="text-sm text-gray-700"><i class="fas fa-exclamation-triangle text-[#2563eb] mr-2"></i><strong>${t('section3.qualification.important')}</strong> ${t('section3.qualification.note')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Commissions -->
+    <div id="commissions" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section4.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section4.rate.title')}</h3>
+          <p class="text-gray-700 mb-3">${t('section4.rate.text')} <strong class="text-green-600 text-xl">${t('section4.rate.percentage')}</strong> ${t('section4.rate.text2')}</p>
+          <div class="bg-green-50 border border-green-200 p-4 rounded-lg">
+            <p class="font-bold text-gray-900 mb-2">${t('section4.rate.exampleTitle')}</p>
+            <ul class="text-sm text-gray-700 space-y-1">
+              ${t('section4.rate.exampleItems', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section4.payment.title')}</h3>
+          <p class="text-gray-700">${t('section4.payment.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section4.method.title')}</h3>
+          <p class="text-gray-700">${t('section4.method.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section4.nonPayment.title')}</h3>
+          <p class="text-gray-700">${t('section4.nonPayment.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section4.nonPayment.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Referrer Obligations -->
+    <div id="obligations-referrer" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section5.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section5.rera.title')}</h3>
+          <p class="text-gray-700">${t('section5.rera.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section5.rera.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section5.confidentiality.title')}</h3>
+          <p class="text-gray-700">${t('section5.confidentiality.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section5.exclusivity.title')}</h3>
+          <p class="text-gray-700">${t('section5.exclusivity.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section5.accuracy.title')}</h3>
+          <p class="text-gray-700">${t('section5.accuracy.text')}</p>
+        </div>
+        <div class="bg-red-50 border-2 border-red-500 p-4 rounded-lg">
+          <h3 class="font-bold text-red-900 mb-2 text-lg"><i class="fas fa-exclamation-circle mr-2"></i>${t('section5.consent.title')}</h3>
+          <p class="text-gray-800 font-semibold mb-2">${t('section5.consent.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section5.consent.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+          <p class="text-red-800 font-bold mt-3 text-sm">${t('section5.consent.warning')}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: Agent Obligations -->
+    <div id="obligations-agent" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section6.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section6.followUp.title')}</h3>
+          <p class="text-gray-700">${t('section6.followUp.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section6.transparency.title')}</h3>
+          <p class="text-gray-700">${t('section6.transparency.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section6.commissionPayment.title')}</h3>
+          <p class="text-gray-700">${t('section6.commissionPayment.text')}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 7: Intellectual Property -->
+    <div id="propriete" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section7.title')}</h2>
+      <div class="space-y-3 text-gray-700">
+        <p>${t('section7.text1')}</p>
+        <p>${t('section7.text2')}</p>
+        <p>${t('section7.text3')}</p>
+      </div>
+    </div>
+
+    <!-- Section 8: Termination -->
+    <div id="resiliation" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section8.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section8.byReferrer.title')}</h3>
+          <p class="text-gray-700">${t('section8.byReferrer.text')}</p>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section8.byAgent.title')}</h3>
+          <p class="text-gray-700">${t('section8.byAgent.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section8.byAgent.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section8.effects.title')}</h3>
+          <p class="text-gray-700">${t('section8.effects.text')}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 9: Liability -->
+    <div id="responsabilite" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section9.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section9.limitations.title')}</h3>
+          <p class="text-gray-700">${t('section9.limitations.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section9.limitations.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section9.exclusions.title')}</h3>
+          <p class="text-gray-700">${t('section9.exclusions.text')}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 10: Personal Data -->
+    <div id="donnees" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section10.title')}</h2>
+      <div class="space-y-4">
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section10.collection.title')}</h3>
+          <p class="text-gray-700 mb-2">${t('section10.collection.intro')}</p>
+          <p class="text-gray-700 font-semibold mb-2"><u>${t('section10.collection.referrersLabel')}</u></p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
+            ${t('section10.collection.referrersItems', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+          <p class="text-gray-700 font-semibold mb-2 mt-3"><u>${t('section10.collection.leadsLabel')}</u></p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1">
+            ${t('section10.collection.leadsItems', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+          <div class="bg-orange-50 border-l-4 border-orange-500 p-3 rounded mt-3">
+            <p class="text-sm text-gray-800"><i class="fas fa-info-circle text-orange-500 mr-2"></i><strong>${t('section10.collection.important')}</strong> ${t('section10.collection.note')}</p>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section10.usage.title')}</h3>
+          <p class="text-gray-700">${t('section10.usage.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section10.usage.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-gray-900 mb-2">${t('section10.rights.title')}</h3>
+          <p class="text-gray-700">${t('section10.rights.intro')}</p>
+          <ul class="list-disc list-inside text-gray-700 ml-4 space-y-1 mt-2">
+            ${t('section10.rights.items', { returnObjects: true }).map(item => `<li>${item}</li>`).join('')}
+          </ul>
+          <p class="text-gray-700 mt-2">${t('section10.rights.contact')} <a href="mailto:contact@real-estate-referrer.com" class="text-[#2563eb] hover:underline">contact@real-estate-referrer.com</a></p>
+        </div>
+        <div class="bg-blue-50 border-l-4 border-[#2563eb] p-4 rounded">
+          <p class="text-sm text-gray-700"><i class="fas fa-info-circle text-[#2563eb] mr-2"></i>${t('section10.rights.moreInfo')} <a href="privacy.html" class="text-[#2563eb] hover:underline font-semibold">${t('section10.rights.privacyLink')}</a>.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 11: Applicable Law -->
+    <div id="loi" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section11.title')}</h2>
+      <div class="space-y-3 text-gray-700">
+        <p>${t('section11.text1')}</p>
+        <p>${t('section11.text2')}</p>
+      </div>
+    </div>
+
+    <!-- Section 12: Modifications -->
+    <div id="modifications" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section12.title')}</h2>
+      <div class="space-y-3 text-gray-700">
+        <p>${t('section12.text1')}</p>
+        <p>${t('section12.text2')}</p>
+        <p class="text-sm text-gray-600 italic">${t('section12.lastModified')}</p>
+      </div>
+    </div>
+
+    <!-- Section 13: Contact -->
+    <div id="contact" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section13.title')}</h2>
+      <div class="space-y-4">
+        <p class="text-gray-700">${t('section13.intro')}</p>
+        <div class="grid md:grid-cols-3 gap-4">
+          <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <p class="font-bold text-gray-900 mb-2"><i class="fas fa-envelope text-[#2563eb] mr-2"></i>${t('section13.emailLabel')}</p>
+            <a href="mailto:${t('section13.email')}" class="text-[#2563eb] hover:underline text-sm">${t('section13.email')}</a>
+          </div>
+          <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+            <p class="font-bold text-gray-900 mb-2"><i class="fas fa-user text-[#7c3aed] mr-2"></i>${t('section13.nameLabel')}</p>
+            <p class="text-gray-700 text-sm">${t('section13.name')}</p>
+          </div>
+          <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+            <p class="font-bold text-gray-900 mb-2"><i class="fas fa-briefcase text-green-600 mr-2"></i>${t('section13.activityLabel')}</p>
+            <p class="text-gray-700 text-sm">${t('section13.activity')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+  if (e.target.matches('.toc-link')) {
+    e.preventDefault();
+    const targetId = e.target.getAttribute('href');
+    const targetSection = document.querySelector(targetId);
+    if (targetSection) {
+      targetSection.scrollIntoView({ behavior: 'smooth' });
+      document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+      e.target.classList.add('active');
     }
-  });
+  }
 });
 </script>
 
