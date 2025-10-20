@@ -1,1 +1,41 @@
+{
+  "privacy": {
+    "title": "Patakaran sa Privacy",
+    "subtitle": "Real Estate Referral Program - Dubai, UAE",
+    "lastUpdated": "Huling na-update: Oktubre 20, 2025",
+    
+    "intro": {
+      "title": "Panimula",
+      "p1": "Ang Real Estate Referrer (na tinukoy bilang \"kami\", \"amin\" o \"Platform\") ay nakatuon sa pagprotekta ng privacy at personal na data ng lahat ng mga gumagamit ng aming real estate referral platform.",
+      "p2": "Ipinalili walawa ng Patakaran sa Privacy na ito kung paano namin kinokolekta, ginagamit, ibinabahagi at pinoprotektahan ang inyong personal na impormasyon alinsunod sa General Data Protection Regulation (GDPR) at mga naaangkop na batas sa United Arab Emirates.",
+      "p3": "Sa paggamit ng aming platform, tinatanggap ninyo ang mga praktis na inilarawan sa patakarang ito."
+    },
 
+    "nav": {
+      "home": "Home",
+      "howItWorks": "Paano Ito Gumagana",
+      "login": "Mag-login"
+    },
+
+    "footer": {
+      "title": "Real Estate Referrer",
+      "navigation": "Nabigasyon",
+      "legal": "Legal",
+      "contact": "Makipag-ugnayan",
+      "home": "Home",
+      "howItWorks": "Paano Ito Gumagana",
+      "loginLink": "Mag-login",
+      "signup": "Mag-sign Up",
+      "terms": "Mga Tuntunin",
+      "privacy": "Privacy",
+      "contract": "Contract Template",
+      "copyright": "© 2025 Karyne de Clercq. Lahat ng karapatan ay nakalaan."
+    },
+
+    "cta": {
+      "questions": "May mga tanong tungkol sa inyong data?",
+      "subtitle": "Huwag mag-atubiling makipag-ugnayan sa amin para sa anumang mga tanong tungkol sa pagproseso ng inyong personal na data.",
+      "button": "Makipag-ugnayan Sa Amin"
+    }
+  }
+}
