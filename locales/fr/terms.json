@@ -2,7 +2,7 @@
   "nav": {
     "home": "Accueil",
     "howItWorks": "Comment ça marche",
-    "login": "Login"
+    "login": "Connexion"
   },
   "hero": {
     "title": "Conditions Générales d'Utilisation",
@@ -29,295 +29,294 @@
   },
   "preambule": {
     "title": "Préambule",
-    "text1": "Les présentes Conditions Générales d'Utilisation (ci-après \"CGU\") régissent l'utilisation de la plateforme Real Estate Referrer et le programme d'apporteurs d'affaires immobiliers opéré par Karyne de Clercq, agent immobilier à Dubai, UAE.",
-    "text2": "En vous inscrivant sur la plateforme, vous acceptez sans réserve les présentes CGU."
+    "text1": "Les présentes Conditions Générales d'Utilisation (ci-après \"CGU\") régissent l'utilisation de la plateforme Real Estate Referrer et la participation au programme d'apporteurs d'affaires immobiliers à Dubai, UAE.",
+    "text2": "En créant un compte et en utilisant nos services, vous acceptez sans réserve les présentes conditions."
   },
   "section1": {
     "title": "1. Définitions",
     "referrer": {
       "label": "Apporteur d'affaires :",
-      "text": "Toute personne physique inscrite sur la plateforme dans le but de référer des clients potentiels."
+      "text": "Toute personne physique ou morale inscrite sur la plateforme et ayant pour objectif de référer des clients potentiels (leads) à l'agent immobilier."
     },
     "lead": {
-      "label": "Lead qualifié :",
-      "text": "Contact d'un client potentiel réellement intéressé par un achat ou une location immobilière, avec un budget défini et un projet à court terme (0-6 mois).",
-      "consent": "Le lead doit avoir donné son consentement explicite pour être contacté par l'agent."
+      "label": "Lead :",
+      "text": "Contact commercial qualifié d'un client potentiel intéressé par une transaction immobilière (achat, vente, ou location) à Dubai.",
+      "consent": "Le lead doit avoir donné son consentement explicite pour être contacté."
     },
     "commission": {
       "label": "Commission :",
-      "text": "Rémunération versée à l'apporteur lors de la conclusion d'une transaction immobilière initiée par son lead."
+      "text": "Rémunération versée à l'apporteur suite à la conclusion d'une transaction immobilière résultant directement du lead fourni."
     },
     "agent": {
       "label": "Agent :",
-      "text": "Karyne de Clercq, agent immobilier titulaire d'une licence RERA à Dubai."
+      "text": "Karyne de Clercq, agent immobilier certifié RERA à Dubai, exploitant la plateforme Real Estate Referrer."
     },
     "platform": {
       "label": "Plateforme :",
-      "text": "Le site web et l'application Real Estate Referrer accessible à l'adresse"
+      "text": "Le site web et l'application accessible à l'adresse"
     }
   },
   "section2": {
     "title": "2. Inscription",
     "eligibility": {
-      "title": "2.1. Conditions d'éligibilité",
+      "title": "2.1 Conditions d'éligibilité",
       "intro": "Pour devenir apporteur d'affaires, vous devez :",
       "items": [
-        "Être majeur (18 ans minimum)",
-        "Fournir des informations exactes et à jour",
-        "Disposer d'une adresse email valide",
-        "Accepter les présentes CGU"
+        "Être âgé d'au moins 18 ans",
+        "Avoir la capacité juridique de contracter",
+        "Fournir des informations exactes et à jour lors de l'inscription",
+        "Accepter les présentes CGU ainsi que la Politique de Confidentialité"
       ]
     },
     "validation": {
-      "title": "2.2. Validation du compte",
-      "text": "Votre inscription sera validée après vérification de vos informations. Nous nous réservons le droit de refuser toute inscription sans justification."
+      "title": "2.2 Validation du compte",
+      "text": "Après votre inscription, votre compte sera vérifié par l'agent. La validation peut prendre jusqu'à 48 heures ouvrées. Vous recevrez une notification par email une fois votre compte validé."
     },
     "responsibilities": {
-      "title": "2.3. Responsabilités",
-      "text": "Vous êtes responsable de la confidentialité de vos identifiants de connexion et de toutes les activités effectuées depuis votre compte."
+      "title": "2.3 Responsabilités de l'apporteur",
+      "text": "Vous êtes responsable de la confidentialité de vos identifiants de connexion et de toute activité effectuée sous votre compte."
     }
   },
   "section3": {
-    "title": "3. Programme de référencement",
+    "title": "3. Programme de Référencement",
     "functioning": {
-      "title": "3.1. Fonctionnement",
-      "intro": "Le programme fonctionne selon les étapes suivantes :",
+      "title": "Fonctionnement du système",
+      "intro": "Le programme fonctionne selon le processus suivant :",
       "steps": [
-        "L'apporteur identifie un client potentiel",
-        "L'apporteur soumet le lead via la plateforme",
-        "L'agent contacte le client et gère la transaction",
-        "En cas de vente ou location, l'apporteur perçoit sa commission"
+        "L'apporteur identifie un client potentiel intéressé par une transaction immobilière à Dubai",
+        "L'apporteur ajoute le lead via son dashboard sur la plateforme",
+        "L'agent prend contact avec le client et gère la transaction",
+        "L'apporteur suit l'évolution du lead en temps réel via son dashboard",
+        "En cas de conclusion de la transaction, l'apporteur reçoit sa commission"
       ]
     },
     "qualification": {
-      "title": "3.2. Critères de qualification",
-      "intro": "Un lead est considéré comme qualifié s'il remplit les critères suivants :",
+      "title": "Critères de qualification des leads",
+      "intro": "Un lead est considéré comme qualifié s'il remplit les conditions suivantes :",
       "items": [
-        "Consentement explicite : La personne a autorisé le partage de ses coordonnées",
-        "Intérêt réel et actuel pour un achat ou une location",
-        "Budget défini et réaliste",
-        "Projet à court terme (moins de 6 mois)",
-        "Coordonnées valides et vérifiables",
-        "Le client n'est pas déjà en contact avec l'agent"
+        "Contact réel et vérifiable (email et téléphone valides)",
+        "Intérêt manifeste pour une transaction immobilière à Dubai",
+        "Budget défini ou fourchette de prix identifiée",
+        "Projet d'achat, de vente ou de location dans les 6 mois",
+        "Consentement explicite du client pour être contacté par l'agent"
       ],
-      "important": "Important :",
-      "note": "Vous n'êtes PAS autorisé à faire visiter les biens. Seuls les agents avec licence RERA peuvent le faire. Votre rôle se limite à transmettre les informations du client."
+      "important": "IMPORTANT :",
+      "note": "Un lead non qualifié ou fournissant de fausses informations pourra être rejeté sans commission."
     }
   },
   "section4": {
     "title": "4. Commissions",
     "rate": {
-      "title": "4.1. Taux de commission",
-      "text": "Vous percevez",
+      "title": "4.1 Taux de commission",
+      "text": "L'apporteur perçoit",
       "percentage": "20%",
-      "text2": "de la commission agent sur toute transaction conclue.",
-      "exampleTitle": "Exemple de calcul :",
+      "text2": "de la commission agent sur chaque transaction aboutie.",
+      "exampleTitle": "Exemple de calcul (vente de 1,000,000 AED) :",
       "exampleItems": [
-        "• Vente d'un bien à 5,000,000 AED",
-        "• Commission totale (2%) : 100,000 AED",
-        "• Commission agent (50%) : 50,000 AED",
-        "• Votre commission (20%) : 10,000 AED"
+        "Commission totale agence : 20,000 AED (2%)",
+        "Part agent : 10,000 AED (50%)",
+        "Commission apporteur : 2,000 AED (20% de 10,000 AED)"
       ]
     },
     "payment": {
-      "title": "4.2. Délai de paiement",
-      "text": "Les commissions sont versées sous 45 à 60 jours après la signature définitive du contrat de vente ou de location et la réception de la commission par l'agent."
+      "title": "4.2 Conditions de versement",
+      "text": "La commission est versée dans les 48 heures ouvrées suivant la signature du contrat de vente ou du contrat de location par le client."
     },
     "method": {
-      "title": "4.3. Mode de paiement",
-      "text": "Les paiements sont effectués par virement bancaire sur le compte bancaire que vous aurez renseigné dans votre profil."
+      "title": "4.3 Mode de paiement",
+      "text": "Les commissions sont versées par virement bancaire sur le compte communiqué par l'apporteur lors de son inscription."
     },
     "nonPayment": {
-      "title": "4.4. Conditions de non-paiement",
-      "intro": "Aucune commission n'est due dans les cas suivants :",
+      "title": "4.4 Cas de non-paiement de commission",
+      "intro": "Aucune commission ne sera due dans les cas suivants :",
       "items": [
-        "Absence de consentement : Le client n'avait pas autorisé le partage de ses coordonnées",
-        "Lead non qualifié ou informations erronées",
-        "Client déjà en contact avec l'agent",
-        "Lead dupliqué (déjà soumis par un autre apporteur)",
-        "Transaction annulée ou non finalisée"
+        "Le lead fourni était déjà connu de l'agent avant votre référencement",
+        "Le client annule la transaction ou ne donne pas suite",
+        "Les informations fournies étaient fausses ou incomplètes",
+        "Le client n'a pas donné son consentement pour être contacté"
       ]
     }
   },
   "section5": {
-    "title": "5. Obligations de l'apporteur",
+    "title": "5. Obligations de l'Apporteur",
     "rera": {
-      "title": "5.1. Respect des lois RERA",
-      "intro": "Vous vous engagez à respecter toutes les réglementations de la Real Estate Regulatory Agency (RERA) de Dubai, notamment :",
+      "title": "5.1 Respect des lois RERA",
+      "intro": "L'apporteur s'engage à respecter les réglementations RERA (Real Estate Regulatory Agency) de Dubai :",
       "items": [
-        "Interdiction formelle de faire visiter des biens",
-        "Interdiction de négocier directement avec les propriétaires",
-        "Interdiction de représenter l'agent sans autorisation écrite"
+        "Ne pas se présenter comme agent immobilier si vous n'avez pas de licence RERA",
+        "Ne pas négocier directement les prix ou conditions de vente",
+        "Ne pas signer de documents au nom de l'agent",
+        "Rediriger toute question technique vers l'agent"
       ]
     },
     "confidentiality": {
-      "title": "5.2. Confidentialité",
-      "text": "Vous vous engagez à ne pas divulguer les informations confidentielles concernant l'agent, ses clients, ou les biens immobiliers."
+      "title": "5.2 Confidentialité",
+      "text": "L'apporteur s'engage à ne pas divulguer les informations confidentielles obtenues dans le cadre du programme à des tiers non autorisés."
     },
     "exclusivity": {
-      "title": "5.3. Exclusivité du lead",
-      "text": "Chaque lead soumis doit être exclusif. Vous ne pouvez pas soumettre le même lead à plusieurs agents ou agences simultanément."
+      "title": "5.3 Exclusivité du lead",
+      "text": "Un lead ne peut être soumis qu'une seule fois. Si vous soumettez un lead déjà enregistré par un autre apporteur ou déjà connu de l'agent, votre soumission sera rejetée."
     },
     "accuracy": {
-      "title": "5.4. Véracité des informations",
-      "text": "Vous garantissez l'exactitude et la véracité de toutes les informations que vous fournissez concernant les leads."
+      "title": "5.4 Exactitude des informations",
+      "text": "Vous garantissez l'exactitude et la véracité des informations fournies concernant les leads. Toute fausse information peut entraîner la résiliation de votre compte."
     },
     "consent": {
-      "title": "5.5. Consentement obligatoire (RGPD)",
-      "intro": "Vous vous engagez à obtenir le consentement explicite et préalable de chaque personne avant de partager ses données personnelles.",
+      "title": "CONSENTEMENT DU CLIENT - OBLIGATOIRE",
+      "intro": "Avant de soumettre un lead, vous DEVEZ obtenir le consentement explicite du client pour :",
       "items": [
-        "La personne doit être informée que ses coordonnées seront transmises à un agent immobilier",
-        "La personne doit accepter explicitement d'être contactée",
-        "Vous ne pouvez PAS partager les coordonnées d'une personne sans son accord"
+        "Être contacté par l'agent immobilier",
+        "Recevoir des informations sur des biens immobiliers",
+        "Voir ses données personnelles traitées dans le cadre de la transaction"
       ],
-      "warning": "⚠️ Le non-respect de cette obligation peut entraîner la suspension immédiate de votre compte et des poursuites légales."
+      "warning": "⚠️ Soumettre un lead sans consentement est une violation des lois sur la protection des données et peut entraîner des poursuites légales."
     }
   },
   "section6": {
-    "title": "6. Obligations de l'agent",
+    "title": "6. Obligations de l'Agent",
     "followUp": {
-      "title": "6.1. Suivi des leads",
-      "text": "L'agent s'engage à contacter chaque lead qualifié dans un délai raisonnable (48-72h) et à assurer un suivi professionnel."
+      "title": "6.1 Suivi des leads",
+      "text": "L'agent s'engage à contacter chaque lead qualifié dans un délai de 48 heures ouvrées et à fournir un service professionnel."
     },
     "transparency": {
-      "title": "6.2. Transparence",
-      "text": "L'agent s'engage à tenir l'apporteur informé de l'avancement de chaque lead via la plateforme (statuts : nouveau, visite, offre, vendu)."
+      "title": "6.2 Transparence sur les ventes",
+      "text": "L'agent mettra à jour le statut de chaque lead en temps réel sur la plateforme pour permettre à l'apporteur de suivre l'avancement."
     },
     "commissionPayment": {
-      "title": "6.3. Paiement des commissions",
-      "text": "L'agent s'engage à verser les commissions dues dans les délais stipulés (45-60 jours après signature)."
+      "title": "6.3 Paiement des commissions",
+      "text": "L'agent s'engage à verser les commissions dues dans les délais indiqués à l'article 4.2."
     }
   },
   "section7": {
-    "title": "7. Propriété intellectuelle",
-    "text1": "La plateforme Real Estate Referrer, son contenu, sa structure, et tous les éléments qui la composent sont la propriété exclusive de Karyne de Clercq.",
-    "text2": "Vous disposez d'un droit d'utilisation personnel, non exclusif et non transférable de la plateforme, uniquement dans le cadre du programme d'apporteurs d'affaires.",
-    "text3": "Toute reproduction, représentation, modification ou exploitation de tout ou partie de la plateforme est strictement interdite sans autorisation préalable écrite."
+    "title": "7. Propriété Intellectuelle",
+    "text1": "Tous les contenus présents sur la plateforme (textes, images, logos, vidéos) sont la propriété exclusive de l'agent ou de ses partenaires et sont protégés par les lois sur la propriété intellectuelle.",
+    "text2": "Toute reproduction, distribution, modification ou utilisation commerciale sans autorisation préalable est strictement interdite.",
+    "text3": "Le nom \"Real Estate Referrer\" et le logo associé sont des marques déposées."
   },
   "section8": {
     "title": "8. Résiliation",
     "byReferrer": {
-      "title": "8.1. Résiliation par l'apporteur",
-      "text": "Vous pouvez résilier votre compte à tout moment depuis votre dashboard ou en contactant le support. Les commissions sur les leads en cours restent acquises."
+      "title": "8.1 Résiliation par l'apporteur",
+      "text": "L'apporteur peut résilier son compte à tout moment en envoyant une demande écrite à l'agent. Les leads en cours resteront valides pour le calcul des commissions."
     },
     "byAgent": {
-      "title": "8.2. Résiliation par l'agent",
-      "intro": "L'agent se réserve le droit de suspendre ou résilier votre compte en cas de :",
+      "title": "8.2 Résiliation par l'agent",
+      "intro": "L'agent se réserve le droit de suspendre ou résilier un compte sans préavis en cas de :",
       "items": [
-        "Partage de données sans consentement (violation du RGPD)",
-        "Non-respect des présentes CGU",
-        "Soumission répétée de leads non qualifiés",
-        "Comportement frauduleux ou contraire à l'éthique",
-        "Violation des lois RERA"
+        "Violation des présentes CGU",
+        "Soumission répétée de leads non qualifiés ou frauduleux",
+        "Comportement nuisible ou contraire à l'éthique professionnelle",
+        "Non-respect des lois RERA ou des réglementations locales"
       ]
     },
     "effects": {
-      "title": "8.3. Effets de la résiliation",
-      "text": "En cas de résiliation, vous conservez le droit aux commissions sur les transactions déjà conclues. Les leads en cours sont transférés à l'agent sans droit à commission sauf accord contraire."
+      "title": "8.3 Effets de la résiliation",
+      "text": "En cas de résiliation, l'apporteur perd l'accès à la plateforme mais conserve le droit aux commissions sur les transactions conclues avant la date de résiliation."
     }
   },
   "section9": {
-    "title": "9. Responsabilité",
+    "title": "9. Limitation de Responsabilité",
     "limitations": {
-      "title": "9.1. Limitations de responsabilité",
-      "intro": "L'agent ne peut être tenu responsable :",
+      "title": "9.1 Limitations de responsabilité",
+      "intro": "L'agent ne pourra être tenu responsable :",
       "items": [
-        "Des interruptions temporaires de la plateforme",
-        "De la non-conclusion d'une transaction avec un lead",
-        "Des pertes de données dues à un cas de force majeure",
-        "Des actions ou comportements des clients référés"
+        "Des dommages indirects résultant de l'utilisation de la plateforme",
+        "Des interruptions temporaires de service pour maintenance",
+        "Des pertes de données dues à des problèmes techniques indépendants de sa volonté",
+        "Des décisions prises par les clients référés"
       ]
     },
     "exclusions": {
-      "title": "9.2. Exclusions de garantie",
-      "text": "La plateforme est fournie \"en l'état\". L'agent ne garantit pas que la plateforme sera exempte d'erreurs ou fonctionnera sans interruption."
+      "title": "9.2 Exclusions de garantie",
+      "text": "La plateforme est fournie \"en l'état\". L'agent ne garantit pas que le service sera exempt d'erreurs ou disponible en permanence."
     }
   },
   "section10": {
-    "title": "10. Données personnelles (RGPD)",
+    "title": "10. Protection des Données Personnelles (RGPD/GDPR)",
     "collection": {
-      "title": "10.1. Collecte des données",
-      "intro": "Nous collectons les données suivantes :",
-      "referrersLabel": "Concernant les apporteurs :",
+      "title": "10.1 Données collectées",
+      "intro": "Dans le cadre du programme, nous collectons les données suivantes :",
+      "referrersLabel": "Pour les apporteurs :",
       "referrersItems": [
         "Nom, prénom, email, téléphone",
-        "Historique des commissions",
-        "Données de connexion et d'utilisation"
+        "Coordonnées bancaires (pour le versement des commissions)",
+        "Historique des leads soumis"
       ],
-      "leadsLabel": "Concernant les leads :",
+      "leadsLabel": "Pour les leads (clients potentiels) :",
       "leadsItems": [
-        "Nom, email, téléphone des clients potentiels",
-        "Informations sur leur projet immobilier"
+        "Nom, prénom, email, téléphone",
+        "Type de bien recherché, budget",
+        "Statut du lead (nouveau, visite, offre, vendu/loué)"
       ],
-      "important": "Important :",
-      "note": "Les données des leads ne peuvent être collectées QUE si la personne concernée a donné son consentement explicite pour être contactée par l'agent immobilier."
+      "important": "IMPORTANT :",
+      "note": "Les apporteurs doivent obtenir le consentement explicite des leads avant de soumettre leurs données."
     },
     "usage": {
-      "title": "10.2. Utilisation des données",
-      "intro": "Vos données sont utilisées pour :",
+      "title": "10.2 Utilisation des données",
+      "intro": "Les données sont utilisées uniquement pour :",
       "items": [
-        "Gestion du programme d'apporteurs",
-        "Communication et support",
-        "Calcul et paiement des commissions",
-        "Amélioration de la plateforme"
+        "La gestion du programme d'apporteurs",
+        "Le suivi des leads et transactions",
+        "Le versement des commissions",
+        "Les communications relatives au programme"
       ]
     },
     "rights": {
-      "title": "10.3. Droits des utilisateurs",
+      "title": "10.3 Droits des utilisateurs",
       "intro": "Conformément au RGPD, vous disposez des droits suivants :",
       "items": [
         "Droit d'accès à vos données",
         "Droit de rectification",
         "Droit à l'effacement (\"droit à l'oubli\")",
         "Droit d'opposition au traitement",
-        "Droit à la portabilité"
+        "Droit à la portabilité des données"
       ],
-      "contact": "Pour exercer vos droits, contactez-nous à",
-      "moreInfo": "Pour plus de détails, consultez notre",
-      "privacyLink": "Politique de confidentialité"
+      "contact": "Pour exercer vos droits, contactez-nous à :",
+      "moreInfo": "Pour plus d'informations, consultez notre",
+      "privacyLink": "Politique de Confidentialité"
     }
   },
   "section11": {
-    "title": "11. Loi applicable et juridiction",
-    "text1": "Les présentes CGU sont régies par le droit des Émirats Arabes Unis et les réglementations de la RERA (Real Estate Regulatory Agency) de Dubai.",
-    "text2": "Tout litige relatif à l'interprétation ou à l'exécution des présentes CGU relève de la compétence exclusive des tribunaux de Dubai."
+    "title": "11. Loi Applicable et Juridiction",
+    "text1": "Les présentes CGU sont régies par les lois des Émirats Arabes Unis.",
+    "text2": "Tout litige relatif à l'interprétation ou à l'exécution des présentes sera soumis aux tribunaux compétents de Dubai, UAE."
   },
   "section12": {
     "title": "12. Modifications des CGU",
-    "text1": "Nous nous réservons le droit de modifier les présentes CGU à tout moment. Les modifications prennent effet dès leur publication sur la plateforme.",
-    "text2": "Vous serez informé par email de toute modification substantielle. La poursuite de l'utilisation de la plateforme après modification vaut acceptation des nouvelles CGU.",
+    "text1": "L'agent se réserve le droit de modifier les présentes CGU à tout moment. Les modifications entreront en vigueur dès leur publication sur la plateforme.",
+    "text2": "Les utilisateurs seront informés par email de toute modification substantielle. La poursuite de l'utilisation de la plateforme après modification vaut acceptation des nouvelles conditions.",
     "lastModified": "Dernière modification : 19 octobre 2025"
   },
   "section13": {
     "title": "13. Contact",
-    "intro": "Pour toute question concernant les présentes CGU, vous pouvez nous contacter :",
+    "intro": "Pour toute question concernant ces Conditions Générales d'Utilisation, vous pouvez nous contacter :",
     "emailLabel": "Email",
     "email": "contact@real-estate-referrer.com",
     "nameLabel": "Nom",
     "name": "Karyne de Clercq",
     "activityLabel": "Activité",
-    "activity": "Agent immobilier - Dubai, UAE"
+    "activity": "Agent Immobilier Certifié RERA - Dubai, UAE"
   },
   "acceptance": {
-    "title": "Acceptation des CGU",
-    "text": "En utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu, compris et accepté les présentes Conditions Générales d'Utilisation."
+    "title": "Acceptation des Conditions",
+    "text": "En créant un compte sur Real Estate Referrer, vous déclarez avoir lu, compris et accepté l'intégralité des présentes Conditions Générales d'Utilisation ainsi que la Politique de Confidentialité."
   },
   "footer": {
     "title": "Real Estate Referrer",
     "navigation": "Navigation",
-    "legal": "Légal",
-    "contact": "Contact",
     "navItems": {
       "home": "Accueil",
       "howItWorks": "Comment ça marche",
       "login": "Connexion",
       "signup": "Inscription"
     },
+    "legal": "Légal",
     "legalItems": {
       "terms": "CGU",
       "privacy": "Confidentialité",
-      "contract": "Template Contrat"
+      "contract": "Modèle de contrat"
     },
+    "contact": "Contact",
     "contactItems": {
       "email": "contact@real-estate-referrer.com",
       "phone": "+971 XX XXX XXXX",
