@@ -1,960 +1,990 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-  <script type="importmap">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+    <script type="importmap">
     {
-      "imports": {
-        "react": "https://esm.sh/react@18.2.0",
-        "react-dom": "https://esm.sh/react-dom@18.2.0",
-        "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
-      }
+        "imports": {
+            "react": "https://esm.sh/react@18.2.0",
+            "react-dom": "https://esm.sh/react-dom@18.2.0",
+            "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2"
+        }
     }
-  </script>
-  <style>
-    body {
-      background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
-      min-height: 100vh;
-    }
-  </style>
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
+            min-height: 100vh;
+        }
+    </style>
 </head>
 <body class="text-white">
-  <div id="app"></div>
+    <div id="app"></div>
 
-  <script type="module">
-    await i18next
-      .use(i18nextHttpBackend)
-      .use(i18nextBrowserLanguageDetector)
-      .init({
-        fallbackLng: 'fr',
-        debug: false,
-        load: 'languageOnly',
-        ns: ['translation', 'auth'],
-        defaultNS: 'translation',
-        backend: {
-        loadPath: '/locales/{{lng}}/{{ns}}.json'
-        },
-        detection: {
-          order: ['localStorage', 'navigator'],
-          caches: ['localStorage']
-        }
-      });
+    <script type="module">
+        /* ============================================
+           🔧 MODIFICATION 1 : Configuration i18next
+           Ajout du namespace 'auth' pour l'authentification
+           ============================================ */
+        await i18next
+            .use(i18nextHttpBackend)
+            .use(i18nextBrowserLanguageDetector)
+            .init({
+                fallbackLng: 'fr',
+                debug: false,
+                load: 'languageOnly',
+                ns: ['translation', 'auth'], // ← AJOUTÉ : namespace auth
+                defaultNS: 'translation', // ← AJOUTÉ : namespace par défaut
+                backend: {
+                    loadPath: '/locales/{{lng}}/{{ns}}.json'
+                },
+                detection: {
+                    order: ['localStorage', 'navigator'],
+                    caches: ['localStorage']
+                }
+            });
 
-    const t = (key) => i18next.t(key);
+        // Fonction de traduction
+        const t = (key) => i18next.t(key);
 
-async function changeLanguage(langCode) {
-  try {
-    await i18next.changeLanguage(langCode);
-    localStorage.setItem('i18nextLng', langCode);
-    window.location.reload();
-  } catch (error) {
-    console.error('Erreur changement de langue:', error);
-  }
-}
-window.changeLanguage = changeLanguage;  
-    import { createClient } from '@supabase/supabase-js';
-
-    const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
-    
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    let currentUser = null;
-    let userProfile = null;
-    let currentPage = 'landing';
-
-    function renderLandingPage() {
-      return `
-        <div class="min-h-screen">
-          <header class="container mx-auto px-4 py-6">
-            <div class="flex justify-between items-center">
-              <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
-              <div class="flex items-center gap-3">
-              <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-  <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
-  <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
-  <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
-  <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
-  <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
-  <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
-  <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
-  <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
-</div>
-                <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
-                <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
-                <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
-              </div>
-            </div>
-          </header>
-
-          <main class="container mx-auto px-4 py-20">
-            <div class="text-center mb-12">
-              <h2 class="text-5xl md:text-6xl font-bold mb-6">
-  ${t('hero.title')}
-              </h2>
-              <p class="text-xl text-gray-300 mb-8">
-  ${t('hero.subtitle')}
-              </p>
-              <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
-  ${t('hero.cta_button')}
-              </button>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6 my-16">
-              <div class="rounded-xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" 
-                     alt="Burj Khalifa Dubai" 
-                     class="w-full h-64 object-cover">
-              </div>
-              <div class="rounded-xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" 
-                     alt="Dubai Marina" 
-                     class="w-full h-64 object-cover">
-              </div>
-              <div class="rounded-xl overflow-hidden shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" 
-                     alt="Dubai Skyline" 
-                     class="w-full h-64 object-cover">
-              </div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8 mt-20">
-              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
-<div class="text-gray-300">${t('stats.commission_label')}</div>
-              </div>
-              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.support_value')}</div>
-<div class="text-gray-300">${t('stats.support_label')}</div>
-              </div>
-              <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-               <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.timeline_value')}</div>
-<div class="text-gray-300">${t('stats.timeline_label')}</div>
-              </div>
-            </div>
-
-            <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
-              <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
-              <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                  <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
-                  <div class="space-y-3 text-gray-300">
-                    <div class="flex justify-between">
-                      <span>${t('gains.sale_example_1_property')}</span>
-<span class="font-bold text-yellow-500">${t('gains.sale_example_1_commission')}</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span>${t('gains.sale_example_2_property')}</span>
-                      <span class="font-bold text-yellow-500">${t('gains.sale_example_2_commission')}</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span>${t('gains.sale_example_3_property')}</span>
-                      <span class="font-bold text-yellow-500">${t('gains.sale_example_3_commission')}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                  <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
-                  <div class="space-y-3 text-gray-300">
-                    <div class="flex justify-between">
-                      <span>${t('gains.rental_example_1_property')}</span>
-                      <span class="font-bold text-yellow-500">${t('gains.rental_example_1_commission')}</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span>${t('gains.rental_example_2_property')}</span>
-                      <span class="font-bold text-yellow-500">${t('gains.rental_example_2_commission')}</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span>${t('gains.rental_example_3_property')}</span>
-                      <span class="font-bold text-yellow-500">${t('gains.rental_example_3_commission')}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </main>
-
-          <footer class="bg-gray-900 bg-opacity-50 backdrop-blur-md py-8 mt-20">
-            <div class="container mx-auto px-4">
-              <div class="flex justify-center gap-8 flex-wrap text-sm text-gray-400">
-                <a href="terms.html" class="hover:text-white transition">${t('footer.terms')}</a>
-                <a href="privacy.html" class="hover:text-white transition">${t('footer.privacy')}</a>
-                <a href="how-it-works.html" class="hover:text-white transition">${t('footer.how_it_works')}</a>
-                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">${t('footer.contact')}</a>
-              </div>
-              <div class="text-center text-gray-500 text-sm mt-4">
-               ${t('footer.copyright')}
-              </div>
-            </div>
-          </footer>
-        </div>
-      `;
-    }
-
-    function renderAuthPage(mode) {
-      const isLogin = mode === 'login';
-      const isReset = mode === 'reset';
-      
-      const ta = (key) => i18next.t(`auth.${key}`);
-      
-      return `
-        <div class="min-h-screen flex items-center justify-center px-4">
-          <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
-            
-            <div class="flex justify-center gap-2 mb-6 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-              <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform" title="Français">🇫🇷</button>
-              <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform" title="English">🇬🇧</button>
-              <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform" title="العربية">🇦🇪</button>
-              <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform" title="Русский">🇷🇺</button>
-              <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform" title="हिन्दी">🇮🇳</button>
-              <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform" title="اردو">🇵🇰</button>
-              <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform" title="中文">🇨🇳</button>
-              <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform" title="Tagalog">🇵🇭</button>
-            </div>
-
-            <h2 class="text-3xl font-bold text-center mb-2">
-              ${isReset ? ta('reset.title') : (isLogin ? ta('login.title') : ta('signup.title'))}
-            </h2>
-            <p class="text-gray-400 text-center mb-8">
-              ${isReset ? ta('reset.subtitle') : (isLogin ? ta('login.subtitle') : ta('signup.subtitle'))}
-            </p>
-            
-            ${!isReset ? `
-            <form id="authForm" class="space-y-6">
-              ${!isLogin ? `
-              <div>
-                <label class="block text-sm font-medium mb-2">${ta('signup.nameLabel')}</label>
-                <input type="text" name="name" required placeholder="${ta('signup.namePlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <div>
-                <label class="block text-sm font-medium mb-2">${ta('signup.phoneLabel')}</label>
-                <input type="tel" name="phone" required placeholder="${ta('signup.phonePlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              ` : ''}
-              
-              <div>
-                <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.emailLabel') : ta('signup.emailLabel')}</label>
-                <input type="email" name="email" required placeholder="${isLogin ? ta('login.emailPlaceholder') : ta('signup.emailPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.passwordLabel') : ta('signup.passwordLabel')}</label>
-                <input type="password" name="password" required minlength="12" placeholder="${isLogin ? ta('login.passwordPlaceholder') : ta('signup.passwordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-                <p class="text-xs text-gray-400 mt-1">${isLogin ? ta('login.passwordHint') : ta('signup.passwordHint')}</p>
-              </div>
-              
-              ${!isLogin ? `
-              <div>
-                <label class="block text-sm font-medium mb-2">${ta('signup.confirmPasswordLabel')}</label>
-                <input type="password" name="confirmPassword" required minlength="12" placeholder="${ta('signup.confirmPasswordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              ` : ''}
-              
-              <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                ${isLogin ? ta('login.submitButton') : ta('signup.submitButton')}
-              </button>
-              
-              ${isLogin ? `
-              <div class="text-center">
-                <button type="button" onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">${ta('login.forgotPassword')}</button>
-              </div>
-              ` : ''}
-            </form>
-            ` : `
-            <form id="resetForm" class="space-y-6">
-              <div>
-                <label class="block text-sm font-medium mb-2">${ta('reset.emailLabel')}</label>
-                <input type="email" name="email" required placeholder="${ta('reset.emailPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
-              </div>
-              <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                ${ta('reset.submitButton')}
-              </button>
-            </form>
-            `}
-            
-            <div class="mt-6 text-center">
-              <button onclick="render()" class="text-gray-400 hover:text-white transition">${ta('common.back')}</button>
-            </div>
-            
-            ${!isReset ? `
-            <div class="mt-4 text-center">
-              <button onclick="${isLogin ? 'showSignup()' : 'showLogin()'}" class="text-yellow-500 hover:text-yellow-400">
-                ${isLogin ? ta('login.noAccount') + ' ' + ta('login.signupLink') : ta('signup.alreadyAccount') + ' ' + ta('signup.loginLink')}
-              </button>
-            </div>
-            ` : ''}
-          </div>
-        </div>
-      `;
-    }
-
-    function renderDashboard() {
-      const isAdmin = userProfile?.role === 'admin';
-      const contractStatus = userProfile?.contract_status || 'pending';
-      
-      if (!isAdmin && contractStatus !== 'validated') {
-        return renderContractUploadPage();
-      }
-      
-      return `
-        <div class="min-h-screen">
-          <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md py-4">
-            <div class="container mx-auto px-4 flex justify-between items-center">
-              <h1 class="text-2xl font-bold text-yellow-400">Dashboard ${isAdmin ? 'Admin' : 'Apporteur'}</h1>
-              <div class="flex gap-4 items-center">
-                <span class="text-gray-300">${userProfile?.name}</span>
-                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">Déconnexion</button>
-              </div>
-            </div>
-          </header>
-          <main class="container mx-auto px-4 py-8">
-            <div id="dashboardContent"></div>
-          </main>
-        </div>
-      `;
-    }
-
-    function renderContractUploadPage() {
-      const contractStatus = userProfile?.contract_status || 'pending';
-      
-      return `
-        <div class="min-h-screen flex items-center justify-center px-4">
-          <div class="max-w-2xl w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
-            <h2 class="text-3xl font-bold text-center mb-6">📋 Contrat d'Apporteur</h2>
-            
-            ${contractStatus === 'pending' ? `
-              <div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded-lg p-6 mb-6">
-                <p class="text-yellow-300 text-center">
-                  ⚠️ Téléchargez et signez le contrat
-                </p>
-              </div>
-              <div class="space-y-6">
-                <div class="text-center">
-                  <a href="contract-template.html" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-lg">
-                    📥 Télécharger le contrat
-                  </a>
-                </div>
-                <form id="contractForm" class="space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium mb-2">Contrat signé (PDF)</label>
-                    <input type="file" name="contract" accept=".pdf" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
-                  </div>
-                  <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg">
-                    Envoyer
-                  </button>
-                </form>
-              </div>
-            ` : contractStatus === 'uploaded' ? `
-              <div class="bg-blue-900 bg-opacity-30 border border-blue-600 rounded-lg p-6 text-center">
-                <p class="text-blue-300">📄 En attente de validation</p>
-              </div>
-            ` : ''}
-            
-            <div class="mt-6 text-center">
-              <button onclick="logout()" class="text-gray-400 hover:text-white">← Déconnexion</button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    async function loadDashboardContent() {
-      const isAdmin = userProfile?.role === 'admin';
-      const container = document.getElementById('dashboardContent');
-      if (!container) return;
-      
-      if (isAdmin) {
-        await loadAdminDashboard(container);
-      } else {
-        await loadReferrerDashboard(container);
-      }
-    }
-
-    async function loadAdminDashboard(container) {
-      const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
-      const { data: allLeads } = await supabase.from('leads').select('*, referrer:referrer_id(id, name)').order('created_at', { ascending: false });
-      
-      const pendingContracts = profiles?.filter(p => p.contract_status === 'uploaded').length || 0;
-      const totalReferrers = profiles?.length || 0;
-      const activeLeads = allLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
-      const totalSales = allLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
-      const totalCommissions = allLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
-      
-      container.innerHTML = `
-        <div class="mb-8">
-          <ul class="flex border-b border-gray-700">
-            <li class="mr-1">
-              <button onclick="switchTab('leads')" id="tab-leads" class="inline-block py-2 px-4 font-semibold border-b-2 border-yellow-500 text-yellow-500">Leads</button>
-            </li>
-            <li class="mr-1">
-              <button onclick="switchTab('contracts')" id="tab-contracts" class="inline-block py-2 px-4 font-semibold text-gray-400">
-                Contrats ${pendingContracts > 0 ? '<span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">' + pendingContracts + '</span>' : ''}
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <div id="tab-content-leads">
-          <div class="grid md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-gray-800 rounded-xl p-6">
-              <div class="text-gray-400 text-sm mb-2">Apporteurs</div>
-              <div class="text-3xl font-bold text-yellow-500">${totalReferrers}</div>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6">
-              <div class="text-gray-400 text-sm mb-2">Leads actifs</div>
-              <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6">
-              <div class="text-gray-400 text-sm mb-2">Transactions</div>
-              <div class="text-3xl font-bold text-green-500">${totalSales}</div>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6">
-              <div class="text-gray-400 text-sm mb-2">Commissions</div>
-              <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
-            </div>
-          </div>
-
-          <div class="bg-gray-800 rounded-xl p-6">
-            <h3 class="text-xl font-bold mb-4">Tous les leads</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full">
-                <thead>
-                  <tr class="border-b border-gray-700">
-                    <th class="text-left py-3 px-4">Apporteur</th>
-                    <th class="text-left py-3 px-4">Client</th>
-                    <th class="text-left py-3 px-4">Type</th>
-                    <th class="text-left py-3 px-4">Budget</th>
-                    <th class="text-left py-3 px-4">Statut</th>
-                    <th class="text-left py-3 px-4">Commission</th>
-                    <th class="text-left py-3 px-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${allLeads?.map(lead => `
-                    <tr class="border-b border-gray-700">
-                      <td class="py-3 px-4">${lead.referrer?.name || 'N/A'}</td>
-                      <td class="py-3 px-4">
-                        <div class="font-semibold">${lead.client_name}</div>
-                        <div class="text-sm text-gray-400">${lead.client_email}</div>
-                      </td>
-                      <td class="py-3 px-4">
-                        <div class="text-sm">${lead.lead_type}</div>
-                        <div class="text-xs text-gray-400">${lead.property_type}</div>
-                      </td>
-                      <td class="py-3 px-4">
-                        ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
-                      </td>
-                      <td class="py-3 px-4">
-                        <select onchange="updateLeadStatus('${lead.id}', this.value)" class="bg-gray-700 rounded px-2 py-1 text-sm">
-                          <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
-                          <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
-                          <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
-                          <option value="${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}" ${(lead.status === 'vendu' || lead.status === 'loué') ? 'selected' : ''}>${lead.lead_type.includes('Sale') ? 'Vendu' : 'Loué'}</option>
-                        </select>
-                      </td>
-                      <td class="py-3 px-4">
-                        ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
-                      </td>
-                      <td class="py-3 px-4">
-                        ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Marquer ${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}</button>` : ''}
-                      </td>
-                    </tr>
-                  `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <div id="tab-content-contracts" style="display: none;">
-          <div class="bg-gray-800 rounded-xl p-6">
-            <h3 class="text-xl font-bold mb-4">Contrats</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full">
-                <thead>
-                  <tr class="border-b border-gray-700">
-                    <th class="text-left py-3 px-4">Nom</th>
-                    <th class="text-left py-3 px-4">Téléphone</th>
-                    <th class="text-left py-3 px-4">Statut</th>
-                    <th class="text-left py-3 px-4">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${profiles?.map(profile => `
-                    <tr class="border-b border-gray-700">
-                      <td class="py-3 px-4">${profile.name}</td>
-                      <td class="py-3 px-4">${profile.phone}</td>
-                      <td class="py-3 px-4">
-                        ${profile.contract_status === 'pending' ? '<span class="px-2 py-1 bg-gray-600 rounded text-xs">Pending</span>' : ''}
-                        ${profile.contract_status === 'uploaded' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">À valider</span>' : ''}
-                        ${profile.contract_status === 'validated' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Validé</span>' : ''}
-                      </td>
-                      <td class="py-3 px-4">
-                        ${profile.contract_status === 'uploaded' || profile.contract_status === 'validated' ? `<button onclick="viewContract('${profile.contract_file_url}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm mr-2">Voir</button>` : ''}
-                        ${profile.contract_status === 'uploaded' ? `<button onclick="validateContract('${profile.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm mr-2">Valider</button><button onclick="rejectContract('${profile.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Rejeter</button>` : ''}
-                      </td>
-                    </tr>
-                  `).join('') || '<tr><td colspan="4" class="text-center py-8 text-gray-400">Aucun apporteur</td></tr>'}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    async function loadReferrerDashboard(container) {
-      const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
-      
-      const totalEarnings = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
-      const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
-      const closedDeals = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
-      
-      container.innerHTML = `
-        <div class="grid md:grid-cols-3 gap-6 mb-8">
-          <div class="bg-gray-800 rounded-xl p-6">
-            <div class="text-gray-400 text-sm mb-2">Gains totaux</div>
-            <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-          </div>
-          <div class="bg-gray-800 rounded-xl p-6">
-            <div class="text-gray-400 text-sm mb-2">Leads en cours</div>
-            <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
-          </div>
-          <div class="bg-gray-800 rounded-xl p-6">
-            <div class="text-gray-400 text-sm mb-2">Transactions</div>
-            <div class="text-3xl font-bold text-green-500">${closedDeals}</div>
-          </div>
-        </div>
-
-        <div class="mb-6">
-          <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg">+ Ajouter un lead</button>
-        </div>
-
-        <div class="bg-gray-800 rounded-xl p-6">
-          <h3 class="text-xl font-bold mb-4">Mes leads</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead>
-                <tr class="border-b border-gray-700">
-                  <th class="text-left py-3 px-4">Client</th>
-                  <th class="text-left py-3 px-4">Type</th>
-                  <th class="text-left py-3 px-4">Budget</th>
-                  <th class="text-left py-3 px-4">Statut</th>
-                  <th class="text-left py-3 px-4">Commission</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${myLeads?.map(lead => `
-                  <tr class="border-b border-gray-700">
-                    <td class="py-3 px-4">
-                      <div class="font-semibold">${lead.client_name}</div>
-                      <div class="text-sm text-gray-400">${lead.client_email}</div>
-                    </td>
-                    <td class="py-3 px-4">
-                      <div class="text-sm">${lead.lead_type}</div>
-                      <div class="text-xs text-gray-400">${lead.property_type}</div>
-                    </td>
-                    <td class="py-3 px-4">
-                      ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
-                    </td>
-                    <td class="py-3 px-4">
-                      ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">Nouveau</span>' : ''}
-                      ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">Visite</span>' : ''}
-                      ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">Offre</span>' : ''}
-                      ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Vendu</span>' : ''}
-                      ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Loué</span>' : ''}
-                    </td>
-                    <td class="py-3 px-4">
-                      ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
-                    </td>
-                  </tr>
-                `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    function showAddLeadForm() {
-      const modal = document.createElement('div');
-      modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50';
-      modal.innerHTML = `
-        <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full max-h-screen overflow-y-auto">
-          <h3 class="text-2xl font-bold mb-6">Ajouter un lead</h3>
-          <form id="addLeadForm" class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium mb-2">Type</label>
-              <select name="leadType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg" onchange="toggleFields(this.value)">
-                <option value="">Sélectionner...</option>
-                <option value="Sale - Buyer">Vente - Acheteur</option>
-                <option value="Sale - Seller">Vente - Vendeur</option>
-                <option value="Rental - Tenant">Location - Locataire</option>
-                <option value="Rental - Landlord">Location - Propriétaire</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-2">Nom</label>
-              <input type="text" name="clientName" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-2">Email</label>
-              <input type="email" name="clientEmail" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-2">Téléphone</label>
-              <input type="tel" name="clientPhone" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-2">Type de propriété</label>
-              <select name="propertyType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
-                <option value="Appartement">Appartement</option>
-                <option value="Villa">Villa</option>
-                <option value="Townhouse">Townhouse</option>
-                <option value="Penthouse">Penthouse</option>
-                <option value="Studio">Studio</option>
-              </select>
-            </div>
-            <div id="budgetField">
-              <label class="block text-sm font-medium mb-2">Budget (AED)</label>
-              <input type="number" name="budget" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
-            </div>
-            <div id="rentField" style="display: none;">
-              <label class="block text-sm font-medium mb-2">Loyer annuel (AED)</label>
-              <input type="number" name="annualRent" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
-            </div>
-            <div class="flex gap-4">
-              <button type="submit" class="flex-1 bg-yellow-500 text-gray-900 font-bold py-3 rounded-lg">Ajouter</button>
-              <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-lg">Annuler</button>
-            </div>
-          </form>
-        </div>
-      `;
-      
-      document.body.appendChild(modal);
-      
-      document.getElementById('addLeadForm').onsubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const leadType = formData.get('leadType');
-        const isSale = leadType.includes('Sale');
-        
-        const { error } = await supabase.from('leads').insert([{
-          referrer_id: currentUser.id,
-          lead_type: leadType,
-          client_name: formData.get('clientName'),
-          client_email: formData.get('clientEmail'),
-          client_phone: formData.get('clientPhone'),
-          property_type: formData.get('propertyType'),
-          budget: isSale ? formData.get('budget') : null,
-          annual_rent: !isSale ? formData.get('annualRent') : null,
-          status: 'nouveau'
-        }]);
-        
-        if (error) {
-          alert('Erreur : ' + error.message);
-        } else {
-          alert('Lead ajouté !');
-          modal.remove();
-          render();
-        }
-      };
-    }
-
-    window.toggleFields = function(leadType) {
-      const budgetField = document.getElementById('budgetField');
-      const rentField = document.getElementById('rentField');
-      const isSale = leadType.includes('Sale');
-      
-      if (isSale) {
-        budgetField.style.display = 'block';
-        budgetField.querySelector('input').required = true;
-        rentField.style.display = 'none';
-        rentField.querySelector('input').required = false;
-      } else {
-        budgetField.style.display = 'none';
-        budgetField.querySelector('input').required = false;
-        rentField.style.display = 'block';
-        rentField.querySelector('input').required = true;
-      }
-    };
-
-    async function updateLeadStatus(leadId, newStatus) {
-      const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
-      if (error) alert('Erreur : ' + error.message);
-      else render();
-    }
-
-    async function markAsSold(leadId, leadType) {
-      const isSale = leadType.includes('Sale');
-      const priceLabel = isSale ? 'Prix de vente (AED)' : 'Loyer annuel (AED)';
-      const price = prompt(priceLabel);
-      if (!price) return;
-      
-      const numPrice = parseFloat(price);
-      const commissionRate = isSale ? 0.02 : 0.05;
-      const agentCommission = numPrice * commissionRate * 0.5;
-      const referrerCommission = agentCommission * 0.2;
-      
-      const { error } = await supabase.from('leads').update({
-        status: isSale ? 'vendu' : 'loué',
-        sale_price: isSale ? numPrice : null,
-        annual_rent: !isSale ? numPrice : null,
-        agent_commission: agentCommission,
-        referrer_commission: referrerCommission,
-        closed_at: new Date().toISOString()
-      }).eq('id', leadId);
-      
-      if (error) alert('Erreur : ' + error.message);
-      else {
-        alert('Commission : ' + referrerCommission.toLocaleString() + ' AED');
-        render();
-      }
-    }
-
-    window.switchTab = function(tab) {
-      document.getElementById('tab-leads').classList.toggle('border-yellow-500', tab === 'leads');
-      document.getElementById('tab-leads').classList.toggle('text-yellow-500', tab === 'leads');
-      document.getElementById('tab-leads').classList.toggle('text-gray-400', tab !== 'leads');
-      document.getElementById('tab-contracts').classList.toggle('border-yellow-500', tab === 'contracts');
-      document.getElementById('tab-contracts').classList.toggle('text-yellow-500', tab === 'contracts');
-      document.getElementById('tab-contracts').classList.toggle('text-gray-400', tab !== 'contracts');
-      document.getElementById('tab-content-leads').style.display = tab === 'leads' ? 'block' : 'none';
-      document.getElementById('tab-content-contracts').style.display = tab === 'contracts' ? 'block' : 'none';
-    };
-
-    window.viewContract = function(url) {
-      if (!url) {
-        alert('Aucun contrat');
-        return;
-      }
-      window.open(url, '_blank');
-    };
-
-    window.validateContract = async function(userId) {
-      if (!confirm('Valider ?')) return;
-      const { error } = await supabase.from('profiles').update({ contract_status: 'validated' }).eq('id', userId);
-      if (error) alert('Erreur : ' + error.message);
-      else {
-        alert('Validé !');
-        render();
-      }
-    };
-
-    window.rejectContract = async function(userId) {
-      if (!confirm('Rejeter ?')) return;
-      const { error } = await supabase.from('profiles').update({ contract_status: 'rejected' }).eq('id', userId);
-      if (error) alert('Erreur : ' + error.message);
-      else {
-        alert('Rejeté');
-        render();
-      }
-    };
-
-    async function handleAuth(mode) {
-      const form = document.getElementById('authForm');
-      if (!form) return;
-      
-      const ta = (key) => i18next.t(`auth.${key}`);
-      
-      form.onsubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const email = formData.get('email');
-        const password = formData.get('password');
-        
-        if (mode === 'signup') {
-          const confirmPassword = formData.get('confirmPassword');
-          if (password !== confirmPassword) {
-            alert(ta('signup.errors.passwordMismatch'));
-            return;
-          }
-          
-          const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?.])[A-Za-z\d@#$%^&*!?.]{12,}$/;
-          if (!passwordRegex.test(password)) {
-            alert(ta('signup.errors.passwordInvalid'));
-            return;
-          }
-          
-          const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-              data: {
-                name: formData.get('name'),
-                phone: formData.get('phone')
-              }
+        // Fonction pour changer la langue
+        async function changeLanguage(langCode) {
+            try {
+                await i18next.changeLanguage(langCode);
+                localStorage.setItem('i18nextLng', langCode);
+                window.location.reload();
+            } catch (error) {
+                console.error('Erreur changement de langue:', error);
             }
-          });
-          
-          if (error) {
-            if (error.message.includes('already registered')) {
-              alert(ta('signup.errors.emailExists'));
+        }
+        // Rendre la fonction accessible globalement
+        window.changeLanguage = changeLanguage;
+
+        import { createClient } from '@supabase/supabase-js';
+
+        const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentUser = null;
+        let userProfile = null;
+        let currentPage = 'landing';
+
+        function renderLandingPage() {
+            return `
+                <div class="min-h-screen">
+                    <header class="container mx-auto px-4 py-6">
+                        <div class="flex justify-between items-center">
+                            <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                                    <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
+                                    <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
+                                    <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
+                                    <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
+                                    <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
+                                    <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
+                                    <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
+                                    <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
+                                </div>
+                                <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
+                                <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
+                                <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main class="container mx-auto px-4 py-20">
+                        <div class="text-center mb-12">
+                            <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                                ${t('hero.title')}
+                            </h2>
+                            <p class="text-xl text-gray-300 mb-8">
+                                ${t('hero.subtitle')}
+                            </p>
+                            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
+                                ${t('hero.cta_button')}
+                            </button>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-6 my-16">
+                            <div class="rounded-xl overflow-hidden shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="rounded-xl overflow-hidden shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" alt="Dubai Marina" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="rounded-xl overflow-hidden shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 gap-8 mt-20">
+                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
+                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
+                                <div class="text-gray-300">${t('stats.commission_label')}</div>
+                            </div>
+                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
+                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.support_value')}</div>
+                                <div class="text-gray-300">${t('stats.support_label')}</div>
+                            </div>
+                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
+                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.timeline_value')}</div>
+                                <div class="text-gray-300">${t('stats.timeline_label')}</div>
+                            </div>
+                        </div>
+
+                        <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
+                            <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
+                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
+                                    <div class="space-y-3 text-gray-300">
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.sale_example_1_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_1_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.sale_example_2_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_2_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.sale_example_3_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_3_commission')}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
+                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
+                                    <div class="space-y-3 text-gray-300">
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.rental_example_1_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_1_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.rental_example_2_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_2_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.rental_example_3_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_3_commission')}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer class="bg-gray-900 bg-opacity-50 backdrop-blur-md py-8 mt-20">
+                        <div class="container mx-auto px-4">
+                            <div class="flex justify-center gap-8 flex-wrap text-sm text-gray-400">
+                                <a href="terms.html" class="hover:text-white transition">${t('footer.terms')}</a>
+                                <a href="privacy.html" class="hover:text-white transition">${t('footer.privacy')}</a>
+                                <a href="how-it-works.html" class="hover:text-white transition">${t('footer.how_it_works')}</a>
+                                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">${t('footer.contact')}</a>
+                            </div>
+                            <div class="text-center text-gray-500 text-sm mt-4">
+                                ${t('footer.copyright')}
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            `;
+        }
+
+        /* ============================================
+           🔧 MODIFICATION 2 : Fonction renderAuthPage()
+           Remplacement COMPLET avec traductions i18next
+           ============================================ */
+        function renderAuthPage(mode) {
+            const isLogin = mode === 'login';
+            const isReset = mode === 'reset';
+
+            // Fonction helper pour traductions auth
+            const ta = (key) => i18next.t(`auth.${key}`);
+
+            return `
+                <div class="min-h-screen flex items-center justify-center px-4">
+                    <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
+                        
+                        <!-- Sélecteur de langue 8 langues -->
+                        <div class="flex justify-center gap-2 mb-6 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                            <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform" title="Français">🇫🇷</button>
+                            <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform" title="English">🇬🇧</button>
+                            <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform" title="العربية">🇦🇪</button>
+                            <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform" title="Русский">🇷🇺</button>
+                            <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform" title="हिन्दी">🇮🇳</button>
+                            <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform" title="اردو">🇵🇰</button>
+                            <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform" title="中文">🇨🇳</button>
+                            <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform" title="Tagalog">🇵🇭</button>
+                        </div>
+
+                        <h2 class="text-3xl font-bold text-center mb-2">
+                            ${isReset ? ta('reset.title') : (isLogin ? ta('login.title') : ta('signup.title'))}
+                        </h2>
+                        <p class="text-gray-400 text-center mb-8">
+                            ${isReset ? ta('reset.subtitle') : (isLogin ? ta('login.subtitle') : ta('signup.subtitle'))}
+                        </p>
+
+                        ${!isReset ? `
+                            <form id="authForm" class="space-y-6">
+                                ${!isLogin ? `
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">${ta('signup.nameLabel')}</label>
+                                        <input type="text" name="name" required placeholder="${ta('signup.namePlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">${ta('signup.phoneLabel')}</label>
+                                        <input type="tel" name="phone" required placeholder="${ta('signup.phonePlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    </div>
+                                ` : ''}
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.emailLabel') : ta('signup.emailLabel')}</label>
+                                    <input type="email" name="email" required placeholder="${isLogin ? ta('login.emailPlaceholder') : ta('signup.emailPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.passwordLabel') : ta('signup.passwordLabel')}</label>
+                                    <input type="password" name="password" required minlength="12" placeholder="${isLogin ? ta('login.passwordPlaceholder') : ta('signup.passwordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    <p class="text-xs text-gray-400 mt-1">${isLogin ? ta('login.passwordHint') : ta('signup.passwordHint')}</p>
+                                </div>
+
+                                ${!isLogin ? `
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">${ta('signup.confirmPasswordLabel')}</label>
+                                        <input type="password" name="confirmPassword" required minlength="12" placeholder="${ta('signup.confirmPasswordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                    </div>
+                                ` : ''}
+
+                                <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                                    ${isLogin ? ta('login.submitButton') : ta('signup.submitButton')}
+                                </button>
+
+                                ${isLogin ? `
+                                    <div class="text-center">
+                                        <button type="button" onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">${ta('login.forgotPassword')}</button>
+                                    </div>
+                                ` : ''}
+                            </form>
+                        ` : `
+                            <form id="resetForm" class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2">${ta('reset.emailLabel')}</label>
+                                    <input type="email" name="email" required placeholder="${ta('reset.emailPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
+                                </div>
+                                <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                                    ${ta('reset.submitButton')}
+                                </button>
+                            </form>
+                        `}
+
+                        <div class="mt-6 text-center">
+                            <button onclick="render()" class="text-gray-400 hover:text-white transition">${ta('common.back')}</button>
+                        </div>
+
+                        ${!isReset ? `
+                            <div class="mt-4 text-center">
+                                <button onclick="${isLogin ? 'showSignup()' : 'showLogin()'}" class="text-yellow-500 hover:text-yellow-400">
+                                    ${isLogin ? ta('login.noAccount') + ' ' + ta('login.signupLink') : ta('signup.alreadyAccount') + ' ' + ta('signup.loginLink')}
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDashboard() {
+            const isAdmin = userProfile?.role === 'admin';
+            const contractStatus = userProfile?.contract_status || 'pending';
+
+            if (!isAdmin && contractStatus !== 'validated') {
+                return renderContractUploadPage();
+            }
+
+            return `
+                <div class="min-h-screen">
+                    <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md py-4">
+                        <div class="container mx-auto px-4 flex justify-between items-center">
+                            <h1 class="text-2xl font-bold text-yellow-400">Dashboard ${isAdmin ? 'Admin' : 'Apporteur'}</h1>
+                            <div class="flex gap-4 items-center">
+                                <span class="text-gray-300">${userProfile?.name}</span>
+                                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">Déconnexion</button>
+                            </div>
+                        </div>
+                    </header>
+                    <main class="container mx-auto px-4 py-8">
+                        <div id="dashboardContent"></div>
+                    </main>
+                </div>
+            `;
+        }
+
+        function renderContractUploadPage() {
+            const contractStatus = userProfile?.contract_status || 'pending';
+
+            return `
+                <div class="min-h-screen flex items-center justify-center px-4">
+                    <div class="max-w-2xl w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
+                        <h2 class="text-3xl font-bold text-center mb-6">📋 Contrat d'Apporteur</h2>
+
+                        ${contractStatus === 'pending' ? `
+                            <div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded-lg p-6 mb-6">
+                                <p class="text-yellow-300 text-center">
+                                    ⚠️ Téléchargez et signez le contrat
+                                </p>
+                            </div>
+                            <div class="space-y-6">
+                                <div class="text-center">
+                                    <a href="contract-template.html" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-lg">
+                                        📄 Télécharger le contrat
+                                    </a>
+                                </div>
+                                <form id="contractForm" class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2">Contrat signé (PDF)</label>
+                                        <input type="file" name="contract" accept=".pdf" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
+                                    </div>
+                                    <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg">
+                                        Envoyer
+                                    </button>
+                                </form>
+                            </div>
+                        ` : contractStatus === 'uploaded' ? `
+                            <div class="bg-blue-900 bg-opacity-30 border border-blue-600 rounded-lg p-6 text-center">
+                                <p class="text-blue-300">⏳ En attente de validation</p>
+                            </div>
+                        ` : ''}
+
+                        <div class="mt-6 text-center">
+                            <button onclick="logout()" class="text-gray-400 hover:text-white">← Déconnexion</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadDashboardContent() {
+            const isAdmin = userProfile?.role === 'admin';
+            const container = document.getElementById('dashboardContent');
+            if (!container) return;
+
+            if (isAdmin) {
+                await loadAdminDashboard(container);
             } else {
-              alert(ta('signup.errors.networkError'));
+                await loadReferrerDashboard(container);
             }
-          } else {
-            alert(ta('signup.success.accountCreated'));
-            showLogin();
-          }
-        } else {
-          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-          if (error) {
-            alert(ta('login.errors.invalidCredentials'));
-          } else {
-            currentUser = data.user;
-            await loadUserProfile();
+        }
+
+        async function loadAdminDashboard(container) {
+            const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
+            const { data: allLeads } = await supabase.from('leads').select('*, referrer:referrer_id(id, name)').order('created_at', { ascending: false });
+
+            const pendingContracts = profiles?.filter(p => p.contract_status === 'uploaded').length || 0;
+            const totalReferrers = profiles?.length || 0;
+            const activeLeads = allLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
+            const totalSales = allLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+            const totalCommissions = allLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
+
+            container.innerHTML = `
+                <div class="mb-8">
+                    <ul class="flex border-b border-gray-700">
+                        <li class="mr-1">
+                            <button onclick="switchTab('leads')" id="tab-leads" class="inline-block py-2 px-4 font-semibold border-b-2 border-yellow-500 text-yellow-500">Leads</button>
+                        </li>
+                        <li class="mr-1">
+                            <button onclick="switchTab('contracts')" id="tab-contracts" class="inline-block py-2 px-4 font-semibold text-gray-400">
+                                Contrats ${pendingContracts > 0 ? '<span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">' + pendingContracts + '</span>' : ''}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div id="tab-content-leads">
+                    <div class="grid md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">Apporteurs</div>
+                            <div class="text-3xl font-bold text-yellow-500">${totalReferrers}</div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">Leads actifs</div>
+                            <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">Transactions</div>
+                            <div class="text-3xl font-bold text-green-500">${totalSales}</div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">Commissions</div>
+                            <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4">Tous les leads</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-700">
+                                        <th class="text-left py-3 px-4">Apporteur</th>
+                                        <th class="text-left py-3 px-4">Client</th>
+                                        <th class="text-left py-3 px-4">Type</th>
+                                        <th class="text-left py-3 px-4">Budget</th>
+                                        <th class="text-left py-3 px-4">Statut</th>
+                                        <th class="text-left py-3 px-4">Commission</th>
+                                        <th class="text-left py-3 px-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${allLeads?.map(lead => `
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4">${lead.referrer?.name || 'N/A'}</td>
+                                            <td class="py-3 px-4">
+                                                <div class="font-semibold">${lead.client_name}</div>
+                                                <div class="text-sm text-gray-400">${lead.client_email}</div>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <div class="text-sm">${lead.lead_type}</div>
+                                                <div class="text-xs text-gray-400">${lead.property_type}</div>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <select onchange="updateLeadStatus('${lead.id}', this.value)" class="bg-gray-700 rounded px-2 py-1 text-sm">
+                                                    <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
+                                                    <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
+                                                    <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
+                                                    <option value="${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}" ${(lead.status === 'vendu' || lead.status === 'loué') ? 'selected' : ''}>${lead.lead_type.includes('Sale') ? 'Vendu' : 'Loué'}</option>
+                                                </select>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Marquer ${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}</button>` : ''}
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-content-contracts" style="display: none;">
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4">Contrats</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-700">
+                                        <th class="text-left py-3 px-4">Nom</th>
+                                        <th class="text-left py-3 px-4">Téléphone</th>
+                                        <th class="text-left py-3 px-4">Statut</th>
+                                        <th class="text-left py-3 px-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${profiles?.map(profile => `
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4">${profile.name}</td>
+                                            <td class="py-3 px-4">${profile.phone}</td>
+                                            <td class="py-3 px-4">
+                                                ${profile.contract_status === 'pending' ? '<span class="px-2 py-1 bg-gray-600 rounded text-xs">Pending</span>' : ''}
+                                                ${profile.contract_status === 'uploaded' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">À valider</span>' : ''}
+                                                ${profile.contract_status === 'validated' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Validé</span>' : ''}
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                ${profile.contract_status === 'uploaded' || profile.contract_status === 'validated' ? `<button onclick="viewContract('${profile.contract_file_url}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm mr-2">Voir</button>` : ''}
+                                                ${profile.contract_status === 'uploaded' ? `<button onclick="validateContract('${profile.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm mr-2">Valider</button><button onclick="rejectContract('${profile.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Rejeter</button>` : ''}
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="4" class="text-center py-8 text-gray-400">Aucun apporteur</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function loadReferrerDashboard(container) {
+            const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
+
+            const totalEarnings = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
+            const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
+            const closedDeals = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+
+            container.innerHTML = `
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <div class="text-gray-400 text-sm mb-2">Gains totaux</div>
+                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <div class="text-gray-400 text-sm mb-2">Leads en cours</div>
+                        <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <div class="text-gray-400 text-sm mb-2">Transactions</div>
+                        <div class="text-3xl font-bold text-green-500">${closedDeals}</div>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg">+ Ajouter un lead</button>
+                </div>
+
+                <div class="bg-gray-800 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">Mes leads</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="border-b border-gray-700">
+                                    <th class="text-left py-3 px-4">Client</th>
+                                    <th class="text-left py-3 px-4">Type</th>
+                                    <th class="text-left py-3 px-4">Budget</th>
+                                    <th class="text-left py-3 px-4">Statut</th>
+                                    <th class="text-left py-3 px-4">Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${myLeads?.map(lead => `
+                                    <tr class="border-b border-gray-700">
+                                        <td class="py-3 px-4">
+                                            <div class="font-semibold">${lead.client_name}</div>
+                                            <div class="text-sm text-gray-400">${lead.client_email}</div>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <div class="text-sm">${lead.lead_type}</div>
+                                            <div class="text-xs text-gray-400">${lead.property_type}</div>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">Nouveau</span>' : ''}
+                                            ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">Visite</span>' : ''}
+                                            ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">Offre</span>' : ''}
+                                            ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Vendu</span>' : ''}
+                                            ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Loué</span>' : ''}
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
+                                        </td>
+                                    </tr>
+                                `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAddLeadForm() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50';
+            modal.innerHTML = `
+                <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full max-h-screen overflow-y-auto">
+                    <h3 class="text-2xl font-bold mb-6">Ajouter un lead</h3>
+                    <form id="addLeadForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Type</label>
+                            <select name="leadType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg" onchange="toggleFields(this.value)">
+                                <option value="">Sélectionner...</option>
+                                <option value="Sale - Buyer">Vente - Acheteur</option>
+                                <option value="Sale - Seller">Vente - Vendeur</option>
+                                <option value="Rental - Tenant">Location - Locataire</option>
+                                <option value="Rental - Landlord">Location - Propriétaire</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Nom</label>
+                            <input type="text" name="clientName" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input type="email" name="clientEmail" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Téléphone</label>
+                            <input type="tel" name="clientPhone" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Type de propriété</label>
+                            <select name="propertyType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                                <option value="Appartement">Appartement</option>
+                                <option value="Villa">Villa</option>
+                                <option value="Townhouse">Townhouse</option>
+                                <option value="Penthouse">Penthouse</option>
+                                <option value="Studio">Studio</option>
+                            </select>
+                        </div>
+                        <div id="budgetField">
+                            <label class="block text-sm font-medium mb-2">Budget (AED)</label>
+                            <input type="number" name="budget" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                        </div>
+                        <div id="rentField" style="display: none;">
+                            <label class="block text-sm font-medium mb-2">Loyer annuel (AED)</label>
+                            <input type="number" name="annualRent" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                        </div>
+                        <div class="flex gap-4">
+                            <button type="submit" class="flex-1 bg-yellow-500 text-gray-900 font-bold py-3 rounded-lg">Ajouter</button>
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-lg">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            document.getElementById('addLeadForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const leadType = formData.get('leadType');
+                const isSale = leadType.includes('Sale');
+
+                const { error } = await supabase.from('leads').insert([{
+                    referrer_id: currentUser.id,
+                    lead_type: leadType,
+                    client_name: formData.get('clientName'),
+                    client_email: formData.get('clientEmail'),
+                    client_phone: formData.get('clientPhone'),
+                    property_type: formData.get('propertyType'),
+                    budget: isSale ? formData.get('budget') : null,
+                    annual_rent: !isSale ? formData.get('annualRent') : null,
+                    status: 'nouveau'
+                }]);
+
+                if (error) {
+                    alert('Erreur : ' + error.message);
+                } else {
+                    alert('Lead ajouté !');
+                    modal.remove();
+                    render();
+                }
+            };
+        }
+
+        window.toggleFields = function(leadType) {
+            const budgetField = document.getElementById('budgetField');
+            const rentField = document.getElementById('rentField');
+            const isSale = leadType.includes('Sale');
+
+            if (isSale) {
+                budgetField.style.display = 'block';
+                budgetField.querySelector('input').required = true;
+                rentField.style.display = 'none';
+                rentField.querySelector('input').required = false;
+            } else {
+                budgetField.style.display = 'none';
+                budgetField.querySelector('input').required = false;
+                rentField.style.display = 'block';
+                rentField.querySelector('input').required = true;
+            }
+        };
+
+        async function updateLeadStatus(leadId, newStatus) {
+            const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+            if (error) alert('Erreur : ' + error.message);
+            else render();
+        }
+
+        async function markAsSold(leadId, leadType) {
+            const isSale = leadType.includes('Sale');
+            const priceLabel = isSale ? 'Prix de vente (AED)' : 'Loyer annuel (AED)';
+            const price = prompt(priceLabel);
+            if (!price) return;
+
+            const numPrice = parseFloat(price);
+            const commissionRate = isSale ? 0.02 : 0.05;
+            const agentCommission = numPrice * commissionRate * 0.5;
+            const referrerCommission = agentCommission * 0.2;
+
+            const { error } = await supabase.from('leads').update({
+                status: isSale ? 'vendu' : 'loué',
+                sale_price: isSale ? numPrice : null,
+                annual_rent: !isSale ? numPrice : null,
+                agent_commission: agentCommission,
+                referrer_commission: referrerCommission,
+                closed_at: new Date().toISOString()
+            }).eq('id', leadId);
+
+            if (error) alert('Erreur : ' + error.message);
+            else {
+                alert('Commission : ' + referrerCommission.toLocaleString() + ' AED');
+                render();
+            }
+        }
+
+        window.switchTab = function(tab) {
+            document.getElementById('tab-leads').classList.toggle('border-yellow-500', tab === 'leads');
+            document.getElementById('tab-leads').classList.toggle('text-yellow-500', tab === 'leads');
+            document.getElementById('tab-leads').classList.toggle('text-gray-400', tab !== 'leads');
+            document.getElementById('tab-contracts').classList.toggle('border-yellow-500', tab === 'contracts');
+            document.getElementById('tab-contracts').classList.toggle('text-yellow-500', tab === 'contracts');
+            document.getElementById('tab-contracts').classList.toggle('text-gray-400', tab !== 'contracts');
+            document.getElementById('tab-content-leads').style.display = tab === 'leads' ? 'block' : 'none';
+            document.getElementById('tab-content-contracts').style.display = tab === 'contracts' ? 'block' : 'none';
+        };
+
+        window.viewContract = function(url) {
+            if (!url) {
+                alert('Aucun contrat');
+                return;
+            }
+            window.open(url, '_blank');
+        };
+
+        window.validateContract = async function(userId) {
+            if (!confirm('Valider ?')) return;
+            const { error } = await supabase.from('profiles').update({ contract_status: 'validated' }).eq('id', userId);
+            if (error) alert('Erreur : ' + error.message);
+            else {
+                alert('Validé !');
+                render();
+            }
+        };
+
+        window.rejectContract = async function(userId) {
+            if (!confirm('Rejeter ?')) return;
+            const { error } = await supabase.from('profiles').update({ contract_status: 'rejected' }).eq('id', userId);
+            if (error) alert('Erreur : ' + error.message);
+            else {
+                alert('Rejeté');
+                render();
+            }
+        };
+
+        /* ============================================
+           🔧 MODIFICATION 3 : Fonction handleAuth()
+           Messages d'erreur et succès traduits
+           ============================================ */
+        async function handleAuth(mode) {
+            const form = document.getElementById('authForm');
+            if (!form) return;
+
+            // Helper pour traductions auth
+            const ta = (key) => i18next.t(`auth.${key}`);
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const email = formData.get('email');
+                const password = formData.get('password');
+
+                if (mode === 'signup') {
+                    const confirmPassword = formData.get('confirmPassword');
+                    if (password !== confirmPassword) {
+                        alert(ta('signup.errors.passwordMismatch'));
+                        return;
+                    }
+
+                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?.])[ A-Za-z\d@#$%^&*!?.]{12,}$/;
+                    if (!passwordRegex.test(password)) {
+                        alert(ta('signup.errors.passwordInvalid'));
+                        return;
+                    }
+
+                    const { data, error } = await supabase.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            data: {
+                                name: formData.get('name'),
+                                phone: formData.get('phone')
+                            }
+                        }
+                    });
+
+                    if (error) {
+                        if (error.message.includes('already registered')) {
+                            alert(ta('signup.errors.emailExists'));
+                        } else {
+                            alert(ta('signup.errors.networkError'));
+                        }
+                    } else {
+                        alert(ta('signup.success.accountCreated'));
+                        showLogin();
+                    }
+                } else {
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    if (error) {
+                        alert(ta('login.errors.invalidCredentials'));
+                    } else {
+                        currentUser = data.user;
+                        await loadUserProfile();
+                        render();
+                    }
+                }
+            };
+        }
+
+        /* ============================================
+           🔧 MODIFICATION 4 : Fonction handleReset()
+           Messages traduits
+           ============================================ */
+        async function handleReset() {
+            const form = document.getElementById('resetForm');
+            if (!form) return;
+
+            // Helper pour traductions auth
+            const ta = (key) => i18next.t(`auth.${key}`);
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const email = formData.get('email');
+
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: 'https://real-estate-referrer.com/reset-password.html'
+                });
+
+                if (error) {
+                    alert(ta('reset.errors.networkError'));
+                } else {
+                    alert(ta('reset.success.emailSent'));
+                    showLogin();
+                }
+            };
+        }
+
+        async function handleContractUpload() {
+            const form = document.getElementById('contractForm');
+            if (!form) return;
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                const fileInput = form.querySelector('input[type="file"]');
+                const file = fileInput.files[0];
+
+                if (!file) {
+                    alert('Fichier manquant');
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Fichier trop volumineux');
+                    return;
+                }
+
+                const fileName = `${currentUser.id}_${Date.now()}.pdf`;
+
+                const { data: uploadData, error: uploadError } = await supabase.storage.from('contracts').upload(fileName, file);
+
+                if (uploadError) {
+                    alert('Erreur : ' + uploadError.message);
+                    return;
+                }
+
+                const { data: urlData } = supabase.storage.from('contracts').getPublicUrl(fileName);
+
+                const { error: updateError } = await supabase.from('profiles').update({
+                    contract_status: 'uploaded',
+                    contract_file_url: urlData.publicUrl
+                }).eq('id', currentUser.id);
+
+                if (updateError) alert('Erreur : ' + updateError.message);
+                else {
+                    alert('Contrat envoyé !');
+                    await loadUserProfile();
+                    render();
+                }
+            };
+        }
+
+        async function loadUserProfile() {
+            const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+            userProfile = data;
+        }
+
+        async function logout() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            userProfile = null;
             render();
-          }
         }
-      };
-    }
 
-    async function handleReset() {
-      const form = document.getElementById('resetForm');
-      if (!form) return;
-      
-      const ta = (key) => i18next.t(`auth.${key}`);
-      
-      form.onsubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        const email = formData.get('email');
-        
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: 'https://real-estate-referrer.com/reset-password.html'
+        function showLogin() {
+            currentPage = 'auth-login';
+            render();
+        }
+
+        function showSignup() {
+            currentPage = 'auth-signup';
+            render();
+        }
+
+        function showReset() {
+            currentPage = 'auth-reset';
+            render();
+        }
+
+        async function render() {
+            const app = document.getElementById('app');
+
+            if (currentUser) {
+                app.innerHTML = renderDashboard();
+                await loadDashboardContent();
+                handleContractUpload();
+            } else if (currentPage === 'auth-login') {
+                app.innerHTML = renderAuthPage('login');
+                handleAuth('login');
+            } else if (currentPage === 'auth-signup') {
+                app.innerHTML = renderAuthPage('signup');
+                handleAuth('signup');
+            } else if (currentPage === 'auth-reset') {
+                app.innerHTML = renderAuthPage('reset');
+                handleReset();
+            } else {
+                app.innerHTML = renderLandingPage();
+            }
+        }
+
+        window.showLogin = showLogin;
+        window.showSignup = showSignup;
+        window.showReset = showReset;
+        window.logout = logout;
+        window.showAddLeadForm = showAddLeadForm;
+        window.updateLeadStatus = updateLeadStatus;
+        window.markAsSold = markAsSold;
+
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            currentUser = session?.user || null;
+            if (currentUser) await loadUserProfile();
+            render();
         });
-        
-        if (error) {
-          alert(ta('reset.errors.networkError'));
-        } else {
-          alert(ta('reset.success.emailSent'));
-          showLogin();
-        }
-      };
-    }
 
-    async function handleContractUpload() {
-      const form = document.getElementById('contractForm');
-      if (!form) return;
-      
-      form.onsubmit = async (e) => {
-        e.preventDefault();
-        const fileInput = form.querySelector('input[type="file"]');
-        const file = fileInput.files[0];
-        
-        if (!file) {
-          alert('Fichier manquant');
-          return;
-        }
-        
-        if (file.size > 5 * 1024 * 1024) {
-          alert('Fichier trop volumineux');
-          return;
-        }
-        
-        const fileName = `${currentUser.id}_${Date.now()}.pdf`;
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage.from('contracts').upload(fileName, file);
-        
-        if (uploadError) {
-          alert('Erreur : ' + uploadError.message);
-          return;
-        }
-        
-        const { data: urlData } = supabase.storage.from('contracts').getPublicUrl(fileName);
-        
-        const { error: updateError } = await supabase.from('profiles').update({
-          contract_status: 'uploaded',
-          contract_file_url: urlData.publicUrl
-        }).eq('id', currentUser.id);
-        
-        if (updateError) alert('Erreur : ' + updateError.message);
-        else {
-          alert('Contrat envoyé !');
-          await loadUserProfile();
-          render();
-        }
-      };
-    }
-
-    async function loadUserProfile() {
-      const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
-      userProfile = data;
-    }
-
-    async function logout() {
-      await supabase.auth.signOut();
-      currentUser = null;
-      userProfile = null;
-      render();
-    }
-
-    function showLogin() {
-      currentPage = 'auth-login';
-      render();
-    }
-
-    function showSignup() {
-      currentPage = 'auth-signup';
-      render();
-    }
-
-    function showReset() {
-      currentPage = 'auth-reset';
-      render();
-    }
-
-    async function render() {
-      const app = document.getElementById('app');
-      
-      if (currentUser) {
-        app.innerHTML = renderDashboard();
-        await loadDashboardContent();
-        handleContractUpload();
-      } else if (currentPage === 'auth-login') {
-        app.innerHTML = renderAuthPage('login');
-        handleAuth('login');
-      } else if (currentPage === 'auth-signup') {
-        app.innerHTML = renderAuthPage('signup');
-        handleAuth('signup');
-      } else if (currentPage === 'auth-reset') {
-        app.innerHTML = renderAuthPage('reset');
-        handleReset();
-      } else {
-        app.innerHTML = renderLandingPage();
-      }
-    }
-
-    window.showLogin = showLogin;
-    window.showSignup = showSignup;
-    window.showReset = showReset;
-    window.logout = logout;
-    window.showAddLeadForm = showAddLeadForm;
-    window.updateLeadStatus = updateLeadStatus;
-    window.markAsSold = markAsSold;
-
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      currentUser = session?.user || null;
-      if (currentUser) await loadUserProfile();
-      render();
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      currentUser = session?.user || null;
-      if (currentUser) {
-        loadUserProfile().then(() => render());
-      } else {
-        render();
-      }
-    });
-  </script>
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            currentUser = session?.user || null;
+            if (currentUser) {
+                loadUserProfile().then(() => render());
+            } else {
+                render();
+            }
+        });
+    </script>
 </body>
 </html>
+```
+
+📝 **MESSAGE DE COMMIT** :
+```
+feat(i18n): implement multilingual authentication (8 languages)
+
+- Add i18next configuration with 'auth' namespace
+- Replace renderAuthPage() with full i18next translations
+- Add 8-language selector in auth forms (login, signup, reset)
+- Translate all error and success messages
+- Support 2FA translations (ready for future implementation)
+- Integrate auth.json files for FR, EN, AR, RU, HI, UR, ZH, TL
