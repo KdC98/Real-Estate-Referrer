@@ -251,19 +251,12 @@ function t(key) {
 
 // Update all content
 function updateContent() {
-  // Update simple translations
   document.querySelectorAll('[data-i18n]').forEach(element => {
     const key = element.getAttribute('data-i18n');
     element.innerHTML = t(key);
   });
-
-  // Update TOC
   updateTOC();
-  
-  // Update main content
   updateMainContent();
-  
-  // Update active flag
   updateActiveFlag(i18next.language);
 }
 
@@ -298,7 +291,6 @@ function updateMainContent() {
   const mainContent = document.getElementById('main-content');
   
   mainContent.innerHTML = `
-    <!-- Preambule -->
     <div class="glass-card rounded-xl p-8 border-l-4 border-[#1e3a8a]">
       <div class="flex items-start mb-4">
         <i class="fas fa-info-circle text-3xl text-[#1e3a8a] mr-4"></i>
@@ -310,7 +302,6 @@ function updateMainContent() {
       </div>
     </div>
 
-    <!-- Section 1: Definitions -->
     <div id="definitions" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section1.title')}</h2>
       <div class="space-y-3 text-gray-700">
@@ -322,7 +313,6 @@ function updateMainContent() {
       </div>
     </div>
 
-    <!-- Section 2: Registration -->
     <div id="inscription" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section2.title')}</h2>
       <div class="space-y-4">
@@ -344,25 +334,6 @@ function updateMainContent() {
       </div>
     </div>
 
-    ${generateRemainingContent()}
-
-    <!-- Acceptance -->
-    <div class="glass-card rounded-xl p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-[#2563eb]">
-      <div class="flex items-start">
-        <i class="fas fa-check-circle text-4xl text-green-500 mr-4"></i>
-        <div>
-          <h3 class="text-xl font-bold text-gray-900 mb-3">${t('acceptance.title')}</h3>
-          <p class="text-gray-700 leading-relaxed">${t('acceptance.text')}</p>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-// Generate remaining content (sections 3-13)
-function generateRemainingContent() {
-  return `
-    <!-- Section 3: Program -->
     <div id="programme" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#fbbf24]">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section3.title')}</h2>
       <div class="space-y-4">
@@ -386,7 +357,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 4: Commissions -->
     <div id="commissions" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section4.title')}</h2>
       <div class="space-y-4">
@@ -418,7 +388,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 5: Referrer Obligations -->
     <div id="obligations-referrer" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section5.title')}</h2>
       <div class="space-y-4">
@@ -452,7 +421,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 6: Agent Obligations -->
     <div id="obligations-agent" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section6.title')}</h2>
       <div class="space-y-4">
@@ -471,7 +439,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 7: Intellectual Property -->
     <div id="propriete" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section7.title')}</h2>
       <div class="space-y-3 text-gray-700">
@@ -481,7 +448,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 8: Termination -->
     <div id="resiliation" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section8.title')}</h2>
       <div class="space-y-4">
@@ -503,7 +469,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 9: Liability -->
     <div id="responsabilite" class="section-card glass-card rounded-xl p-8 border-l-4 border-red-500">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section9.title')}</h2>
       <div class="space-y-4">
@@ -521,7 +486,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 10: Personal Data -->
     <div id="donnees" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#2563eb]">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section10.title')}</h2>
       <div class="space-y-4">
@@ -561,7 +525,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 11: Applicable Law -->
     <div id="loi" class="section-card glass-card rounded-xl p-8 border-l-4 border-[#7c3aed]">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section11.title')}</h2>
       <div class="space-y-3 text-gray-700">
@@ -570,7 +533,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 12: Modifications -->
     <div id="modifications" class="section-card glass-card rounded-xl p-8 border-l-4 border-orange-500">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section12.title')}</h2>
       <div class="space-y-3 text-gray-700">
@@ -580,7 +542,6 @@ function generateRemainingContent() {
       </div>
     </div>
 
-    <!-- Section 13: Contact -->
     <div id="contact" class="section-card glass-card rounded-xl p-8 border-l-4 border-green-500">
       <h2 class="text-2xl font-bold text-gray-900 mb-4">${t('section13.title')}</h2>
       <div class="space-y-4">
@@ -601,6 +562,16 @@ function generateRemainingContent() {
         </div>
       </div>
     </div>
+
+    <div class="glass-card rounded-xl p-8 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-[#2563eb]">
+      <div class="flex items-start">
+        <i class="fas fa-check-circle text-4xl text-green-500 mr-4"></i>
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">${t('acceptance.title')}</h3>
+          <p class="text-gray-700 leading-relaxed">${t('acceptance.text')}</p>
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -618,7 +589,7 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// Initialize on load
+// Initialize on page load
 initI18n();
 </script>
 
