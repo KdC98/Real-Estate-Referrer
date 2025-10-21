@@ -107,7 +107,7 @@ html{
 <nav class="flex gap-4 items-center text-sm font-medium">
 <a href="index.html" class="text-gray-600 hover:text-[#1e3a8a] transition" data-i18n="nav.home"><i class="fas fa-home mr-1"></i>Home</a>
 <a href="how-it-works.html" class="text-gray-600 hover:text-[#1e3a8a] transition" data-i18n="nav.howItWorks"><i class="fas fa-question-circle mr-1"></i>How It Works</a>
-<a href="login.html" class="bg-[#1e3a8a] hover:bg-[#7c3aed] text-white px-6 py-2 rounded-lg transition" data-i18n="nav.login">
+<a href="index.html" class="bg-[#1e3a8a] hover:bg-[#7c3aed] text-white px-6 py-2 rounded-lg transition" data-i18n="nav.login">
 <i class="fas fa-sign-in-alt mr-1"></i>Login
 </a>
 </nav>
@@ -166,8 +166,8 @@ html{
 <ul class="space-y-2 text-sm">
 <li><a href="index.html" class="hover:text-white transition" data-i18n="footer.navItems.home">Home</a></li>
 <li><a href="how-it-works.html" class="hover:text-white transition" data-i18n="footer.navItems.howItWorks">How It Works</a></li>
-<li><a href="login.html" class="hover:text-white transition" data-i18n="footer.navItems.login">Login</a></li>
-<li><a href="signup.html" class="hover:text-white transition" data-i18n="footer.navItems.signup">Sign Up</a></li>
+<li><a href="index.html" class="hover:text-white transition" data-i18n="footer.navItems.login">Login</a></li>
+<li><a href="index.html" class="hover:text-white transition" data-i18n="footer.navItems.signup">Sign Up</a></li>
 </ul>
 </div>
 <div>
@@ -344,7 +344,6 @@ function updateMainContent() {
       </div>
     </div>
 
-    <!-- Continue with remaining sections... -->
     ${generateRemainingContent()}
 
     <!-- Acceptance -->
@@ -604,6 +603,9 @@ function generateRemainingContent() {
     </div>
   `;
 }
+
+// Handle TOC clicks
+document.addEventListener('click', function(e) {
   if (e.target.matches('.toc-link')) {
     e.preventDefault();
     const targetId = e.target.getAttribute('href');
@@ -615,6 +617,9 @@ function generateRemainingContent() {
     }
   }
 });
+
+// Initialize on load
+initI18n();
 </script>
 
 </body>
