@@ -201,7 +201,7 @@
         function renderAuthPage(mode) {
             const isLogin = mode === 'login';
             const isReset = mode === 'reset';
-            const ta = (key) => i18next.t(`auth.${key}`);
+            const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
 
             return `
                 <div class="min-h-screen flex items-center justify-center px-4">
@@ -763,7 +763,7 @@
             const form = document.getElementById('authForm');
             if (!form) return;
 
-            const ta = (key) => i18next.t(`auth.${key}`);
+            const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
 
             form.onsubmit = async (e) => {
                 e.preventDefault();
@@ -825,7 +825,7 @@
             const form = document.getElementById('resetForm');
             if (!form) return;
 
-            const ta = (key) => i18next.t(`auth.${key}`);
+            const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
 
             form.onsubmit = async (e) => {
                 e.preventDefault();
