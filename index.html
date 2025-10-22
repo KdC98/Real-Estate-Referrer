@@ -778,7 +778,7 @@
                         return;
                     }
 
-                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*!?.])[ A-Za-z\d@#$%^&*!?.]{12,}$/;
+                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{8,}$/;
                     if (!passwordRegex.test(password)) {
                         alert(ta('signup.errors.passwordInvalid'));
                         return;
