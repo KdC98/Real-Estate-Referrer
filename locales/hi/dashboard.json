@@ -1,1 +1,174 @@
-
+{
+  "referrer": {
+    "title": "रेफरर डैशबोर्ड",
+    "stats": {
+      "totalEarnings": "कुल कमाई",
+      "activeLeads": "सक्रिय लीड",
+      "closedSales": "पूर्ण बिक्री",
+      "currency": "दिरहम"
+    },
+    "actions": {
+      "addLead": "लीड जोड़ें",
+      "refresh": "रिफ्रेश करें",
+      "logout": "लॉगआउट"
+    },
+    "table": {
+      "title": "मेरे लीड",
+      "headers": {
+        "client": "ग्राहक",
+        "property": "संपत्ति",
+        "budget": "बजट",
+        "status": "स्थिति",
+        "commission": "कमीशन"
+      },
+      "empty": "अभी तक कोई लीड नहीं",
+      "emptyDesc": "कमीशन कमाने के लिए लीड जोड़ना शुरू करें!"
+    },
+    "status": {
+      "nouveau": "नया",
+      "visite": "देखना",
+      "offre": "प्रस्ताव",
+      "vendu": "बेचा गया",
+      "perdu": "खोया"
+    },
+    "propertyTypes": {
+      "apartment": "अपार्टमेंट",
+      "villa": "विला",
+      "penthouse": "पेंटहाउस",
+      "townhouse": "टाउनहाउस",
+      "office": "कार्यालय",
+      "shop": "दुकान",
+      "land": "जमीन"
+    }
+  },
+  "admin": {
+    "title": "एडमिन डैशबोर्ड",
+    "stats": {
+      "totalReferrers": "रेफरर",
+      "activeLeads": "सक्रिय लीड",
+      "totalSales": "कुल बिक्री",
+      "commissionsEarned": "अर्जित कमीशन",
+      "commissionsPaid": "भुगतान किया गया कमीशन",
+      "currency": "दिरहम"
+    },
+    "tabs": {
+      "leads": "लीड",
+      "contracts": "अनुबंध",
+      "referrers": "रेफरर"
+    },
+    "actions": {
+      "markSold": "बेचा गया चिह्नित करें",
+      "viewDetails": "विवरण देखें",
+      "downloadContract": "अनुबंध डाउनलोड करें",
+      "refresh": "रिफ्रेश करें",
+      "logout": "लॉगआउट"
+    },
+    "table": {
+      "headers": {
+        "referrer": "रेफरर",
+        "client": "ग्राहक",
+        "property": "संपत्ति",
+        "budget": "बजट",
+        "status": "स्थिति",
+        "commission": "कमीशन",
+        "actions": "कार्रवाई"
+      },
+      "empty": "कोई लीड नहीं",
+      "contractStatus": {
+        "pending": "लंबित",
+        "signed": "हस्ताक्षरित",
+        "expired": "समाप्त"
+      }
+    }
+  },
+  "modal": {
+    "addLead": {
+      "title": "नया लीड जोड़ें",
+      "subtitle": "ग्राहक की जानकारी भरें",
+      "form": {
+        "leadType": {
+          "label": "लीड प्रकार",
+          "sale": "बिक्री",
+          "rent": "किराया"
+        },
+        "clientName": {
+          "label": "ग्राहक का नाम",
+          "placeholder": "उदाहरण: अहमद अल मकतूम"
+        },
+        "clientEmail": {
+          "label": "ग्राहक का ईमेल",
+          "placeholder": "ahmed@example.com"
+        },
+        "clientPhone": {
+          "label": "फोन नंबर",
+          "placeholder": "+971 50 123 4567"
+        },
+        "propertyType": {
+          "label": "संपत्ति का प्रकार",
+          "placeholder": "एक प्रकार चुनें"
+        },
+        "budget": {
+          "label": "बजट (दिरहम)",
+          "placeholder": "उदाहरण: 1500000"
+        },
+        "annualRent": {
+          "label": "वार्षिक किराया (दिरहम)",
+          "placeholder": "उदाहरण: 80000"
+        },
+        "notes": {
+          "label": "अतिरिक्त नोट्स",
+          "placeholder": "अतिरिक्त जानकारी..."
+        }
+      },
+      "buttons": {
+        "cancel": "रद्द करें",
+        "submit": "लीड जोड़ें"
+      }
+    },
+    "markSold": {
+      "title": "बेचा गया चिह्नित करें",
+      "subtitle": "अंतिम बिक्री मूल्य दर्ज करें",
+      "form": {
+        "salePrice": {
+          "label": "बिक्री मूल्य (दिरहम)",
+          "placeholder": "उदाहरण: 1500000"
+        },
+        "closedAt": {
+          "label": "समापन तिथि"
+        }
+      },
+      "commission": {
+        "title": "कमीशन विवरण",
+        "total": "कुल कमीशन (2%)",
+        "agent": "एजेंट का हिस्सा (50%)",
+        "referrer": "रेफरर कमीशन (20%)"
+      },
+      "buttons": {
+        "cancel": "रद्द करें",
+        "confirm": "बिक्री की पुष्टि करें"
+      }
+    }
+  },
+  "messages": {
+    "success": {
+      "leadAdded": "लीड सफलतापूर्वक जोड़ा गया!",
+      "leadUpdated": "लीड अपडेट किया गया!",
+      "leadMarkedSold": "लीड को बेचा गया चिह्नित किया गया!",
+      "statusChanged": "स्थिति सफलतापूर्वक बदली गई!"
+    },
+    "error": {
+      "general": "एक त्रुटि हुई",
+      "loadingFailed": "डेटा लोड करने में विफल",
+      "invalidData": "अमान्य डेटा",
+      "required": "यह फ़ील्ड आवश्यक है",
+      "invalidEmail": "अमान्य ईमेल",
+      "invalidPhone": "अमान्य फोन नंबर",
+      "invalidBudget": "अमान्य बजट"
+    },
+    "validation": {
+      "minBudget": "बजट 0 से अधिक होना चाहिए",
+      "maxBudget": "बजट 100 मिलियन दिरहम से अधिक नहीं हो सकता",
+      "phoneFormat": "प्रारूप: +971 XX XXX XXXX"
+    }
+  }
+}
