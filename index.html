@@ -29,18 +29,17 @@
 
     <script type="module">
         /* ============================================
-           🔧 MODIFICATION 1 : Configuration i18next
-           Ajout du namespace 'auth' pour l'authentification
+           🔧 Configuration i18next avec namespace 'auth'
            ============================================ */
         await i18next
             .use(i18nextHttpBackend)
             .use(i18nextBrowserLanguageDetector)
             .init({
                 fallbackLng: 'fr',
-                debug: false,
+                debug: true,
                 load: 'languageOnly',
-                ns: ['translation', 'auth'], // ← AJOUTÉ : namespace auth
-                defaultNS: 'translation', // ← AJOUTÉ : namespace par défaut
+                ns: ['translation', 'auth'],
+                defaultNS: 'translation',
                 backend: {
                     loadPath: '/locales/{{lng}}/{{ns}}.json'
                 },
@@ -50,10 +49,8 @@
                 }
             });
 
-        // Fonction de traduction
         const t = (key) => i18next.t(key);
 
-        // Fonction pour changer la langue
         async function changeLanguage(langCode) {
             try {
                 await i18next.changeLanguage(langCode);
@@ -63,7 +60,6 @@
                 console.error('Erreur changement de langue:', error);
             }
         }
-        // Rendre la fonction accessible globalement
         window.changeLanguage = changeLanguage;
 
         import { createClient } from '@supabase/supabase-js';
@@ -199,23 +195,18 @@
                 </div>
             `;
         }
-
         /* ============================================
-           🔧 MODIFICATION 2 : Fonction renderAuthPage()
-           Remplacement COMPLET avec traductions i18next
+           🔧 Fonction renderAuthPage() - COMPLÈTE
            ============================================ */
         function renderAuthPage(mode) {
             const isLogin = mode === 'login';
             const isReset = mode === 'reset';
-
-            // Fonction helper pour traductions auth
             const ta = (key) => i18next.t(`auth.${key}`);
 
             return `
                 <div class="min-h-screen flex items-center justify-center px-4">
                     <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
                         
-                        <!-- Sélecteur de langue 8 langues -->
                         <div class="flex justify-center gap-2 mb-6 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                             <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform" title="Français">🇫🇷</button>
                             <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform" title="English">🇬🇧</button>
@@ -590,7 +581,6 @@
                 </div>
             `;
         }
-
         function showAddLeadForm() {
             const modal = document.createElement('div');
             modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50';
@@ -767,14 +757,12 @@
         };
 
         /* ============================================
-           🔧 MODIFICATION 3 : Fonction handleAuth()
-           Messages d'erreur et succès traduits
+           🔧 Fonction handleAuth() - Messages traduits
            ============================================ */
         async function handleAuth(mode) {
             const form = document.getElementById('authForm');
             if (!form) return;
 
-            // Helper pour traductions auth
             const ta = (key) => i18next.t(`auth.${key}`);
 
             form.onsubmit = async (e) => {
@@ -831,14 +819,12 @@
         }
 
         /* ============================================
-           🔧 MODIFICATION 4 : Fonction handleReset()
-           Messages traduits
+           🔧 Fonction handleReset() - Messages traduits
            ============================================ */
         async function handleReset() {
             const form = document.getElementById('resetForm');
             if (!form) return;
 
-            // Helper pour traductions auth
             const ta = (key) => i18next.t(`auth.${key}`);
 
             form.onsubmit = async (e) => {
