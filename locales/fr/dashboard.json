@@ -1,1 +1,174 @@
-
+{
+  "referrer": {
+    "title": "Tableau de bord Apporteur",
+    "stats": {
+      "totalEarnings": "Gains totaux",
+      "activeLeads": "Leads en cours",
+      "closedSales": "Ventes conclues",
+      "currency": "AED"
+    },
+    "actions": {
+      "addLead": "Ajouter un lead",
+      "refresh": "Actualiser",
+      "logout": "Déconnexion"
+    },
+    "table": {
+      "title": "Mes Leads",
+      "headers": {
+        "client": "Client",
+        "property": "Propriété",
+        "budget": "Budget",
+        "status": "Statut",
+        "commission": "Commission"
+      },
+      "empty": "Aucun lead pour le moment",
+      "emptyDesc": "Commencez à ajouter des leads pour gagner des commissions !"
+    },
+    "status": {
+      "nouveau": "Nouveau",
+      "visite": "Visite",
+      "offre": "Offre",
+      "vendu": "Vendu",
+      "perdu": "Perdu"
+    },
+    "propertyTypes": {
+      "apartment": "Appartement",
+      "villa": "Villa",
+      "penthouse": "Penthouse",
+      "townhouse": "Maison de ville",
+      "office": "Bureau",
+      "shop": "Commerce",
+      "land": "Terrain"
+    }
+  },
+  "admin": {
+    "title": "Tableau de bord Admin",
+    "stats": {
+      "totalReferrers": "Apporteurs",
+      "activeLeads": "Leads actifs",
+      "totalSales": "Ventes totales",
+      "commissionsEarned": "Commissions gagnées",
+      "commissionsPaid": "Commissions versées",
+      "currency": "AED"
+    },
+    "tabs": {
+      "leads": "Leads",
+      "contracts": "Contrats",
+      "referrers": "Apporteurs"
+    },
+    "actions": {
+      "markSold": "Marquer vendu",
+      "viewDetails": "Voir détails",
+      "downloadContract": "Télécharger contrat",
+      "refresh": "Actualiser",
+      "logout": "Déconnexion"
+    },
+    "table": {
+      "headers": {
+        "referrer": "Apporteur",
+        "client": "Client",
+        "property": "Propriété",
+        "budget": "Budget",
+        "status": "Statut",
+        "commission": "Commission",
+        "actions": "Actions"
+      },
+      "empty": "Aucun lead",
+      "contractStatus": {
+        "pending": "En attente",
+        "signed": "Signé",
+        "expired": "Expiré"
+      }
+    }
+  },
+  "modal": {
+    "addLead": {
+      "title": "Ajouter un nouveau lead",
+      "subtitle": "Remplissez les informations du client",
+      "form": {
+        "leadType": {
+          "label": "Type de lead",
+          "sale": "Vente",
+          "rent": "Location"
+        },
+        "clientName": {
+          "label": "Nom du client",
+          "placeholder": "Ex: Ahmed Al Maktoum"
+        },
+        "clientEmail": {
+          "label": "Email du client",
+          "placeholder": "ahmed@example.com"
+        },
+        "clientPhone": {
+          "label": "Téléphone",
+          "placeholder": "+971 50 123 4567"
+        },
+        "propertyType": {
+          "label": "Type de propriété",
+          "placeholder": "Sélectionnez un type"
+        },
+        "budget": {
+          "label": "Budget (AED)",
+          "placeholder": "Ex: 1500000"
+        },
+        "annualRent": {
+          "label": "Loyer annuel (AED)",
+          "placeholder": "Ex: 80000"
+        },
+        "notes": {
+          "label": "Notes additionnelles",
+          "placeholder": "Informations complémentaires..."
+        }
+      },
+      "buttons": {
+        "cancel": "Annuler",
+        "submit": "Ajouter le lead"
+      }
+    },
+    "markSold": {
+      "title": "Marquer comme vendu",
+      "subtitle": "Entrez le prix de vente final",
+      "form": {
+        "salePrice": {
+          "label": "Prix de vente (AED)",
+          "placeholder": "Ex: 1500000"
+        },
+        "closedAt": {
+          "label": "Date de clôture"
+        }
+      },
+      "commission": {
+        "title": "Calcul des commissions",
+        "total": "Commission totale (2%)",
+        "agent": "Part agent (50%)",
+        "referrer": "Commission apporteur (20%)"
+      },
+      "buttons": {
+        "cancel": "Annuler",
+        "confirm": "Confirmer la vente"
+      }
+    }
+  },
+  "messages": {
+    "success": {
+      "leadAdded": "Lead ajouté avec succès !",
+      "leadUpdated": "Lead mis à jour !",
+      "leadMarkedSold": "Lead marqué comme vendu !",
+      "statusChanged": "Statut modifié avec succès !"
+    },
+    "error": {
+      "general": "Une erreur est survenue",
+      "loadingFailed": "Impossible de charger les données",
+      "invalidData": "Données invalides",
+      "required": "Ce champ est requis",
+      "invalidEmail": "Email invalide",
+      "invalidPhone": "Numéro de téléphone invalide",
+      "invalidBudget": "Budget invalide"
+    },
+    "validation": {
+      "minBudget": "Le budget doit être supérieur à 0",
+      "maxBudget": "Le budget ne peut pas dépasser 100 millions AED",
+      "phoneFormat": "Format : +971 XX XXX XXXX"
+    }
+  }
+}
