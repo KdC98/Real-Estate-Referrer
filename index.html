@@ -509,7 +509,10 @@
             `;
         }
 
-        async function loadReferrerDashboard(container) {
+     async function loadReferrerDashboard(container) {
+            // 🌍 Récupérer les traductions dashboard
+            const td = (key) => i18next.t(key, { ns: 'dashboard' });
+            
             const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
 
             const totalEarnings = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
@@ -519,34 +522,34 @@
             container.innerHTML = `
                 <div class="grid md:grid-cols-3 gap-6 mb-8">
                     <div class="bg-gray-800 rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">Gains totaux</div>
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.totalEarnings')}</div>
+                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} ${td('referrer.stats.currency')}</div>
                     </div>
                     <div class="bg-gray-800 rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">Leads en cours</div>
+                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.activeLeads')}</div>
                         <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
                     </div>
                     <div class="bg-gray-800 rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">Transactions</div>
+                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.closedSales')}</div>
                         <div class="text-3xl font-bold text-green-500">${closedDeals}</div>
                     </div>
                 </div>
 
                 <div class="mb-6">
-                    <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg">+ Ajouter un lead</button>
+                    <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg">${td('referrer.actions.addLead')}</button>
                 </div>
 
                 <div class="bg-gray-800 rounded-xl p-6">
-                    <h3 class="text-xl font-bold mb-4">Mes leads</h3>
+                    <h3 class="text-xl font-bold mb-4">${td('referrer.table.title')}</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full">
                             <thead>
                                 <tr class="border-b border-gray-700">
-                                    <th class="text-left py-3 px-4">Client</th>
-                                    <th class="text-left py-3 px-4">Type</th>
-                                    <th class="text-left py-3 px-4">Budget</th>
-                                    <th class="text-left py-3 px-4">Statut</th>
-                                    <th class="text-left py-3 px-4">Commission</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.client')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.property')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.budget')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.status')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.commission')}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -561,20 +564,20 @@
                                             <div class="text-xs text-gray-400">${lead.property_type}</div>
                                         </td>
                                         <td class="py-3 px-4">
-                                            ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
+                                            ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' ' + td('referrer.stats.currency') : (lead.annual_rent?.toLocaleString() || 'N/A') + ' ' + td('referrer.stats.currency') + '/an'}
                                         </td>
                                         <td class="py-3 px-4">
-                                            ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">Nouveau</span>' : ''}
-                                            ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">Visite</span>' : ''}
-                                            ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">Offre</span>' : ''}
-                                            ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Vendu</span>' : ''}
-                                            ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Loué</span>' : ''}
+                                            ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">' + td('referrer.status.nouveau') + '</span>' : ''}
+                                            ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">' + td('referrer.status.visite') + '</span>' : ''}
+                                            ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">' + td('referrer.status.offre') + '</span>' : ''}
+                                            ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.vendu') + '</span>' : ''}
+                                            ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.vendu') + '</span>' : ''}
                                         </td>
                                         <td class="py-3 px-4">
-                                            ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
+                                            ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('referrer.stats.currency') + '</span>' : '-'}
                                         </td>
                                     </tr>
-                                `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
+                                `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">' + td('referrer.table.empty') + '</td></tr>'}
                             </tbody>
                         </table>
                     </div>
