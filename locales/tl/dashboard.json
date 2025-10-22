@@ -1,1 +1,174 @@
-
+{
+  "referrer": {
+    "title": "Talaang Tagapag-refer",
+    "stats": {
+      "totalEarnings": "Kabuuang Kita",
+      "activeLeads": "Aktibong Mga Lead",
+      "closedSales": "Natapos na Benta",
+      "currency": "Dirham"
+    },
+    "actions": {
+      "addLead": "Magdagdag ng Lead",
+      "refresh": "I-refresh",
+      "logout": "Mag-logout"
+    },
+    "table": {
+      "title": "Aking Mga Lead",
+      "headers": {
+        "client": "Kliyente",
+        "property": "Ari-arian",
+        "budget": "Badyet",
+        "status": "Katayuan",
+        "commission": "Komisyon"
+      },
+      "empty": "Wala pang mga lead",
+      "emptyDesc": "Magsimulang magdagdag ng mga lead upang kumita ng komisyon!"
+    },
+    "status": {
+      "nouveau": "Bago",
+      "visite": "Pagtingin",
+      "offre": "Alok",
+      "vendu": "Nabenta",
+      "perdu": "Nawala"
+    },
+    "propertyTypes": {
+      "apartment": "Apartment",
+      "villa": "Villa",
+      "penthouse": "Penthouse",
+      "townhouse": "Townhouse",
+      "office": "Opisina",
+      "shop": "Tindahan",
+      "land": "Lupa"
+    }
+  },
+  "admin": {
+    "title": "Talaang Tagapamahala",
+    "stats": {
+      "totalReferrers": "Mga Tagapag-refer",
+      "activeLeads": "Aktibong Mga Lead",
+      "totalSales": "Kabuuang Benta",
+      "commissionsEarned": "Kinitang Komisyon",
+      "commissionsPaid": "Binayarang Komisyon",
+      "currency": "Dirham"
+    },
+    "tabs": {
+      "leads": "Mga Lead",
+      "contracts": "Mga Kontrata",
+      "referrers": "Mga Tagapag-refer"
+    },
+    "actions": {
+      "markSold": "Markahan Bilang Nabenta",
+      "viewDetails": "Tingnan ang Detalye",
+      "downloadContract": "I-download ang Kontrata",
+      "refresh": "I-refresh",
+      "logout": "Mag-logout"
+    },
+    "table": {
+      "headers": {
+        "referrer": "Tagapag-refer",
+        "client": "Kliyente",
+        "property": "Ari-arian",
+        "budget": "Badyet",
+        "status": "Katayuan",
+        "commission": "Komisyon",
+        "actions": "Mga Aksyon"
+      },
+      "empty": "Walang mga lead",
+      "contractStatus": {
+        "pending": "Nakabinbin",
+        "signed": "Nilagdaan",
+        "expired": "Nag-expire"
+      }
+    }
+  },
+  "modal": {
+    "addLead": {
+      "title": "Magdagdag ng Bagong Lead",
+      "subtitle": "Punan ang impormasyon ng kliyente",
+      "form": {
+        "leadType": {
+          "label": "Uri ng Lead",
+          "sale": "Benta",
+          "rent": "Paupa"
+        },
+        "clientName": {
+          "label": "Pangalan ng Kliyente",
+          "placeholder": "Halimbawa: Ahmed Al Maktoum"
+        },
+        "clientEmail": {
+          "label": "Email ng Kliyente",
+          "placeholder": "ahmed@example.com"
+        },
+        "clientPhone": {
+          "label": "Numero ng Telepono",
+          "placeholder": "+971 50 123 4567"
+        },
+        "propertyType": {
+          "label": "Uri ng Ari-arian",
+          "placeholder": "Pumili ng uri"
+        },
+        "budget": {
+          "label": "Badyet (Dirham)",
+          "placeholder": "Halimbawa: 1500000"
+        },
+        "annualRent": {
+          "label": "Taunang Upa (Dirham)",
+          "placeholder": "Halimbawa: 80000"
+        },
+        "notes": {
+          "label": "Karagdagang Tala",
+          "placeholder": "Karagdagang impormasyon..."
+        }
+      },
+      "buttons": {
+        "cancel": "Kanselahin",
+        "submit": "Idagdag ang Lead"
+      }
+    },
+    "markSold": {
+      "title": "Markahan Bilang Nabenta",
+      "subtitle": "Ilagay ang huling presyo ng benta",
+      "form": {
+        "salePrice": {
+          "label": "Presyo ng Benta (Dirham)",
+          "placeholder": "Halimbawa: 1500000"
+        },
+        "closedAt": {
+          "label": "Petsa ng Pagsasara"
+        }
+      },
+      "commission": {
+        "title": "Detalye ng Komisyon",
+        "total": "Kabuuang Komisyon (2%)",
+        "agent": "Bahagi ng Ahente (50%)",
+        "referrer": "Komisyon ng Tagapag-refer (20%)"
+      },
+      "buttons": {
+        "cancel": "Kanselahin",
+        "confirm": "Kumpirmahin ang Benta"
+      }
+    }
+  },
+  "messages": {
+    "success": {
+      "leadAdded": "Matagumpay na naidagdag ang lead!",
+      "leadUpdated": "Na-update ang lead!",
+      "leadMarkedSold": "Naimarkahan ang lead bilang nabenta!",
+      "statusChanged": "Matagumpay na nabago ang katayuan!"
+    },
+    "error": {
+      "general": "May naganap na pagkakamali",
+      "loadingFailed": "Nabigong mag-load ng datos",
+      "invalidData": "Hindi wastong datos",
+      "required": "Kinakailangan ang field na ito",
+      "invalidEmail": "Hindi wastong email",
+      "invalidPhone": "Hindi wastong numero ng telepono",
+      "invalidBudget": "Hindi wastong badyet"
+    },
+    "validation": {
+      "minBudget": "Ang badyet ay dapat na higit sa 0",
+      "maxBudget": "Ang badyet ay hindi maaaring lumampas sa 100 milyong Dirham",
+      "phoneFormat": "Pormat: +971 XX XXX XXXX"
+    }
+  }
+}
