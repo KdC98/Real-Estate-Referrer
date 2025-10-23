@@ -28,9 +28,6 @@
     <div id="app"></div>
 
     <script type="module">
-        /* ============================================
-           🔧 Configuration i18next avec namespace 'auth'
-           ============================================ */
         await i18next
             .use(i18nextHttpBackend)
             .use(i18nextBrowserLanguageDetector)
@@ -195,9 +192,7 @@
                 </div>
             `;
         }
-        /* ============================================
-           🔧 Fonction renderAuthPage() - COMPLÈTE
-           ============================================ */
+
         function renderAuthPage(mode) {
             const isLogin = mode === 'login';
             const isReset = mode === 'reset';
@@ -293,7 +288,6 @@
                 </div>
             `;
         }
-
         function renderDashboard() {
             const isAdmin = userProfile?.role === 'admin';
             const contractStatus = userProfile?.contract_status || 'pending';
@@ -377,7 +371,6 @@
         }
 
         async function loadAdminDashboard(container) {
-            // 🌍 Récupérer les traductions dashboard admin
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
             const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
@@ -510,74 +503,39 @@
                     </div>
                 </div>
             `;
-       }
-async function loadReferrerDashboard(container) {
-    const td = (key) => i18next.t(key, { ns: 'dashboard' });
-    
-    const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
-    
-    const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
-    const closedSales = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
-    const totalCommissions = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
+        }
 
-    container.innerHTML = `
-        <div class="grid md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.totalEarnings')}</div>
-                <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} ${td('referrer.stats.currency')}</div>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.activeLeads')}</div>
-                <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
-            </div>
-            <div class="bg-gray-800 rounded-xl p-6">
-                <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.closedSales')}</div>
-                <div class="text-3xl font-bold text-green-500">${closedSales}</div>
-            </div>
-        </div>
+        async function loadReferrerDashboard(container) {
+            const td = (key) => i18next.t(key, { ns: 'dashboard' });
+            
+            const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
+            
+            const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
+            const closedSales = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+            const totalCommissions = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
 
-        <div class="mb-6">
-            <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
-                ${td('referrer.actions.addLead')}
-            </button>
-        </div>
+            container.innerHTML = `
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.totalEarnings')}</div>
+                        <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} ${td('referrer.stats.currency')}</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.activeLeads')}</div>
+                        <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
+                    </div>
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.closedSales')}</div>
+                        <div class="text-3xl font-bold text-green-500">${closedSales}</div>
+                    </div>
+                </div>
 
-        <div class="bg-gray-800 rounded-xl p-6">
-            <h3 class="text-xl font-bold mb-4">${td('referrer.table.title')}</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-gray-700">
-                            <th class="text-left py-3 px-4">${td('referrer.table.headers.client')}</th>
-                            <th class="text-left py-3 px-4">${td('referrer.table.headers.property')}</th>
-                            <th class="text-left py-3 px-4">${td('referrer.table.headers.budget')}</th>
-                            <th class="text-left py-3 px-4">${td('referrer.table.headers.status')}</th>
-                            <th class="text-left py-3 px-4">${td('referrer.table.headers.commission')}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${myLeads?.map(lead => `
-                            <tr class="border-b border-gray-700">
-                                <td class="py-3 px-4">
-                                    <div class="font-semibold">${lead.client_name}</div>
-                                    <div class="text-sm text-gray-400">${lead.client_email}</div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    <div class="text-sm">${lead.lead_type}</div>
-                                    <div class="text-xs text-gray-400">${lead.property_type}</div>
-                                </td>
-                                <td class="py-3 px-4">
-                                    ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' ' + td('referrer.stats.currency') : (lead.annual_rent?.toLocaleString() || 'N/A') + ' ' + td('referrer.stats.currency') + '/an'}
-                                </td>
-                                <td class="py-3 px-4">
-                                    ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">' + td('referrer.status.nouveau') + '</span>' : ''}
-                                    ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">' + td('referrer.status.visite') + '</span>' : ''}
-                                    ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">' + td('referrer.status.offre') + '</span>' : ''}
-                                    ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.vendu') + '</span>' : ''}
-                                    ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.vendu') + '</span>' : ''}
-                                </td>
-                                <td class="py-3 px-4">
-                                    ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('referrer.stats.currency') + '</span>' : '-'}
+                <div class="mb-6">
+                    <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
+                        ${td('referrer.actions.addLead')}
+                    </button>
+                </div>
+
                 <div class="bg-gray-800 rounded-xl p-6">
                     <h3 class="text-xl font-bold mb-4">${td('referrer.table.title')}</h3>
                     <div class="overflow-x-auto">
@@ -616,15 +574,14 @@ async function loadReferrerDashboard(container) {
                                             ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('referrer.stats.currency') + '</span>' : '-'}
                                         </td>
                                     </tr>
-                        `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">' + td('referrer.table.empty') + '</td></tr>'}`
-                   </tbody>
-            </table>
-        </div>
-    </div>
-    `;
-}
-function showAddLeadForm() {
-            // 🌍 Récupérer les traductions dashboard
+                                `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">' + td('referrer.table.empty') + '</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+        function showAddLeadForm() {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
             const modal = document.createElement('div');
@@ -801,9 +758,6 @@ function showAddLeadForm() {
             }
         };
 
-        /* ============================================
-           🔧 Fonction handleAuth() - Messages traduits
-           ============================================ */
         async function handleAuth(mode) {
             const form = document.getElementById('authForm');
             if (!form) return;
@@ -863,9 +817,6 @@ function showAddLeadForm() {
             };
         }
 
-        /* ============================================
-           🔧 Fonction handleReset() - Messages traduits
-           ============================================ */
         async function handleReset() {
             const form = document.getElementById('resetForm');
             if (!form) return;
