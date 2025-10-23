@@ -617,11 +617,12 @@ async function loadReferrerDashboard(container) {
                                         </td>
                                     </tr>
                         `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">' + td('referrer.table.empty') + '</td></tr>'}`
-                    </tbody>
-                        </table>
-                    </div>
-                </div>
-        }
+                   </tbody>
+            </table>
+        </div>
+    </div>
+    `;
+}
 function showAddLeadForm() {
             // 🌍 Récupérer les traductions dashboard
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
