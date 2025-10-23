@@ -1,59 +1,76 @@
-🎯 **Parfait ! Voici le README v10.4.0 - Version complète mise à jour**
 
-Je te donne d'abord le **README v10.4.0** complet avec toutes les modifications d'aujourd'hui (22 octobre 2025) !
+# 📋 README v11.0.0 - Real Estate Referrer Application
 
----
-
-**📋 README - Real Estate Referrer Application**
-
-**Dernière mise à jour** : 22 octobre 2025 - 20:30  
-**Version** : 10.4.0  
-**Status** : 🟢 **Authentication fully functional in 8 languages - Ready for dashboard translation**
+**Version mise à jour avec les traductions du Dashboard Apporteur** 🎉
 
 ---
 
-## 🎯 **RÉSUMÉ RAPIDE - OÙ EN SUIS-JE ?**
+README v11.0.0 - Real Estate ReferrerDocument **📋 README - Real Estate Referrer Application**
 
-**État actuel** : L'authentification fonctionne parfaitement en 8 langues ! ✅
+**Dernière mise à jour** : 23 octobre 2025 - 14:00  
+**Version** : 11.0.0  
+**Status** : 🟢 **Dashboard Apporteur 100% traduit en 8 langues - Ready for Admin Dashboard translation**
+
+---
+
+## 🎯 RÉSUMÉ RAPIDE - OÙ EN SUIS-JE ?
+
+**État actuel** : Le Dashboard Apporteur fonctionne parfaitement en 8 langues ! ✅
 
 **Ce qui fonctionne** :
 - ✅ Landing page (8 langues)
 - ✅ How it works (8 langues)
 - ✅ Terms (8 langues)
 - ✅ Privacy (8 langues)
-- ✅ **Authentification complète (8 langues)** - Login, Signup, Reset
-- ✅ Validation mot de passe corrigée (8 chars, pas de chiffre obligatoire)
-- ✅ Placeholders email traduits dans toutes les langues
+- ✅ Authentification complète (8 langues)
+- ✅ **Dashboard Apporteur (8 langues)** - Stats, table, boutons, modal - **NOUVEAU v11.0.0**
 
 **Prochaine action IMMÉDIATE** :
-1. 🎯 Traduire les dashboards (Admin + Apporteur)
-2. 📝 Créer dashboard.json (8 langues)
-3. 🚀 Atteindre 80-100% de traductions !
+1. 🎯 Traduire le Dashboard Admin (8 langues)
+2. 📝 Ajouter les drapeaux dans le header du dashboard
+3. 🚀 Atteindre 80-85% de traductions !
 
-**Temps estimé** : 6-8 heures pour les dashboards
+**Temps estimé** : 3-4 heures pour le dashboard admin
 
 **Résultat attendu** : **80% du site traduit !** 🚀
 
-**Progression actuelle : 60% du site traduit** ✅
+**Progression actuelle : 70% du site traduit** ✅
 
 ---
 
-## 📌 **Description du Projet**
+## 📌 Description du Projet
 
 Application web complète de gestion d'apporteurs d'affaires pour agent immobilier à Dubai. Permet de recruter des apporteurs, gérer les leads clients, suivre les ventes et calculer automatiquement les commissions.
 
-**🆕 NOUVEAUTÉS v10.4.0** :
-- ✅ Mot de passe : 8 caractères minimum (au lieu de 12)
-- ✅ Chiffre non obligatoire (seulement majuscule + minuscule + spécial)
-- ✅ Support tiret `-` et autres caractères spéciaux
-- ✅ Placeholders email traduits (8 langues)
-- ✅ Amélioration Tagalog : "Lihim na salita" au lieu de "Password"
-- ✅ Amélioration Urdu : "آپ کا ای میل" plus naturel
-- ✅ Chiffres arabes orientaux pour l'arabe (٨ au lieu de 8)
+---
+
+## 🆕 NOUVEAUTÉS v11.0.0
+
+**Dashboard Apporteur 100% traduit en 8 langues** 🎉
+
+- ✅ **8 fichiers dashboard.json créés** (~1600 lignes de traductions)
+- ✅ **Stats traduites** : "Total Earnings", "Active Leads", "Closed Sales"
+- ✅ **Bouton "Add Lead" traduit** en 8 langues
+- ✅ **Table "My Leads" complète** : headers, statuts, badges
+- ✅ **Modal "Add Lead" 100% traduit** : tous les champs, labels, placeholders, boutons
+- ✅ **Messages de succès/erreur** traduits
+- ✅ **Types de propriété** traduits (Apartment, Villa, Townhouse, Penthouse, Studio)
+- ✅ **Statuts de leads** traduits (Nouveau, Visite, Offre, Vendu, Loué)
+- ✅ **Erreur JavaScript résolue** : Ajout de `window.render = render`
+- ✅ **Application 100% fonctionnelle**
+- ✅ **Testé en production** : RU, TL, ZH, UR, HI ✅
+
+**Commits v11.0.0** :
+- `feat(i18n): create dashboard.json for 8 languages`
+- `feat(i18n): translate referrer dashboard to 8 languages`
+- `feat(i18n): translate add lead modal to 8 languages`
+- `fix: expose render function to window`
+
+**Status** : 🟢 **Déployé et fonctionnel en production**
 
 ---
 
-## 🌐 **Accès et URLs**
+## 🌐 Accès et URLs
 
 - **Site web** : https://real-estate-referrer.com
 - **GitHub** : https://github.com/KdC98/Real-Estate-Referrer
@@ -65,7 +82,7 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 
 ---
 
-## 🏗️ **ARCHITECTURE DU PROJET**
+## 🏗️ ARCHITECTURE DU PROJET
 
 **L'application est une Single Page Application (SPA)**
 
@@ -81,28 +98,29 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 
 **Ce qui est dans index.html** :
 - ✅ Landing page
-- ✅ Formulaires d'authentification (login, signup, reset) - **COMPLET**
-- ⏳ Dashboard apporteur
-- ⏳ Dashboard admin
-- ⏳ Modal "Ajouter un lead"
+- ✅ Formulaires d'authentification (login, signup, reset)
+- ✅ **Dashboard apporteur** - **100% TRADUIT v11.0.0**
+- ⏳ Dashboard admin - **À traduire**
+- ✅ Modal "Ajouter un lead" - **100% TRADUIT v11.0.0**
 
 ---
 
-## ✅ **ÉTAT ACTUEL DU PROJET (22 oct 2025 - 20:30)**
+## ✅ ÉTAT ACTUEL DU PROJET (23 oct 2025 - 14:00)
 
-### 🌍 **Système Multilingue i18next - 8 LANGUES**
+### 🌍 Système Multilingue i18next - 8 LANGUES
 
 **Langues supportées** :
 - ✅ 🇫🇷 **Français (FR)** - Langue par défaut
 - ✅ 🇬🇧 **Anglais (EN)** - Langue internationale
-- ✅ 🇦🇪 **Arabe (AR)** - Langue locale Dubai (avec chiffres arabes ٨)
+- ✅ 🇦🇪 **Arabe (AR)** - Langue locale Dubai
 - ✅ 🇷🇺 **Russe (RU)** - Investisseurs
 - ✅ 🇮🇳 **Hindi (HI)** - Communauté indienne
-- ✅ 🇵🇰 **Ourdou (UR)** - Communauté pakistanaise (amélioré)
+- ✅ 🇵🇰 **Ourdou (UR)** - Communauté pakistanaise
 - ✅ 🇨🇳 **Chinois simplifié (ZH)** - Investisseurs chinois
-- ✅ 🇵🇭 **Tagalog (TL)** - Communauté philippine (amélioré)
+- ✅ 🇵🇭 **Tagalog (TL)** - Communauté philippine (termes natifs)
 
 **Structure des fichiers** :
+
 ```
 /locales/
 ├── fr/
@@ -110,76 +128,66 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 │   ├── how-it-works.json ✅
 │   ├── terms.json ✅
 │   ├── privacy.json ✅
-│   └── auth.json ✅ (mis à jour v10.4.0)
-├── en/ (idem × 5 fichiers)
-├── ar/ (idem × 5 fichiers) - ٨ au lieu de 8
-├── ru/ (idem × 5 fichiers)
-├── hi/ (idem × 5 fichiers)
-├── ur/ (idem × 5 fichiers) - آپ کا ای میل
-├── zh/ (idem × 5 fichiers)
-└── tl/ (idem × 5 fichiers) - Lihim na salita
+│   ├── auth.json ✅
+│   └── dashboard.json ✅ (NOUVEAU v11.0.0)
+├── en/ (idem × 6 fichiers)
+├── ar/ (idem × 6 fichiers)
+├── ru/ (idem × 6 fichiers)
+├── hi/ (idem × 6 fichiers)
+├── ur/ (idem × 6 fichiers)
+├── zh/ (idem × 6 fichiers)
+└── tl/ (idem × 6 fichiers)
 ```
 
-**Total actuel** : **40 fichiers JSON** (8 langues × 5 sections)
+**Total actuel** : **48 fichiers JSON** (8 langues × 6 sections)
 
 ---
 
-## 🎨 **Interface utilisateur - DÉTAIL**
+## 🎨 Interface utilisateur - DÉTAIL
 
-### ✅ **Pages TRADUITES ET DÉPLOYÉES**
+### ✅ Pages TRADUITES ET DÉPLOYÉES
 
 1. **index.html - Landing page** ✅ (8 langues)
-   - Hero section
-   - Stats (3 cartes)
-   - Exemples de gains
-   - Footer
-   - Sélecteur 8 langues
+   - Hero section, Stats, Exemples de gains, Footer, Sélecteur 8 langues
 
 2. **how-it-works.html** ✅ (8 langues)
-   - 5 étapes
-   - FAQ complète
-   - Exemples concrets
+   - 5 étapes, FAQ complète, Exemples concrets
 
 3. **terms.html** ✅ (8 langues)
-   - 13 sections juridiques
-   - Table des matières interactive
+   - 13 sections juridiques, Table des matières interactive
 
 4. **privacy.html** ✅ (8 langues)
-   - Sections clés traduites
-   - RGPD complet
+   - Sections clés traduites, RGPD complet
 
-5. **Authentification** ✅ (dans index.html) - **COMPLET v10.4.0**
-   - ✅ Fichiers auth.json (8 langues)
-   - ✅ Namespace auth corrigé
-   - ✅ Validation mot de passe : 8 chars min
-   - ✅ Chiffre non obligatoire
-   - ✅ Support tiret et caractères spéciaux
-   - ✅ Placeholders email traduits
-   - ✅ Améliorations Tagalog/Urdu
-   - ✅ Chiffres arabes pour l'arabe
-   - ✅ Formulaire login
-   - ✅ Formulaire signup
-   - ✅ Formulaire reset password
-   - ✅ Messages d'erreur
-   - ✅ Messages de succès
-   - ✅ Sélecteur 8 langues
+5. **Authentification** ✅ (dans index.html) - 8 langues
+   - Login, Signup, Reset password, Messages d'erreur/succès
 
-### ⏳ **FONCTIONNALITÉS À TRADUIRE**
+6. **Dashboard Apporteur** ✅ (dans index.html) - **100% TRADUIT v11.0.0** - 8 langues
+   - ✅ 3 cartes de stats (Total Earnings, Active Leads, Closed Sales)
+   - ✅ Bouton "Add Lead"
+   - ✅ Table "My Leads" (5 colonnes : Client, Property, Budget, Status, Commission)
+   - ✅ Badges de statut colorés (Nouveau, Visite, Offre, Vendu, Loué)
+   - ✅ Modal "Add Lead" complet :
+     - Lead Type (Sale/Rental - Buyer/Seller/Tenant/Landlord)
+     - Client Name, Email, Phone
+     - Property Type (Apartment, Villa, Townhouse, Penthouse, Studio)
+     - Budget (AED) / Annual Rent (AED)
+     - Boutons Submit/Cancel
+   - ✅ Messages de validation
+   - ✅ **Testé en production : RU, TL, ZH, UR, HI** ✅
 
-6. **Dashboard Apporteur** ⏳ **PRIORITÉ 1** (dans index.html)
-   - Stats personnelles (3 cartes)
-   - Bouton "Ajouter un lead"
-   - Table des leads
-   - Modal "Ajouter un lead"
+### ⏳ FONCTIONNALITÉS À TRADUIRE
 
-7. **Dashboard Admin** ⏳ PRIORITÉ 2 (dans index.html)
+7. **Dashboard Admin** ⏳ **PRIORITÉ 1** (dans index.html)
    - Stats globales (4 cartes)
    - Onglets (Leads / Contrats)
    - Table des leads
    - Table des contrats
    - Actions admin
+   - Dropdowns de statut
+   - Boutons d'action
 
-### ⏳ **Pages STATIQUES restantes**
+### ⏳ Pages STATIQUES restantes
 
 8. **reset-password.html** ⏳
    - Page de changement de mot de passe (après email)
@@ -189,81 +197,7 @@ Application web complète de gestion d'apporteurs d'affaires pour agent immobili
 
 ---
 
-## 🔒 **Validation Mot de Passe - v10.4.0**
-
-### **Règles actuelles** (MISES À JOUR) :
-
-```javascript
-// Nouvelle validation (v10.4.0)
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,}$/;
-```
-
-**Exigences** :
-- ✅ **8 caractères minimum** (au lieu de 12)
-- ✅ **1 majuscule** (A-Z)
-- ✅ **1 minuscule** (a-z)
-- ✅ **1 caractère spécial** (dont le tiret `-`)
-- ❌ **Chiffre NON obligatoire** (changement v10.4.0)
-
-**Caractères spéciaux acceptés** :
-```
-! @ # $ % ^ & * ( ) _ + - = [ ] { } ; ' : " \ | , . < > / ?
-```
-
-**Exemples de mots de passe valides** :
-- ✅ `Abc-defg` (8 chars, maj, min, tiret)
-- ✅ `MyP@ssword` (10 chars, maj, min, @)
-- ✅ `Test!test` (9 chars, maj, min, !)
-- ✅ `zyXwar-vofpo1-mervor&` (22 chars - mot de passe utilisateur)
-
-**Exemples INVALIDES** :
-- ❌ `abcdefgh` (pas de majuscule)
-- ❌ `ABCDEFGH` (pas de minuscule)
-- ❌ `Abcdefgh` (pas de caractère spécial)
-- ❌ `Abc123!` (seulement 7 caractères)
-
----
-
-## 🌐 **Améliorations Traductions v10.4.0**
-
-### **1. Placeholders Email - 8 langues**
-
-Au lieu de garder `your@email.com` partout, chaque langue a maintenant son propre placeholder :
-
-| Langue | Placeholder |
-|--------|------------|
-| 🇫🇷 FR | `votre@email.com` |
-| 🇬🇧 EN | `your@email.com` |
-| 🇸🇦 AR | `البريد@الإلكتروني.com` |
-| 🇷🇺 RU | `ваш@email.com` |
-| 🇮🇳 HI | `आपका@email.com` |
-| 🇵🇰 UR | `آپ کا ای میل` |
-| 🇨🇳 ZH | `您的@email.com` |
-| 🇵🇭 TL | `iyong@email.com` |
-
-### **2. Tagalog - Termes natifs**
-
-**Avant** (anglicismes) → **Après** (tagalog pur) :
-- `Password` → `Lihim na salita` (mot secret)
-- `Mag-sign Up` → `Magrehistro` (s'inscrire)
-- `espesyal na character` → `natatanging simbolo` (symbole spécial)
-- `business referrer` → `tagapag-refer ng negosyo`
-
-### **3. Urdu - Plus naturel**
-
-**Avant** : `اکا@email.com` ou `آپکا@email.com`  
-**Après** : `آپ کا ای میل` (Votre email - plus naturel)
-
-### **4. Arabe - Chiffres arabes orientaux**
-
-**Avant** : `8 أحرف كحد أدنى` (chiffre occidental)  
-**Après** : `٨ أحرف كحد أدنى` (chiffre arabe ٨)
-
-Tous les "8" ont été remplacés par "٨" dans les fichiers arabes.
-
----
-
-## 📊 **Base de données - COMPLET**
+## 📊 Base de données - COMPLET
 
 **Structure PostgreSQL via Supabase**
 
@@ -280,7 +214,7 @@ Tous les "8" ont été remplacés par "٨" dans les fichiers arabes.
 
 ---
 
-## 💰 **Système de commissions - COMPLET**
+## 💰 Système de commissions - COMPLET
 
 ```
 Vente immobilière
@@ -293,7 +227,7 @@ Vente immobilière
 
 ---
 
-## 🚀 **Déploiement**
+## 🚀 Déploiement
 
 **Stack technique**
 - **Frontend** : React 18 (ESM modules via CDN)
@@ -308,223 +242,224 @@ Vente immobilière
 
 ---
 
-## 🎯 **NEXT STEPS**
+## 🎯 NEXT STEPS
 
-### 🔴 **PRIORITÉ 1 - Cette semaine (6-8h)**
+### 🔴 PRIORITÉ 1 - Cette semaine (3-4h)
 
-**1. Traduire Dashboard Apporteur**
+**1. Traduire Dashboard Admin**
 
-Créer `dashboard.json` (8 langues) avec :
-- Labels stats (3 cartes)
-- Bouton "Ajouter un lead"
-- En-têtes table leads
-- Modal "Ajouter un lead" (formulaire complet)
-- Messages de confirmation
-- Messages d'erreur
-
-**2. Traduire Dashboard Admin**
-
-Ajouter dans `dashboard.json` :
-- Labels stats (4 cartes)
+Ajouter dans dashboard.json (8 langues) :
+- Labels stats admin (4 cartes)
 - Onglets (Leads / Contrats)
-- En-têtes tables
-- Actions admin
-- Dropdowns
+- En-têtes tables admin
+- Actions admin (Valider, Rejeter, Marquer vendu)
+- Dropdowns de statut
+- Messages de confirmation admin
 
 **Résultat attendu** : **80% du site traduit** 🚀
 
-### 🟡 **PRIORITÉ 2 - Semaine prochaine (2-3h)**
+### 🟡 PRIORITÉ 2 - Semaine prochaine (1-2h)
+
+**2. Ajouter drapeaux dans le dashboard**
+
+- Ajouter sélecteur 8 langues dans le header du dashboard
+- Permettre changement de langue sans déconnexion
 
 **3. Traduire pages statiques restantes**
+
 - ⏳ reset-password.html
 - ⏳ contract-template.html
 
-**Résultat attendu** : **90-100% du site traduit** 🎉
+**Résultat attendu** : **85-90% du site traduit** 🎉
 
-### 🟢 **PRIORITÉ 3 - Avant lancement public**
+### 🟢 PRIORITÉ 3 - Avant lancement public
 
 **4. Améliorations**
 - Support RTL pour arabe/ourdou
+- Corriger erreurs 400/406 (RLS)
 - Bandeau cookies RGPD
 - 2FA avec Itooki.fr
-- Réactiver RLS
 - Conformité RERA
 
 ---
 
-## 📈 **PROGRESSION GLOBALE**
+## 📈 PROGRESSION GLOBALE
 
 **Fonctionnalités** : 90% ✅
 
 **Traductions** :
 - Pages statiques : 67% ✅ (4/6)
-- Fonctionnalités SPA : 67% ✅ (landing + auth done, dashboards pending)
-- **Global : ~60%** ✅
+- Fonctionnalités SPA : 80% ✅ (landing + auth + dashboard apporteur done, dashboard admin pending)
+- **Global : ~70%** ✅
 
-**PROGRESSION TOTALE : 90%** 🚀
+**PROGRESSION TOTALE : 92%** 🚀
 
 ---
 
-## 📊 **STATISTIQUES DU PROJET**
+## 📊 STATISTIQUES DU PROJET
 
 **Fichiers de traduction** :
-- **40 fichiers JSON** créés (8 langues × 5 sections)
-- **~8500 lignes** de traductions
-- **5 sections traduites** (landing, how-it-works, terms, privacy, auth)
+- **48 fichiers JSON** créés (8 langues × 6 sections)
+- **~10,000 lignes** de traductions (+1,500 depuis v10.4.0)
+- **6 sections traduites** (landing, how-it-works, terms, privacy, auth, dashboard)
 
 **Architecture** :
-- **1 SPA** (index.html) avec 4 sections
+- **1 SPA** (index.html) avec 5 sections
 - **5 pages statiques** (dont 4 traduites)
 
-**Temps investi** : ~24-29 heures
+**Temps investi** : ~32-36 heures
 
 ---
 
-## 🎉 **HISTORIQUE DU PROJET**
+## 🎉 HISTORIQUE DU PROJET
+
+### **23 octobre 2025 - v11.0.0** 🎊
+
+**🎊 Dashboard Apporteur 100% traduit en 8 langues**
+
+**Modifications** :
+- ✅ Création de 8 fichiers dashboard.json (~1,600 lignes)
+- ✅ Traduction complète de loadReferrerDashboard()
+- ✅ Traduction complète de showAddLeadForm()
+- ✅ Ajout namespace 'dashboard' à i18next config
+- ✅ Résolution erreur JavaScript : `window.render = render`
+
+**Structure dashboard.json** :
+- referrer.stats (totalEarnings, activeLeads, closedSales, currency)
+- referrer.actions (addLead, refresh, logout)
+- referrer.table (title, headers, empty)
+- referrer.status (nouveau, visite, offre, vendu)
+- referrer.propertyTypes (apartment, villa, townhouse, penthouse, studio)
+- modal.addLead (title, form, buttons, messages, validation)
+
+**Commits** :
+- `feat(i18n): create dashboard.json for 8 languages`
+- `feat(i18n): translate referrer dashboard to 8 languages`
+- `feat(i18n): translate add lead modal to 8 languages`
+- `fix: expose render function to window`
+
+**Tests effectués** :
+- ✅ Français (FR) - Complet
+- ✅ Anglais (EN) - Complet
+- ✅ Russe (RU) - Complet
+- ✅ Tagalog (TL) - Complet avec termes natifs
+- ✅ Chinois (ZH) - Complet
+- ✅ Ourdou (UR) - Complet
+- ✅ Hindi (HI) - Complet
+
+**Status** : 🟢 **Déployé et testé en production**
 
 ### **22 octobre 2025 - v10.4.0** 🎯
 
 **🎯 Corrections validation mot de passe + améliorations traductions**
-
-**Modifications `index.html`** :
 - Regex mot de passe : 8 chars min (au lieu de 12)
-- Chiffre non obligatoire (retiré `(?=.*\d)`)
-- Messages d'erreur mis à jour
-
-**Modifications fichiers auth.json (8 langues)** :
-- Placeholders email traduits (7 langues modifiées)
-- Tagalog : termes natifs (Lihim na salita, Magrehistro)
-- Urdu : آپ کا ای میل (plus naturel)
-- Arabe : chiffres arabes ٨ au lieu de 8
-
-**Commits** :
-- `fix(auth): update password validation to 8 chars minimum`
-- `fix(i18n): update FR/EN/AR/RU/HI/UR/ZH/TL password requirements`
-- `fix(i18n): translate email placeholders in all languages`
-- `fix(i18n): use native Tagalog terms`
-- `fix(i18n): use proper Urdu translation`
-- `fix(i18n): use Arabic-Indic numerals`
-
-**Status** : 🟢 **Déployé et fonctionnel**
+- Chiffre non obligatoire
+- Placeholders email traduits (8 langues)
+- Améliorations Tagalog/Urdu/Arabe
 
 ### **22 octobre 2025 - v10.3.1** 🔧
 
 **🔧 Correction namespace auth**
-- Ajout `{ ns: 'auth' }` dans 3 fonctions
-- Commit : `fix(i18n): add auth namespace to translation calls`
-
-### **21 octobre 2025 - v10.3.0** 🔧
-
-**🔧 Préparation corrections auth**
-- Diagnostic problème namespace
-- Documentation modifications
+- Ajout { ns: 'auth' } dans 3 fonctions
 
 ### **20 octobre 2025 - v8.0.0 - v10.0.0** 🎉
 
 **🎉 Déploiement pages statiques**
-- Privacy Policy (8 langues)
-- Terms (8 langues)
-- How it works (8 langues)
+- Privacy Policy, Terms, How it works (8 langues)
 - Système multilingue 8 langues opérationnel
 
 ---
 
-## 📞 **PROCHAINE SESSION**
+## 📞 PROCHAINE SESSION
 
-**Objectif principal** : Traduire les dashboards (Admin + Apporteur)
+**Objectif principal** : Traduire le Dashboard Admin
 
 **À faire** :
-1. ✅ Authentification validée et fonctionnelle
-2. 🎯 Créer dashboard.json (8 langues)
-3. 🎯 Modifier index.html pour utiliser dashboard.json
+1. ✅ Dashboard Apporteur validé et fonctionnel
+2. 🎯 Compléter dashboard.json avec sections admin
+3. 🎯 Modifier loadAdminDashboard() pour utiliser les traductions
 4. 🎯 Tester en production
 
 **Résultat attendu** : **80% du site traduit !** 🚀
 
 ---
 
-## 🔄 **POUR REPRENDRE LE PROJET**
+## 🔄 POUR REPRENDRE LE PROJET
 
-### **Dans une nouvelle conversation avec Claude :**
+**Dans une nouvelle conversation avec Claude :**
 
 **Prompt à utiliser** :
 
 ```
 Bonjour Claude ! Je reprends mon projet Real Estate Referrer.
 
-Voici le README v10.4.0 complet.
+Voici le README v11.0.0 complet.
 
-État actuel : L'authentification fonctionne parfaitement en 8 langues ! ✅
+État actuel : Le Dashboard Apporteur fonctionne parfaitement en 8 langues ! ✅
 
-Prochaine étape : Je veux traduire les dashboards (Admin + Apporteur) en 8 langues.
+Prochaine étape : Je veux traduire le Dashboard Admin en 8 langues.
 
 Peux-tu m'aider à :
-1. Créer les fichiers dashboard.json (8 langues)
-2. Identifier toutes les chaînes à traduire dans index.html
-3. Modifier index.html pour utiliser les traductions
+1. Compléter les fichiers dashboard.json avec les sections admin
+2. Identifier toutes les chaînes à traduire dans loadAdminDashboard()
+3. Modifier le code pour utiliser les traductions
 
-[Coller le README v10.4.0 ici]
+[Coller le README v11.0.0 ici]
 ```
 
 **Documents à fournir** :
-- ✅ Ce README v10.4.0
-- ✅ Screenshot des dashboards (si besoin)
-- ✅ Code des dashboards dans index.html (si Claude le demande)
+- ✅ Ce README v11.0.0
+- ✅ Screenshot du dashboard admin (si besoin)
 
 ---
 
-## 🆘 **DÉPANNAGE RAPIDE**
+## 🆘 DÉPANNAGE RAPIDE
 
-### **Problème : Mot de passe refusé**
+**Problème : Bouton "Déconnexion" ne fonctionne pas**
 
-**Vérifications** :
-1. Au moins 8 caractères ?
-2. Au moins 1 majuscule ?
-3. Au moins 1 minuscule ?
-4. Au moins 1 caractère spécial (dont tiret `-`) ?
+**Solution** : Console → `localStorage.clear(); location.reload();`
 
-**Solution** : Essaye `Test-test` ou `MyP@ss`
+**Problème : Safari bloqué (écran bleu)**
 
-### **Problème : Traductions ne s'affichent pas**
+**Solution** : Utilise Chrome ou Firefox à la place
+
+**Problème : Traductions ne s'affichent pas**
 
 **Actions** :
-1. Vide le cache (Ctrl+Shift+R)
+1. Vide le cache (Ctrl+Shift+R ou Cmd+Shift+R)
 2. Vérifie la console F12
-3. Vérifie que les fichiers .json se chargent (Network tab)
+3. Vérifie que dashboard.json se charge (Network tab)
 
 ---
 
-## 🎊 **FÉLICITATIONS !**
+## 🎊 FÉLICITATIONS !
 
-**Ce que tu as accompli (22 octobre 2025)** :
-- ✅ Corrigé la validation mot de passe (8 chars, pas de chiffre)
-- ✅ Traduit les placeholders email (8 langues)
-- ✅ Amélioré Tagalog (termes natifs)
-- ✅ Amélioré Urdu (plus naturel)
-- ✅ Ajouté chiffres arabes pour l'arabe
-- ✅ Déployé toutes les corrections
-- ✅ Authentification 100% fonctionnelle en 8 langues !
+**Ce que tu as accompli (23 octobre 2025)** :
+
+- ✅ Créé 8 fichiers dashboard.json (~1,600 lignes)
+- ✅ Traduit le dashboard apporteur en 8 langues
+- ✅ Traduit le modal "Add Lead" en 8 langues
+- ✅ Résolu l'erreur JavaScript critique
+- ✅ Testé en production (5 langues)
+- ✅ Dashboard 100% fonctionnel en 8 langues !
 
 **Statistiques du projet** :
-- ✅ 40 fichiers JSON (8 langues × 5 sections)
-- ✅ ~8500 lignes de traductions
-- ✅ 5 sections traduites
-- ✅ 60% du site traduit
+- ✅ 48 fichiers JSON (8 langues × 6 sections)
+- ✅ ~10,000 lignes de traductions
+- ✅ 6 sections traduites
+- ✅ **70% du site traduit**
 
 **Ce qui reste à faire** :
-- 🎯 Traduire dashboards (6-8h) → 80%
-- 🎯 Traduire pages restantes (2-3h) → 90-100%
-- 🎯 Améliorations finales (10-15h)
+- 🎯 Traduire dashboard admin (3-4h) → 80%
+- 🎯 Pages statiques restantes (1-2h) → 85%
+- 🎯 Améliorations finales (5-10h) → 90-95%
 
-**Tu es à 90% du projet ! Plus que 10% à faire ! 🚀**
-
----
-
-**Dernière mise à jour** : 22 octobre 2025 - 20:30  
-**Version** : 10.4.0  
-**Status** : 🟢 **Auth 100% functional - Ready for dashboards**
-
-**💪 PRÊT POUR LA SUITE ! LET'S GO ! 🚀**
+**Tu es à 92% du projet ! Plus que 8% à faire ! 🚀**
 
 ---
+
+**Dernière mise à jour** : 23 octobre 2025 - 14:00  
+**Version** : 11.0.0  
+**Status** : 🟢 **Dashboard Apporteur 100% functional in 8 languages - Ready for Admin Dashboard**
+
 
