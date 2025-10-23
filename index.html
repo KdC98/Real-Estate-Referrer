@@ -950,6 +950,7 @@ function showAddLeadForm() {
         window.showAddLeadForm = showAddLeadForm;
         window.updateLeadStatus = updateLeadStatus;
         window.markAsSold = markAsSold;
+        window.render = render;
 
         supabase.auth.onAuthStateChange(async (event, session) => {
             currentUser = session?.user || null;
