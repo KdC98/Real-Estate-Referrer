@@ -641,31 +641,38 @@ window.supabase = supabase;
 
             document.body.appendChild(modal);
 
-            document.getElementById('addLeadForm').onsubmit = async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const leadType = formData.get('leadType');
-                const isSale = leadType.includes('Sale');
+            // Attacher l'événement avec un délai
+            setTimeout(() => {
+                const form = document.getElementById('addLeadForm');
+                if (form) {
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(e.target);
+                        const leadType = formData.get('leadType');
+                        const isSale = leadType.includes('Sale');
 
-                const { error } = await supabase.from('leads').insert([{
-                    referrer_id: currentUser.id,
-                    lead_type: leadType,
-                    client_name: formData.get('clientName'),
-                    client_email: formData.get('clientEmail'),
-                    client_phone: formData.get('clientPhone'),
-                    property_type: formData.get('propertyType'),
-                    budget: isSale ? formData.get('budget') : null,
-                    annual_rent: !isSale ? formData.get('annualRent') : null,
-                    status: 'nouveau'
-                }]);
+                        const { error } = await supabase.from('leads').insert([{
+                            referrer_id: currentUser.id,
+                            lead_type: leadType,
+                            client_name: formData.get('clientName'),
+                            client_email: formData.get('clientEmail'),
+                            client_phone: formData.get('clientPhone'),
+                            property_type: formData.get('propertyType'),
+                            budget: isSale ? formData.get('budget') : null,
+                            annual_rent: !isSale ? formData.get('annualRent') : null,
+                            status: 'nouveau'
+                        }]);
 
-                if (error) {
-                    alert(td('messages.error.general') + ' : ' + error.message);
-                } else {
-                    alert(td('messages.success.leadAdded'));
-                    modal.remove();
-                    render();
+                        if (error) {
+                            alert('Erreur : ' + error.message);
+                        } else {
+                            alert('Lead ajouté !');
+                            modal.remove();
+                            render();
+                        }
+                    });
                 }
+            }, 100);
             };
         }
 
