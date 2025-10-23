@@ -377,6 +377,9 @@
         }
 
         async function loadAdminDashboard(container) {
+            // 🌍 Récupérer les traductions dashboard admin
+            const td = (key) => i18next.t(key, { ns: 'dashboard' });
+            
             const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
             const { data: allLeads } = await supabase.from('leads').select('*, referrer:referrer_id(id, name)').order('created_at', { ascending: false });
 
@@ -390,11 +393,11 @@
                 <div class="mb-8">
                     <ul class="flex border-b border-gray-700">
                         <li class="mr-1">
-                            <button onclick="switchTab('leads')" id="tab-leads" class="inline-block py-2 px-4 font-semibold border-b-2 border-yellow-500 text-yellow-500">Leads</button>
+                            <button onclick="switchTab('leads')" id="tab-leads" class="inline-block py-2 px-4 font-semibold border-b-2 border-yellow-500 text-yellow-500">${td('admin.tabs.leads')}</button>
                         </li>
                         <li class="mr-1">
                             <button onclick="switchTab('contracts')" id="tab-contracts" class="inline-block py-2 px-4 font-semibold text-gray-400">
-                                Contrats ${pendingContracts > 0 ? '<span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">' + pendingContracts + '</span>' : ''}
+                                ${td('admin.tabs.contracts')} ${pendingContracts > 0 ? '<span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">' + pendingContracts + '</span>' : ''}
                             </button>
                         </li>
                     </ul>
@@ -403,36 +406,36 @@
                 <div id="tab-content-leads">
                     <div class="grid md:grid-cols-4 gap-6 mb-8">
                         <div class="bg-gray-800 rounded-xl p-6">
-                            <div class="text-gray-400 text-sm mb-2">Apporteurs</div>
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.totalReferrers')}</div>
                             <div class="text-3xl font-bold text-yellow-500">${totalReferrers}</div>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-6">
-                            <div class="text-gray-400 text-sm mb-2">Leads actifs</div>
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.activeLeads')}</div>
                             <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-6">
-                            <div class="text-gray-400 text-sm mb-2">Transactions</div>
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.totalSales')}</div>
                             <div class="text-3xl font-bold text-green-500">${totalSales}</div>
                         </div>
                         <div class="bg-gray-800 rounded-xl p-6">
-                            <div class="text-gray-400 text-sm mb-2">Commissions</div>
-                            <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.commissionsEarned')}</div>
+                            <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} ${td('admin.stats.currency')}</div>
                         </div>
                     </div>
 
                     <div class="bg-gray-800 rounded-xl p-6">
-                        <h3 class="text-xl font-bold mb-4">Tous les leads</h3>
+                        <h3 class="text-xl font-bold mb-4">${td('admin.tabs.leads')}</h3>
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
                                     <tr class="border-b border-gray-700">
-                                        <th class="text-left py-3 px-4">Apporteur</th>
-                                        <th class="text-left py-3 px-4">Client</th>
-                                        <th class="text-left py-3 px-4">Type</th>
-                                        <th class="text-left py-3 px-4">Budget</th>
-                                        <th class="text-left py-3 px-4">Statut</th>
-                                        <th class="text-left py-3 px-4">Commission</th>
-                                        <th class="text-left py-3 px-4">Actions</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.referrer')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.client')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.property')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.budget')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.status')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.commission')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -448,24 +451,24 @@
                                                 <div class="text-xs text-gray-400">${lead.property_type}</div>
                                             </td>
                                             <td class="py-3 px-4">
-                                                ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' AED' : (lead.annual_rent?.toLocaleString() || 'N/A') + ' AED/an'}
+                                                ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' ' + td('admin.stats.currency') : (lead.annual_rent?.toLocaleString() || 'N/A') + ' ' + td('admin.stats.currency') + '/an'}
                                             </td>
                                             <td class="py-3 px-4">
                                                 <select onchange="updateLeadStatus('${lead.id}', this.value)" class="bg-gray-700 rounded px-2 py-1 text-sm">
-                                                    <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>Nouveau</option>
-                                                    <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>Visite</option>
-                                                    <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>Offre</option>
-                                                    <option value="${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}" ${(lead.status === 'vendu' || lead.status === 'loué') ? 'selected' : ''}>${lead.lead_type.includes('Sale') ? 'Vendu' : 'Loué'}</option>
+                                                    <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${td('referrer.status.nouveau')}</option>
+                                                    <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${td('referrer.status.visite')}</option>
+                                                    <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${td('referrer.status.offre')}</option>
+                                                    <option value="${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}" ${(lead.status === 'vendu' || lead.status === 'loué') ? 'selected' : ''}>${lead.lead_type.includes('Sale') ? td('referrer.status.vendu') : td('referrer.status.vendu')}</option>
                                                 </select>
                                             </td>
                                             <td class="py-3 px-4">
-                                                ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' AED</span>' : '-'}
+                                                ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('admin.stats.currency') + '</span>' : '-'}
                                             </td>
                                             <td class="py-3 px-4">
-                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">Marquer ${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}</button>` : ''}
+                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">${td('admin.actions.markSold')}</button>` : ''}
                                             </td>
                                         </tr>
-                                    `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">Aucun lead</td></tr>'}
+                                    `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">' + td('admin.table.empty') + '</td></tr>'}
                                 </tbody>
                             </table>
                         </div>
@@ -474,15 +477,15 @@
 
                 <div id="tab-content-contracts" style="display: none;">
                     <div class="bg-gray-800 rounded-xl p-6">
-                        <h3 class="text-xl font-bold mb-4">Contrats</h3>
+                        <h3 class="text-xl font-bold mb-4">${td('admin.tabs.contracts')}</h3>
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
                                     <tr class="border-b border-gray-700">
-                                        <th class="text-left py-3 px-4">Nom</th>
-                                        <th class="text-left py-3 px-4">Téléphone</th>
-                                        <th class="text-left py-3 px-4">Statut</th>
-                                        <th class="text-left py-3 px-4">Actions</th>
+                                        <th class="text-left py-3 px-4">${td('modal.addLead.form.clientName.label')}</th>
+                                        <th class="text-left py-3 px-4">${td('modal.addLead.form.clientPhone.label')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.status')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -491,54 +494,32 @@
                                             <td class="py-3 px-4">${profile.name}</td>
                                             <td class="py-3 px-4">${profile.phone}</td>
                                             <td class="py-3 px-4">
-                                                ${profile.contract_status === 'pending' ? '<span class="px-2 py-1 bg-gray-600 rounded text-xs">Pending</span>' : ''}
-                                                ${profile.contract_status === 'uploaded' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">À valider</span>' : ''}
-                                                ${profile.contract_status === 'validated' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">Validé</span>' : ''}
+                                                ${profile.contract_status === 'pending' ? '<span class="px-2 py-1 bg-gray-600 rounded text-xs">' + td('admin.table.contractStatus.pending') + '</span>' : ''}
+                                                ${profile.contract_status === 'uploaded' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">' + td('admin.table.contractStatus.pending') + '</span>' : ''}
+                                                ${profile.contract_status === 'validated' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('admin.table.contractStatus.signed') + '</span>' : ''}
                                             </td>
                                             <td class="py-3 px-4">
-                                                ${profile.contract_status === 'uploaded' || profile.contract_status === 'validated' ? `<button onclick="viewContract('${profile.contract_file_url}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm mr-2">Voir</button>` : ''}
-                                                ${profile.contract_status === 'uploaded' ? `<button onclick="validateContract('${profile.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm mr-2">Valider</button><button onclick="rejectContract('${profile.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">Rejeter</button>` : ''}
+                                                ${profile.contract_status === 'uploaded' || profile.contract_status === 'validated' ? `<button onclick="viewContract('${profile.contract_file_url}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm mr-2">${td('admin.actions.viewDetails')}</button>` : ''}
+                                                ${profile.contract_status === 'uploaded' ? `<button onclick="validateContract('${profile.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm mr-2">${td('admin.actions.viewDetails')}</button><button onclick="rejectContract('${profile.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">${td('modal.addLead.buttons.cancel')}</button>` : ''}
                                             </td>
                                         </tr>
-                                    `).join('') || '<tr><td colspan="4" class="text-center py-8 text-gray-400">Aucun apporteur</td></tr>'}
+                                    `).join('') || '<tr><td colspan="4" class="text-center py-8 text-gray-400">' + td('admin.table.empty') + '</td></tr>'}
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             `;
-        }
-
-     async function loadReferrerDashboard(container) {
-            // 🌍 Récupérer les traductions dashboard
+        }async function loadReferrerDashboard(container) {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
             const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
-
-            const totalEarnings = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
+            
             const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
-            const closedDeals = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+            const totalCommissions = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
 
-            container.innerHTML = `
-                <div class="grid md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-gray-800 rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.totalEarnings')}</div>
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} ${td('referrer.stats.currency')}</div>
-                    </div>
-                    <div class="bg-gray-800 rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.activeLeads')}</div>
-                        <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
-                    </div>
-                    <div class="bg-gray-800 rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.closedSales')}</div>
-                        <div class="text-3xl font-bold text-green-500">${closedDeals}</div>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg">${td('referrer.actions.addLead')}</button>
-                </div>
-
+            container.innerHTML =
+</div>
                 <div class="bg-gray-800 rounded-xl p-6">
                     <h3 class="text-xl font-bold mb-4">${td('referrer.table.title')}</h3>
                     <div class="overflow-x-auto">
