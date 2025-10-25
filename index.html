@@ -20,10 +20,8 @@
 </head>
 <body class="text-white">
     <div id="app"></div>
-
     <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
     (async () => {
         await i18next
             .use(i18nextHttpBackend)
@@ -42,9 +40,7 @@
                     caches: ['localStorage']
                 }
             });
-
         const t = (key) => i18next.t(key);
-
         async function changeLanguage(langCode) {
             try {
                 await i18next.changeLanguage(langCode);
@@ -55,10 +51,8 @@
             }
         }
         window.changeLanguage = changeLanguage;
-
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
-
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         window.supabase = supabase;
         
@@ -69,7 +63,6 @@
         window.currentUser = null;
         window.userProfile = null;
         window.currentPage = 'landing';
-
         function renderLandingPage() {
             return `
                 <div class="min-h-screen">
@@ -93,7 +86,6 @@
                             </div>
                         </div>
                     </header>
-
                     <main class="container mx-auto px-4 py-20">
                         <div class="text-center mb-12">
                             <h2 class="text-5xl md:text-6xl font-bold mb-6">
@@ -106,7 +98,6 @@
                                 ${t('hero.cta_button')}
                             </button>
                         </div>
-
                         <div class="grid md:grid-cols-3 gap-6 my-16">
                             <div class="rounded-xl overflow-hidden shadow-2xl">
                                 <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
@@ -118,7 +109,6 @@
                                 <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
                             </div>
                         </div>
-
                         <div class="grid md:grid-cols-3 gap-8 mt-20">
                             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                                 <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
@@ -133,7 +123,6 @@
                                 <div class="text-gray-300">${t('stats.timeline_label')}</div>
                             </div>
                         </div>
-
                         <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
                             <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
                             <div class="grid md:grid-cols-2 gap-8">
@@ -154,7 +143,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
                                     <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
                                     <div class="space-y-3 text-gray-300">
@@ -175,7 +163,6 @@
                             </div>
                         </div>
                     </main>
-
                     <footer class="bg-gray-900 bg-opacity-50 backdrop-blur-md py-8 mt-20">
                         <div class="container mx-auto px-4">
                             <div class="flex justify-center gap-8 flex-wrap text-sm text-gray-400">
@@ -192,12 +179,10 @@
                 </div>
             `;
         }
-
         function renderAuthPage(mode) {
             const isLogin = mode === 'login';
             const isReset = mode === 'reset';
             const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
-
             return `
                 <div class="min-h-screen flex items-center justify-center px-4">
                     <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
@@ -212,14 +197,12 @@
                             <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform" title="中文">🇨🇳</button>
                             <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform" title="Tagalog">🇵🇭</button>
                         </div>
-
                         <h2 class="text-3xl font-bold text-center mb-2">
                             ${isReset ? ta('reset.title') : (isLogin ? ta('login.title') : ta('signup.title'))}
                         </h2>
                         <p class="text-gray-400 text-center mb-8">
                             ${isReset ? ta('reset.subtitle') : (isLogin ? ta('login.subtitle') : ta('signup.subtitle'))}
                         </p>
-
                         ${!isReset ? `
                             <form id="authForm" class="space-y-6">
                                 ${!isLogin ? `
@@ -232,29 +215,24 @@
                                         <input type="tel" name="phone" required placeholder="${ta('signup.phonePlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
                                     </div>
                                 ` : ''}
-
                                 <div>
                                     <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.emailLabel') : ta('signup.emailLabel')}</label>
                                     <input type="email" name="email" required placeholder="${isLogin ? ta('login.emailPlaceholder') : ta('signup.emailPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
                                 </div>
-
                                 <div>
                                     <label class="block text-sm font-medium mb-2">${isLogin ? ta('login.passwordLabel') : ta('signup.passwordLabel')}</label>
                                     <input type="password" name="password" required minlength="12" placeholder="${isLogin ? ta('login.passwordPlaceholder') : ta('signup.passwordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
                                     <p class="text-xs text-gray-400 mt-1">${isLogin ? ta('login.passwordHint') : ta('signup.passwordHint')}</p>
                                 </div>
-
                                 ${!isLogin ? `
                                     <div>
                                         <label class="block text-sm font-medium mb-2">${ta('signup.confirmPasswordLabel')}</label>
                                         <input type="password" name="confirmPassword" required minlength="12" placeholder="${ta('signup.confirmPasswordPlaceholder')}" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent">
                                     </div>
                                 ` : ''}
-
                                 <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
                                     ${isLogin ? ta('login.submitButton') : ta('signup.submitButton')}
                                 </button>
-
                                 ${isLogin ? `
                                     <div class="text-center">
                                         <button type="button" onclick="showReset()" class="text-yellow-500 hover:text-yellow-400 text-sm">${ta('login.forgotPassword')}</button>
@@ -272,13 +250,11 @@
                                 </button>
                             </form>
                         `}
-
                         <div class="mt-6 text-center">
                             <button onclick="backToHome()" class="text-gray-400 hover:text-white transition">
                                 ← ${i18next.t('common.back', { ns: 'common' }) || 'Retour'}
                             </button>
                         </div>
-
                         ${!isReset ? `
                             <div class="mt-4 text-center">
                                 <button onclick="${isLogin ? 'showSignup()' : 'showLogin()'}" class="text-yellow-500 hover:text-yellow-400">
@@ -290,15 +266,12 @@
                 </div>
             `;
         }
-
         function renderDashboard() {
             const isAdmin = userProfile?.role === 'admin';
             let contractStatus = (userProfile?.contract_status || 'pending').trim().replace(/\*+/g, '');
-
             if (!isAdmin && contractStatus !== 'validated') {
                 return renderContractUploadPage();
             }
-
             return `
                 <div class="min-h-screen">
                     <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md py-4">
@@ -316,15 +289,12 @@
                 </div>
             `;
         }
-
         function renderContractUploadPage() {
             const contractStatus = userProfile?.contract_status || 'pending';
-
             return `
                 <div class="min-h-screen flex items-center justify-center px-4">
                     <div class="max-w-2xl w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
                         <h2 class="text-3xl font-bold text-center mb-6">📋 Contrat d'Apporteur</h2>
-
                         ${contractStatus === 'pending' ? `
                             <div class="bg-yellow-900 bg-opacity-30 border border-yellow-600 rounded-lg p-6 mb-6">
                                 <p class="text-yellow-300 text-center">
@@ -337,7 +307,7 @@
                                         📄 Télécharger le contrat
                                     </a>
                                 </div>
-                                <form id="contractForm" onsubmit="handleContractSubmit(event); return false;" class="space-y-4">
+                                <form id="contractForm" class="space-y-4">
                                     <div>
                                         <label class="block text-sm font-medium mb-2">Contrat signé (PDF)</label>
                                         <input type="file" name="contract" accept=".pdf" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
@@ -352,7 +322,6 @@
                                 <p class="text-blue-300">⏳ En attente de validation</p>
                             </div>
                         ` : ''}
-
                         <div class="mt-6 text-center">
                             <button onclick="logout()" class="text-red-500 hover:text-red-400 font-medium">
                                 🚪 Déconnexion
@@ -362,19 +331,16 @@
                 </div>
             `;
         }
-
         async function loadDashboardContent() {
             const isAdmin = userProfile?.role === 'admin';
             const container = document.getElementById('dashboardContent');
             if (!container) return;
-
             if (isAdmin) {
                 await loadAdminDashboard(container);
             } else {
                 await loadReferrerDashboard(container);
             }
         }
-
         async function loadAdminDashboard(container) {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
@@ -400,13 +366,11 @@
             allLeads?.forEach(lead => {
                 lead.profiles = allProfiles?.find(p => p.id === lead.referrer_id);
             });
-
             const pendingContracts = profiles?.filter(p => p.contract_status === 'uploaded').length || 0;
             const totalReferrers = profiles?.length || 0;
             const activeLeads = allLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
             const totalSales = allLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
             const totalCommissions = allLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
-
             container.innerHTML = `
                 <div class="mb-8">
                     <ul class="flex border-b border-gray-700">
@@ -420,7 +384,6 @@
                         </li>
                     </ul>
                 </div>
-
                 <div id="tab-content-leads">
                     <div class="grid md:grid-cols-4 gap-6 mb-8">
                         <div class="bg-gray-800 rounded-xl p-6">
@@ -440,7 +403,6 @@
                             <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} ${td('admin.stats.currency')}</div>
                         </div>
                     </div>
-
                     <div class="bg-gray-800 rounded-xl p-6">
                         <h3 class="text-xl font-bold mb-4">${td('admin.tabs.leads')}</h3>
                         <div class="overflow-x-auto">
@@ -496,7 +458,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div id="tab-content-contracts" style="display: none;">
                     <div class="bg-gray-800 rounded-xl p-6">
                         <h3 class="text-xl font-bold mb-4">${td('admin.tabs.contracts')}</h3>
@@ -533,7 +494,6 @@
                 </div>
             `;
         }
-
         async function loadReferrerDashboard(container) {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
@@ -557,7 +517,6 @@
             const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
             const closedSales = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
             const totalCommissions = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
-
             container.innerHTML = `
                 <div class="grid md:grid-cols-3 gap-6 mb-8">
                     <div class="bg-gray-800 rounded-xl p-6">
@@ -573,13 +532,11 @@
                         <div class="text-3xl font-bold text-green-500">${closedSales}</div>
                     </div>
                 </div>
-
                 <div class="mb-6">
                     <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
                         ${td('referrer.actions.addLead')}
                     </button>
                 </div>
-
                 <div class="bg-gray-800 rounded-xl p-6">
                     <h3 class="text-xl font-bold mb-4">${td('referrer.table.title')}</h3>
                     <div class="overflow-x-auto">
@@ -627,7 +584,6 @@
                 </div>
             `;
         }
-
         function showAddLeadForm() {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
@@ -684,9 +640,7 @@
                     </form>
                 </div>
             `;
-
             document.body.appendChild(modal);
-
             setTimeout(() => {
                 const form = document.getElementById('addLeadForm');
                 if (form) {
@@ -695,7 +649,6 @@
                         const formData = new FormData(e.target);
                         const leadType = formData.get('leadType');
                         const isSale = leadType.includes('Sale');
-
                         const { error } = await supabase.from('leads').insert([{
                             referrer_id: currentUser.id,
                             lead_type: leadType,
@@ -707,7 +660,6 @@
                             annual_rent: !isSale ? Number(formData.get('annualRent')) || null : null,
                             status: 'nouveau'
                         }]);
-
                         if (error) {
                             alert('Erreur : ' + error.message);
                         } else {
@@ -719,12 +671,10 @@
                 }
             }, 300);
         }
-
         window.toggleFields = function(leadType) {
             const budgetField = document.getElementById('budgetField');
             const rentField = document.getElementById('rentField');
             const isSale = leadType.includes('Sale');
-
             if (isSale) {
                 budgetField.style.display = 'block';
                 budgetField.querySelector('input').required = true;
@@ -737,29 +687,24 @@
                 rentField.querySelector('input').required = true;
             }
         };
-
         async function updateLeadStatus(leadId, newStatus) {
             const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
             if (error) alert('Erreur : ' + error.message);
             else render();
         }
-
         async function markAsSold(leadId, leadType) {
             const isSale = leadType.includes('Sale');
             const priceLabel = isSale ? 'Prix de vente (AED)' : 'Loyer annuel (AED)';
             const price = prompt(priceLabel);
             if (!price) return;
-
             const numPrice = parseFloat(price);
             if (Number.isNaN(numPrice) || numPrice <= 0) {
                 alert('Montant invalide');
                 return;
             }
-
             const commissionRate = isSale ? 0.02 : 0.05;
             const agentCommission = numPrice * commissionRate * 0.5;
             const referrerCommission = agentCommission * 0.2;
-
             const { error } = await supabase.from('leads').update({
                 status: isSale ? 'vendu' : 'loué',
                 sale_price: isSale ? numPrice : null,
@@ -768,14 +713,12 @@
                 referrer_commission: referrerCommission,
                 closed_at: new Date().toISOString()
             }).eq('id', leadId);
-
             if (error) alert('Erreur : ' + error.message);
             else {
                 alert('Commission : ' + referrerCommission.toLocaleString() + ' AED');
                 render();
             }
         }
-
         window.switchTab = function(tab) {
             document.getElementById('tab-leads').classList.toggle('border-yellow-500', tab === 'leads');
             document.getElementById('tab-leads').classList.toggle('text-yellow-500', tab === 'leads');
@@ -786,7 +729,6 @@
             document.getElementById('tab-content-leads').style.display = tab === 'leads' ? 'block' : 'none';
             document.getElementById('tab-content-contracts').style.display = tab === 'contracts' ? 'block' : 'none';
         };
-
         window.viewContract = function(url) {
             if (!url) {
                 alert('Aucun contrat');
@@ -794,7 +736,6 @@
             }
             window.open(url, '_blank');
         };
-
         window.validateContract = async function(userId) {
             if (!confirm('Valider ?')) return;
             const { error } = await supabase.from('profiles').update({ contract_status: 'validated' }).eq('id', userId);
@@ -804,7 +745,6 @@
                 render();
             }
         };
-
         window.rejectContract = async function(userId) {
             if (!confirm('Rejeter ?')) return;
             const { error } = await supabase.from('profiles').update({ contract_status: 'rejected' }).eq('id', userId);
@@ -814,32 +754,26 @@
                 render();
             }
         };
-
         async function handleAuth(mode) {
             const form = document.getElementById('authForm');
             if (!form) return;
-
             const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
-
             form.onsubmit = async (e) => {
                 e.preventDefault();
                 const formData = new FormData(form);
                 const email = formData.get('email');
                 const password = formData.get('password');
-
                 if (mode === 'signup') {
                     const confirmPassword = formData.get('confirmPassword');
                     if (password !== confirmPassword) {
                         alert(ta('signup.errors.passwordMismatch'));
                         return;
                     }
-
                     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{12,}$/;
                     if (!passwordRegex.test(password)) {
                         alert(ta('signup.errors.passwordInvalid'));
                         return;
                     }
-
                     const { data, error } = await supabase.auth.signUp({
                         email,
                         password,
@@ -850,7 +784,6 @@
                             }
                         }
                     });
-
                     if (error) {
                         if (error.message && error.message.toLowerCase().includes('already')) {
                             alert(ta('signup.errors.emailExists'));
@@ -874,22 +807,17 @@
                 }
             };
         }
-
         async function handleReset() {
             const form = document.getElementById('resetForm');
             if (!form) return;
-
             const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
-
             form.onsubmit = async (e) => {
                 e.preventDefault();
                 const formData = new FormData(form);
                 const email = formData.get('email');
-
                 const { error } = await supabase.auth.resetPasswordForEmail(email, {
                     redirectTo: 'https://real-estate-referrer.com/reset-password.html'
                 });
-
                 if (error) {
                     alert(ta('reset.errors.networkError'));
                 } else {
@@ -898,39 +826,30 @@
                 }
             };
         }
-
         async function handleContractSubmit(e) {
             e.preventDefault();
             const fileInput = document.querySelector('input[name="contract"]');
             const file = fileInput?.files[0];
-
             if (!file) {
                 alert('Fichier manquant');
                 return;
             }
-
             if (file.size > 5 * 1024 * 1024) {
                 alert('Fichier trop volumineux (max 5MB)');
                 return;
             }
-
             const fileName = `${currentUser.id}_${Date.now()}.pdf`;
-
             try {
                 const { data: uploadData, error: uploadError } = await supabase.storage.from('contracts').upload(fileName, file);
-
                 if (uploadError) {
                     alert('Erreur upload : ' + uploadError.message);
                     return;
                 }
-
                 const { data: urlData } = supabase.storage.from('contracts').getPublicUrl(fileName);
-
                 const { error: updateError } = await supabase.from('profiles').update({
                     contract_status: 'uploaded',
                     contract_file_url: urlData.publicUrl
                 }).eq('id', currentUser.id);
-
                 if (updateError) {
                     alert('Erreur mise à jour : ' + updateError.message);
                 } else {
@@ -942,7 +861,6 @@
                 alert('Erreur : ' + error.message);
             }
         }
-
         async function loadUserProfile() {
             const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
             
@@ -953,7 +871,6 @@
             userProfile = data;
             window.userProfile = data;
         }
-
         async function logout() {
             await supabase.auth.signOut();
             currentUser = null;
@@ -966,7 +883,6 @@
             sessionStorage.clear();
             render();
         }
-
         function backToHome() {
             currentUser = null;
             userProfile = null;
@@ -976,31 +892,30 @@
             window.currentPage = 'landing';
             render();
         }
-
         function showLogin() {
             currentPage = 'auth-login';
             window.currentPage = 'auth-login';
             render();
         }
-
         function showSignup() {
             currentPage = 'auth-signup';
             window.currentPage = 'auth-signup';
             render();
         }
-
         function showReset() {
             currentPage = 'auth-reset';
             window.currentPage = 'auth-reset';
             render();
         }
-
         async function render() {
             const app = document.getElementById('app');
-
             if (currentUser) {
                 app.innerHTML = renderDashboard();
                 await loadDashboardContent();
+                const contractForm = document.getElementById('contractForm');
+                if (contractForm) {
+                    contractForm.addEventListener('submit', handleContractSubmit);
+                }
             } else if (currentPage === 'auth-login') {
                 app.innerHTML = renderAuthPage('login');
                 setTimeout(() => handleAuth('login'), 100);
@@ -1014,7 +929,6 @@
                 app.innerHTML = renderLandingPage();
             }
         }
-
         window.showLogin = showLogin;
         window.showSignup = showSignup;
         window.showReset = showReset;
@@ -1023,15 +937,14 @@
         window.showAddLeadForm = showAddLeadForm;
         window.updateLeadStatus = updateLeadStatus;
         window.markAsSold = markAsSold;
+        window.handleContractSubmit = handleContractSubmit;
         window.render = render;
-
         supabase.auth.onAuthStateChange(async (event, session) => {
             currentUser = session?.user || null;
             window.currentUser = currentUser;
             if (currentUser) await loadUserProfile();
             render();
         });
-
         supabase.auth.getSession().then(({ data: { session } }) => {
             currentUser = session?.user || null;
             window.currentUser = currentUser;
