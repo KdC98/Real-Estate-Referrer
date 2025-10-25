@@ -175,18 +175,44 @@
                             </div>
                         </div>
                     </main>
+
+                    <footer class="bg-gray-900 bg-opacity-50 backdrop-blur-md py-8 mt-20">
+                        <div class="container mx-auto px-4">
+                            <div class="flex justify-center gap-8 flex-wrap text-sm text-gray-400">
+                                <a href="terms.html" class="hover:text-white transition">${t('footer.terms')}</a>
+                                <a href="privacy.html" class="hover:text-white transition">${t('footer.privacy')}</a>
+                                <a href="how-it-works.html" class="hover:text-white transition">${t('footer.how_it_works')}</a>
+                                <a href="mailto:contact@real-estate-referrer.com" class="hover:text-white transition">${t('footer.contact')}</a>
+                            </div>
+                            <div class="text-center text-gray-500 text-sm mt-4">
+                                ${t('footer.copyright')}
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             `;
         }
 
-        function renderAuthPage(type) {
-            const isLogin = type === 'login';
-            const isReset = type === 'reset';
-            const ta = (key) => i18next.t(key, { ns: 'auth' });
+        function renderAuthPage(mode) {
+            const isLogin = mode === 'login';
+            const isReset = mode === 'reset';
+            const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
 
             return `
                 <div class="min-h-screen flex items-center justify-center px-4">
                     <div class="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8">
+                        
+                        <div class="flex justify-center gap-2 mb-6 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                            <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform" title="Français">🇫🇷</button>
+                            <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform" title="English">🇬🇧</button>
+                            <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform" title="العربية">🇦🇪</button>
+                            <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform" title="Русский">🇷🇺</button>
+                            <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform" title="हिन्दी">🇮🇳</button>
+                            <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform" title="اردو">🇵🇰</button>
+                            <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform" title="中文">🇨🇳</button>
+                            <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform" title="Tagalog">🇵🇭</button>
+                        </div>
+
                         <h2 class="text-3xl font-bold text-center mb-2">
                             ${isReset ? ta('reset.title') : (isLogin ? ta('login.title') : ta('signup.title'))}
                         </h2>
@@ -354,99 +380,155 @@
             
             const translateLeadType = (leadType) => {
                 if (!leadType) return '-';
-                const typeKey = `referrer.leadTypes.${leadType.toLowerCase()}`;
-                const translation = td(typeKey);
-                return translation !== typeKey ? translation : leadType;
+                const typeMap = {
+                    'sale_seller': td('admin.leadTypes.sale_seller'),
+                    'sale_buyer': td('admin.leadTypes.sale_buyer'),
+                    'rent_tenant': td('admin.leadTypes.rent_tenant'),
+                    'rent_landlord': td('admin.leadTypes.rent_landlord'),
+                    'sale': td('admin.leadTypes.sale'),
+                    'Rental - Landlord': td('admin.leadTypes.rent_landlord'),
+                    'Sale - Buyer': td('admin.leadTypes.sale_buyer'),
+                    'Sale - Seller': td('admin.leadTypes.sale_seller')
+                };
+                return typeMap[leadType] || leadType;
             };
-
-            const { data: referrers } = await supabase.from('profiles').select('*').eq('role', 'referrer');
-            const { data: leads } = await supabase.from('leads').select('*');
-            const { data: profiles } = await supabase.from('profiles').select('id, name');
-
-            const profilesMap = {};
-            (profiles || []).forEach(p => {
-                profilesMap[p.id] = p.name;
+            
+            const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
+            const { data: allLeads } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+            const { data: allProfiles } = await supabase.from('profiles').select('id, name');
+            
+            allLeads?.forEach(lead => {
+                lead.profiles = allProfiles?.find(p => p.id === lead.referrer_id);
             });
 
-            const activeLeads = (leads || []).filter(l => l.status !== 'vendu' && l.status !== 'loué').length;
-            const closedLeads = (leads || []).filter(l => l.status === 'vendu' || l.status === 'loué').length;
-            const totalCommissions = (leads || []).reduce((sum, l) => sum + (parseFloat(l.referrer_commission) || 0), 0);
+            const pendingContracts = profiles?.filter(p => p.contract_status === 'uploaded').length || 0;
+            const totalReferrers = profiles?.length || 0;
+            const activeLeads = allLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
+            const totalSales = allLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+            const totalCommissions = allLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
 
             container.innerHTML = `
-                <div class="grid md:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('admin.stats.referrersCount')}</div>
-                        <div class="text-3xl font-bold text-yellow-500">${referrers?.length || 0}</div>
-                    </div>
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('admin.stats.activeLeads')}</div>
-                        <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
-                    </div>
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('admin.stats.closedDeals')}</div>
-                        <div class="text-3xl font-bold text-green-500">${closedLeads}</div>
-                    </div>
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('admin.stats.commissionsPaid')}</div>
-                        <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} AED</div>
-                    </div>
+                <div class="mb-8">
+                    <ul class="flex border-b border-gray-700">
+                        <li class="mr-1">
+                            <button onclick="switchTab('leads')" id="tab-leads" class="inline-block py-2 px-4 font-semibold border-b-2 border-yellow-500 text-yellow-500">${td('admin.tabs.leads')}</button>
+                        </li>
+                        <li class="mr-1">
+                            <button onclick="switchTab('contracts')" id="tab-contracts" class="inline-block py-2 px-4 font-semibold text-gray-400">
+                                ${td('admin.tabs.contracts')} ${pendingContracts > 0 ? '<span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">' + pendingContracts + '</span>' : ''}
+                            </button>
+                        </li>
+                    </ul>
                 </div>
 
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold">${td('admin.leadsTable.title')}</h3>
+                <div id="tab-content-leads">
+                    <div class="grid md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.totalReferrers')}</div>
+                            <div class="text-3xl font-bold text-yellow-500">${totalReferrers}</div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.activeLeads')}</div>
+                            <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.totalSales')}</div>
+                            <div class="text-3xl font-bold text-green-500">${totalSales}</div>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-6">
+                            <div class="text-gray-400 text-sm mb-2">${td('admin.stats.commissionsEarned')}</div>
+                            <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} ${td('admin.stats.currency')}</div>
+                        </div>
                     </div>
 
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-700">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">${td('admin.leadsTable.referrerName')}</th>
-                                    <th class="px-4 py-3 text-left">${td('admin.leadsTable.clientName')}</th>
-                                    <th class="px-4 py-3 text-left">${td('admin.leadsTable.leadType')}</th>
-                                    <th class="px-4 py-3 text-left">${td('admin.leadsTable.budget')}</th>
-                                    <th class="px-4 py-3 text-left">${td('admin.leadsTable.status')}</th>
-                                    <th class="px-4 py-3 text-left">${td('admin.leadsTable.commission')}</th>
-                                    <th class="px-4 py-3 text-left">${td('admin.leadsTable.actions')}</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-700">
-                                ${(leads || []).map(lead => {
-                                    const referrerName = profilesMap[lead.referrer_id] || 'Inconnu';
-                                    const isSale = lead.lead_type && lead.lead_type.toLowerCase().includes('sale');
-                                    const statusKey = `referrer.status.${lead.status}`;
-                                    const statusLabel = td(statusKey) !== statusKey ? td(statusKey) : lead.status;
-
-                                    return `
-                                        <tr class="hover:bg-gray-700">
-                                            <td class="px-4 py-3 font-medium">${referrerName}</td>
-                                            <td class="px-4 py-3">${lead.client_name}</td>
-                                            <td class="px-4 py-3">${translateLeadType(lead.lead_type)}</td>
-                                            <td class="px-4 py-3">${lead.budget ? (lead.budget.toLocaleString() + (isSale ? ' AED' : ' AED/an')) : '<span class="text-gray-500">-</span>'}</td>
-                                            <td class="px-4 py-3">
-                                                <select onchange="updateLeadStatus(${lead.id}, this.value)" class="bg-gray-700 border border-gray-600 rounded px-2 py-1">
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4">${td('admin.tabs.leads')}</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-700">
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.referrer')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.client')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.property')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.budget')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.status')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.commission')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.actions')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${allLeads?.map(lead => `
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4">${lead.profiles?.name || 'N/A'}</td>
+                                            <td class="py-3 px-4">
+                                                <div class="font-semibold">${lead.client_name}</div>
+                                                <div class="text-sm text-gray-400">${lead.client_email}</div>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <div class="text-sm">${translateLeadType(lead.lead_type)}</div>
+                                                <div class="text-xs text-gray-400">${lead.property_type}</div>
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                ${lead.lead_type.includes('Sale') 
+                                                    ? (lead.budget ? lead.budget.toLocaleString() + ' ' + td('admin.stats.currency') : '<span class="text-gray-500">-</span>') 
+                                                    : (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' ' + td('admin.stats.currency') + '/an' : '<span class="text-gray-500">-</span>')}
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                <select onchange="updateLeadStatus('${lead.id}', this.value)" class="bg-gray-700 rounded px-2 py-1 text-sm">
                                                     <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${td('referrer.status.nouveau')}</option>
                                                     <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${td('referrer.status.visite')}</option>
                                                     <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${td('referrer.status.offre')}</option>
-                                                    <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${td('referrer.status.vendu')}</option>
-                                                    <option value="loué" ${lead.status === 'loué' ? 'selected' : ''}>${td('referrer.status.loué')}</option>
+                                                    <option value="${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}" ${(lead.status === 'vendu' || lead.status === 'loué') ? 'selected' : ''}>
+                                                        ${lead.lead_type.includes('Sale') ? td('referrer.status.vendu') : td('referrer.status.loué')}
+                                                    </option>
                                                 </select>
                                             </td>
-                                            <td class="px-4 py-3 font-bold text-yellow-500">
-                                                ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
+                                            <td class="py-3 px-4">
+                                                ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('admin.stats.currency') + '</span>' : '-'}
                                             </td>
-                                            <td class="px-4 py-3">
-                                                ${lead.status !== 'vendu' && lead.status !== 'loué' ? `
-                                                    <button onclick="markAsSold(${lead.id}, '${isSale ? 'vendu' : 'loué'}')" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
-                                                        ${isSale ? td('admin.leadsTable.markSold') : td('admin.actions.markRented')}
-                                                    </button>
-                                                ` : `<span class="text-green-500">✓</span>`}
+                                            <td class="py-3 px-4">
+                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">${lead.lead_type.toLowerCase().includes('sale') ? td('admin.actions.markSold') : td('admin.actions.markRented')}</button>` : ''}
                                             </td>
                                         </tr>
-                                    `;
-                                }).join('')}
-                            </tbody>
-                        </table>
+                                    `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">' + td('admin.table.empty') + '</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-content-contracts" style="display: none;">
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <h3 class="text-xl font-bold mb-4">${td('admin.tabs.contracts')}</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b border-gray-700">
+                                        <th class="text-left py-3 px-4">${td('modal.addLead.form.clientName.label')}</th>
+                                        <th class="text-left py-3 px-4">${td('modal.addLead.form.clientPhone.label')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.status')}</th>
+                                        <th class="text-left py-3 px-4">${td('admin.table.headers.actions')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${profiles?.map(profile => `
+                                        <tr class="border-b border-gray-700">
+                                            <td class="py-3 px-4">${profile.name}</td>
+                                            <td class="py-3 px-4">${profile.phone}</td>
+                                            <td class="py-3 px-4">
+                                                ${profile.contract_status === 'pending' ? '<span class="px-2 py-1 bg-gray-600 rounded text-xs">' + td('admin.table.contractStatus.pending') + '</span>' : ''}
+                                                ${profile.contract_status === 'uploaded' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">' + (td('admin.table.contractStatus.uploaded') || 'Téléversé') + '</span>' : ''}
+                                                ${profile.contract_status === 'validated' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('admin.table.contractStatus.signed') + '</span>' : ''}
+                                            </td>
+                                            <td class="py-3 px-4">
+                                                ${profile.contract_status === 'uploaded' || profile.contract_status === 'validated' ? `<button onclick="viewContract('${profile.contract_file_url}')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm mr-2">${td('admin.actions.viewDetails')}</button>` : ''}
+                                                ${profile.contract_status === 'uploaded' ? `<button onclick="validateContract('${profile.id}')" class="bg-green-500 text-white px-3 py-1 rounded text-sm mr-2">${td('admin.actions.validate')}</button><button onclick="rejectContract('${profile.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-sm">${td('modal.addLead.buttons.cancel')}</button>` : ''}
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="4" class="text-center py-8 text-gray-400">' + td('admin.table.empty') + '</td></tr>'}
+                                    </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             `;
@@ -454,84 +536,91 @@
 
         async function loadReferrerDashboard(container) {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
-
+            
             const translateLeadType = (leadType) => {
                 if (!leadType) return '-';
-                const typeKey = `referrer.leadTypes.${leadType.toLowerCase()}`;
-                const translation = td(typeKey);
-                return translation !== typeKey ? translation : leadType;
+                const typeMap = {
+                    'sale_seller': td('admin.leadTypes.sale_seller'),
+                    'sale_buyer': td('admin.leadTypes.sale_buyer'),
+                    'rent_tenant': td('admin.leadTypes.rent_tenant'),
+                    'rent_landlord': td('admin.leadTypes.rent_landlord'),
+                    'sale': td('admin.leadTypes.sale'),
+                    'Rental - Landlord': td('admin.leadTypes.rent_landlord'),
+                    'Sale - Buyer': td('admin.leadTypes.sale_buyer'),
+                    'Sale - Seller': td('admin.leadTypes.sale_seller')
+                };
+                return typeMap[leadType] || leadType;
             };
-
-            const { data: leads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id);
-
-            const totalEarnings = (leads || []).reduce((sum, l) => sum + (parseFloat(l.referrer_commission) || 0), 0);
-            const activeLeads = (leads || []).filter(l => l.status !== 'vendu' && l.status !== 'loué').length;
-            const closedDeals = (leads || []).filter(l => l.status === 'vendu' || l.status === 'loué').length;
+            
+            const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
+            
+            const activeLeads = myLeads?.filter(l => l.status !== 'vendu' && l.status !== 'loué').length || 0;
+            const closedSales = myLeads?.filter(l => l.status === 'vendu' || l.status === 'loué').length || 0;
+            const totalCommissions = myLeads?.reduce((sum, l) => sum + (l.referrer_commission || 0), 0) || 0;
 
             container.innerHTML = `
                 <div class="grid md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                    <div class="bg-gray-800 rounded-xl p-6">
                         <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.totalEarnings')}</div>
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+                        <div class="text-3xl font-bold text-yellow-500">${totalCommissions.toLocaleString()} ${td('referrer.stats.currency')}</div>
                     </div>
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                    <div class="bg-gray-800 rounded-xl p-6">
                         <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.activeLeads')}</div>
                         <div class="text-3xl font-bold text-blue-500">${activeLeads}</div>
                     </div>
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.closedDeals')}</div>
-                        <div class="text-3xl font-bold text-green-500">${closedDeals}</div>
+                    <div class="bg-gray-800 rounded-xl p-6">
+                        <div class="text-gray-400 text-sm mb-2">${td('referrer.stats.closedSales')}</div>
+                        <div class="text-3xl font-bold text-green-500">${closedSales}</div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-2xl font-bold">${td('referrer.leadsTable.title')}</h3>
-                        <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg">
-                            ${td('referrer.addLead.button')}
-                        </button>
-                    </div>
+                <div class="mb-6">
+                    <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
+                        ${td('referrer.actions.addLead')}
+                    </button>
+                </div>
 
+                <div class="bg-gray-800 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">${td('referrer.table.title')}</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full">
-                            <thead class="bg-gray-700">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">${td('referrer.leadsTable.clientName')}</th>
-                                    <th class="px-4 py-3 text-left">${td('referrer.leadsTable.leadType')}</th>
-                                    <th class="px-4 py-3 text-left">${td('referrer.leadsTable.budget')}</th>
-                                    <th class="px-4 py-3 text-left">${td('referrer.leadsTable.status')}</th>
-                                    <th class="px-4 py-3 text-left">${td('referrer.leadsTable.commission')}</th>
+                            <thead>
+                                <tr class="border-b border-gray-700">
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.client')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.property')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.budget')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.status')}</th>
+                                    <th class="text-left py-3 px-4">${td('referrer.table.headers.commission')}</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-700">
-                                ${(leads || []).map(lead => {
-                                    const isSale = lead.lead_type && lead.lead_type.toLowerCase().includes('sale');
-                                    const statusKey = `referrer.status.${lead.status}`;
-                                    const statusLabel = td(statusKey) !== statusKey ? td(statusKey) : lead.status;
-                                    const statusColors = {
-                                        'nouveau': 'bg-blue-500',
-                                        'visite': 'bg-yellow-500',
-                                        'offre': 'bg-orange-500',
-                                        'vendu': 'bg-green-500',
-                                        'loué': 'bg-green-500'
-                                    };
-
-                                    return `
-                                        <tr class="hover:bg-gray-700">
-                                            <td class="px-4 py-3">${lead.client_name}</td>
-                                            <td class="px-4 py-3">${translateLeadType(lead.lead_type)}</td>
-                                            <td class="px-4 py-3">${lead.budget ? (lead.budget.toLocaleString() + (isSale ? ' AED' : ' AED/an')) : '<span class="text-gray-500">-</span>'}</td>
-                                            <td class="px-4 py-3">
-                                                <span class="${statusColors[lead.status] || 'bg-gray-500'} text-white px-3 py-1 rounded-full text-sm">
-                                                    ${statusLabel}
-                                                </span>
-                                            </td>
-                                            <td class="px-4 py-3 font-bold text-yellow-500">
-                                                ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
-                                            </td>
-                                        </tr>
-                                    `;
-                                }).join('')}
+                            <tbody>
+                                ${myLeads?.map(lead => `
+                                    <tr class="border-b border-gray-700">
+                                        <td class="py-3 px-4">
+                                            <div class="font-semibold">${lead.client_name}</div>
+                                            <div class="text-sm text-gray-400">${lead.client_email}</div>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            <div class="text-sm">${translateLeadType(lead.lead_type)}</div>
+                                            <div class="text-xs text-gray-400">${lead.property_type}</div>
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            ${lead.lead_type.includes('Sale') 
+                                                ? (lead.budget ? lead.budget.toLocaleString() + ' ' + td('referrer.stats.currency') : '<span class="text-gray-500">-</span>') 
+                                                : (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' ' + td('referrer.stats.currency') + '/an' : '<span class="text-gray-500">-</span>')}
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">' + td('referrer.status.nouveau') + '</span>' : ''}
+                                            ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">' + td('referrer.status.visite') + '</span>' : ''}
+                                            ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">' + td('referrer.status.offre') + '</span>' : ''}
+                                            ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.vendu') + '</span>' : ''}
+                                            ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.loué') + '</span>' : ''}
+                                        </td>
+                                        <td class="py-3 px-4">
+                                            ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('referrer.stats.currency') + '</span>' : '-'}
+                                        </td>
+                                    </tr>
+                                `).join('') || '<tr><td colspan="5" class="text-center py-8 text-gray-400">' + td('referrer.table.empty') + '</td></tr>'}
                             </tbody>
                         </table>
                     </div>
@@ -539,144 +628,197 @@
             `;
         }
 
-        async function showAddLeadForm() {
+        function showAddLeadForm() {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
-
+            
             const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50';
             modal.innerHTML = `
-                <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-                    <h3 class="text-2xl font-bold mb-6">${td('referrer.addLead.title')}</h3>
+                <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full max-h-screen overflow-y-auto">
+                    <h3 class="text-2xl font-bold mb-6">${td('modal.addLead.title')}</h3>
                     <form id="addLeadForm" class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium mb-2">${td('referrer.addLead.leadType')}</label>
-                            <select name="lead_type" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
-                                <option value="">${td('referrer.addLead.placeholder')}</option>
-                                <option value="sale_buyer">${td('referrer.leadTypes.sale_buyer')}</option>
-                                <option value="sale_seller">${td('referrer.leadTypes.sale_seller')}</option>
-                                <option value="rent_landlord">${td('referrer.leadTypes.rent_landlord')}</option>
-                                <option value="rent_tenant">${td('referrer.leadTypes.rent_tenant')}</option>
+                            <label class="block text-sm font-medium mb-2">${td('modal.addLead.form.leadType.label')}</label>
+                            <select name="leadType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg" onchange="toggleFields(this.value)">
+                                <option value="">${td('modal.addLead.form.leadType.placeholder') || 'Sélectionner un type de lead'}</option>
+                                <option value="Sale - Buyer">${td('modal.addLead.form.leadType.sale')} - Buyer</option>
+                                <option value="Sale - Seller">${td('modal.addLead.form.leadType.sale')} - Seller</option>
+                                <option value="Rental - Tenant">${td('modal.addLead.form.leadType.rent')} - Tenant</option>
+                                <option value="Rental - Landlord">${td('modal.addLead.form.leadType.rent')} - Landlord</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">${td('referrer.addLead.clientName')}</label>
-                            <input type="text" name="client_name" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
+                            <label class="block text-sm font-medium mb-2">${td('modal.addLead.form.clientName.label')}</label>
+                            <input type="text" name="clientName" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">${td('referrer.addLead.clientEmail')}</label>
-                            <input type="email" name="client_email" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
+                            <label class="block text-sm font-medium mb-2">${td('modal.addLead.form.clientEmail.label')}</label>
+                            <input type="email" name="clientEmail" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">${td('referrer.addLead.clientPhone')}</label>
-                            <input type="tel" name="client_phone" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
+                            <label class="block text-sm font-medium mb-2">${td('modal.addLead.form.clientPhone.label')}</label>
+                            <input type="tel" name="clientPhone" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">${td('referrer.addLead.budget')}</label>
-                            <input type="number" name="budget" class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
+                            <label class="block text-sm font-medium mb-2">${td('modal.addLead.form.propertyType.label')}</label>
+                            <select name="propertyType" required class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                                <option value="Appartement">${td('referrer.propertyTypes.apartment')}</option>
+                                <option value="Villa">${td('referrer.propertyTypes.villa')}</option>
+                                <option value="Townhouse">${td('referrer.propertyTypes.townhouse')}</option>
+                                <option value="Penthouse">${td('referrer.propertyTypes.penthouse')}</option>
+                                <option value="Studio">Studio</option>
+                            </select>
+                        </div>
+                        <div id="budgetField">
+                            <label class="block text-sm font-medium mb-2">${td('modal.addLead.form.budget.label')}</label>
+                            <input type="number" name="budget" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
+                        </div>
+                        <div id="rentField" style="display: none;">
+                            <label class="block text-sm font-medium mb-2">${td('modal.addLead.form.annualRent.label')}</label>
+                            <input type="number" name="annualRent" class="w-full px-4 py-2 bg-gray-700 rounded-lg">
                         </div>
                         <div class="flex gap-4">
-                            <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg">
-                                ${td('referrer.addLead.submit')}
-                            </button>
-                            <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg">
-                                ${td('referrer.addLead.cancel')}
-                            </button>
+                            <button type="submit" class="flex-1 bg-yellow-500 text-gray-900 font-bold py-3 rounded-lg">${td('modal.addLead.buttons.submit')}</button>
+                            <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-600 text-white font-bold py-3 rounded-lg">${td('modal.addLead.buttons.cancel')}</button>
                         </div>
                     </form>
                 </div>
             `;
+
             document.body.appendChild(modal);
 
-            document.getElementById('addLeadForm').onsubmit = async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                
-                const { error } = await supabase.from('leads').insert({
-                    referrer_id: currentUser.id,
-                    lead_type: formData.get('lead_type'),
-                    client_name: formData.get('client_name'),
-                    client_email: formData.get('client_email'),
-                    client_phone: formData.get('client_phone'),
-                    budget: formData.get('budget') || null,
-                    status: 'nouveau'
-                });
+            setTimeout(() => {
+                const form = document.getElementById('addLeadForm');
+                if (form) {
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        const formData = new FormData(e.target);
+                        const leadType = formData.get('leadType');
+                        const isSale = leadType.includes('Sale');
 
-                if (error) {
-                    alert('Erreur : ' + error.message);
-                } else {
-                    modal.remove();
-                    await loadDashboardContent();
+                        const { error } = await supabase.from('leads').insert([{
+                            referrer_id: currentUser.id,
+                            lead_type: leadType,
+                            client_name: formData.get('clientName'),
+                            client_email: formData.get('clientEmail'),
+                            client_phone: formData.get('clientPhone'),
+                            property_type: formData.get('propertyType'),
+                            budget: isSale ? Number(formData.get('budget')) || null : null,
+                            annual_rent: !isSale ? Number(formData.get('annualRent')) || null : null,
+                            status: 'nouveau'
+                        }]);
+
+                        if (error) {
+                            alert('Erreur : ' + error.message);
+                        } else {
+                            alert('Lead ajouté !');
+                            modal.remove();
+                            render();
+                        }
+                    });
                 }
-            };
+            }, 300);
         }
+
+        window.toggleFields = function(leadType) {
+            const budgetField = document.getElementById('budgetField');
+            const rentField = document.getElementById('rentField');
+            const isSale = leadType.includes('Sale');
+
+            if (isSale) {
+                budgetField.style.display = 'block';
+                budgetField.querySelector('input').required = true;
+                rentField.style.display = 'none';
+                rentField.querySelector('input').required = false;
+            } else {
+                budgetField.style.display = 'none';
+                budgetField.querySelector('input').required = false;
+                rentField.style.display = 'block';
+                rentField.querySelector('input').required = true;
+            }
+        };
 
         async function updateLeadStatus(leadId, newStatus) {
             const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
             if (error) alert('Erreur : ' + error.message);
-            else await loadDashboardContent();
+            else render();
         }
 
-        async function markAsSold(leadId, finalStatus) {
-            const td = (key) => i18next.t(key, { ns: 'dashboard' });
-            const { data: lead } = await supabase.from('leads').select('*').eq('id', leadId).single();
+        async function markAsSold(leadId, leadType) {
+            const isSale = leadType.includes('Sale');
+            const priceLabel = isSale ? 'Prix de vente (AED)' : 'Loyer annuel (AED)';
+            const price = prompt(priceLabel);
+            if (!price) return;
 
-            const isSale = lead.lead_type && lead.lead_type.toLowerCase().includes('sale');
-            const modalTitle = isSale ? td('admin.soldModal.title') : 'Marquer comme loué';
-            const priceLabel = isSale ? td('admin.soldModal.salePrice') : 'Prix de location annuel';
+            const numPrice = parseFloat(price);
+            if (Number.isNaN(numPrice) || numPrice <= 0) {
+                alert('Montant invalide');
+                return;
+            }
 
-            const modal = document.createElement('div');
-            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-            modal.innerHTML = `
-                <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full mx-4">
-                    <h3 class="text-2xl font-bold mb-6">${modalTitle}</h3>
-                    <form id="soldForm" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-2">${priceLabel}</label>
-                            <input type="number" name="sale_price" required class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg">
-                        </div>
-                        <div class="flex gap-4">
-                            <button type="submit" class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg">
-                                ${td('admin.soldModal.confirm')}
-                            </button>
-                            <button type="button" onclick="this.closest('.fixed').remove()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg">
-                                ${td('admin.soldModal.cancel')}
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            `;
-            document.body.appendChild(modal);
+            const commissionRate = isSale ? 0.02 : 0.05;
+            const agentCommission = numPrice * commissionRate * 0.5;
+            const referrerCommission = agentCommission * 0.2;
 
-            document.getElementById('soldForm').onsubmit = async (e) => {
-                e.preventDefault();
-                const salePrice = parseFloat(new FormData(e.target).get('sale_price'));
-                
-                const commissionRate = isSale ? 0.02 : 0.05;
-                const agentCommission = salePrice * commissionRate * 0.5;
-                const referrerCommission = agentCommission * 0.2;
+            const { error } = await supabase.from('leads').update({
+                status: isSale ? 'vendu' : 'loué',
+                sale_price: isSale ? numPrice : null,
+                annual_rent: !isSale ? numPrice : null,
+                agent_commission: agentCommission,
+                referrer_commission: referrerCommission,
+                closed_at: new Date().toISOString()
+            }).eq('id', leadId);
 
-                const { error } = await supabase.from('leads').update({
-                    status: finalStatus,
-                    sale_price: salePrice,
-                    agent_commission: agentCommission,
-                    referrer_commission: referrerCommission,
-                    closed_at: new Date().toISOString()
-                }).eq('id', leadId);
-
-                if (error) {
-                    alert('Erreur : ' + error.message);
-                } else {
-                    modal.remove();
-                    await loadDashboardContent();
-                }
-            };
+            if (error) alert('Erreur : ' + error.message);
+            else {
+                alert('Commission : ' + referrerCommission.toLocaleString() + ' AED');
+                render();
+            }
         }
 
-        async function handleAuth(type) {
+        window.switchTab = function(tab) {
+            document.getElementById('tab-leads').classList.toggle('border-yellow-500', tab === 'leads');
+            document.getElementById('tab-leads').classList.toggle('text-yellow-500', tab === 'leads');
+            document.getElementById('tab-leads').classList.toggle('text-gray-400', tab !== 'leads');
+            document.getElementById('tab-contracts').classList.toggle('border-yellow-500', tab === 'contracts');
+            document.getElementById('tab-contracts').classList.toggle('text-yellow-500', tab === 'contracts');
+            document.getElementById('tab-contracts').classList.toggle('text-gray-400', tab !== 'contracts');
+            document.getElementById('tab-content-leads').style.display = tab === 'leads' ? 'block' : 'none';
+            document.getElementById('tab-content-contracts').style.display = tab === 'contracts' ? 'block' : 'none';
+        };
+
+        window.viewContract = function(url) {
+            if (!url) {
+                alert('Aucun contrat');
+                return;
+            }
+            window.open(url, '_blank');
+        };
+
+        window.validateContract = async function(userId) {
+            if (!confirm('Valider ?')) return;
+            const { error } = await supabase.from('profiles').update({ contract_status: 'validated' }).eq('id', userId);
+            if (error) alert('Erreur : ' + error.message);
+            else {
+                alert('Validé !');
+                render();
+            }
+        };
+
+        window.rejectContract = async function(userId) {
+            if (!confirm('Rejeter ?')) return;
+            const { error } = await supabase.from('profiles').update({ contract_status: 'rejected' }).eq('id', userId);
+            if (error) alert('Erreur : ' + error.message);
+            else {
+                alert('Rejeté');
+                render();
+            }
+        };
+
+        async function handleAuth(mode) {
             const form = document.getElementById('authForm');
             if (!form) return;
 
-            const isLogin = type === 'login';
             const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
 
             form.onsubmit = async (e) => {
@@ -685,40 +827,45 @@
                 const email = formData.get('email');
                 const password = formData.get('password');
 
-                if (!isLogin) {
+                if (mode === 'signup') {
                     const confirmPassword = formData.get('confirmPassword');
                     if (password !== confirmPassword) {
                         alert(ta('signup.errors.passwordMismatch'));
                         return;
                     }
-                }
 
-                if (isLogin) {
+                    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{12,}$/;
+                    if (!passwordRegex.test(password)) {
+                        alert(ta('signup.errors.passwordInvalid'));
+                        return;
+                    }
+
+                    const { data, error } = await supabase.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            data: {
+                                name: formData.get('name'),
+                                phone: formData.get('phone')
+                            }
+                        }
+                    });
+
+                    if (error) {
+                        if (error.message && error.message.toLowerCase().includes('already')) {
+                            alert(ta('signup.errors.emailExists'));
+                        } else {
+                            alert(ta('signup.errors.networkError'));
+                        }
+                    } else {
+                        alert(ta('signup.success.accountCreated'));
+                        showLogin();
+                    }
+                } else {
                     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                     if (error) {
                         alert(ta('login.errors.invalidCredentials'));
                     } else {
-                        currentUser = data.user;
-                        window.currentUser = data.user;
-                        await loadUserProfile();
-                        render();
-                    }
-                } else {
-                    const { data, error } = await supabase.auth.signUp({ email, password });
-                    if (error) {
-                        alert(ta('signup.errors.emailTaken'));
-                    } else {
-                        const name = formData.get('name');
-                        const phone = formData.get('phone');
-                        
-                        await supabase.from('profiles').insert({
-                            id: data.user.id,
-                            name: name,
-                            phone: phone,
-                            role: 'referrer',
-                            contract_status: 'pending'
-                        });
-
                         currentUser = data.user;
                         window.currentUser = data.user;
                         await loadUserProfile();
