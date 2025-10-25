@@ -374,7 +374,12 @@
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
             const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
-            const { data: allLeads } = await supabase.from('leads').select('*, profiles!referrer_id(id, name)').order('created_at', { ascending: false });
+            const { data: allLeads } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
+            const { data: allProfiles } = await supabase.from('profiles').select('id, name');
+            
+            allLeads?.forEach(lead => {
+                lead.profiles = allProfiles?.find(p => p.id === lead.referrer_id);
+            });
 
             const pendingContracts = profiles?.filter(p => p.contract_status === 'uploaded').length || 0;
             const totalReferrers = profiles?.length || 0;
