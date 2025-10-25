@@ -66,6 +66,13 @@
       "refresh": "Actualiser",
       "logout": "Déconnexion"
     },
+    "leadTypes": {
+      "sale_seller": "Vente - Vendeur",
+      "sale_buyer": "Vente - Acheteur",
+      "rent_tenant": "Location - Locataire",
+      "rent_landlord": "Location - Propriétaire",
+      "sale": "Vente"
+    },
     "table": {
       "headers": {
         "referrer": "Apporteur",
