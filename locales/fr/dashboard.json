@@ -29,6 +29,7 @@
       "visite": "Visite",
       "offre": "Offre",
       "vendu": "Vendu",
+      "loué": "Loué",
       "perdu": "Perdu"
     },
     "propertyTypes": {
@@ -59,6 +60,7 @@
     "actions": {
       "markSold": "Marquer vendu",
       "viewDetails": "Voir détails",
+      "validate": "Valider",
       "downloadContract": "Télécharger contrat",
       "refresh": "Actualiser",
       "logout": "Déconnexion"
@@ -76,6 +78,7 @@
       "empty": "Aucun lead",
       "contractStatus": {
         "pending": "En attente",
+        "uploaded": "Téléversé",
         "signed": "Signé",
         "expired": "Expiré"
       }
@@ -88,6 +91,7 @@
       "form": {
         "leadType": {
           "label": "Type de lead",
+          "placeholder": "Sélectionner un type de lead",
           "sale": "Vente",
           "rent": "Location"
         },
