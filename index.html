@@ -65,6 +65,7 @@
         
         window.currentUser = null;
         window.userProfile = null;
+        window.currentPage = 'landing';
 
         function renderLandingPage() {
             return `
@@ -915,16 +916,19 @@
 
         function showLogin() {
             currentPage = 'auth-login';
+            window.currentPage = 'auth-login';
             render();
         }
 
         function showSignup() {
             currentPage = 'auth-signup';
+            window.currentPage = 'auth-signup';
             render();
         }
 
         function showReset() {
             currentPage = 'auth-reset';
+            window.currentPage = 'auth-reset';
             render();
         }
 
