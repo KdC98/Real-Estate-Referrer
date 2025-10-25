@@ -376,6 +376,21 @@
         async function loadAdminDashboard(container) {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
             
+            const translateLeadType = (leadType) => {
+                if (!leadType) return '-';
+                const typeMap = {
+                    'sale_seller': td('admin.leadTypes.sale_seller'),
+                    'sale_buyer': td('admin.leadTypes.sale_buyer'),
+                    'rent_tenant': td('admin.leadTypes.rent_tenant'),
+                    'rent_landlord': td('admin.leadTypes.rent_landlord'),
+                    'sale': td('admin.leadTypes.sale'),
+                    'Rental - Landlord': td('admin.leadTypes.rent_landlord'),
+                    'Sale - Buyer': td('admin.leadTypes.sale_buyer'),
+                    'Sale - Seller': td('admin.leadTypes.sale_seller')
+                };
+                return typeMap[leadType] || leadType;
+            };
+            
             const { data: profiles } = await supabase.from('profiles').select('*').eq('role', 'referrer');
             const { data: allLeads } = await supabase.from('leads').select('*').order('created_at', { ascending: false });
             const { data: allProfiles } = await supabase.from('profiles').select('id, name');
@@ -448,7 +463,7 @@
                                                 <div class="text-sm text-gray-400">${lead.client_email}</div>
                                             </td>
                                             <td class="py-3 px-4">
-                                                <div class="text-sm">${lead.lead_type}</div>
+                                                <div class="text-sm">${translateLeadType(lead.lead_type)}</div>
                                                 <div class="text-xs text-gray-400">${lead.property_type}</div>
                                             </td>
                                             <td class="py-3 px-4">
@@ -470,7 +485,7 @@
                                                 ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('admin.stats.currency') + '</span>' : '-'}
                                             </td>
                                             <td class="py-3 px-4">
-                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">${lead.lead_type.includes('Sale') ? td('admin.actions.markSold') : td('admin.actions.markRented')}</button>` : ''}
+                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">${lead.lead_type.toLowerCase().includes('sale') ? td('admin.actions.markSold') : td('admin.actions.markRented')}</button>` : ''}
                                             </td>
                                         </tr>
                                     `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">' + td('admin.table.empty') + '</td></tr>'}
@@ -519,6 +534,21 @@
 
         async function loadReferrerDashboard(container) {
             const td = (key) => i18next.t(key, { ns: 'dashboard' });
+            
+            const translateLeadType = (leadType) => {
+                if (!leadType) return '-';
+                const typeMap = {
+                    'sale_seller': td('admin.leadTypes.sale_seller'),
+                    'sale_buyer': td('admin.leadTypes.sale_buyer'),
+                    'rent_tenant': td('admin.leadTypes.rent_tenant'),
+                    'rent_landlord': td('admin.leadTypes.rent_landlord'),
+                    'sale': td('admin.leadTypes.sale'),
+                    'Rental - Landlord': td('admin.leadTypes.rent_landlord'),
+                    'Sale - Buyer': td('admin.leadTypes.sale_buyer'),
+                    'Sale - Seller': td('admin.leadTypes.sale_seller')
+                };
+                return typeMap[leadType] || leadType;
+            };
             
             const { data: myLeads } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
             
@@ -569,7 +599,7 @@
                                             <div class="text-sm text-gray-400">${lead.client_email}</div>
                                         </td>
                                         <td class="py-3 px-4">
-                                            <div class="text-sm">${lead.lead_type}</div>
+                                            <div class="text-sm">${translateLeadType(lead.lead_type)}</div>
                                             <div class="text-xs text-gray-400">${lead.property_type}</div>
                                         </td>
                                         <td class="py-3 px-4">
@@ -921,8 +951,10 @@
             await supabase.auth.signOut();
             currentUser = null;
             userProfile = null;
+            currentPage = 'auth-login';
             window.currentUser = null;
             window.userProfile = null;
+            window.currentPage = 'auth-login';
             render();
         }
 
