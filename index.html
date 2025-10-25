@@ -293,7 +293,7 @@
 
         function renderDashboard() {
             const isAdmin = userProfile?.role === 'admin';
-            const contractStatus = userProfile?.contract_status || 'pending';
+            let contractStatus = (userProfile?.contract_status || 'pending').trim().replace(/\*+/g, '');
 
             if (!isAdmin && contractStatus !== 'validated') {
                 return renderContractUploadPage();
@@ -945,6 +945,11 @@
 
         async function loadUserProfile() {
             const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+            
+            if (data && data.contract_status) {
+                data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
+            }
+            
             userProfile = data;
             window.userProfile = data;
         }
