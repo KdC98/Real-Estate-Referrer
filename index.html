@@ -449,7 +449,9 @@
                                                 <div class="text-xs text-gray-400">${lead.property_type}</div>
                                             </td>
                                             <td class="py-3 px-4">
-                                                ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' ' + td('admin.stats.currency') : (lead.annual_rent?.toLocaleString() || 'N/A') + ' ' + td('admin.stats.currency') + '/an'}
+                                                ${lead.lead_type.includes('Sale') 
+                                                    ? (lead.budget ? lead.budget.toLocaleString() + ' ' + td('admin.stats.currency') : '<span class="text-gray-500">-</span>') 
+                                                    : (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' ' + td('admin.stats.currency') + '/an' : '<span class="text-gray-500">-</span>')}
                                             </td>
                                             <td class="py-3 px-4">
                                                 <select onchange="updateLeadStatus('${lead.id}', this.value)" class="bg-gray-700 rounded px-2 py-1 text-sm">
@@ -457,7 +459,7 @@
                                                     <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${td('referrer.status.visite')}</option>
                                                     <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${td('referrer.status.offre')}</option>
                                                     <option value="${lead.lead_type.includes('Sale') ? 'vendu' : 'loué'}" ${(lead.status === 'vendu' || lead.status === 'loué') ? 'selected' : ''}>
-                                                        ${lead.lead_type.includes('Sale') ? td('referrer.status.vendu') : td('referrer.status.loue')}
+                                                        ${lead.lead_type.includes('Sale') ? td('referrer.status.vendu') : td('referrer.status.loué')}
                                                     </option>
                                                 </select>
                                             </td>
@@ -568,14 +570,16 @@
                                             <div class="text-xs text-gray-400">${lead.property_type}</div>
                                         </td>
                                         <td class="py-3 px-4">
-                                            ${lead.lead_type.includes('Sale') ? (lead.budget?.toLocaleString() || 'N/A') + ' ' + td('referrer.stats.currency') : (lead.annual_rent?.toLocaleString() || 'N/A') + ' ' + td('referrer.stats.currency') + '/an'}
+                                            ${lead.lead_type.includes('Sale') 
+                                                ? (lead.budget ? lead.budget.toLocaleString() + ' ' + td('referrer.stats.currency') : '<span class="text-gray-500">-</span>') 
+                                                : (lead.annual_rent ? lead.annual_rent.toLocaleString() + ' ' + td('referrer.stats.currency') + '/an' : '<span class="text-gray-500">-</span>')}
                                         </td>
                                         <td class="py-3 px-4">
                                             ${lead.status === 'nouveau' ? '<span class="px-2 py-1 bg-blue-600 rounded text-xs">' + td('referrer.status.nouveau') + '</span>' : ''}
                                             ${lead.status === 'visite' ? '<span class="px-2 py-1 bg-yellow-600 rounded text-xs">' + td('referrer.status.visite') + '</span>' : ''}
                                             ${lead.status === 'offre' ? '<span class="px-2 py-1 bg-purple-600 rounded text-xs">' + td('referrer.status.offre') + '</span>' : ''}
                                             ${lead.status === 'vendu' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.vendu') + '</span>' : ''}
-                                            ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.loue') + '</span>' : ''}
+                                            ${lead.status === 'loué' ? '<span class="px-2 py-1 bg-green-600 rounded text-xs">' + td('referrer.status.loué') + '</span>' : ''}
                                         </td>
                                         <td class="py-3 px-4">
                                             ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('referrer.stats.currency') + '</span>' : '-'}
