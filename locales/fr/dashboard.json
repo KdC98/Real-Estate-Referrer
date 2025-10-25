@@ -59,6 +59,7 @@
     },
     "actions": {
       "markSold": "Marquer vendu",
+      "markRented": "Marquer loué",
       "viewDetails": "Voir détails",
       "validate": "Valider",
       "downloadContract": "Télécharger contrat",
