@@ -470,7 +470,7 @@
                                                 ${lead.referrer_commission ? '<span class="text-green-500 font-bold">' + lead.referrer_commission.toLocaleString() + ' ' + td('admin.stats.currency') + '</span>' : '-'}
                                             </td>
                                             <td class="py-3 px-4">
-                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">${td('admin.actions.markSold')}</button>` : ''}
+                                                ${(lead.status !== 'vendu' && lead.status !== 'loué') ? `<button onclick="markAsSold('${lead.id}', '${lead.lead_type}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">${lead.lead_type.includes('Sale') ? td('admin.actions.markSold') : td('admin.actions.markRented')}</button>` : ''}
                                             </td>
                                         </tr>
                                     `).join('') || '<tr><td colspan="7" class="text-center py-8 text-gray-400">' + td('admin.table.empty') + '</td></tr>'}
