@@ -937,13 +937,13 @@
                 handleContractUpload();
             } else if (currentPage === 'auth-login') {
                 app.innerHTML = renderAuthPage('login');
-                handleAuth('login');
+                setTimeout(() => handleAuth('login'), 100);
             } else if (currentPage === 'auth-signup') {
                 app.innerHTML = renderAuthPage('signup');
-                handleAuth('signup');
+                setTimeout(() => handleAuth('signup'), 100);
             } else if (currentPage === 'auth-reset') {
                 app.innerHTML = renderAuthPage('reset');
-                handleReset();
+                setTimeout(() => handleReset(), 100);
             } else {
                 app.innerHTML = renderLandingPage();
             }
