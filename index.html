@@ -887,14 +887,25 @@
             }
         }
         async function loadUserProfile() {
-            const { data } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
-            
-            if (data && data.contract_status) {
-                data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
+            try {
+                const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+                
+                if (error) {
+                    console.error('Error loading profile:', error);
+                    return false;
+                }
+                
+                if (data && data.contract_status) {
+                    data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
+                }
+                
+                userProfile = data;
+                window.userProfile = data;
+                return true;
+            } catch (error) {
+                console.error('Exception loading profile:', error);
+                return false;
             }
-            
-            userProfile = data;
-            window.userProfile = data;
         }
         async function logout() {
             await supabase.auth.signOut();
@@ -977,20 +988,88 @@
         window.handleContractSubmit = handleContractSubmit;
         window.togglePasswordVisibility = togglePasswordVisibility;
         window.render = render;
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            currentUser = session?.user || null;
-            window.currentUser = currentUser;
-            if (currentUser) await loadUserProfile();
-            render();
-        });
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            currentUser = session?.user || null;
-            window.currentUser = currentUser;
-            if (currentUser) {
-                loadUserProfile().then(() => render());
-            } else {
+        
+        // Afficher un loader initial
+        document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
+        
+        // Timeout de sécurité : forcer l'affichage après 3 secondes
+        setTimeout(() => {
+            if (!document.getElementById('app').innerHTML.includes('container')) {
+                console.warn('Timeout: forcing landing page render');
+                currentUser = null;
+                window.currentUser = null;
+                currentPage = 'landing';
+                window.currentPage = 'landing';
                 render();
             }
+        }, 3000);
+        
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log('Auth state changed:', event);
+            currentUser = session?.user || null;
+            window.currentUser = currentUser;
+            
+            // Si l'email n'est pas confirmé, déconnecter
+            if (currentUser && !currentUser.email_confirmed_at) {
+                console.warn('Email not confirmed, signing out');
+                await supabase.auth.signOut();
+                currentUser = null;
+                window.currentUser = null;
+            }
+            
+            if (currentUser) {
+                const profileLoaded = await loadUserProfile();
+                if (!profileLoaded) {
+                    console.error('Failed to load profile, signing out');
+                    await supabase.auth.signOut();
+                    currentUser = null;
+                    window.currentUser = null;
+                }
+            }
+            render();
+        });
+        
+        supabase.auth.getSession().then(async ({ data: { session }, error }) => {
+            if (error) {
+                console.error('Session error:', error);
+                currentUser = null;
+                window.currentUser = null;
+                render();
+                return;
+            }
+            
+            currentUser = session?.user || null;
+            window.currentUser = currentUser;
+            
+            // Si l'email n'est pas confirmé, nettoyer et afficher landing
+            if (currentUser && !currentUser.email_confirmed_at) {
+                console.warn('Email not confirmed on init, cleaning session');
+                await supabase.auth.signOut();
+                localStorage.clear();
+                sessionStorage.clear();
+                currentUser = null;
+                window.currentUser = null;
+                render();
+                return;
+            }
+            
+            if (currentUser) {
+                const profileLoaded = await loadUserProfile();
+                if (!profileLoaded) {
+                    console.error('Failed to load profile on init, signing out');
+                    await supabase.auth.signOut();
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    currentUser = null;
+                    window.currentUser = null;
+                }
+            }
+            render();
+        }).catch((err) => {
+            console.error('Fatal session error:', err);
+            currentUser = null;
+            window.currentUser = null;
+            render();
         });
     })();
     </script>
