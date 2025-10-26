@@ -833,8 +833,8 @@
                         console.log('✅ Login successful, user:', data.user.email);
                         currentUser = data.user;
                         window.currentUser = data.user;
-                        console.log('🔄 Calling loadUserProfile...');
-                        const profileLoaded = await loadUserProfile();
+                        console.log('🔄 Calling loadUserProfile with user:', data.user.id);
+                        const profileLoaded = await loadUserProfile(data.user);
                         console.log('📊 Profile loaded:', profileLoaded, userProfile);
                         isAuthenticating = false;
                         render();
@@ -896,7 +896,7 @@
                     alert('❌ Erreur lors de la mise à jour\n\n' + updateError.message + '\n\n💡 Contactez le support si le problème persiste');
                 } else {
                     alert('✅ Contrat envoyé avec succès !\n\n⏳ Votre contrat est en attente de validation par l\'admin\n📧 Vous recevrez une notification par email une fois validé\n\n💡 Vous pouvez vous déconnecter en attendant');
-                    await loadUserProfile();
+                    await loadUserProfile(currentUser);
                     render();
                 }
             } catch (error) {
@@ -904,10 +904,18 @@
                 alert('❌ Erreur inattendue\n\n' + error.message + '\n\n💡 Rafraîchissez la page (F5) et réessayez');
             }
         }
-        async function loadUserProfile() {
-            console.log('🔍 loadUserProfile called for user:', currentUser?.id);
+        async function loadUserProfile(user = null) {
+            const targetUser = user || currentUser;
+            console.log('🔍 loadUserProfile called for user:', targetUser?.id);
+            
+            if (!targetUser || !targetUser.id) {
+                console.error('❌ No user provided to loadUserProfile');
+                return false;
+            }
+            
             try {
-                const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
+                console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
+                const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).single();
                 
                 if (error) {
                     console.error('❌ Error loading profile:', error);
@@ -1066,7 +1074,7 @@
             
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
-                const profileLoaded = await loadUserProfile();
+                const profileLoaded = await loadUserProfile(currentUser);
                 if (!profileLoaded) {
                     console.error('❌ Failed to load profile, signing out');
                     await supabase.auth.signOut();
@@ -1103,7 +1111,7 @@
             
             if (currentUser) {
                 console.log('👤 Session found, loading profile...');
-                const profileLoaded = await loadUserProfile();
+                const profileLoaded = await loadUserProfile(currentUser);
                 if (!profileLoaded) {
                     console.error('❌ Failed to load profile on init, signing out');
                     await supabase.auth.signOut();
