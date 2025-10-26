@@ -770,6 +770,7 @@
             const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
             form.onsubmit = async (e) => {
                 e.preventDefault();
+                isAuthenticating = true; // Empêche le timeout d'interférer
                 const formData = new FormData(form);
                 const email = formData.get('email');
                 const password = formData.get('password');
@@ -777,10 +778,12 @@
                     const confirmPassword = formData.get('confirmPassword');
                     if (password !== confirmPassword) {
                         alert('❌ Les mots de passe ne correspondent pas\n\n✅ Solution : Vérifiez que les deux champs sont identiques\n💡 Utilisez le bouton 👁️ pour voir vos mots de passe');
+                        isAuthenticating = false;
                         return;
                     }
                     if (password.length < 8) {
                         alert('❌ Mot de passe trop court\n\n✅ Minimum requis : 8 caractères\n📝 Votre mot de passe : ' + password.length + ' caractères\n\n💡 Exemples valides :\n• monmotdepasse\n• Password123\n• 12345678');
+                        isAuthenticating = false;
                         return;
                     }
                     const { data, error } = await supabase.auth.signUp({
@@ -800,8 +803,10 @@
                         } else {
                             alert('❌ Erreur lors de l\'inscription\n\n' + error.message + '\n\n💡 Vérifiez votre connexion internet et réessayez');
                         }
+                        isAuthenticating = false;
                     } else {
                         alert('✅ Compte créé avec succès !\n\n📧 Un email de confirmation a été envoyé à :\n' + email + '\n\n⚠️ IMPORTANT : Cliquez sur le lien dans l\'email avant de vous connecter\n\n💡 Vérifiez aussi vos Spams');
+                        isAuthenticating = false;
                         showLogin();
                     }
                 } else {
@@ -815,10 +820,12 @@
                         } else {
                             alert('❌ Erreur de connexion\n\n' + error.message + '\n\n💡 Essayez de réinitialiser votre mot de passe');
                         }
+                        isAuthenticating = false;
                     } else {
                         currentUser = data.user;
                         window.currentUser = data.user;
                         await loadUserProfile();
+                        isAuthenticating = false;
                         render();
                     }
                 }
@@ -992,17 +999,22 @@
         // Afficher un loader initial
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         
-        // Timeout de sécurité : forcer l'affichage après 3 secondes
+        // Flag pour éviter que le timeout interfère avec les connexions
+        let isAuthenticating = false;
+        let initialLoadComplete = false;
+        
+        // Timeout de sécurité : forcer l'affichage après 5 secondes SEULEMENT au chargement initial
         setTimeout(() => {
-            if (!document.getElementById('app').innerHTML.includes('container')) {
-                console.warn('Timeout: forcing landing page render');
+            if (!initialLoadComplete && !isAuthenticating && !document.getElementById('app').innerHTML.includes('container')) {
+                console.warn('Initial load timeout: forcing landing page render');
                 currentUser = null;
                 window.currentUser = null;
                 currentPage = 'landing';
                 window.currentPage = 'landing';
                 render();
             }
-        }, 3000);
+            initialLoadComplete = true;
+        }, 5000);
         
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('Auth state changed:', event);
