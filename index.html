@@ -766,11 +766,18 @@
         };
         async function handleAuth(mode) {
             const form = document.getElementById('authForm');
-            if (!form) return;
+            if (!form) {
+                console.error('❌ Form #authForm not found in DOM');
+                return;
+            }
+            
+            console.log('✅ Form found, attaching event listener for mode:', mode);
+            
             const ta = (key) => i18next.t(`auth.${key}`, { ns: 'auth' });
             form.onsubmit = async (e) => {
                 e.preventDefault();
-                isAuthenticating = true; // Empêche le timeout d'interférer
+                console.log('🔄 Form submitted');
+                isAuthenticating = true;
                 const formData = new FormData(form);
                 const email = formData.get('email');
                 const password = formData.get('password');
@@ -810,9 +817,10 @@
                         showLogin();
                     }
                 } else {
+                    console.log('🔐 Attempting login for:', email);
                     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                     if (error) {
-                        console.error('Erreur connexion:', error);
+                        console.error('❌ Erreur connexion:', error);
                         if (error.message.toLowerCase().includes('email not confirmed')) {
                             alert('❌ Email non confirmé\n\n✅ Solution : Vérifiez votre boîte mail et cliquez sur le lien de confirmation envoyé par Supabase.');
                         } else if (error.message.toLowerCase().includes('invalid') || error.message.toLowerCase().includes('credentials')) {
@@ -822,9 +830,12 @@
                         }
                         isAuthenticating = false;
                     } else {
+                        console.log('✅ Login successful, user:', data.user.email);
                         currentUser = data.user;
                         window.currentUser = data.user;
-                        await loadUserProfile();
+                        console.log('🔄 Calling loadUserProfile...');
+                        const profileLoaded = await loadUserProfile();
+                        console.log('📊 Profile loaded:', profileLoaded, userProfile);
                         isAuthenticating = false;
                         render();
                     }
@@ -894,13 +905,16 @@
             }
         }
         async function loadUserProfile() {
+            console.log('🔍 loadUserProfile called for user:', currentUser?.id);
             try {
                 const { data, error } = await supabase.from('profiles').select('*').eq('id', currentUser.id).single();
                 
                 if (error) {
-                    console.error('Error loading profile:', error);
+                    console.error('❌ Error loading profile:', error);
                     return false;
                 }
+                
+                console.log('✅ Profile data retrieved:', data);
                 
                 if (data && data.contract_status) {
                     data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
@@ -908,23 +922,34 @@
                 
                 userProfile = data;
                 window.userProfile = data;
+                console.log('✅ userProfile set:', userProfile);
                 return true;
             } catch (error) {
-                console.error('Exception loading profile:', error);
+                console.error('❌ Exception loading profile:', error);
                 return false;
             }
         }
+        
+        window.loadUserProfile = loadUserProfile;
+        
         async function logout() {
-            await supabase.auth.signOut();
-            currentUser = null;
-            userProfile = null;
-            currentPage = 'landing';
-            window.currentUser = null;
-            window.userProfile = null;
-            window.currentPage = 'landing';
-            localStorage.clear();
-            sessionStorage.clear();
-            render();
+            console.log('🚪 Logout called');
+            try {
+                await supabase.auth.signOut();
+                currentUser = null;
+                userProfile = null;
+                currentPage = 'landing';
+                window.currentUser = null;
+                window.userProfile = null;
+                window.currentPage = 'landing';
+                localStorage.clear();
+                sessionStorage.clear();
+                console.log('✅ Logout successful');
+                render();
+            } catch (error) {
+                console.error('❌ Error during logout:', error);
+                alert('Erreur lors de la déconnexion');
+            }
         }
         function backToHome() {
             currentUser = null;
@@ -951,8 +976,10 @@
             render();
         }
         async function render() {
+            console.log('🎨 Render called - currentUser:', !!currentUser, 'userProfile:', !!userProfile, 'currentPage:', currentPage);
             const app = document.getElementById('app');
             if (currentUser) {
+                console.log('👤 User exists, rendering dashboard');
                 app.innerHTML = renderDashboard();
                 await loadDashboardContent();
                 const contractForm = document.getElementById('contractForm');
@@ -960,15 +987,25 @@
                     contractForm.addEventListener('submit', handleContractSubmit);
                 }
             } else if (currentPage === 'auth-login') {
+                console.log('🔐 Rendering login page');
                 app.innerHTML = renderAuthPage('login');
-                setTimeout(() => handleAuth('login'), 100);
+                setTimeout(() => {
+                    console.log('⏱️ Attempting to attach login handler (500ms delay)');
+                    handleAuth('login');
+                }, 500);
             } else if (currentPage === 'auth-signup') {
+                console.log('📝 Rendering signup page');
                 app.innerHTML = renderAuthPage('signup');
-                setTimeout(() => handleAuth('signup'), 100);
+                setTimeout(() => {
+                    console.log('⏱️ Attempting to attach signup handler (500ms delay)');
+                    handleAuth('signup');
+                }, 500);
             } else if (currentPage === 'auth-reset') {
+                console.log('🔑 Rendering reset page');
                 app.innerHTML = renderAuthPage('reset');
-                setTimeout(() => handleReset(), 100);
+                setTimeout(() => handleReset(), 500);
             } else {
+                console.log('🏠 Rendering landing page');
                 app.innerHTML = renderLandingPage();
             }
         }
@@ -996,17 +1033,16 @@
         window.togglePasswordVisibility = togglePasswordVisibility;
         window.render = render;
         
-        // Afficher un loader initial
+        console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         
-        // Flag pour éviter que le timeout interfère avec les connexions
         let isAuthenticating = false;
         let initialLoadComplete = false;
         
-        // Timeout de sécurité : forcer l'affichage après 5 secondes SEULEMENT au chargement initial
+        console.log('⏱️ Setting 5 second safety timeout');
         setTimeout(() => {
             if (!initialLoadComplete && !isAuthenticating && !document.getElementById('app').innerHTML.includes('container')) {
-                console.warn('Initial load timeout: forcing landing page render');
+                console.warn('⚠️ Initial load timeout: forcing landing page render');
                 currentUser = null;
                 window.currentUser = null;
                 currentPage = 'landing';
@@ -1017,22 +1053,22 @@
         }, 5000);
         
         supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log('Auth state changed:', event);
+            console.log('🔔 Auth state changed:', event);
             currentUser = session?.user || null;
             window.currentUser = currentUser;
             
-            // Si l'email n'est pas confirmé, déconnecter
             if (currentUser && !currentUser.email_confirmed_at) {
-                console.warn('Email not confirmed, signing out');
+                console.warn('⚠️ Email not confirmed, signing out');
                 await supabase.auth.signOut();
                 currentUser = null;
                 window.currentUser = null;
             }
             
             if (currentUser) {
+                console.log('👤 User authenticated, loading profile...');
                 const profileLoaded = await loadUserProfile();
                 if (!profileLoaded) {
-                    console.error('Failed to load profile, signing out');
+                    console.error('❌ Failed to load profile, signing out');
                     await supabase.auth.signOut();
                     currentUser = null;
                     window.currentUser = null;
@@ -1041,9 +1077,10 @@
             render();
         });
         
+        console.log('🔍 Getting initial session...');
         supabase.auth.getSession().then(async ({ data: { session }, error }) => {
             if (error) {
-                console.error('Session error:', error);
+                console.error('❌ Session error:', error);
                 currentUser = null;
                 window.currentUser = null;
                 render();
@@ -1053,9 +1090,8 @@
             currentUser = session?.user || null;
             window.currentUser = currentUser;
             
-            // Si l'email n'est pas confirmé, nettoyer et afficher landing
             if (currentUser && !currentUser.email_confirmed_at) {
-                console.warn('Email not confirmed on init, cleaning session');
+                console.warn('⚠️ Email not confirmed on init, cleaning session');
                 await supabase.auth.signOut();
                 localStorage.clear();
                 sessionStorage.clear();
@@ -1066,9 +1102,10 @@
             }
             
             if (currentUser) {
+                console.log('👤 Session found, loading profile...');
                 const profileLoaded = await loadUserProfile();
                 if (!profileLoaded) {
-                    console.error('Failed to load profile on init, signing out');
+                    console.error('❌ Failed to load profile on init, signing out');
                     await supabase.auth.signOut();
                     localStorage.clear();
                     sessionStorage.clear();
@@ -1078,7 +1115,7 @@
             }
             render();
         }).catch((err) => {
-            console.error('Fatal session error:', err);
+            console.error('❌ Fatal session error:', err);
             currentUser = null;
             window.currentUser = null;
             render();
