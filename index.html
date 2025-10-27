@@ -1227,8 +1227,17 @@
             
             let phoneValid = false;
             if (phoneInput) {
-                const phone = phoneInput.value.trim().replace(/[\s\-\(\)]/g, '');
-                phoneValid = /^(\+971[0-9]{9}|05[0-9]{8})$/.test(phone);
+                let phone = phoneInput.value.trim();
+                // Enlever +971 au début si présent
+                phone = phone.replace(/^\+971\s*/, '');
+                // Enlever espaces, tirets, parenthèses
+                phone = phone.replace(/[\s\-\(\)]/g, '');
+                // Accepter 9 chiffres avec préfixes valides UAE
+                // Mobiles: 50, 52, 54, 55, 56, 58, 59
+                // Fixes: commence par 2, 3, 4, 6, 7, 9
+                phoneValid = /^[0-9]{9}$/.test(phone) && 
+                           (['50','52','54','55','56','58','59'].includes(phone.substring(0,2)) || 
+                            ['2','3','4','6','7','9'].includes(phone.charAt(0)));
             }
             
             const emailValid = emailInput && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
