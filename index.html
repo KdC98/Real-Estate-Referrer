@@ -40,6 +40,12 @@
                     caches: ['localStorage']
                 }
             });
+        
+        // Charger explicitement tous les namespaces avant de continuer
+        console.log('🌐 Loading translations...');
+        await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
+        console.log('✅ All translations loaded!');
+        
         const t = (key) => i18next.t(key);
         async function changeLanguage(langCode) {
             try {
