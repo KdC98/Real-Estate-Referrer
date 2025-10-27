@@ -176,19 +176,19 @@
             let title, buttonText, linkText, linkAction;
             
             if (mode === 'login') {
-                title = t('auth.login_title');
-                buttonText = t('auth.login_button');
-                linkText = t('auth.no_account');
+                title = t('auth:login_title');
+                buttonText = t('auth:login_button');
+                linkText = t('auth:no_account');
                 linkAction = 'showSignup()';
             } else if (mode === 'signup') {
-                title = t('auth.signup_title');
-                buttonText = t('auth.signup_button');
-                linkText = t('auth.have_account');
+                title = t('auth:signup_title');
+                buttonText = t('auth:signup_button');
+                linkText = t('auth:have_account');
                 linkAction = 'showLogin()';
             } else if (mode === 'reset') {
-                title = t('auth.reset_title');
-                buttonText = t('auth.reset_button');
-                linkText = t('auth.back_to_login');
+                title = t('auth:reset_title');
+                buttonText = t('auth:reset_button');
+                linkText = t('auth:back_to_login');
                 linkAction = 'showLogin()';
             }
             
@@ -196,13 +196,13 @@
                 <div class="min-h-screen flex items-center justify-center px-4">
                     <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
                         <button onclick="backToHome()" class="text-gray-400 hover:text-white mb-6 flex items-center">
-                            ← ${t('auth.back_home')}
+                            ← ${t('auth:back_home')}
                         </button>
                         <h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>
                         <form id="authForm" class="space-y-4">
                             ${mode === 'signup' ? `
                                 <div>
-                                    <label class="block mb-2 font-medium">${t('auth.name_label')}</label>
+                                    <label class="block mb-2 font-medium">${t('auth:name_label')}</label>
                                     <input 
                                         type="text" 
                                         id="name" 
@@ -216,7 +216,7 @@
                                     <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
                                 <div>
-                                    <label class="block mb-2 font-medium">${t('auth.phone_label')}</label>
+                                    <label class="block mb-2 font-medium">${t('auth:phone_label')}</label>
                                     <div class="relative">
                                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">+971</span>
                                         <input 
@@ -236,7 +236,7 @@
                             ` : ''}
                             
                             <div>
-                                <label class="block mb-2 font-medium">${t('auth.email_label')}</label>
+                                <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
                                 <input 
                                     type="email" 
                                     id="email" 
@@ -250,7 +250,7 @@
                             
                             ${mode !== 'reset' ? `
                                 <div>
-                                    <label class="block mb-2 font-medium">${t('auth.password_label')}</label>
+                                    <label class="block mb-2 font-medium">${t('auth:password_label')}</label>
                                     <div class="relative">
                                         <input 
                                             type="password" 
@@ -293,14 +293,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    ` : `<div class="text-sm text-gray-400 mt-1">${t('auth.password_hint')}</div>`}
+                                    ` : `<div class="text-sm text-gray-400 mt-1">${t('auth:password_hint')}</div>`}
                                     <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
                             ` : ''}
                             
                             ${mode === 'signup' ? `
                                 <div>
-                                    <label class="block mb-2 font-medium">${t('auth.confirm_password_label')}</label>
+                                    <label class="block mb-2 font-medium">${t('auth:confirm_password_label')}</label>
                                     <div class="relative">
                                         <input 
                                             type="password" 
@@ -331,7 +331,7 @@
                             ${mode === 'login' ? `
                                 <div class="text-right">
                                     <button type="button" onclick="showReset()" class="text-yellow-400 hover:text-yellow-300 text-sm transition-colors">
-                                        ${t('auth.forgot_password')}
+                                        ${t('auth:forgot_password')}
                                     </button>
                                 </div>
                             ` : ''}
@@ -361,7 +361,7 @@
                 return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
             }
             const isAdmin = userProfile.role === 'admin';
-            const dashboardTitle = isAdmin ? t('dashboard.admin_title') : t('dashboard.referrer_title');
+            const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
             return `
                 <div class="min-h-screen">
                     <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md">
@@ -371,7 +371,7 @@
                                 <div class="flex items-center gap-4">
                                     <span class="text-gray-300">${userProfile.name}</span>
                                     <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
-                                        ${t('dashboard.logout')}
+                                        ${t('dashboard:logout')}
                                     </button>
                                 </div>
                             </div>
@@ -383,23 +383,23 @@
                             ${!isAdmin ? `
                                 <div class="mb-6">
                                     <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
-                                        ${t('dashboard.add_lead')}
+                                        ${t('dashboard:add_lead')}
                                     </button>
                                 </div>
                             ` : ''}
                             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                                <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard.all_leads') : t('dashboard.my_leads')}</h2>
+                                <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
                                 <div id="leadsTable" class="overflow-x-auto"></div>
                             </div>
                         ` : `
                             <div class="bg-yellow-500 bg-opacity-20 border-2 border-yellow-500 rounded-xl p-8 text-center">
                                 <div class="text-4xl mb-4">📋</div>
-                                <h3 class="text-2xl font-bold mb-4">${t('dashboard.contract_required_title')}</h3>
-                                <p class="text-lg mb-6">${t('dashboard.contract_required_message')}</p>
+                                <h3 class="text-2xl font-bold mb-4">${t('dashboard:contract_required_title')}</h3>
+                                <p class="text-lg mb-6">${t('dashboard:contract_required_message')}</p>
                                 <form id="contractForm" class="max-w-md mx-auto">
                                     <input type="file" id="contractFile" accept=".pdf,.jpg,.jpeg,.png" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none mb-4">
                                     <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                                        ${t('dashboard.upload_contract')}
+                                        ${t('dashboard:upload_contract')}
                                     </button>
                                 </form>
                             </div>
@@ -407,42 +407,42 @@
                     </main>
                     <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
                         <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full">
-                            <h3 class="text-2xl font-bold mb-6">${t('dashboard.add_lead')}</h3>
+                            <h3 class="text-2xl font-bold mb-6">${t('dashboard:add_lead')}</h3>
                             <form id="addLeadForm" class="space-y-4">
                                 <div class="grid md:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block mb-2">${t('dashboard.client_name')}</label>
+                                        <label class="block mb-2">${t('dashboard:client_name')}</label>
                                         <input type="text" id="clientName" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
                                     </div>
                                     <div>
-                                        <label class="block mb-2">${t('dashboard.client_email')}</label>
+                                        <label class="block mb-2">${t('dashboard:client_email')}</label>
                                         <input type="email" id="clientEmail" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
                                     </div>
                                     <div>
-                                        <label class="block mb-2">${t('dashboard.client_phone')}</label>
+                                        <label class="block mb-2">${t('dashboard:client_phone')}</label>
                                         <input type="tel" id="clientPhone" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
                                     </div>
                                     <div>
-                                        <label class="block mb-2">${t('dashboard.property_type')}</label>
+                                        <label class="block mb-2">${t('dashboard:property_type')}</label>
                                         <select id="propertyType" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                            <option value="">${t('dashboard.select_type')}</option>
-                                            <option value="sale_buyer">${t('dashboard.sale_buyer')}</option>
-                                            <option value="sale_seller">${t('dashboard.sale_seller')}</option>
-                                            <option value="rental_landlord">${t('dashboard.rental_landlord')}</option>
-                                            <option value="rental_tenant">${t('dashboard.rental_tenant')}</option>
+                                            <option value="">${t('dashboard:select_type')}</option>
+                                            <option value="sale_buyer">${t('dashboard:sale_buyer')}</option>
+                                            <option value="sale_seller">${t('dashboard:sale_seller')}</option>
+                                            <option value="rental_landlord">${t('dashboard:rental_landlord')}</option>
+                                            <option value="rental_tenant">${t('dashboard:rental_tenant')}</option>
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block mb-2">${t('dashboard.budget')}</label>
+                                        <label class="block mb-2">${t('dashboard:budget')}</label>
                                         <input type="number" id="budget" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
                                     </div>
                                 </div>
                                 <div class="flex gap-4">
                                     <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                                        ${t('dashboard.add')}
+                                        ${t('dashboard:add')}
                                     </button>
                                     <button type="button" onclick="document.getElementById('addLeadModal').classList.add('hidden')" class="flex-1 bg-gray-600 hover:bg-gray-700 py-3 rounded-lg transition">
-                                        ${t('dashboard.cancel')}
+                                        ${t('dashboard:cancel')}
                                     </button>
                                 </div>
                             </form>
@@ -507,7 +507,7 @@
                         if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
                         if (!validateEmail()) throw new Error('Email invalide');
                         if (!validatePassword()) throw new Error('Mot de passe invalide');
-                        if (password !== confirmPassword) throw new Error(t('auth.password_mismatch'));
+                        if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
                         
                         const fullPhone = '+971' + phone;
                         const submitButton = document.getElementById('submitButton');
@@ -524,7 +524,7 @@
                         
                         if (error) throw error;
                         console.log('✅ Signup successful');
-                        alert(t('auth.signup_success'));
+                        alert(t('auth:signup_success'));
                         showLogin();
                         
                     } else if (mode === 'login') {
@@ -542,7 +542,7 @@
                     if (mode === 'signup') {
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = false;
-                        submitButton.textContent = t('auth.signup_button');
+                        submitButton.textContent = t('auth:signup_button');
                     }
                 }
             };
@@ -561,7 +561,7 @@
                         redirectTo: window.location.origin
                     });
                     if (error) throw error;
-                    alert(t('auth.reset_email_sent'));
+                    alert(t('auth:reset_email_sent'));
                     showLogin();
                 } catch (error) {
                     console.error('Reset error:', error);
@@ -603,26 +603,26 @@
                 ${isAdmin ? `
                     <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                         <div class="text-3xl font-bold text-yellow-500">${leads.length}</div>
-                        <div class="text-gray-300">${t('dashboard.total_referrers')}</div>
+                        <div class="text-gray-300">${t('dashboard:total_referrers')}</div>
                     </div>
                 ` : `
                     <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                         <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard.total_earnings')}</div>
+                        <div class="text-gray-300">${t('dashboard:total_earnings')}</div>
                     </div>
                 `}
                 <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                     <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
-                    <div class="text-gray-300">${t('dashboard.active_leads')}</div>
+                    <div class="text-gray-300">${t('dashboard:active_leads')}</div>
                 </div>
                 <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                     <div class="text-3xl font-bold text-yellow-500">${closedSales}</div>
-                    <div class="text-gray-300">${t('dashboard.closed_sales')}</div>
+                    <div class="text-gray-300">${t('dashboard:closed_sales')}</div>
                 </div>
                 ${isAdmin ? `
                     <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                         <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard.commissions_paid')}</div>
+                        <div class="text-gray-300">${t('dashboard:commissions_paid')}</div>
                     </div>
                 ` : ''}
             `;
@@ -638,13 +638,13 @@
                 <table class="w-full">
                     <thead>
                         <tr class="border-b border-gray-700">
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard.referrer')}</th>` : ''}
-                            <th class="text-left py-3 px-4">${t('dashboard.client_name')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard.property_type')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard.budget')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard.status')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard.commission')}</th>
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard.actions')}</th>` : ''}
+                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:referrer')}</th>` : ''}
+                            <th class="text-left py-3 px-4">${t('dashboard:client_name')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:property_type')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:budget')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:status')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:commission')}</th>
+                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:actions')}</th>` : ''}
                         </tr>
                     </thead>
                     <tbody>
@@ -652,19 +652,19 @@
                             <tr class="border-b border-gray-700">
                                 ${isAdmin ? `<td class="py-3 px-4">${lead.referrer?.name || 'N/A'}</td>` : ''}
                                 <td class="py-3 px-4">${lead.client_name}</td>
-                                <td class="py-3 px-4">${t('dashboard.' + lead.property_type)}</td>
+                                <td class="py-3 px-4">${t('dashboard:' + lead.property_type)}</td>
                                 <td class="py-3 px-4">${lead.budget?.toLocaleString()} AED</td>
                                 <td class="py-3 px-4">
                                     ${isAdmin ? `
                                         <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard.status_new')}</option>
-                                            <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard.status_visit')}</option>
-                                            <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard.status_offer')}</option>
-                                            <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard.status_sold')}</option>
+                                            <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard:status_new')}</option>
+                                            <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard:status_visit')}</option>
+                                            <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard:status_offer')}</option>
+                                            <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard:status_sold')}</option>
                                         </select>
                                     ` : `
                                         <span class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            ${t('dashboard.status_' + lead.status.replace('é', 'e'))}
+                                            ${t('dashboard:status_' + lead.status.replace('é', 'e'))}
                                         </span>
                                     `}
                                 </td>
@@ -675,7 +675,7 @@
                                     <td class="py-3 px-4">
                                         ${lead.status !== 'vendu' ? `
                                             <button onclick="markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
-                                                ${t('dashboard.mark_sold')}
+                                                ${t('dashboard:mark_sold')}
                                             </button>
                                         ` : '-'}
                                     </td>
