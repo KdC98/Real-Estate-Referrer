@@ -480,6 +480,12 @@
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
             
+            // Nettoyer le message d'erreur au chargement
+            if (errorDiv) {
+                errorDiv.textContent = '';
+                errorDiv.classList.add('hidden');
+            }
+            
             if (!form) {
                 console.error('❌ Form not found');
                 return;
@@ -579,7 +585,7 @@
             if (isAdmin) {
                 const { data, error } = await supabase.from('leads').select(`
                     *,
-                    referrer:profiles!leads_referrer_id_fkey(name)
+                    referrer:profiles!referrer_id(name)
                 `).order('created_at', { ascending: false });
                 if (error) {
                     console.error('Error loading leads:', error);
