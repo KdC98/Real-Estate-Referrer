@@ -979,10 +979,10 @@
                 phoneInput.classList.remove('border-green-500');
                 return false;
             }
-            const validPrefixes = ['50', '52', '54', '55', '56', '58'];
+            const validPrefixes = ['50', '52', '54', '55', '56', '58', '59'];
             const prefix = phone.substring(0, 2);
             if (!validPrefixes.includes(prefix)) {
-                phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56 ou 58';
+                phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56, 58 ou 59';
                 phoneError.classList.remove('hidden');
                 phoneInput.classList.add('border-red-500');
                 phoneInput.classList.remove('border-green-500');
@@ -1189,6 +1189,12 @@
         window.markAsSold = markAsSold;
         window.handleContractSubmit = handleContractSubmit;
         window.togglePasswordVisibility = togglePasswordVisibility;
+        window.validateName = validateName;
+        window.validatePhone = validatePhone;
+        window.validateEmail = validateEmail;
+        window.validatePassword = validatePassword;
+        window.validateConfirmPassword = validateConfirmPassword;
+        window.checkFormValidity = checkFormValidity;
         window.render = render;
         
         console.log('⏳ Displaying initial loader');
