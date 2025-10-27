@@ -1214,12 +1214,37 @@
         function checkFormValidity() {
             const submitButton = document.getElementById('submitButton');
             if (!submitButton) return;
-            const nameValid = validateName();
-            const phoneValid = validatePhone();
-            const emailValid = validateEmail();
-            const passwordValid = validatePassword();
-            const confirmPasswordValid = validateConfirmPassword();
+            
+            // Lire les éléments du formulaire
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            
+            // Vérifier chaque champ directement sans rappeler les fonctions
+            const nameValid = nameInput && nameInput.value.trim().length >= 2;
+            
+            let phoneValid = false;
+            if (phoneInput) {
+                const phone = phoneInput.value.trim().replace(/[\s\-\(\)]/g, '');
+                phoneValid = /^(\+971[0-9]{9}|05[0-9]{8})$/.test(phone);
+            }
+            
+            const emailValid = emailInput && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+            
+            let passwordValid = false;
+            if (passwordInput) {
+                const pwd = passwordInput.value;
+                passwordValid = pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd);
+            }
+            
+            const confirmPasswordValid = confirmPasswordInput && 
+                                        confirmPasswordInput.value.length > 0 && 
+                                        confirmPasswordInput.value === passwordInput?.value;
+            
             const allValid = nameValid && phoneValid && emailValid && passwordValid && confirmPasswordValid;
+            
             if (allValid) {
                 submitButton.disabled = false;
                 submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
