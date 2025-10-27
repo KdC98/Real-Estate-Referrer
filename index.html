@@ -69,6 +69,7 @@
         window.currentUser = null;
         window.userProfile = null;
         window.currentPage = 'landing';
+        
         function renderLandingPage() {
             return `
                 <div class="min-h-screen">
@@ -172,6 +173,7 @@
                 </div>
             `;
         }
+
         function renderAuthPage(mode) {
             let title, buttonText, linkText, linkAction;
             
@@ -224,13 +226,13 @@
                                             id="phone" 
                                             required 
                                             pattern="[0-9]{9}"
-                                            placeholder="501234567"
+                                            placeholder="505059595"
                                             maxlength="9"
                                             class="w-full pl-16 pr-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
                                             oninput="validatePhone()"
                                         >
                                     </div>
-                                    <div class="text-xs text-gray-400 mt-1">Format: 9 chiffres après +971 (ex: +971 50 123 4567)</div>
+                                    <div class="text-xs text-gray-400 mt-1">Format: 9 chiffres après +971 (ex: 501234567)</div>
                                     <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
                             ` : ''}
@@ -352,10 +354,18 @@
                                 ${linkText}
                             </button>
                         </p>
+                        ${mode === 'signup' ? `
+                            <div class="text-center mt-4">
+                                <button type="button" onclick="prefillTestData()" class="text-sm text-gray-400 hover:text-white border border-gray-600 px-3 py-1 rounded">
+                                    Remplir avec les données de test
+                                </button>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
         }
+
         function renderDashboard() {
             if (!userProfile) {
                 return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
@@ -451,30 +461,54 @@
                 </div>
             `;
         }
+
         function showLogin() {
             console.log('🔐 showLogin called');
             currentPage = 'auth-login';
             window.currentPage = 'auth-login';
             render();
         }
+
         function showSignup() {
             console.log('📝 showSignup called');
             currentPage = 'auth-signup';
             window.currentPage = 'auth-signup';
             render();
         }
+
         function showReset() {
             console.log('🔑 showReset called');
             currentPage = 'auth-reset';
             window.currentPage = 'auth-reset';
             render();
         }
+
         function backToHome() {
             console.log('🏠 backToHome called');
             currentPage = 'landing';
             window.currentPage = 'landing';
             render();
         }
+
+        function prefillTestData() {
+            if (document.getElementById('name')) {
+                document.getElementById('name').value = 'Test User';
+                document.getElementById('phone').value = '505059595';
+                document.getElementById('email').value = 'karyne@itooki.fr';
+                document.getElementById('password').value = 'wyqsuc-Necxur-Tpedpy';
+                document.getElementById('confirmPassword').value = 'wyqsuc-Necxur-Tpedpy';
+                
+                // Déclencher les validations
+                validateName();
+                validatePhone();
+                validateEmail();
+                validatePassword();
+                validateConfirmPassword();
+                
+                console.log('✅ Données de test pré-remplies');
+            }
+        }
+
         function handleAuth(mode) {
             console.log(`🔧 handleAuth called for mode: ${mode}`);
             const form = document.getElementById('authForm');
@@ -507,10 +541,17 @@
                         
                         const name = document.getElementById('name').value.trim();
                         let phone = document.getElementById('phone').value.trim();
-                        // Nettoyer le téléphone : enlever +971, espaces, tirets
-                        phone = phone.replace(/^\+971\s*/, '');
-                        phone = phone.replace(/\s/g, '');
-                        phone = phone.replace(/-/g, '');
+                        
+                        // Nettoyer plus agressivement le téléphone
+                        phone = phone.replace(/[^\d]/g, ''); // Garder uniquement les chiffres
+                        // Si le numéro commence par 971, le retirer
+                        if (phone.startsWith('971')) {
+                            phone = phone.substring(3);
+                        }
+                        // S'assurer qu'on a exactement 9 chiffres
+                        if (phone.length > 9) {
+                            phone = phone.substring(0, 9);
+                        }
                         
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         
@@ -524,6 +565,8 @@
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = true;
                         submitButton.textContent = 'Inscription en cours...';
+                        
+                        console.log('📤 Signup data:', { email, name, phone: fullPhone });
                         
                         const { data, error } = await supabase.auth.signUp({
                             email,
@@ -540,7 +583,6 @@
                         
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
-                        isAuthenticating = true;
                         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                         if (error) throw error;
                         console.log('✅ Login successful, waiting for auth state change');
@@ -549,7 +591,6 @@
                     console.error('❌ Auth error:', error);
                     errorDiv.textContent = error.message;
                     errorDiv.classList.remove('hidden');
-                    isAuthenticating = false;
                     if (mode === 'signup') {
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = false;
@@ -558,6 +599,7 @@
                 }
             };
         }
+
         async function handleReset() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
@@ -581,6 +623,7 @@
                 }
             };
         }
+
         async function loadDashboardContent() {
             if (!userProfile) return;
             
@@ -697,6 +740,7 @@
                 </table>
             `;
         }
+
         function showAddLeadForm() {
             document.getElementById('addLeadModal').classList.remove('hidden');
             
@@ -727,6 +771,7 @@
                 await loadDashboardContent();
             };
         }
+
         async function updateLeadStatus(leadId, newStatus) {
             const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
             
@@ -738,6 +783,7 @@
             
             await loadDashboardContent();
         }
+
         async function markAsSold(leadId) {
             const salePrice = prompt('Prix de vente (AED):');
             if (!salePrice) return;
@@ -762,6 +808,7 @@
             
             await loadDashboardContent();
         }
+
         async function handleContractSubmit(e) {
             e.preventDefault();
             const fileInput = document.getElementById('contractFile');
@@ -795,6 +842,7 @@
             await loadUserProfile();
             render();
         }
+
         async function loadUserProfile(user = null) {
             const targetUser = user || currentUser;
             console.log('🔍 loadUserProfile called for user:', targetUser?.id);
@@ -873,6 +921,7 @@
                 alert('Erreur lors de la déconnexion: ' + error.message);
             }
         }
+
         async function render() {
             console.log('🎨 RENDER called');
             console.log('- currentUser:', !!currentUser);
@@ -917,6 +966,7 @@
                 app.innerHTML = renderLandingPage();
             }
         }
+
         function validateName() {
             const nameInput = document.getElementById('name');
             const nameError = document.getElementById('nameError');
@@ -950,6 +1000,7 @@
             checkFormValidity();
             return true;
         }
+
         function validatePhone() {
             const phoneInput = document.getElementById('phone');
             const phoneError = document.getElementById('phoneError');
@@ -967,6 +1018,7 @@
                 phoneInput.classList.remove('border-green-500', 'border-red-500');
                 return false;
             }
+            
             const phoneRegex = /^[0-9]{9}$/;
             if (!phoneRegex.test(phone)) {
                 if (phone.length < 9) {
@@ -979,15 +1031,20 @@
                 phoneInput.classList.remove('border-green-500');
                 return false;
             }
-            const validPrefixes = ['50', '52', '54', '55', '56', '58', '59'];
+            
+            // CORRECTION : Liste élargie des préfixes valides incluant 50
+            const validPrefixes = ['50', '52', '54', '55', '56', '58', '59', '2', '3', '4', '6', '7', '9'];
             const prefix = phone.substring(0, 2);
-            if (!validPrefixes.includes(prefix)) {
-                phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56, 58 ou 59';
+            
+            // Vérifier si le préfixe est dans la liste OU si c'est un numéro fixe (commence par 2,3,4,6,7,9)
+            if (!validPrefixes.includes(prefix) && !['2','3','4','6','7','9'].includes(phone.charAt(0))) {
+                phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56, 58, 59 ou un numéro fixe';
                 phoneError.classList.remove('hidden');
                 phoneInput.classList.add('border-red-500');
                 phoneInput.classList.remove('border-green-500');
                 return false;
             }
+            
             phoneError.textContent = '';
             phoneError.classList.add('hidden');
             phoneInput.classList.remove('border-red-500');
@@ -995,6 +1052,7 @@
             checkFormValidity();
             return true;
         }
+
         function validateEmail() {
             const emailInput = document.getElementById('email');
             const emailError = document.getElementById('emailError');
@@ -1021,6 +1079,7 @@
             checkFormValidity();
             return true;
         }
+
         function validatePassword() {
             const passwordInput = document.getElementById('password');
             const passwordError = document.getElementById('passwordError');
@@ -1119,6 +1178,7 @@
             checkFormValidity();
             return true;
         }
+
         function validateConfirmPassword() {
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirmPassword');
@@ -1150,6 +1210,7 @@
             checkFormValidity();
             return true;
         }
+
         function checkFormValidity() {
             const submitButton = document.getElementById('submitButton');
             if (!submitButton) return;
@@ -1167,6 +1228,7 @@
                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
+
         function togglePasswordVisibility(fieldId, button) {
             const field = document.getElementById(fieldId);
             if (!field) return;
@@ -1179,6 +1241,8 @@
                 button.innerHTML = '<span class="text-xl">👁️</span>';
             }
         }
+
+        // Exposer les fonctions globales
         window.showLogin = showLogin;
         window.showSignup = showSignup;
         window.showReset = showReset;
@@ -1195,12 +1259,12 @@
         window.validatePassword = validatePassword;
         window.validateConfirmPassword = validateConfirmPassword;
         window.checkFormValidity = checkFormValidity;
+        window.prefillTestData = prefillTestData;
         window.render = render;
         
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         
-        let isAuthenticating = false;
         let initialLoadComplete = false;
         
         supabase.auth.onAuthStateChange(async (event, session) => {
