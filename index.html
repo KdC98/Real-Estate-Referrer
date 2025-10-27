@@ -168,6 +168,7 @@
         }
         function renderAuthPage(mode) {
             let title, buttonText, linkText, linkAction;
+            
             if (mode === 'login') {
                 title = t('auth.login_title');
                 buttonText = t('auth.login_button');
@@ -184,71 +185,170 @@
                 linkText = t('auth.back_to_login');
                 linkAction = 'showLogin()';
             }
-            return `
+            
+            return \`
                 <div class="min-h-screen flex items-center justify-center px-4">
                     <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
                         <button onclick="backToHome()" class="text-gray-400 hover:text-white mb-6 flex items-center">
-                            ← ${t('auth.back_home')}
+                            ← \${t('auth.back_home')}
                         </button>
-                        <h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>
+                        <h2 class="text-3xl font-bold mb-6 text-center">\${title}</h2>
                         <form id="authForm" class="space-y-4">
-                            ${mode === 'signup' ? `
+                            \${mode === 'signup' ? \`
                                 <div>
-                                    <label class="block mb-2">${t('auth.name_label')}</label>
-                                    <input type="text" id="name" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                    <label class="block mb-2 font-medium">\${t('auth.name_label')}</label>
+                                    <input 
+                                        type="text" 
+                                        id="name" 
+                                        required 
+                                        minlength="2"
+                                        maxlength="100"
+                                        placeholder="John Doe"
+                                        class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                        oninput="validateName()"
+                                    >
+                                    <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
                                 <div>
-                                    <label class="block mb-2">${t('auth.phone_label')}</label>
-                                    <input type="tel" id="phone" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                    <label class="block mb-2 font-medium">\${t('auth.phone_label')}</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">+971</span>
+                                        <input 
+                                            type="tel" 
+                                            id="phone" 
+                                            required 
+                                            pattern="[0-9]{9}"
+                                            placeholder="501234567"
+                                            maxlength="9"
+                                            class="w-full pl-16 pr-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                            oninput="validatePhone()"
+                                        >
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">Format: 9 chiffres après +971 (ex: +971 50 123 4567)</div>
+                                    <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
-                            ` : ''}
+                            \` : ''}
+                            
                             <div>
-                                <label class="block mb-2">${t('auth.email_label')}</label>
-                                <input type="email" id="email" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                <label class="block mb-2 font-medium">\${t('auth.email_label')}</label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    required 
+                                    placeholder="exemple@email.com"
+                                    class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                    \${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
+                                >
+                                \${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
                             </div>
-                            ${mode !== 'reset' ? `
+                            
+                            \${mode !== 'reset' ? \`
                                 <div>
-                                    <label class="block mb-2">${t('auth.password_label')}</label>
+                                    <label class="block mb-2 font-medium">\${t('auth.password_label')}</label>
                                     <div class="relative">
-                                        <input type="password" id="password" required minlength="8" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12">
-                                        <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                                        <input 
+                                            type="password" 
+                                            id="password" 
+                                            required 
+                                            minlength="8" 
+                                            placeholder="••••••••"
+                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
+                                            \${mode === 'signup' ? 'oninput="validatePassword()"' : ''}
+                                        >
+                                        <button 
+                                            type="button" 
+                                            onclick="togglePasswordVisibility('password', this)" 
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                            aria-label="Afficher/masquer le mot de passe"
+                                        >
                                             <span class="text-xl">👁️</span>
                                         </button>
                                     </div>
-                                    <div class="text-sm text-gray-400 mt-1">${t('auth.password_hint')}</div>
+                                    \${mode === 'signup' ? \`
+                                        <div class="mt-2">
+                                            <div class="flex items-center gap-2 text-xs text-gray-400">
+                                                <div id="passwordStrength" class="flex-1 h-1.5 bg-gray-600 rounded-full overflow-hidden">
+                                                    <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300"></div>
+                                                </div>
+                                                <span id="passwordStrengthText" class="min-w-[60px]"></span>
+                                            </div>
+                                            <div class="text-xs text-gray-400 mt-1.5 space-y-0.5">
+                                                <div id="req-length" class="flex items-center gap-1">
+                                                    <span class="w-3">•</span>
+                                                    <span>Minimum 8 caractères</span>
+                                                </div>
+                                                <div id="req-letter" class="flex items-center gap-1">
+                                                    <span class="w-3">•</span>
+                                                    <span>Au moins une lettre</span>
+                                                </div>
+                                                <div id="req-number" class="flex items-center gap-1">
+                                                    <span class="w-3">•</span>
+                                                    <span>Au moins un chiffre</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    \` : '<div class="text-sm text-gray-400 mt-1">\${t(\\'auth.password_hint\\')}</div>'}
+                                    <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
-                            ` : ''}
-                            ${mode === 'signup' ? `
+                            \` : ''}
+                            
+                            \${mode === 'signup' ? \`
                                 <div>
-                                    <label class="block mb-2">${t('auth.confirm_password_label')}</label>
+                                    <label class="block mb-2 font-medium">\${t('auth.confirm_password_label')}</label>
                                     <div class="relative">
-                                        <input type="password" id="confirmPassword" required minlength="8" class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12">
-                                        <button type="button" onclick="togglePasswordVisibility('confirmPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
+                                        <input 
+                                            type="password" 
+                                            id="confirmPassword" 
+                                            required 
+                                            minlength="8" 
+                                            placeholder="••••••••"
+                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
+                                            oninput="validateConfirmPassword()"
+                                        >
+                                        <button 
+                                            type="button" 
+                                            onclick="togglePasswordVisibility('confirmPassword', this)" 
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                            aria-label="Afficher/masquer la confirmation"
+                                        >
                                             <span class="text-xl">👁️</span>
                                         </button>
                                     </div>
+                                    <div id="confirmPasswordError" class="text-red-400 text-sm mt-1 hidden"></div>
+                                    <div id="confirmPasswordSuccess" class="text-green-400 text-sm mt-1 hidden flex items-center gap-1">
+                                        <span>✓</span>
+                                        <span>Les mots de passe correspondent</span>
+                                    </div>
                                 </div>
-                            ` : ''}
-                            ${mode === 'login' ? `
+                            \` : ''}
+                            
+                            \${mode === 'login' ? \`
                                 <div class="text-right">
-                                    <button type="button" onclick="showReset()" class="text-yellow-400 hover:text-yellow-300 text-sm">
-                                        ${t('auth.forgot_password')}
+                                    <button type="button" onclick="showReset()" class="text-yellow-400 hover:text-yellow-300 text-sm transition-colors">
+                                        \${t('auth.forgot_password')}
                                     </button>
                                 </div>
-                            ` : ''}
-                            <div id="authError" class="text-red-400 text-sm hidden"></div>
-                            <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                                ${buttonText}
+                            \` : ''}
+                            
+                            <div id="authError" class="text-red-400 text-sm hidden bg-red-900/20 border border-red-500/50 rounded-lg p-3"></div>
+                            
+                            <button 
+                                type="submit" 
+                                id="submitButton"
+                                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                \${mode === 'signup' ? 'disabled' : ''}
+                            >
+                                \${buttonText}
                             </button>
                         </form>
                         <p class="text-center mt-6 text-gray-400">
-                            <button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300">
-                                ${linkText}
+                            <button onclick="\${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">
+                                \${linkText}
                             </button>
                         </p>
                     </div>
                 </div>
-            `;
+            \`;
         }
         function renderDashboard() {
             if (!userProfile) {
@@ -385,27 +485,34 @@
                 e.preventDefault();
                 console.log(`📤 Form submitted for ${mode}`);
                 errorDiv.classList.add('hidden');
-                const email = document.getElementById('email').value;
+                
+                const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password')?.value;
                 
                 try {
                     if (mode === 'signup') {
                         console.log('📝 Processing signup');
-                        const name = document.getElementById('name').value;
-                        const phone = document.getElementById('phone').value;
+                        
+                        const name = document.getElementById('name').value.trim();
+                        const phone = document.getElementById('phone').value.trim();
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         
-                        if (password !== confirmPassword) {
-                            errorDiv.textContent = t('auth.password_mismatch');
-                            errorDiv.classList.remove('hidden');
-                            return;
-                        }
+                        if (!validateName()) throw new Error('Nom invalide');
+                        if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
+                        if (!validateEmail()) throw new Error('Email invalide');
+                        if (!validatePassword()) throw new Error('Mot de passe invalide');
+                        if (password !== confirmPassword) throw new Error(t('auth.password_mismatch'));
+                        
+                        const fullPhone = '+971' + phone;
+                        const submitButton = document.getElementById('submitButton');
+                        submitButton.disabled = true;
+                        submitButton.textContent = 'Inscription en cours...';
                         
                         const { data, error } = await supabase.auth.signUp({
                             email,
                             password,
                             options: {
-                                data: { name, phone }
+                                data: { name, phone: fullPhone }
                             }
                         });
                         
@@ -413,6 +520,7 @@
                         console.log('✅ Signup successful');
                         alert(t('auth.signup_success'));
                         showLogin();
+                        
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
                         isAuthenticating = true;
@@ -425,6 +533,11 @@
                     errorDiv.textContent = error.message;
                     errorDiv.classList.remove('hidden');
                     isAuthenticating = false;
+                    if (mode === 'signup') {
+                        const submitButton = document.getElementById('submitButton');
+                        submitButton.disabled = false;
+                        submitButton.textContent = t('auth.signup_button');
+                    }
                 }
             };
         }
@@ -787,6 +900,250 @@
                 app.innerHTML = renderLandingPage();
             }
         }
+        function validateName() {
+            const nameInput = document.getElementById('name');
+            const nameError = document.getElementById('nameError');
+            if (!nameInput || !nameError) return true;
+            const name = nameInput.value.trim();
+            if (name.length === 0) {
+                nameError.textContent = '';
+                nameError.classList.add('hidden');
+                nameInput.classList.remove('border-green-500', 'border-red-500');
+                return false;
+            }
+            if (name.length < 2) {
+                nameError.textContent = 'Le nom doit contenir au moins 2 caractères';
+                nameError.classList.remove('hidden');
+                nameInput.classList.add('border-red-500');
+                nameInput.classList.remove('border-green-500');
+                return false;
+            }
+            const nameRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+            if (!nameRegex.test(name)) {
+                nameError.textContent = 'Le nom ne peut contenir que des lettres, espaces, tirets et apostrophes';
+                nameError.classList.remove('hidden');
+                nameInput.classList.add('border-red-500');
+                nameInput.classList.remove('border-green-500');
+                return false;
+            }
+            nameError.textContent = '';
+            nameError.classList.add('hidden');
+            nameInput.classList.remove('border-red-500');
+            nameInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+        function validatePhone() {
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            if (!phoneInput || !phoneError) return true;
+            const phone = phoneInput.value.trim();
+            if (phone.length === 0) {
+                phoneError.textContent = '';
+                phoneError.classList.add('hidden');
+                phoneInput.classList.remove('border-green-500', 'border-red-500');
+                return false;
+            }
+            const phoneRegex = /^[0-9]{9}$/;
+            if (!phoneRegex.test(phone)) {
+                if (phone.length < 9) {
+                    phoneError.textContent = `Il manque ${9 - phone.length} chiffre(s)`;
+                } else {
+                    phoneError.textContent = 'Le numéro doit contenir exactement 9 chiffres';
+                }
+                phoneError.classList.remove('hidden');
+                phoneInput.classList.add('border-red-500');
+                phoneInput.classList.remove('border-green-500');
+                return false;
+            }
+            const validPrefixes = ['50', '52', '54', '55', '56', '58'];
+            const prefix = phone.substring(0, 2);
+            if (!validPrefixes.includes(prefix)) {
+                phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56 ou 58';
+                phoneError.classList.remove('hidden');
+                phoneInput.classList.add('border-red-500');
+                phoneInput.classList.remove('border-green-500');
+                return false;
+            }
+            phoneError.textContent = '';
+            phoneError.classList.add('hidden');
+            phoneInput.classList.remove('border-red-500');
+            phoneInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+        function validateEmail() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            if (!emailInput || !emailError) return true;
+            const email = emailInput.value.trim();
+            if (email.length === 0) {
+                emailError.textContent = '';
+                emailError.classList.add('hidden');
+                emailInput.classList.remove('border-green-500', 'border-red-500');
+                return false;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailError.textContent = "Format d'email invalide";
+                emailError.classList.remove('hidden');
+                emailInput.classList.add('border-red-500');
+                emailInput.classList.remove('border-green-500');
+                return false;
+            }
+            emailError.textContent = '';
+            emailError.classList.add('hidden');
+            emailInput.classList.remove('border-red-500');
+            emailInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+        function validatePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordError = document.getElementById('passwordError');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const strengthText = document.getElementById('passwordStrengthText');
+            const reqLength = document.getElementById('req-length');
+            const reqLetter = document.getElementById('req-letter');
+            const reqNumber = document.getElementById('req-number');
+            if (!passwordInput) return true;
+            const password = passwordInput.value;
+            if (reqLength && reqLetter && reqNumber) {
+                if (password.length >= 8) {
+                    reqLength.classList.add('text-green-400');
+                    reqLength.querySelector('span:first-child').textContent = '✓';
+                } else {
+                    reqLength.classList.remove('text-green-400');
+                    reqLength.querySelector('span:first-child').textContent = '•';
+                }
+                if (/[a-zA-Z]/.test(password)) {
+                    reqLetter.classList.add('text-green-400');
+                    reqLetter.querySelector('span:first-child').textContent = '✓';
+                } else {
+                    reqLetter.classList.remove('text-green-400');
+                    reqLetter.querySelector('span:first-child').textContent = '•';
+                }
+                if (/[0-9]/.test(password)) {
+                    reqNumber.classList.add('text-green-400');
+                    reqNumber.querySelector('span:first-child').textContent = '✓';
+                } else {
+                    reqNumber.classList.remove('text-green-400');
+                    reqNumber.querySelector('span:first-child').textContent = '•';
+                }
+            }
+            if (strengthBar && strengthText) {
+                let strength = 0;
+                if (password.length >= 8) strength++;
+                if (password.length >= 12) strength++;
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^a-zA-Z0-9]/.test(password)) strength++;
+                let color, text, width;
+                if (password.length === 0) {
+                    width = 0; text = ''; color = 'bg-gray-600';
+                } else if (strength <= 1) {
+                    width = 25; text = 'Faible'; color = 'bg-red-500';
+                } else if (strength === 2) {
+                    width = 50; text = 'Moyen'; color = 'bg-yellow-500';
+                } else if (strength === 3) {
+                    width = 75; text = 'Bon'; color = 'bg-blue-500';
+                } else {
+                    width = 100; text = 'Excellent'; color = 'bg-green-500';
+                }
+                strengthBar.style.width = width + '%';
+                strengthBar.className = `h-full transition-all duration-300 ${color}`;
+                strengthText.textContent = text;
+                strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
+            }
+            if (!passwordError) return true;
+            if (password.length === 0) {
+                passwordError.classList.add('hidden');
+                passwordInput.classList.remove('border-green-500', 'border-red-500');
+                checkFormValidity();
+                return false;
+            }
+            if (password.length < 8) {
+                passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('border-red-500');
+                passwordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            if (!/[a-zA-Z]/.test(password)) {
+                passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre';
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('border-red-500');
+                passwordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            if (!/[0-9]/.test(password)) {
+                passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('border-red-500');
+                passwordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            passwordError.classList.add('hidden');
+            passwordInput.classList.remove('border-red-500');
+            passwordInput.classList.add('border-green-500');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
+                validateConfirmPassword();
+            }
+            checkFormValidity();
+            return true;
+        }
+        function validateConfirmPassword() {
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            const confirmPasswordSuccess = document.getElementById('confirmPasswordSuccess');
+            if (!passwordInput || !confirmPasswordInput || !confirmPasswordError || !confirmPasswordSuccess) return true;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            if (confirmPassword.length === 0) {
+                confirmPasswordError.classList.add('hidden');
+                confirmPasswordSuccess.classList.add('hidden');
+                confirmPasswordInput.classList.remove('border-green-500', 'border-red-500');
+                checkFormValidity();
+                return false;
+            }
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Les mots de passe ne correspondent pas';
+                confirmPasswordError.classList.remove('hidden');
+                confirmPasswordSuccess.classList.add('hidden');
+                confirmPasswordInput.classList.add('border-red-500');
+                confirmPasswordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            confirmPasswordError.classList.add('hidden');
+            confirmPasswordSuccess.classList.remove('hidden');
+            confirmPasswordInput.classList.remove('border-red-500');
+            confirmPasswordInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+        function checkFormValidity() {
+            const submitButton = document.getElementById('submitButton');
+            if (!submitButton) return;
+            const nameValid = validateName();
+            const phoneValid = validatePhone();
+            const emailValid = validateEmail();
+            const passwordValid = validatePassword();
+            const confirmPasswordValid = validateConfirmPassword();
+            const allValid = nameValid && phoneValid && emailValid && passwordValid && confirmPasswordValid;
+            if (allValid) {
+                submitButton.disabled = false;
+                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
         function togglePasswordVisibility(fieldId, button) {
             const field = document.getElementById(fieldId);
             if (!field) return;
@@ -822,6 +1179,13 @@
             currentUser = session?.user || null;
             window.currentUser = currentUser;
             
+            if (currentUser && !currentUser.email_confirmed_at) {
+                console.warn('⚠️ Email not confirmed, signing out');
+                await supabase.auth.signOut();
+                currentUser = null;
+                window.currentUser = null;
+            }
+            
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
                 const profileLoaded = await loadUserProfile(currentUser);
@@ -850,6 +1214,18 @@
             
             currentUser = session?.user || null;
             window.currentUser = currentUser;
+            
+            if (currentUser && !currentUser.email_confirmed_at) {
+                console.warn('⚠️ Email not confirmed on init, cleaning session');
+                await supabase.auth.signOut();
+                localStorage.clear();
+                sessionStorage.clear();
+                currentUser = null;
+                window.currentUser = null;
+                render();
+                initialLoadComplete = true;
+                return;
+            }
             
             if (currentUser) {
                 console.log('👤 Session found, loading profile...');
