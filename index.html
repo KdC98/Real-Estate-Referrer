@@ -506,7 +506,12 @@
                         console.log('📝 Processing signup');
                         
                         const name = document.getElementById('name').value.trim();
-                        const phone = document.getElementById('phone').value.trim();
+                        let phone = document.getElementById('phone').value.trim();
+                        // Nettoyer le téléphone : enlever +971, espaces, tirets
+                        phone = phone.replace(/^\+971\s*/, '');
+                        phone = phone.replace(/\s/g, '');
+                        phone = phone.replace(/-/g, '');
+                        
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         
                         if (!validateName()) throw new Error('Nom invalide');
@@ -949,7 +954,13 @@
             const phoneInput = document.getElementById('phone');
             const phoneError = document.getElementById('phoneError');
             if (!phoneInput || !phoneError) return true;
-            const phone = phoneInput.value.trim();
+            
+            // Nettoyer le numéro : enlever +971, espaces, tirets
+            let phone = phoneInput.value.trim();
+            phone = phone.replace(/^\+971\s*/, ''); // Enlever +971 au début
+            phone = phone.replace(/\s/g, ''); // Enlever tous les espaces
+            phone = phone.replace(/-/g, ''); // Enlever tous les tirets
+            
             if (phone.length === 0) {
                 phoneError.textContent = '';
                 phoneError.classList.add('hidden');
