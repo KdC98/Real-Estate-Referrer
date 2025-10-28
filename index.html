@@ -626,7 +626,21 @@
                     }
                 } catch (error) {
                     console.error('❌ Auth error:', error);
-                    errorDiv.textContent = error.message;
+                    
+                    // Traduire les messages d'erreur Supabase en français
+                    let errorMessage = error.message;
+                    
+                    if (error.message.includes('Invalid login credentials')) {
+                        errorMessage = 'Email ou mot de passe incorrect';
+                    } else if (error.message.includes('Email not confirmed')) {
+                        errorMessage = 'Veuillez confirmer votre email avant de vous connecter';
+                    } else if (error.message.includes('User already registered')) {
+                        errorMessage = 'Cet email est déjà utilisé';
+                    } else if (error.message.includes('Password should be at least')) {
+                        errorMessage = 'Le mot de passe doit contenir au moins 8 caractères';
+                    }
+                    
+                    errorDiv.textContent = errorMessage;
                     errorDiv.classList.remove('hidden');
                     if (mode === 'signup') {
                         const submitButton = document.getElementById('submitButton');
@@ -911,19 +925,51 @@
         
         async function logout() {
             console.log('🚪 Logout called');
+            
+            // Empêcher les appels multiples
+            if (window.isLoggingOut) {
+                console.log('⚠️ Logout already in progress, ignoring');
+                return;
+            }
+            
+            window.isLoggingOut = true;
+            
             try {
-                await supabase.auth.signOut();
+                console.log('🔓 Signing out from Supabase...');
+                const { error } = await supabase.auth.signOut();
+                
+                if (error) {
+                    console.error('❌ Logout error:', error);
+                    alert('Erreur lors de la déconnexion: ' + error.message);
+                    window.isLoggingOut = false;
+                    return;
+                }
+                
+                console.log('✅ Supabase signOut successful');
+                
+                // Nettoyer les variables locales
                 currentUser = null;
                 userProfile = null;
                 currentPage = 'landing';
                 window.currentUser = null;
                 window.userProfile = null;
                 window.currentPage = 'landing';
-                console.log('✅ Logout successful');
+                
+                // Nettoyer le localStorage
+                localStorage.removeItem('supabase.auth.token');
+                
+                console.log('✅ Local state cleaned');
+                console.log('🏠 Redirecting to landing page...');
+                
+                // Rendre la page d'accueil
                 render();
+                
+                window.isLoggingOut = false;
+                
             } catch (error) {
-                console.error('❌ Logout error:', error);
+                console.error('❌ Logout exception:', error);
                 alert('Erreur lors de la déconnexion: ' + error.message);
+                window.isLoggingOut = false;
             }
         }
         async function render() {
