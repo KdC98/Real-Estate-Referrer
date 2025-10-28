@@ -985,54 +985,57 @@ async function loadDashboardContent() {
         window.loadUserProfile = loadUserProfile;
         
         async function logout() {
-            console.log('🚪 Logout called');
-            
-            // Empêcher les appels multiples
-            if (window.isLoggingOut) {
-                console.log('⚠️ Logout already in progress, ignoring');
-                return;
+    console.log('🚪 Logout called');
+    
+    // Empêcher les appels multiples - CORRECTION
+    const logoutBtn = document.querySelector('button[onclick="logout()"]');
+    if (logoutBtn) {
+        logoutBtn.disabled = true;
+        logoutBtn.textContent = 'Déconnexion...';
+    }
+    
+    try {
+        console.log('🔓 Signing out from Supabase...');
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) {
+            console.error('❌ Logout error:', error);
+            alert('Erreur lors de la déconnexion: ' + error.message);
+            if (logoutBtn) {
+                logoutBtn.disabled = false;
+                logoutBtn.textContent = 'Déconnexion';
             }
-            
-            window.isLoggingOut = true;
-            
-            try {
-                console.log('🔓 Signing out from Supabase...');
-                const { error } = await supabase.auth.signOut();
-                
-                if (error) {
-                    console.error('❌ Logout error:', error);
-                    alert('Erreur lors de la déconnexion: ' + error.message);
-                    window.isLoggingOut = false;
-                    return;
-                }
-                
-                console.log('✅ Supabase signOut successful');
-                
-                // Nettoyer les variables locales
-                currentUser = null;
-                userProfile = null;
-                currentPage = 'landing';
-                window.currentUser = null;
-                window.userProfile = null;
-                window.currentPage = 'landing';
-                
-                // Nettoyer le localStorage
-                localStorage.removeItem('supabase.auth.token');
-                
-                console.log('✅ Local state cleaned');
-                console.log('🏠 Redirecting to landing page...');
-                
-                // Rendre la page d'accueil
-                render();
-                
-                window.isLoggingOut = false;
-                
-            } catch (error) {
-                console.error('❌ Logout exception:', error);
-                alert('Erreur lors de la déconnexion: ' + error.message);
-                window.isLoggingOut = false;
-            }
+            return;
         }
+        
+        console.log('✅ Supabase signOut successful');
+        
+        // Nettoyer les variables locales
+        currentUser = null;
+        userProfile = null;
+        currentPage = 'landing';
+        window.currentUser = null;
+        window.userProfile = null;
+        window.currentPage = 'landing';
+        
+        // Nettoyer le localStorage
+        localStorage.removeItem('supabase.auth.token');
+        
+        console.log('✅ Local state cleaned');
+        console.log('🏠 Redirecting to landing page...');
+        
+        // Rendre la page d'accueil
+        render();
+        
+    } catch (error) {
+        console.error('❌ Logout exception:', error);
+        alert('Erreur lors de la déconnexion: ' + error.message);
+        if (logoutBtn) {
+            logoutBtn.disabled = false;
+            logoutBtn.textContent = 'Déconnexion';
+        }
+    }
+}
         async function render() {
             console.log('🎨 RENDER called');
             console.log('- currentUser:', !!currentUser);
@@ -1048,72 +1051,76 @@ async function loadDashboardContent() {
                 app.innerHTML = renderDashboard();
                 await loadDashboardContent();
                 
-                // Attacher le listener pour le formulaire de contrat
-                const contractForm = document.getElementById('contractForm');
-                if (contractForm) {
-                    console.log('✅ Contract form found, attaching submit handler');
-                    contractForm.addEventListener('submit', async (e) => {
-                        e.preventDefault();
-                        console.log('📄 Starting contract upload...');
-                        
-                        const fileInput = document.getElementById('contractFile');
-                        const file = fileInput.files[0];
-                        
-                        if (!file) {
-                            alert('Veuillez sélectionner un fichier');
-                            return;
-                        }
-                        
-                        // Validation du type de fichier (PDF uniquement)
-                        if (file.type !== 'application/pdf') {
-                            alert('Seuls les fichiers PDF sont acceptés');
-                            return;
-                        }
-                        
-                        // Validation de la taille (max 5MB)
-                        const maxSize = 5 * 1024 * 1024;
-                        if (file.size > maxSize) {
-                            alert('Le fichier est trop volumineux. Taille maximum : 5MB');
-                            return;
-                        }
-                        
-                        console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-                        
-                        const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-                        console.log('📄 Uploading to Storage with name:', fileName);
-                        
-                        const { data: uploadData, error: uploadError } = await supabase.storage
-                            .from('contracts')
-                            .upload(fileName, file);
-                        
-                        if (uploadError) {
-                            console.error('❌ Error uploading contract:', uploadError);
-                            alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
-                            return;
-                        }
-                        
-                        console.log('✅ File uploaded successfully to Storage');
-                        
-                        const { error: updateError } = await supabase.from('profiles').update({
-                            contract_status: 'uploaded',
-                            contract_file_url: fileName
-                        }).eq('id', currentUser.id);
-                        
-                        if (updateError) {
-                            console.error('❌ Error updating profile:', updateError);
-                            alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
-                            return;
-                        }
-                        
-                        console.log('✅ Profile updated successfully');
-                        alert('✅ Contrat uploadé avec succès !');
-                        
-                        await loadUserProfile();
-                        render();
-                    });
-                } else {
-                    console.warn('⚠️ Contract form not found');
-                }
+                // Attacher le listener pour le formulaire de contrat (UNIQUEMENT pour les apporteurs)
+if (userProfile.role !== 'admin') {
+    const contractForm = document.getElementById('contractForm');
+    if (contractForm) {
+        console.log('✅ Contract form found, attaching submit handler');
+        contractForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('📄 Starting contract upload...');
+            
+            const fileInput = document.getElementById('contractFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Veuillez sélectionner un fichier');
+                return;
+            }
+            
+            // Validation du type de fichier (PDF uniquement)
+            if (file.type !== 'application/pdf') {
+                alert('Seuls les fichiers PDF sont acceptés');
+                return;
+            }
+            
+            // Validation de la taille (max 5MB)
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                alert('Le fichier est trop volumineux. Taille maximum : 5MB');
+                return;
+            }
+            
+            console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+            
+            const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+            console.log('📄 Uploading to Storage with name:', fileName);
+            
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('contracts')
+                .upload(fileName, file);
+            
+            if (uploadError) {
+                console.error('❌ Error uploading contract:', uploadError);
+                alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
+                return;
+            }
+            
+            console.log('✅ File uploaded successfully to Storage');
+            
+            const { error: updateError } = await supabase.from('profiles').update({
+                contract_status: 'uploaded',
+                contract_file_url: fileName
+            }).eq('id', currentUser.id);
+            
+            if (updateError) {
+                console.error('❌ Error updating profile:', updateError);
+                alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
+                return;
+            }
+            
+            console.log('✅ Profile updated successfully');
+            alert('✅ Contrat uploadé avec succès !');
+            
+            await loadUserProfile();
+            render();
+        });
+    } else {
+        console.log('ℹ️ Contract form not found (normal for referrer without contract requirement)');
+    }
+} else {
+    console.log('ℹ️ Admin user - no contract form needed');
+}
             } else if (currentUser && !userProfile) {
                 console.log('⏳ User connected but no profile, waiting...');
                 app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement de votre profil...</div></div></div>';
