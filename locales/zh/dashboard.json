@@ -1,174 +1,31 @@
 {
-  "referrer": {
-    "title": "推荐人仪表板",
-    "stats": {
-      "totalEarnings": "总收入",
-      "activeLeads": "活跃客户",
-      "closedSales": "已完成销售",
-      "currency": "迪拉姆"
-    },
-    "actions": {
-      "addLead": "添加客户",
-      "refresh": "刷新",
-      "logout": "登出"
-    },
-    "table": {
-      "title": "我的客户",
-      "headers": {
-        "client": "客户",
-        "property": "房产",
-        "budget": "预算",
-        "status": "状态",
-        "commission": "佣金"
-      },
-      "empty": "暂无客户",
-      "emptyDesc": "开始添加客户以赚取佣金!"
-    },
-    "status": {
-      "nouveau": "新客户",
-      "visite": "看房",
-      "offre": "报价",
-      "vendu": "已售",
-      "perdu": "失去"
-    },
-    "propertyTypes": {
-      "apartment": "公寓",
-      "villa": "别墅",
-      "penthouse": "顶层公寓",
-      "townhouse": "联排别墅",
-      "office": "办公室",
-      "shop": "商铺",
-      "land": "土地"
-    }
-  },
-  "admin": {
-    "title": "管理员仪表板",
-    "stats": {
-      "totalReferrers": "推荐人",
-      "activeLeads": "活跃客户",
-      "totalSales": "总销售额",
-      "commissionsEarned": "已赚佣金",
-      "commissionsPaid": "已付佣金",
-      "currency": "迪拉姆"
-    },
-    "tabs": {
-      "leads": "客户",
-      "contracts": "合同",
-      "referrers": "推荐人"
-    },
-    "actions": {
-      "markSold": "标记为已售",
-      "viewDetails": "查看详情",
-      "downloadContract": "下载合同",
-      "refresh": "刷新",
-      "logout": "登出"
-    },
-    "table": {
-      "headers": {
-        "referrer": "推荐人",
-        "client": "客户",
-        "property": "房产",
-        "budget": "预算",
-        "status": "状态",
-        "commission": "佣金",
-        "actions": "操作"
-      },
-      "empty": "无客户",
-      "contractStatus": {
-        "pending": "待处理",
-        "signed": "已签署",
-        "expired": "已过期"
-      }
-    }
-  },
-  "modal": {
-    "addLead": {
-      "title": "添加新客户",
-      "subtitle": "填写客户信息",
-      "form": {
-        "leadType": {
-          "label": "客户类型",
-          "sale": "销售",
-          "rent": "租赁"
-        },
-        "clientName": {
-          "label": "客户姓名",
-          "placeholder": "例如:艾哈迈德·马克图姆"
-        },
-        "clientEmail": {
-          "label": "客户邮箱",
-          "placeholder": "ahmed@example.com"
-        },
-        "clientPhone": {
-          "label": "电话号码",
-          "placeholder": "+971 50 123 4567"
-        },
-        "propertyType": {
-          "label": "房产类型",
-          "placeholder": "选择类型"
-        },
-        "budget": {
-          "label": "预算 (迪拉姆)",
-          "placeholder": "例如:1500000"
-        },
-        "annualRent": {
-          "label": "年租金 (迪拉姆)",
-          "placeholder": "例如:80000"
-        },
-        "notes": {
-          "label": "附加说明",
-          "placeholder": "附加信息..."
-        }
-      },
-      "buttons": {
-        "cancel": "取消",
-        "submit": "添加客户"
-      }
-    },
-    "markSold": {
-      "title": "标记为已售",
-      "subtitle": "输入最终售价",
-      "form": {
-        "salePrice": {
-          "label": "售价 (迪拉姆)",
-          "placeholder": "例如:1500000"
-        },
-        "closedAt": {
-          "label": "成交日期"
-        }
-      },
-      "commission": {
-        "title": "佣金明细",
-        "total": "总佣金 (2%)",
-        "agent": "经纪人份额 (50%)",
-        "referrer": "推荐人佣金 (20%)"
-      },
-      "buttons": {
-        "cancel": "取消",
-        "confirm": "确认销售"
-      }
-    }
-  },
-  "messages": {
-    "success": {
-      "leadAdded": "客户添加成功!",
-      "leadUpdated": "客户已更新!",
-      "leadMarkedSold": "客户已标记为已售!",
-      "statusChanged": "状态更改成功!"
-    },
-    "error": {
-      "general": "发生错误",
-      "loadingFailed": "数据加载失败",
-      "invalidData": "无效数据",
-      "required": "此字段为必填项",
-      "invalidEmail": "无效邮箱",
-      "invalidPhone": "无效电话号码",
-      "invalidBudget": "无效预算"
-    },
-    "validation": {
-      "minBudget": "预算必须大于 0",
-      "maxBudget": "预算不能超过 1 亿迪拉姆",
-      "phoneFormat": "格式: +971 XX XXX XXXX"
-    }
-  }
+  "dashboard_title": "推荐人仪表板",
+  "welcome": "欢迎",
+  "my_stats": "我的统计",
+  "total_earnings": "总收入",
+  "active_leads": "活跃潜在客户",
+  "closed_sales": "已完成销售",
+  "add_lead": "添加潜在客户",
+  "my_leads": "我的潜在客户",
+  "client_name": "客户姓名",
+  "property_type": "房产类型",
+  "budget": "预算",
+  "status": "状态",
+  "commission": "佣金",
+  "no_leads": "暂无潜在客户",
+  "start_adding": "开始添加潜在客户以赚取佣金！",
+  "logout": "登出",
+  "contract_required": "需要合同",
+  "contract_warning_message": "在添加潜在客户之前，您必须下载并签署推荐人协议。",
+  "upload_contract_now": "立即上传我的合同",
+  "contract_required_to_add_lead": "在添加潜在客户之前，您必须上传已签署的合同。",
+  "download_contract_template": "下载空白合同",
+  "upload_instructions": "下载、打印、签署并扫描合同，然后在下面上传。",
+  "choose_file": "选择文件",
+  "submit_contract": "提交已签署的合同",
+  "contract_pending": "合同待验证",
+  "contract_pending_message": "您的合同已提交，正在由管理员验证。",
+  "contract_approved": "合同已批准",
+  "contract_rejected": "合同已拒绝",
+  "contract_rejected_message": "您的合同已被拒绝。请下载并进行必要的更正后重新上传。"
 }
