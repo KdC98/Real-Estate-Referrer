@@ -1,174 +1,31 @@
 {
-  "referrer": {
-    "title": "ریفرر ڈیش بورڈ",
-    "stats": {
-      "totalEarnings": "کل آمدنی",
-      "activeLeads": "فعال لیڈز",
-      "closedSales": "مکمل فروخت",
-      "currency": "درہم"
-    },
-    "actions": {
-      "addLead": "لیڈ شامل کریں",
-      "refresh": "تازہ کریں",
-      "logout": "لاگ آؤٹ"
-    },
-    "table": {
-      "title": "میرے لیڈز",
-      "headers": {
-        "client": "گاہک",
-        "property": "جائیداد",
-        "budget": "بجٹ",
-        "status": "حالت",
-        "commission": "کمیشن"
-      },
-      "empty": "ابھی تک کوئی لیڈ نہیں",
-      "emptyDesc": "کمیشن کمانے کے لیے لیڈز شامل کرنا شروع کریں!"
-    },
-    "status": {
-      "nouveau": "نیا",
-      "visite": "ملاقات",
-      "offre": "پیشکش",
-      "vendu": "فروخت شدہ",
-      "perdu": "ضائع"
-    },
-    "propertyTypes": {
-      "apartment": "اپارٹمنٹ",
-      "villa": "ویلا",
-      "penthouse": "پینٹ ہاؤس",
-      "townhouse": "ٹاؤن ہاؤس",
-      "office": "دفتر",
-      "shop": "دکان",
-      "land": "زمین"
-    }
-  },
-  "admin": {
-    "title": "ایڈمن ڈیش بورڈ",
-    "stats": {
-      "totalReferrers": "ریفررز",
-      "activeLeads": "فعال لیڈز",
-      "totalSales": "کل فروخت",
-      "commissionsEarned": "حاصل شدہ کمیشن",
-      "commissionsPaid": "ادا شدہ کمیشن",
-      "currency": "درہم"
-    },
-    "tabs": {
-      "leads": "لیڈز",
-      "contracts": "معاہدے",
-      "referrers": "ریفررز"
-    },
-    "actions": {
-      "markSold": "فروخت شدہ نشان زد کریں",
-      "viewDetails": "تفصیلات دیکھیں",
-      "downloadContract": "معاہدہ ڈاؤن لوڈ کریں",
-      "refresh": "تازہ کریں",
-      "logout": "لاگ آؤٹ"
-    },
-    "table": {
-      "headers": {
-        "referrer": "ریفرر",
-        "client": "گاہک",
-        "property": "جائیداد",
-        "budget": "بجٹ",
-        "status": "حالت",
-        "commission": "کمیشن",
-        "actions": "اقدامات"
-      },
-      "empty": "کوئی لیڈ نہیں",
-      "contractStatus": {
-        "pending": "زیر التواء",
-        "signed": "دستخط شدہ",
-        "expired": "ختم شدہ"
-      }
-    }
-  },
-  "modal": {
-    "addLead": {
-      "title": "نیا لیڈ شامل کریں",
-      "subtitle": "گاہک کی معلومات بھریں",
-      "form": {
-        "leadType": {
-          "label": "لیڈ کی قسم",
-          "sale": "فروخت",
-          "rent": "کرایہ"
-        },
-        "clientName": {
-          "label": "گاہک کا نام",
-          "placeholder": "مثال: احمد المکتوم"
-        },
-        "clientEmail": {
-          "label": "گاہک کا ای میل",
-          "placeholder": "ahmed@example.com"
-        },
-        "clientPhone": {
-          "label": "فون نمبر",
-          "placeholder": "+971 50 123 4567"
-        },
-        "propertyType": {
-          "label": "جائیداد کی قسم",
-          "placeholder": "ایک قسم منتخب کریں"
-        },
-        "budget": {
-          "label": "بجٹ (درہم)",
-          "placeholder": "مثال: 1500000"
-        },
-        "annualRent": {
-          "label": "سالانہ کرایہ (درہم)",
-          "placeholder": "مثال: 80000"
-        },
-        "notes": {
-          "label": "اضافی نوٹس",
-          "placeholder": "اضافی معلومات..."
-        }
-      },
-      "buttons": {
-        "cancel": "منسوخ کریں",
-        "submit": "لیڈ شامل کریں"
-      }
-    },
-    "markSold": {
-      "title": "فروخت شدہ نشان زد کریں",
-      "subtitle": "حتمی فروخت کی قیمت درج کریں",
-      "form": {
-        "salePrice": {
-          "label": "فروخت کی قیمت (درہم)",
-          "placeholder": "مثال: 1500000"
-        },
-        "closedAt": {
-          "label": "اختتامی تاریخ"
-        }
-      },
-      "commission": {
-        "title": "کمیشن کی تفصیلات",
-        "total": "کل کمیشن (2%)",
-        "agent": "ایجنٹ کا حصہ (50%)",
-        "referrer": "ریفرر کمیشن (20%)"
-      },
-      "buttons": {
-        "cancel": "منسوخ کریں",
-        "confirm": "فروخت کی تصدیق کریں"
-      }
-    }
-  },
-  "messages": {
-    "success": {
-      "leadAdded": "لیڈ کامیابی سے شامل ہو گیا!",
-      "leadUpdated": "لیڈ اپ ڈیٹ ہو گیا!",
-      "leadMarkedSold": "لیڈ کو فروخت شدہ نشان زد کیا گیا!",
-      "statusChanged": "حالت کامیابی سے تبدیل ہو گئی!"
-    },
-    "error": {
-      "general": "ایک خرابی پیش آئی",
-      "loadingFailed": "ڈیٹا لوڈ کرنے میں ناکامی",
-      "invalidData": "غلط ڈیٹا",
-      "required": "یہ فیلڈ ضروری ہے",
-      "invalidEmail": "غلط ای میل",
-      "invalidPhone": "غلط فون نمبر",
-      "invalidBudget": "غلط بجٹ"
-    },
-    "validation": {
-      "minBudget": "بجٹ 0 سے زیادہ ہونا چاہیے",
-      "maxBudget": "بجٹ 100 ملین درہم سے زیادہ نہیں ہو سکتا",
-      "phoneFormat": "فارمیٹ: +971 XX XXX XXXX"
-    }
-  }
+  "dashboard_title": "ریفرر ڈیش بورڈ",
+  "welcome": "خوش آمدید",
+  "my_stats": "میرے اعداد و شمار",
+  "total_earnings": "کل آمدنی",
+  "active_leads": "فعال لیڈز",
+  "closed_sales": "مکمل فروخت",
+  "add_lead": "لیڈ شامل کریں",
+  "my_leads": "میری لیڈز",
+  "client_name": "کلائنٹ کا نام",
+  "property_type": "پراپرٹی کی قسم",
+  "budget": "بجٹ",
+  "status": "حالت",
+  "commission": "کمیشن",
+  "no_leads": "ابھی تک کوئی لیڈز نہیں",
+  "start_adding": "کمیشن کمانے کے لیے لیڈز شامل کرنا شروع کریں!",
+  "logout": "لاگ آؤٹ",
+  "contract_required": "معاہدہ درکار ہے",
+  "contract_warning_message": "لیڈز شامل کرنے سے پہلے آپ کو ریفرر معاہدہ ڈاؤن لوڈ اور دستخط کرنا ہوگا۔",
+  "upload_contract_now": "اپنا معاہدہ ابھی اپ لوڈ کریں",
+  "contract_required_to_add_lead": "لیڈز شامل کرنے سے پہلے آپ کو دستخط شدہ معاہدہ اپ لوڈ کرنا ہوگا۔",
+  "download_contract_template": "خالی معاہدہ ڈاؤن لوڈ کریں",
+  "upload_instructions": "معاہدہ ڈاؤن لوڈ کریں، پرنٹ کریں، دستخط کریں اور اسکین کریں، پھر اسے نیچے اپ لوڈ کریں۔",
+  "choose_file": "فائل منتخب کریں",
+  "submit_contract": "دستخط شدہ معاہدہ جمع کروائیں",
+  "contract_pending": "معاہدہ توثیق کے منتظر",
+  "contract_pending_message": "آپ کا معاہدہ جمع کرایا گیا ہے اور منتظم کی طرف سے توثیق کی جا رہی ہے۔",
+  "contract_approved": "معاہدہ منظور شد",
+  "contract_rejected": "معاہدہ مسترد",
+  "contract_rejected_message": "آپ کا معاہدہ مسترد کر دیا گیا ہے۔ براہ کرم ضروری اصلاحات کے ساتھ اسے دوبارہ ڈاؤن لوڈ کریں۔"
 }
