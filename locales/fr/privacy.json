@@ -1,306 +1,88 @@
 {
   "privacy": {
-    "title": "Politique de Confidentialité",
-    "subtitle": "Programme d'apporteurs d'affaires immobiliers - Dubai, UAE",
-    "lastUpdated": "Dernière mise à jour : 20 octobre 2025",
+    "title": "Politique de confidentialité",
+    "subtitle": "Protection de vos données personnelles - Conformité RGPD",
+    "lastUpdated": "Dernière mise à jour : 28 octobre 2025",
     
-    "intro": {
-      "title": "Introduction",
-      "p1": "Real Estate Referrer (ci-après \"nous\", \"notre\" ou \"la Plateforme\") s'engage à protéger la vie privée et les données personnelles de tous les utilisateurs de notre plateforme de référencement immobilier.",
-      "p2": "Cette Politique de Confidentialité explique comment nous collectons, utilisons, partageons et protégeons vos informations personnelles conformément au Règlement Général sur la Protection des Données (RGPD) et aux lois applicables aux Émirats Arabes Unis.",
-      "p3": "En utilisant notre plateforme, vous acceptez les pratiques décrites dans cette politique."
-    },
-
-    "dataCollected": {
-      "title": "1. Données Collectées",
-      "intro": "Nous collectons différents types de données pour fournir et améliorer nos services :",
-      
-      "personal": {
-        "subtitle": "1.1 Informations Personnelles",
-        "p1": "Lorsque vous créez un compte d'apporteur, nous collectons :",
-        "items": [
-          "Nom complet",
-          "Adresse email",
-          "Numéro de téléphone",
-          "Rôle (apporteur ou administrateur)",
-          "Date d'inscription"
-        ]
-      },
-
-      "leads": {
-        "subtitle": "1.2 Données des Leads Clients",
-        "p1": "Lorsque vous soumettez un lead, nous collectons :",
-        "items": [
-          "Nom du client potentiel",
-          "Email du client",
-          "Numéro de téléphone du client",
-          "Type de propriété recherchée",
-          "Budget estimé",
-          "Loyer annuel (pour les locations)",
-          "Statut du lead",
-          "Historique des interactions"
-        ]
-      },
-
-      "technical": {
-        "subtitle": "1.3 Données Techniques",
-        "p1": "Nous collectons automatiquement certaines informations techniques :",
-        "items": [
-          "Adresse IP",
-          "Type de navigateur",
-          "Système d'exploitation",
-          "Pages visitées",
-          "Durée des sessions",
-          "Préférence de langue"
-        ]
-      },
-
-      "financial": {
-        "subtitle": "1.4 Données Financières",
-        "items": [
-          "Prix de vente des propriétés",
-          "Montants des commissions calculées",
-          "Historique des paiements",
-          "Informations bancaires (si nécessaire pour les paiements)"
-        ]
-      }
-    },
-
-    "dataUsage": {
-      "title": "2. Utilisation des Données",
-      "intro": "Nous utilisons vos données personnelles uniquement aux fins suivantes :",
-      
-      "purposes": [
-        {
-          "subtitle": "2.1 Gestion du Programme",
-          "text": "Créer et gérer votre compte d'apporteur, suivre vos leads et calculer vos commissions."
-        },
-        {
-          "subtitle": "2.2 Communication",
-          "text": "Vous contacter concernant vos leads, les ventes conclues, les paiements de commissions et les mises à jour importantes du programme."
-        },
-        {
-          "subtitle": "2.3 Traitement des Leads",
-          "text": "Contacter les clients potentiels que vous nous référez, organiser des visites et négocier des transactions immobilières."
-        },
-        {
-          "subtitle": "2.4 Paiement des Commissions",
-          "text": "Calculer, vérifier et effectuer les paiements de vos commissions d'apporteur."
-        },
-        {
-          "subtitle": "2.5 Amélioration des Services",
-          "text": "Analyser l'utilisation de la plateforme pour améliorer nos services et l'expérience utilisateur."
-        },
-        {
-          "subtitle": "2.6 Conformité Légale",
-          "text": "Respecter nos obligations légales, notamment celles liées à la réglementation RERA et aux lois fiscales des UAE."
-        }
-      ]
-    },
-
-    "dataSharing": {
-      "title": "3. Partage des Données",
-      "intro": "Nous ne vendons jamais vos données personnelles à des tiers. Nous partageons vos informations uniquement dans les cas suivants :",
-      
-      "cases": [
-        {
-          "subtitle": "3.1 Traitement des Leads",
-          "text": "Les informations des clients que vous référez sont partagées avec notre équipe commerciale pour le traitement des leads et la conclusion des ventes."
-        },
-        {
-          "subtitle": "3.2 Prestataires de Services",
-          "text": "Nous pouvons partager certaines données avec des prestataires de confiance qui nous aident à fournir nos services (hébergement, paiements, analytics). Ces prestataires sont contractuellement tenus de protéger vos données."
-        },
-        {
-          "subtitle": "3.3 Obligations Légales",
-          "text": "Nous pouvons divulguer vos informations si requis par la loi, une décision de justice ou une autorité gouvernementale des UAE."
-        },
-        {
-          "subtitle": "3.4 Protection des Droits",
-          "text": "En cas de fraude, violation des conditions d'utilisation ou pour protéger nos droits légaux."
-        }
-      ],
-
-      "noSale": "🔒 Nous ne vendons, ne louons ni n'échangeons jamais vos données personnelles avec des tiers à des fins marketing."
-    },
-
-    "dataSecurity": {
-      "title": "4. Sécurité des Données",
-      "intro": "Nous prenons la sécurité de vos données très au sérieux et mettons en œuvre des mesures techniques et organisationnelles appropriées :",
-      
-      "measures": [
-        {
-          "subtitle": "4.1 Chiffrement",
-          "text": "Toutes les données sensibles sont chiffrées en transit (HTTPS/SSL) et au repos."
-        },
-        {
-          "subtitle": "4.2 Authentification Sécurisée",
-          "text": "Les mots de passe sont hashés avec bcrypt. Nous utilisons des tokens JWT pour les sessions sécurisées."
-        },
-        {
-          "subtitle": "4.3 Contrôle d'Accès",
-          "text": "Accès limité aux données personnelles, avec des permissions basées sur les rôles (admin/apporteur)."
-        },
-        {
-          "subtitle": "4.4 Hébergement Sécurisé",
-          "text": "Nos données sont hébergées sur des serveurs sécurisés (Supabase/Vercel) avec des certifications de sécurité reconnues."
-        },
-        {
-          "subtitle": "4.5 Surveillance",
-          "text": "Surveillance continue des accès et détection des activités suspectes."
-        },
-        {
-          "subtitle": "4.6 Sauvegardes",
-          "text": "Sauvegardes régulières et automatiques de toutes les données."
-        }
-      ],
-
-      "warning": "⚠️ Aucune transmission de données sur Internet n'est 100% sécurisée. Bien que nous mettions tout en œuvre pour protéger vos données, nous ne pouvons garantir une sécurité absolue."
-    },
-
-    "userRights": {
-      "title": "5. Vos Droits (RGPD)",
-      "intro": "Conformément au RGPD, vous disposez des droits suivants concernant vos données personnelles :",
-      
-      "rights": [
-        {
-          "name": "5.1 Droit d'Accès",
-          "description": "Vous pouvez demander une copie de toutes les données personnelles que nous détenons à votre sujet."
-        },
-        {
-          "name": "5.2 Droit de Rectification",
-          "description": "Vous pouvez demander la correction de données inexactes ou incomplètes."
-        },
-        {
-          "name": "5.3 Droit à l'Effacement (\"Droit à l'Oubli\")",
-          "description": "Vous pouvez demander la suppression de vos données personnelles dans certains cas. Note : nous devons conserver certaines données pour des raisons légales ou comptables."
-        },
-        {
-          "name": "5.4 Droit à la Limitation du Traitement",
-          "description": "Vous pouvez demander la restriction du traitement de vos données dans certaines circonstances."
-        },
-        {
-          "name": "5.5 Droit à la Portabilité",
-          "description": "Vous pouvez recevoir vos données dans un format structuré et couramment utilisé."
-        },
-        {
-          "name": "5.6 Droit d'Opposition",
-          "description": "Vous pouvez vous opposer au traitement de vos données à des fins de marketing direct."
-        },
-        {
-          "name": "5.7 Droit de Retrait du Consentement",
-          "description": "Lorsque le traitement est basé sur votre consentement, vous pouvez le retirer à tout moment."
-        }
-      ],
-
-      "exercise": "Pour exercer ces droits, contactez-nous à : privacy@real-estate-referrer.com",
-      "response": "Nous répondrons à votre demande dans un délai de 30 jours."
-    },
-
-    "cookies": {
-      "title": "6. Cookies et Technologies Similaires",
-      "intro": "Notre plateforme utilise des cookies et des technologies similaires :",
-      
-      "types": [
-        {
-          "name": "6.1 Cookies Essentiels",
-          "description": "Nécessaires au fonctionnement de la plateforme (authentification, sessions, préférences de langue).",
-          "required": "Requis - Ne peuvent pas être désactivés"
-        },
-        {
-          "name": "6.2 Cookies de Performance",
-          "description": "Nous aident à comprendre comment les utilisateurs interagissent avec la plateforme.",
-          "required": "Optionnels - Peuvent être désactivés"
-        },
-        {
-          "name": "6.3 LocalStorage",
-          "description": "Utilisé pour sauvegarder votre préférence de langue et certaines données de session.",
-          "required": "Essentiel pour l'expérience utilisateur"
-        }
-      ],
-
-      "control": "Vous pouvez contrôler et supprimer les cookies via les paramètres de votre navigateur. Notez que la désactivation de certains cookies peut affecter le fonctionnement de la plateforme."
-    },
-
-    "dataRetention": {
-      "title": "7. Conservation des Données",
-      "intro": "Nous conservons vos données personnelles uniquement pendant la durée nécessaire aux finalités pour lesquelles elles ont été collectées :",
-      
-      "periods": [
-        {
-          "type": "Compte actif d'apporteur",
-          "duration": "Tant que votre compte est actif"
-        },
-        {
-          "type": "Compte inactif",
-          "duration": "3 ans après la dernière activité"
-        },
-        {
-          "type": "Données de leads",
-          "duration": "5 ans après la transaction ou fermeture du lead"
-        },
-        {
-          "type": "Données financières",
-          "duration": "7 ans (conformément aux exigences comptables et fiscales des UAE)"
-        },
-        {
-          "type": "Logs de connexion",
-          "duration": "1 an"
-        }
-      ],
-
-      "deletion": "Après ces périodes, vos données sont supprimées de manière sécurisée et irréversible, sauf si une obligation légale nous impose de les conserver plus longtemps."
-    },
-
-    "minors": {
-      "title": "8. Protection des Mineurs",
-      "text": "Notre plateforme n'est pas destinée aux personnes de moins de 18 ans. Nous ne collectons pas sciemment de données personnelles auprès de mineurs. Si vous pensez qu'un mineur a fourni des informations personnelles, contactez-nous immédiatement."
-    },
-
-    "international": {
-      "title": "9. Transferts Internationaux de Données",
-      "text": "Vos données sont principalement stockées et traitées aux Émirats Arabes Unis. Certains de nos prestataires de services peuvent être situés dans d'autres pays (notamment l'Union Européenne et les États-Unis). Dans ce cas, nous veillons à ce que des garanties appropriées soient en place pour protéger vos données conformément au RGPD."
-    },
-
-    "modifications": {
-      "title": "10. Modifications de la Politique",
-      "p1": "Nous pouvons mettre à jour cette Politique de Confidentialité périodiquement pour refléter les changements dans nos pratiques ou pour des raisons légales.",
-      "p2": "La date de \"Dernière mise à jour\" en haut de cette page indique quand les modifications ont été apportées.",
-      "p3": "Nous vous encourageons à consulter régulièrement cette politique pour rester informé de la manière dont nous protégeons vos données."
-    },
-
-    "contact": {
-      "title": "12. Contact",
-      "p1": "Pour toute question concernant cette Politique de Confidentialité ou l'exercice de vos droits, vous pouvez nous contacter :",
-      "email": "Email : contact@real-estate-referrer.com",
-      "response": "Nous nous engageons à répondre à toutes vos demandes dans les meilleurs délais."
-    },
-
     "nav": {
       "home": "Accueil",
       "howItWorks": "Comment ça marche",
-      "login": "Login"
+      "login": "Connexion"
     },
-
+    
+    "intro": {
+      "title": "Introduction",
+      "p1": "La présente Politique de confidentialité décrit comment Karyne de Clercq Real Estate collecte, utilise, partage et protège vos informations personnelles.",
+      "p2": "En utilisant notre service, vous acceptez les pratiques décrites dans cette politique.",
+      "p3": "Nous nous engageons à protéger votre vie privée conformément au RGPD et aux lois des Émirats Arabes Unis."
+    },
+    
+    "section1": {
+      "title": "1. Données collectées",
+      "intro": "Nous collectons les données suivantes :",
+      "item1": "Données d'inscription : nom, email, téléphone, mot de passe",
+      "item2": "Données des leads : informations clients, budget, type de propriété",
+      "item3": "Documents : contrats signés (PDF)",
+      "item4": "Transactions : prix de vente, commissions",
+      "item5": "Données techniques : IP, navigateur, langue"
+    },
+    
+    "section2": {
+      "title": "2. Utilisation des données",
+      "intro": "Vos données sont utilisées pour :",
+      "item1": "Gérer votre compte et vos leads",
+      "item2": "Calculer et verser vos commissions",
+      "item3": "Vous envoyer des notifications importantes",
+      "item4": "Respecter la conformité RERA Dubai",
+      "item5": "Améliorer notre service"
+    },
+    
+    "section3": {
+      "title": "3. Partage des données",
+      "intro": "Nous ne vendons jamais vos données. Partage limité :",
+      "item1": "✓ Avec l'agent immobilier pour traiter vos leads",
+      "item2": "✓ Autorités légales si requis par la loi (RERA)",
+      "item3": "✓ Prestataires techniques (Vercel, Supabase)",
+      "item4": "✗ Jamais vendu à des tiers marketing"
+    },
+    
+    "section4": {
+      "title": "4. Vos droits RGPD",
+      "intro": "Vous avez le droit de :",
+      "item1": "Accéder à vos données",
+      "item2": "Rectifier vos informations",
+      "item3": "Supprimer vos données",
+      "item4": "Exporter vos données",
+      "item5": "Vous opposer au traitement",
+      "contact": "Contactez privacy@real-estate-referrer.com pour exercer vos droits (réponse sous 30 jours)"
+    },
+    
+    "section5": {
+      "title": "5. Contact",
+      "responsible": "Responsable du traitement",
+      "coordinates": "Coordonnées"
+    },
+    
+    "cta": {
+      "title": "Des questions sur vos données ?",
+      "subtitle": "N'hésitez pas à nous contacter. Réponse sous 30 jours maximum.",
+      "button": "Nous contacter"
+    },
+    
     "footer": {
       "title": "Real Estate Referrer",
+      "tagline": "Programme d'apporteurs d'affaires immobiliers à Dubai",
       "navigation": "Navigation",
-      "legal": "Légal",
-      "contact": "Contact",
       "home": "Accueil",
       "howItWorks": "Comment ça marche",
       "loginLink": "Connexion",
       "signup": "Inscription",
+      "legal": "Légal",
       "terms": "CGU",
       "privacy": "Confidentialité",
       "contract": "Template Contrat",
+      "contact": "Contact",
       "copyright": "© 2025 Karyne de Clercq. Tous droits réservés."
-    },
-
-    "cta": {
-      "questions": "Des questions sur vos données ?",
-      "subtitle": "N'hésitez pas à nous contacter pour toute question concernant le traitement de vos données personnelles.",
-      "button": "Nous contacter"
     }
   }
 }
