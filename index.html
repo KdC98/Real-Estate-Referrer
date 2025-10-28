@@ -855,7 +855,7 @@
             // Mise à jour du profil dans la base de données
             const { error: updateError } = await supabase.from('profiles').update({
                 contract_status: 'uploaded',
-                contract_file: fileName
+                contract_file_url: fileName
             }).eq('id', currentUser.id);
             
             if (updateError) {
