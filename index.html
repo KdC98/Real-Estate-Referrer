@@ -412,7 +412,7 @@
                                             <!-- Colonne 2: Uploader le contrat signé -->
                                             <div class="bg-yellow-900 bg-opacity-30 p-4 rounded-lg">
                                                 <h4 class="font-bold text-yellow-300 mb-2">📤 Étape 2 : Uploader</h4>
-                                                <form id="contractForm" onsubmit="handleContractSubmit(event); return false;">
+                                                <form id="contractForm">
                                                     <input 
                                                         type="file" 
                                                         id="contractFile" 
@@ -422,6 +422,7 @@
                                                     >
                                                     <button 
                                                         type="submit" 
+                                                        id="contractSubmitBtn"
                                                         class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded-lg transition"
                                                     >
                                                         ${t('dashboard:submit_contract')}
@@ -847,68 +848,6 @@
             await loadDashboardContent();
         }
         
-        async function handleContractSubmit(e) {
-            e.preventDefault();
-            console.log('📄 Starting contract upload...');
-            
-            const fileInput = document.getElementById('contractFile');
-            const file = fileInput.files[0];
-            
-            if (!file) {
-                alert('Veuillez sélectionner un fichier');
-                return;
-            }
-            
-            // Validation du type de fichier (PDF uniquement)
-            if (file.type !== 'application/pdf') {
-                alert('Seuls les fichiers PDF sont acceptés');
-                return;
-            }
-            
-            // Validation de la taille (max 5MB)
-            const maxSize = 5 * 1024 * 1024; // 5MB en bytes
-            if (file.size > maxSize) {
-                alert('Le fichier est trop volumineux. Taille maximum : 5MB');
-                return;
-            }
-            
-            console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-            
-            // Création du nom de fichier : UUID_timestamp_nomOriginal.pdf
-            const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-            console.log('📄 Uploading to Storage with name:', fileName);
-            
-            const { data: uploadData, error: uploadError } = await supabase.storage
-                .from('contracts')
-                .upload(fileName, file);
-            
-            if (uploadError) {
-                console.error('❌ Error uploading contract:', uploadError);
-                alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
-                return;
-            }
-            
-            console.log('✅ File uploaded successfully to Storage');
-            
-            // Mise à jour du profil dans la base de données
-            const { error: updateError } = await supabase.from('profiles').update({
-                contract_status: 'uploaded',
-                contract_file_url: fileName
-            }).eq('id', currentUser.id);
-            
-            if (updateError) {
-                console.error('❌ Error updating profile:', updateError);
-                alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
-                return;
-            }
-            
-            console.log('✅ Profile updated successfully');
-            alert('✅ Contrat uploadé avec succès !');
-            
-            // Recharger le profil et l'interface
-            await loadUserProfile();
-            render();
-        }
         async function loadUserProfile(user = null) {
             const targetUser = user || currentUser;
             console.log('🔍 loadUserProfile called for user:', targetUser?.id);
@@ -1001,6 +940,73 @@
                 window.currentPage = 'dashboard';
                 app.innerHTML = renderDashboard();
                 await loadDashboardContent();
+                
+                // Attacher le listener pour le formulaire de contrat
+                const contractForm = document.getElementById('contractForm');
+                if (contractForm) {
+                    console.log('✅ Contract form found, attaching submit handler');
+                    contractForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        console.log('📄 Starting contract upload...');
+                        
+                        const fileInput = document.getElementById('contractFile');
+                        const file = fileInput.files[0];
+                        
+                        if (!file) {
+                            alert('Veuillez sélectionner un fichier');
+                            return;
+                        }
+                        
+                        // Validation du type de fichier (PDF uniquement)
+                        if (file.type !== 'application/pdf') {
+                            alert('Seuls les fichiers PDF sont acceptés');
+                            return;
+                        }
+                        
+                        // Validation de la taille (max 5MB)
+                        const maxSize = 5 * 1024 * 1024;
+                        if (file.size > maxSize) {
+                            alert('Le fichier est trop volumineux. Taille maximum : 5MB');
+                            return;
+                        }
+                        
+                        console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+                        
+                        const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+                        console.log('📄 Uploading to Storage with name:', fileName);
+                        
+                        const { data: uploadData, error: uploadError } = await supabase.storage
+                            .from('contracts')
+                            .upload(fileName, file);
+                        
+                        if (uploadError) {
+                            console.error('❌ Error uploading contract:', uploadError);
+                            alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
+                            return;
+                        }
+                        
+                        console.log('✅ File uploaded successfully to Storage');
+                        
+                        const { error: updateError } = await supabase.from('profiles').update({
+                            contract_status: 'uploaded',
+                            contract_file_url: fileName
+                        }).eq('id', currentUser.id);
+                        
+                        if (updateError) {
+                            console.error('❌ Error updating profile:', updateError);
+                            alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
+                            return;
+                        }
+                        
+                        console.log('✅ Profile updated successfully');
+                        alert('✅ Contrat uploadé avec succès !');
+                        
+                        await loadUserProfile();
+                        render();
+                    });
+                } else {
+                    console.warn('⚠️ Contract form not found');
+                }
             } else if (currentUser && !userProfile) {
                 console.log('⏳ User connected but no profile, waiting...');
                 app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement de votre profil...</div></div></div>';
@@ -1338,7 +1344,6 @@
         window.showAddLeadForm = showAddLeadForm;
         window.updateLeadStatus = updateLeadStatus;
         window.markAsSold = markAsSold;
-        window.handleContractSubmit = handleContractSubmit;
         window.togglePasswordVisibility = togglePasswordVisibility;
         window.validateName = validateName;
         window.validatePhone = validatePhone;
