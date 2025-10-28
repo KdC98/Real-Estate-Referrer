@@ -1,41 +1,88 @@
 {
   "privacy": {
     "title": "Patakaran sa Privacy",
-    "subtitle": "Real Estate Referral Program - Dubai, UAE",
-    "lastUpdated": "Huling na-update: Oktubre 20, 2025",
+    "subtitle": "Proteksyon ng iyong personal na data - Pagsunod sa GDPR",
+    "lastUpdated": "Huling na-update: Oktubre 28, 2025",
+    
+    "nav": {
+      "home": "Home",
+      "howItWorks": "Paano Gumagana",
+      "login": "Mag-login"
+    },
     
     "intro": {
       "title": "Panimula",
-      "p1": "Ang Real Estate Referrer (na tinukoy bilang \"kami\", \"amin\" o \"Platform\") ay nakatuon sa pagprotekta ng privacy at personal na data ng lahat ng mga gumagamit ng aming real estate referral platform.",
-      "p2": "Ipinalili walawa ng Patakaran sa Privacy na ito kung paano namin kinokolekta, ginagamit, ibinabahagi at pinoprotektahan ang inyong personal na impormasyon alinsunod sa General Data Protection Regulation (GDPR) at mga naaangkop na batas sa United Arab Emirates.",
-      "p3": "Sa paggamit ng aming platform, tinatanggap ninyo ang mga praktis na inilarawan sa patakarang ito."
+      "p1": "Ang Patakaran sa Privacy na ito ay naglalarawan kung paano kinokolekta, ginagamit, ibinabahagi at pinoprotektahan ng Karyne de Clercq Real Estate ang iyong personal na impormasyon.",
+      "p2": "Sa paggamit ng aming serbisyo, tinatanggap mo ang mga gawing inilarawan sa patakarang ito.",
+      "p3": "Kami ay nakatuon sa pagprotekta ng iyong privacy ayon sa GDPR at mga batas ng United Arab Emirates."
     },
-
-    "nav": {
-      "home": "Home",
-      "howItWorks": "Paano Ito Gumagana",
-      "login": "Mag-login"
+    
+    "section1": {
+      "title": "1. Kinokolektang Data",
+      "intro": "Kinokolekta namin ang sumusunod na data:",
+      "item1": "Registration data: pangalan, email, telepono, password",
+      "item2": "Lead data: impormasyon ng kliyente, badyet, uri ng ari-arian",
+      "item3": "Mga dokumento: nilagdaang mga kontrata (PDF)",
+      "item4": "Mga transaksyon: presyo ng pagbebenta, komisyon",
+      "item5": "Teknikal na data: IP, browser, wika"
     },
-
+    
+    "section2": {
+      "title": "2. Paggamit ng Data",
+      "intro": "Ang iyong data ay ginagamit para sa:",
+      "item1": "Pamahalaan ang iyong account at mga lead",
+      "item2": "Kalkulahin at bayaran ang iyong mga komisyon",
+      "item3": "Magpadala sa iyo ng mahahalagang abiso",
+      "item4": "Sumunod sa mga regulasyon ng RERA Dubai",
+      "item5": "Pahusayin ang aming serbisyo"
+    },
+    
+    "section3": {
+      "title": "3. Pagbabahagi ng Data",
+      "intro": "Hindi namin kailanman ibinebenta ang iyong data. Limitadong pagbabahagi:",
+      "item1": "✓ Sa real estate agent para iproseso ang iyong mga lead",
+      "item2": "✓ Legal na awtoridad kung kinakailangan ng batas (RERA)",
+      "item3": "✓ Mga teknikal na provider (Vercel, Supabase)",
+      "item4": "✗ Hindi kailanman ibinebenta sa marketing third parties"
+    },
+    
+    "section4": {
+      "title": "4. Ang Iyong mga Karapatan sa GDPR",
+      "intro": "May karapatan ka na:",
+      "item1": "I-access ang iyong data",
+      "item2": "Itama ang iyong impormasyon",
+      "item3": "Tanggalin ang iyong data",
+      "item4": "I-export ang iyong data",
+      "item5": "Tumuol sa processing",
+      "contact": "Makipag-ugnayan sa privacy@real-estate-referrer.com para gamitin ang iyong mga karapatan (tugon sa loob ng 30 araw)"
+    },
+    
+    "section5": {
+      "title": "5. Makipag-ugnayan",
+      "responsible": "Data Controller",
+      "coordinates": "Impormasyon sa Pakikipag-ugnayan"
+    },
+    
+    "cta": {
+      "title": "May mga tanong tungkol sa iyong data?",
+      "subtitle": "Huwag mag-atubiling makipag-ugnayan sa amin. Tugon sa loob ng maximum na 30 araw.",
+      "button": "Makipag-ugnayan sa Amin"
+    },
+    
     "footer": {
       "title": "Real Estate Referrer",
+      "tagline": "Real estate referral program sa Dubai",
       "navigation": "Nabigasyon",
-      "legal": "Legal",
-      "contact": "Makipag-ugnayan",
       "home": "Home",
-      "howItWorks": "Paano Ito Gumagana",
+      "howItWorks": "Paano Gumagana",
       "loginLink": "Mag-login",
       "signup": "Mag-sign Up",
+      "legal": "Legal",
       "terms": "Mga Tuntunin",
       "privacy": "Privacy",
-      "contract": "Contract Template",
+      "contract": "Template ng Kontrata",
+      "contact": "Makipag-ugnayan",
       "copyright": "© 2025 Karyne de Clercq. Lahat ng karapatan ay nakalaan."
-    },
-
-    "cta": {
-      "questions": "May mga tanong tungkol sa inyong data?",
-      "subtitle": "Huwag mag-atubiling makipag-ugnayan sa amin para sa anumang mga tanong tungkol sa pagproseso ng inyong personal na data.",
-      "button": "Makipag-ugnayan Sa Amin"
     }
   }
 }
