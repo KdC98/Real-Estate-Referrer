@@ -1,41 +1,88 @@
 {
   "privacy": {
     "title": "隐私政策",
-    "subtitle": "房地产推荐计划（迪拜，阿联酋）",
-    "lastUpdated": "最后更新：2025年10月20日",
-
-    "intro": {
-      "title": "简介",
-      "p1": "Real Estate Referrer（以下简称“我们”、“我们的”或“平台”）致力于保护所有使用我们房地产推荐平台的用户的隐私和个人数据。",
-      "p2": "本隐私政策说明我们如何根据《通用数据保护条例》（GDPR）以及阿拉伯联合酋长国的相关法律收集、使用、共享和保护您的个人信息。",
-      "p3": "使用我们的平台，即表示您接受本政策中所述的做法。"
-    },
-
+    "subtitle": "保护您的个人数据 - GDPR 合规",
+    "lastUpdated": "最后更新：2025年10月28日",
+    
     "nav": {
       "home": "首页",
       "howItWorks": "工作原理",
       "login": "登录"
     },
-
+    
+    "intro": {
+      "title": "简介",
+      "p1": "本隐私政策描述了 Karyne de Clercq Real Estate 如何收集、使用、共享和保护您的个人信息。",
+      "p2": "使用我们的服务，即表示您接受本政策中描述的做法。",
+      "p3": "我们承诺根据GDPR和阿拉伯联合酋长国法律保护您的隐私。"
+    },
+    
+    "section1": {
+      "title": "1. 收集的数据",
+      "intro": "我们收集以下数据：",
+      "item1": "注册数据：姓名、电子邮件、电话、密码",
+      "item2": "潜在客户数据：客户信息、预算、房产类型",
+      "item3": "文件：签署的合同（PDF）",
+      "item4": "交易：销售价格、佣金",
+      "item5": "技术数据：IP、浏览器、语言"
+    },
+    
+    "section2": {
+      "title": "2. 数据使用",
+      "intro": "您的数据用于：",
+      "item1": "管理您的账户和潜在客户",
+      "item2": "计算和支付您的佣金",
+      "item3": "向您发送重要通知",
+      "item4": "遵守RERA迪拜法规",
+      "item5": "改进我们的服务"
+    },
+    
+    "section3": {
+      "title": "3. 数据共享",
+      "intro": "我们从不出售您的数据。有限共享：",
+      "item1": "✓ 与房地产经纪人共享以处理您的潜在客户",
+      "item2": "✓ 如法律要求，与法律机构共享（RERA）",
+      "item3": "✓ 与技术提供商共享（Vercel、Supabase）",
+      "item4": "✗ 从不出售给营销第三方"
+    },
+    
+    "section4": {
+      "title": "4. 您的GDPR权利",
+      "intro": "您有权：",
+      "item1": "访问您的数据",
+      "item2": "更正您的信息",
+      "item3": "删除您的数据",
+      "item4": "导出您的数据",
+      "item5": "反对处理",
+      "contact": "联系 privacy@real-estate-referrer.com 行使您的权利（30天内回复）"
+    },
+    
+    "section5": {
+      "title": "5. 联系我们",
+      "responsible": "数据控制者",
+      "coordinates": "联系信息"
+    },
+    
+    "cta": {
+      "title": "对您的数据有疑问？",
+      "subtitle": "请随时与我们联系。最多30天内回复。",
+      "button": "联系我们"
+    },
+    
     "footer": {
       "title": "Real Estate Referrer",
+      "tagline": "迪拜房地产推荐计划",
       "navigation": "导航",
-      "legal": "法律",
-      "contact": "联系我们",
       "home": "首页",
       "howItWorks": "工作原理",
       "loginLink": "登录",
       "signup": "注册",
+      "legal": "法律",
       "terms": "条款",
       "privacy": "隐私",
       "contract": "合同模板",
-      "copyright": "© 2025 Karyne de Clercq 版权所有。"
-    },
-
-    "cta": {
-      "questions": "对您的个人数据有疑问吗？",
-      "subtitle": "如果您对我们处理您的个人数据有任何疑问，请随时与我们联系。",
-      "button": "联系我们"
+      "contact": "联系",
+      "copyright": "© 2025 Karyne de Clercq。版权所有。"
     }
   }
 }
