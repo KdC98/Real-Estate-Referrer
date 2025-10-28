@@ -1,174 +1,31 @@
 {
-  "referrer": {
-    "title": "Referrer Dashboard",
-    "stats": {
-      "totalEarnings": "Total Earnings",
-      "activeLeads": "Active Leads",
-      "closedSales": "Closed Sales",
-      "currency": "AED"
-    },
-    "actions": {
-      "addLead": "Add Lead",
-      "refresh": "Refresh",
-      "logout": "Logout"
-    },
-    "table": {
-      "title": "My Leads",
-      "headers": {
-        "client": "Client",
-        "property": "Property",
-        "budget": "Budget",
-        "status": "Status",
-        "commission": "Commission"
-      },
-      "empty": "No leads yet",
-      "emptyDesc": "Start adding leads to earn commissions!"
-    },
-    "status": {
-      "nouveau": "New",
-      "visite": "Viewing",
-      "offre": "Offer",
-      "vendu": "Sold",
-      "perdu": "Lost"
-    },
-    "propertyTypes": {
-      "apartment": "Apartment",
-      "villa": "Villa",
-      "penthouse": "Penthouse",
-      "townhouse": "Townhouse",
-      "office": "Office",
-      "shop": "Shop",
-      "land": "Land"
-    }
-  },
-  "admin": {
-    "title": "Admin Dashboard",
-    "stats": {
-      "totalReferrers": "Referrers",
-      "activeLeads": "Active Leads",
-      "totalSales": "Total Sales",
-      "commissionsEarned": "Commissions Earned",
-      "commissionsPaid": "Commissions Paid",
-      "currency": "AED"
-    },
-    "tabs": {
-      "leads": "Leads",
-      "contracts": "Contracts",
-      "referrers": "Referrers"
-    },
-    "actions": {
-      "markSold": "Mark as Sold",
-      "viewDetails": "View Details",
-      "downloadContract": "Download Contract",
-      "refresh": "Refresh",
-      "logout": "Logout"
-    },
-    "table": {
-      "headers": {
-        "referrer": "Referrer",
-        "client": "Client",
-        "property": "Property",
-        "budget": "Budget",
-        "status": "Status",
-        "commission": "Commission",
-        "actions": "Actions"
-      },
-      "empty": "No leads",
-      "contractStatus": {
-        "pending": "Pending",
-        "signed": "Signed",
-        "expired": "Expired"
-      }
-    }
-  },
-  "modal": {
-    "addLead": {
-      "title": "Add New Lead",
-      "subtitle": "Fill in the client information",
-      "form": {
-        "leadType": {
-          "label": "Lead Type",
-          "sale": "Sale",
-          "rent": "Rent"
-        },
-        "clientName": {
-          "label": "Client Name",
-          "placeholder": "e.g. Ahmed Al Maktoum"
-        },
-        "clientEmail": {
-          "label": "Client Email",
-          "placeholder": "ahmed@example.com"
-        },
-        "clientPhone": {
-          "label": "Phone Number",
-          "placeholder": "+971 50 123 4567"
-        },
-        "propertyType": {
-          "label": "Property Type",
-          "placeholder": "Select a type"
-        },
-        "budget": {
-          "label": "Budget (AED)",
-          "placeholder": "e.g. 1500000"
-        },
-        "annualRent": {
-          "label": "Annual Rent (AED)",
-          "placeholder": "e.g. 80000"
-        },
-        "notes": {
-          "label": "Additional Notes",
-          "placeholder": "Additional information..."
-        }
-      },
-      "buttons": {
-        "cancel": "Cancel",
-        "submit": "Add Lead"
-      }
-    },
-    "markSold": {
-      "title": "Mark as Sold",
-      "subtitle": "Enter the final sale price",
-      "form": {
-        "salePrice": {
-          "label": "Sale Price (AED)",
-          "placeholder": "e.g. 1500000"
-        },
-        "closedAt": {
-          "label": "Closing Date"
-        }
-      },
-      "commission": {
-        "title": "Commission Breakdown",
-        "total": "Total Commission (2%)",
-        "agent": "Agent Share (50%)",
-        "referrer": "Referrer Commission (20%)"
-      },
-      "buttons": {
-        "cancel": "Cancel",
-        "confirm": "Confirm Sale"
-      }
-    }
-  },
-  "messages": {
-    "success": {
-      "leadAdded": "Lead added successfully!",
-      "leadUpdated": "Lead updated!",
-      "leadMarkedSold": "Lead marked as sold!",
-      "statusChanged": "Status changed successfully!"
-    },
-    "error": {
-      "general": "An error occurred",
-      "loadingFailed": "Failed to load data",
-      "invalidData": "Invalid data",
-      "required": "This field is required",
-      "invalidEmail": "Invalid email",
-      "invalidPhone": "Invalid phone number",
-      "invalidBudget": "Invalid budget"
-    },
-    "validation": {
-      "minBudget": "Budget must be greater than 0",
-      "maxBudget": "Budget cannot exceed 100 million AED",
-      "phoneFormat": "Format: +971 XX XXX XXXX"
-    }
-  }
+  "dashboard_title": "Referrer Dashboard",
+  "welcome": "Welcome",
+  "my_stats": "My Statistics",
+  "total_earnings": "Total Earnings",
+  "active_leads": "Active Leads",
+  "closed_sales": "Closed Sales",
+  "add_lead": "Add Lead",
+  "my_leads": "My Leads",
+  "client_name": "Client Name",
+  "property_type": "Property Type",
+  "budget": "Budget",
+  "status": "Status",
+  "commission": "Commission",
+  "no_leads": "No leads yet",
+  "start_adding": "Start adding leads to earn commissions!",
+  "logout": "Logout",
+  "contract_required": "Contract Required",
+  "contract_warning_message": "You must download and sign the referrer agreement before adding leads.",
+  "upload_contract_now": "Upload my contract now",
+  "contract_required_to_add_lead": "You must upload your signed contract before adding leads.",
+  "download_contract_template": "Download blank contract",
+  "upload_instructions": "Download, print, sign and scan the contract, then upload it below.",
+  "choose_file": "Choose file",
+  "submit_contract": "Submit signed contract",
+  "contract_pending": "Contract pending validation",
+  "contract_pending_message": "Your contract has been submitted and is being validated by the administrator.",
+  "contract_approved": "Contract approved",
+  "contract_rejected": "Contract rejected",
+  "contract_rejected_message": "Your contract has been rejected. Please download it again with the necessary corrections."
 }
