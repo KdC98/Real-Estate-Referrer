@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Apporteur | Real Estate Referrer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/i18next@23.7.6/dist/umd/i18next.min.js"></script>
+    <script src="https://unpkg.com/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <nav class="bg-white shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-600" data-i18n="dashboard_title">Tableau de bord Apporteur</h1>
+            <div class="flex items-center gap-4">
+                <select id="language-selector" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="fr">🇫🇷 Français</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="ar">🇦🇪 العربية</option>
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="hi">🇮🇳 हिन्दी</option>
+                    <option value="ur">🇵🇰 اردو</option>
+                    <option value="zh">🇨🇳 中文</option>
+                    <option value="tl">🇵🇭 Tagalog</option>
+                </select>
+                <button id="logout-btn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <span data-i18n="logout">Déconnexion</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- BANNIÈRE D'AVERTISSEMENT CONTRAT -->
+        <div id="contract-warning" class="hidden mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-md">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div class="ml-3 flex-1">
+                    <h3 class="text-lg font-semibold text-red-800" data-i18n="contract_required">
+                        Contrat requis
+                    </h3>
+                    <p class="mt-1 text-sm text-red-700" data-i18n="contract_warning_message">
+                        Vous devez télécharger et signer le contrat d'apporteur d'affaires avant de pouvoir ajouter des leads.
+                    </p>
+                    <div class="mt-4">
+                        <a href="contract-upload.html" 
+                           class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors">
+                            <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span data-i18n="upload_contract_now">Uploader mon contrat maintenant</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                <span data-i18n="welcome">Bienvenue</span>, <span id="user-name"></span>!
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
+                    <h3 class="text-sm text-green-700 font-semibold mb-2" data-i18n="total_earnings">Gains totaux</h3>
+                    <p class="text-3xl font-bold text-green-600"><span id="total-earnings">0</span> AED</p>
+                </div>
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
+                    <h3 class="text-sm text-blue-700 font-semibold mb-2" data-i18n="active_leads">Leads actifs</h3>
+                    <p class="text-3xl font-bold text-blue-600" id="active-leads-count">0</p>
+                </div>
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg">
+                    <h3 class="text-sm text-purple-700 font-semibold mb-2" data-i18n="closed_sales">Ventes conclues</h3>
+                    <p class="text-3xl font-bold text-purple-600" id="closed-sales-count">0</p>
+                </div>
+            </div>
+
+            <button id="add-lead-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all mb-6">
+                <span data-i18n="add_lead">Ajouter un lead</span>
+            </button>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4" data-i18n="my_leads">Mes leads</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="px-4 py-2 text-left" data-i18n="client_name">Nom du client</th>
+                            <th class="px-4 py-2 text-left" data-i18n="property_type">Type de propriété</th>
+                            <th class="px-4 py-2 text-left" data-i18n="budget">Budget</th>
+                            <th class="px-4 py-2 text-left" data-i18n="status">Statut</th>
+                            <th class="px-4 py-2 text-left" data-i18n="commission">Commission</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-table">
+                        <tr>
+                            <td colspan="5" class="text-center py-8 text-gray-500">
+                                <p class="text-lg" data-i18n="no_leads">Aucun lead pour le moment</p>
+                                <p class="text-sm" data-i18n="start_adding">Commencez à ajouter des leads pour gagner des commissions !</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="lead-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg p-8 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4" data-i18n="add_lead">Ajouter un lead</h2>
+            <form id="lead-form">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2" data-i18n="client_name">Nom du client</label>
+                    <input type="text" id="client-name" required class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Email</label>
+                    <input type="email" id="client-email" required class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2">Téléphone</label>
+                    <input type="tel" id="client-phone" required class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2" data-i18n="property_type">Type de propriété</label>
+                    <select id="property-type" required class="w-full px-3 py-2 border rounded-lg">
+                        <option value="apartment">Appartement</option>
+                        <option value="villa">Villa</option>
+                        <option value="townhouse">Townhouse</option>
+                        <option value="penthouse">Penthouse</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2" data-i18n="budget">Budget (AED)</label>
+                    <input type="number" id="budget" required class="w-full px-3 py-2 border rounded-lg">
+                </div>
+                <div class="flex gap-4">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+                        Soumettre
+                    </button>
+                    <button type="button" id="cancel-lead" class="bg-gray-300 hover:bg-gray-400 px-6 py-2 rounded-lg">
+                        Annuler
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MjkxNjEsImV4cCI6MjA0NDUwNTE2MX0.kHGJ6d1wMUFdL_JpRuZNJJ1u9hBfJVHQZnHxgDQ8oP0';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let hasValidContract = false;
+
+        async function initI18n() {
+            await i18next
+                .use(i18nextHttpBackend)
+                .init({
+                    lng: localStorage.getItem('language') || 'fr',
+                    fallbackLng: 'fr',
+                    debug: false,
+                    backend: {
+                        loadPath: '/locales/{{lng}}/{{ns}}.json'
+                    },
+                    ns: ['translation', 'auth', 'dashboard'],
+                    defaultNS: 'translation'
+                });
+            
+            updateContent();
+        }
+
+        function updateContent() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const translation = i18next.t(key);
+                if (element.tagName === 'INPUT' && element.type === 'submit') {
+                    element.value = translation;
+                } else {
+                    element.textContent = translation;
+                }
+            });
+        }
+
+        document.getElementById('language-selector').addEventListener('change', async (e) => {
+            const newLang = e.target.value;
+            localStorage.setItem('language', newLang);
+            await i18next.changeLanguage(newLang);
+            updateContent();
+        });
+
+        async function checkAuth() {
+            const { data: { user }, error } = await supabase.auth.getUser();
+            
+            if (error || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('name, role')
+                .eq('id', user.id)
+                .single();
+
+            if (profile && profile.role === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+                return;
+            }
+
+            document.getElementById('user-name').textContent = profile?.name || user.email;
+
+            const { data: contractStatus } = await supabase
+                .from('contract_status')
+                .select('status')
+                .eq('user_id', user.id)
+                .single();
+
+            hasValidContract = contractStatus && contractStatus.status === 'approved';
+
+            if (!hasValidContract) {
+                document.getElementById('contract-warning').classList.remove('hidden');
+                document.getElementById('add-lead-btn').disabled = true;
+                document.getElementById('add-lead-btn').classList.add('opacity-50', 'cursor-not-allowed');
+            }
+
+            loadLeads();
+        }
+
+        async function loadLeads() {
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            const { data: leads, error } = await supabase
+                .from('leads')
+                .select('*')
+                .eq('referrer_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error loading leads:', error);
+                return;
+            }
+
+            const activeLeads = leads.filter(l => l.status !== 'vendu' && l.status !== 'loué');
+            const closedSales = leads.filter(l => l.status === 'vendu' || l.status === 'loué');
+            const totalEarnings = leads.reduce((sum, lead) => sum + (lead.referrer_commission || 0), 0);
+
+            document.getElementById('active-leads-count').textContent = activeLeads.length;
+            document.getElementById('closed-sales-count').textContent = closedSales.length;
+            document.getElementById('total-earnings').textContent = totalEarnings.toLocaleString();
+
+            const tableBody = document.getElementById('leads-table');
+            
+            if (leads.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-gray-500">
+                            <p class="text-lg" data-i18n="no_leads">Aucun lead pour le moment</p>
+                            <p class="text-sm" data-i18n="start_adding">Commencez à ajouter des leads pour gagner des commissions !</p>
+                        </td>
+                    </tr>
+                `;
+                updateContent();
+                return;
+            }
+
+            tableBody.innerHTML = leads.map(lead => {
+                const statusColors = {
+                    'nouveau': 'bg-blue-100 text-blue-800',
+                    'visite': 'bg-yellow-100 text-yellow-800',
+                    'offre': 'bg-orange-100 text-orange-800',
+                    'vendu': 'bg-green-100 text-green-800',
+                    'loué': 'bg-purple-100 text-purple-800'
+                };
+
+                return `
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-2">${lead.client_name}</td>
+                        <td class="px-4 py-2">${lead.property_type}</td>
+                        <td class="px-4 py-2">${lead.budget?.toLocaleString()} AED</td>
+                        <td class="px-4 py-2">
+                            <span class="px-2 py-1 rounded-full text-xs ${statusColors[lead.status] || 'bg-gray-100 text-gray-800'}">
+                                ${lead.status}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2 font-semibold">${(lead.referrer_commission || 0).toLocaleString()} AED</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('add-lead-btn').addEventListener('click', (e) => {
+            if (e.target.disabled) {
+                alert(i18next.t('contract_required_to_add_lead', 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.'));
+                return;
+            }
+            
+            document.getElementById('lead-form-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('cancel-lead').addEventListener('click', () => {
+            document.getElementById('lead-form-modal').classList.add('hidden');
+            document.getElementById('lead-form').reset();
+        });
+
+        document.getElementById('lead-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const { data: { user } } = await supabase.auth.getUser();
+
+            const leadData = {
+                referrer_id: user.id,
+                client_name: document.getElementById('client-name').value,
+                client_email: document.getElementById('client-email').value,
+                client_phone: document.getElementById('client-phone').value,
+                property_type: document.getElementById('property-type').value,
+                budget: parseFloat(document.getElementById('budget').value),
+                status: 'nouveau'
+            };
+
+            const { error } = await supabase
+                .from('leads')
+                .insert([leadData]);
+
+            if (error) {
+                console.error('Error adding lead:', error);
+                alert('Erreur lors de l\'ajout du lead');
+                return;
+            }
+
+            document.getElementById('lead-form-modal').classList.add('hidden');
+            document.getElementById('lead-form').reset();
+            loadLeads();
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'login.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initI18n();
+            await checkAuth();
+            
+            const savedLang = localStorage.getItem('language') || 'fr';
+            document.getElementById('language-selector').value = savedLang;
+        });
+    </script>
+</body>
+</html>
