@@ -369,7 +369,9 @@
                 return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
             }
             const isAdmin = userProfile.role === 'admin';
+            const hasValidContract = userProfile.contract_status === 'signed' || userProfile.contract_status === 'approved';
             const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
+            
             return `
                 <div class="min-h-screen">
                     <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md">
@@ -386,43 +388,81 @@
                         </div>
                     </header>
                     <main class="container mx-auto px-4 py-8">
-                        ${userProfile.contract_status === 'signed' ? `
-                            <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
-                            ${!isAdmin ? `
-                                <div class="mb-6">
-                                    <button onclick="showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
-                                        ${t('dashboard:add_lead')}
-                                    </button>
+                        ${!hasValidContract && !isAdmin ? `
+                            <div class="mb-6 bg-red-900 bg-opacity-50 border-l-4 border-red-500 p-6 rounded-lg shadow-lg">
+                                <div class="flex items-start gap-4">
+                                    <div class="text-3xl">⚠️</div>
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold text-red-300 mb-2">${t('dashboard:contract_required')}</h3>
+                                        <p class="text-gray-300 mb-4">${t('dashboard:contract_warning_message')}</p>
+                                        <div class="flex gap-3 flex-wrap">
+                                            <button 
+                                                onclick="downloadContractTemplate()" 
+                                                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition inline-flex items-center"
+                                            >
+                                                📥 ${t('dashboard:download_contract_template')}
+                                            </button>
+                                            <button 
+                                                onclick="document.getElementById('contractUploadSection').scrollIntoView({behavior: 'smooth'})" 
+                                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+                                            >
+                                                ${t('dashboard:upload_contract_now')}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            ` : ''}
-                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                                <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
-                                <div id="leadsTable" class="overflow-x-auto"></div>
                             </div>
-                        ` : `
-                            <div class="bg-yellow-500 bg-opacity-20 border-2 border-yellow-500 rounded-xl p-8 text-center">
-                                <div class="text-4xl mb-4">📋</div>
-                                <h3 class="text-2xl font-bold mb-4">${t('dashboard:contract_required_title')}</h3>
-                                <p class="text-lg mb-6">${t('dashboard:contract_required_message')}</p>
-                                <!-- NOUVEAU : Bouton télécharger template -->
-                    <div class="mb-6">
-                        <button 
-                            onclick="downloadContractTemplate()" 
-                            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold transition inline-flex items-center"
-                        >
-                            <i class="fas fa-download mr-2"></i>
-                            ${t('dashboard:download_contract_template')}
-                        </button>
-                        <p class="text-sm text-gray-600 mt-2">${t('dashboard:download_instruction')}</p>
-                    </div>
-                                <form id="contractForm" class="max-w-md mx-auto">
-                                    <input type="file" id="contractFile" accept=".pdf" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none mb-4">
-                                    <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                                        ${t('dashboard:upload_contract')}
-                                    </button>
-                                </form>
+                        ` : ''}
+                        
+                        <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
+                        
+                        ${!isAdmin ? `
+                            <div class="mb-6">
+                                <button 
+                                    id="addLeadBtn"
+                                    onclick="showAddLeadForm()" 
+                                    ${!hasValidContract ? 'disabled' : ''}
+                                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition ${!hasValidContract ? 'opacity-50 cursor-not-allowed' : ''}"
+                                >
+                                    ${t('dashboard:add_lead')}
+                                </button>
                             </div>
-                        `}
+                        ` : ''}
+                        
+                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-8">
+                            <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
+                            <div id="leadsTable" class="overflow-x-auto"></div>
+                        </div>
+                        
+                        ${!hasValidContract && !isAdmin ? `
+                            <div id="contractUploadSection" class="bg-yellow-500 bg-opacity-20 border-2 border-yellow-500 rounded-xl p-8">
+                                <div class="text-center mb-6">
+                                    <div class="text-4xl mb-4">📋</div>
+                                    <h3 class="text-2xl font-bold mb-4">${t('dashboard:contract_required_title')}</h3>
+                                    <p class="text-lg mb-6">${t('dashboard:contract_required_message')}</p>
+                                </div>
+                                <div class="max-w-md mx-auto">
+                                    <div class="mb-6 text-center">
+                                        <button 
+                                            onclick="downloadContractTemplate()" 
+                                            class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold transition inline-flex items-center"
+                                        >
+                                            <i class="fas fa-download mr-2"></i>
+                                            ${t('dashboard:download_contract_template')}
+                                        </button>
+                                        <p class="text-sm text-gray-400 mt-2">${t('dashboard:upload_instructions')}</p>
+                                    </div>
+                                    <form id="contractForm">
+                                        <input type="file" id="contractFile" accept=".pdf" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none mb-4">
+                                        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                                            ${t('dashboard:submit_contract')}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </main>
+
                     </main>
                     <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
                         <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full">
@@ -742,6 +782,13 @@
             `;
         }
         function showAddLeadForm() {
+            // Vérifier si l'utilisateur a un contrat valide
+            const hasValidContract = userProfile?.contract_status === 'signed' || userProfile?.contract_status === 'approved';
+            if (!hasValidContract) {
+                alert(t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
+                return;
+            }
+            
             document.getElementById('addLeadModal').classList.remove('hidden');
             
             const form = document.getElementById('addLeadForm');
