@@ -808,9 +808,11 @@
             
             await loadDashboardContent();
         }
-
+        
         async function handleContractSubmit(e) {
             e.preventDefault();
+            console.log('📄 Starting contract upload...');
+            
             const fileInput = document.getElementById('contractFile');
             const file = fileInput.files[0];
             
@@ -819,30 +821,56 @@
                 return;
             }
             
-            const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-            const { error: uploadError } = await supabase.storage.from('contracts').upload(fileName, file);
-            
-            if (uploadError) {
-                console.error('Error uploading contract:', uploadError);
-                alert('Erreur lors de l\'upload du contrat');
+            // Validation du type de fichier (PDF uniquement)
+            if (file.type !== 'application/pdf') {
+                alert('Seuls les fichiers PDF sont acceptés');
                 return;
             }
             
+            // Validation de la taille (max 5MB)
+            const maxSize = 5 * 1024 * 1024; // 5MB en bytes
+            if (file.size > maxSize) {
+                alert('Le fichier est trop volumineux. Taille maximum : 5MB');
+                return;
+            }
+            
+            console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+            
+            // Création du nom de fichier : UUID_timestamp_nomOriginal.pdf
+            const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+            console.log('📄 Uploading to Storage with name:', fileName);
+            
+            const { data: uploadData, error: uploadError } = await supabase.storage
+                .from('contracts')
+                .upload(fileName, file);
+            
+            if (uploadError) {
+                console.error('❌ Error uploading contract:', uploadError);
+                alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
+                return;
+            }
+            
+            console.log('✅ File uploaded successfully to Storage');
+            
+            // Mise à jour du profil dans la base de données
             const { error: updateError } = await supabase.from('profiles').update({
                 contract_status: 'uploaded',
                 contract_file: fileName
             }).eq('id', currentUser.id);
             
             if (updateError) {
-                console.error('Error updating profile:', updateError);
-                alert('Erreur lors de la mise à jour du profil');
+                console.error('❌ Error updating profile:', updateError);
+                alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
                 return;
             }
             
+            console.log('✅ Profile updated successfully');
+            alert('✅ Contrat uploadé avec succès !');
+            
+            // Recharger le profil et l'interface
             await loadUserProfile();
             render();
         }
-
         async function loadUserProfile(user = null) {
             const targetUser = user || currentUser;
             console.log('🔍 loadUserProfile called for user:', targetUser?.id);
