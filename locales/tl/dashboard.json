@@ -1,174 +1,31 @@
 {
-  "referrer": {
-    "title": "Talaang Tagapag-refer",
-    "stats": {
-      "totalEarnings": "Kabuuang Kita",
-      "activeLeads": "Aktibong Mga Lead",
-      "closedSales": "Natapos na Benta",
-      "currency": "Dirham"
-    },
-    "actions": {
-      "addLead": "Magdagdag ng Lead",
-      "refresh": "I-refresh",
-      "logout": "Mag-logout"
-    },
-    "table": {
-      "title": "Aking Mga Lead",
-      "headers": {
-        "client": "Kliyente",
-        "property": "Ari-arian",
-        "budget": "Badyet",
-        "status": "Katayuan",
-        "commission": "Komisyon"
-      },
-      "empty": "Wala pang mga lead",
-      "emptyDesc": "Magsimulang magdagdag ng mga lead upang kumita ng komisyon!"
-    },
-    "status": {
-      "nouveau": "Bago",
-      "visite": "Pagtingin",
-      "offre": "Alok",
-      "vendu": "Nabenta",
-      "perdu": "Nawala"
-    },
-    "propertyTypes": {
-      "apartment": "Apartment",
-      "villa": "Villa",
-      "penthouse": "Penthouse",
-      "townhouse": "Townhouse",
-      "office": "Opisina",
-      "shop": "Tindahan",
-      "land": "Lupa"
-    }
-  },
-  "admin": {
-    "title": "Talaang Tagapamahala",
-    "stats": {
-      "totalReferrers": "Mga Tagapag-refer",
-      "activeLeads": "Aktibong Mga Lead",
-      "totalSales": "Kabuuang Benta",
-      "commissionsEarned": "Kinitang Komisyon",
-      "commissionsPaid": "Binayarang Komisyon",
-      "currency": "Dirham"
-    },
-    "tabs": {
-      "leads": "Mga Lead",
-      "contracts": "Mga Kontrata",
-      "referrers": "Mga Tagapag-refer"
-    },
-    "actions": {
-      "markSold": "Markahan Bilang Nabenta",
-      "viewDetails": "Tingnan ang Detalye",
-      "downloadContract": "I-download ang Kontrata",
-      "refresh": "I-refresh",
-      "logout": "Mag-logout"
-    },
-    "table": {
-      "headers": {
-        "referrer": "Tagapag-refer",
-        "client": "Kliyente",
-        "property": "Ari-arian",
-        "budget": "Badyet",
-        "status": "Katayuan",
-        "commission": "Komisyon",
-        "actions": "Mga Aksyon"
-      },
-      "empty": "Walang mga lead",
-      "contractStatus": {
-        "pending": "Nakabinbin",
-        "signed": "Nilagdaan",
-        "expired": "Nag-expire"
-      }
-    }
-  },
-  "modal": {
-    "addLead": {
-      "title": "Magdagdag ng Bagong Lead",
-      "subtitle": "Punan ang impormasyon ng kliyente",
-      "form": {
-        "leadType": {
-          "label": "Uri ng Lead",
-          "sale": "Benta",
-          "rent": "Paupa"
-        },
-        "clientName": {
-          "label": "Pangalan ng Kliyente",
-          "placeholder": "Halimbawa: Ahmed Al Maktoum"
-        },
-        "clientEmail": {
-          "label": "Email ng Kliyente",
-          "placeholder": "ahmed@example.com"
-        },
-        "clientPhone": {
-          "label": "Numero ng Telepono",
-          "placeholder": "+971 50 123 4567"
-        },
-        "propertyType": {
-          "label": "Uri ng Ari-arian",
-          "placeholder": "Pumili ng uri"
-        },
-        "budget": {
-          "label": "Badyet (Dirham)",
-          "placeholder": "Halimbawa: 1500000"
-        },
-        "annualRent": {
-          "label": "Taunang Upa (Dirham)",
-          "placeholder": "Halimbawa: 80000"
-        },
-        "notes": {
-          "label": "Karagdagang Tala",
-          "placeholder": "Karagdagang impormasyon..."
-        }
-      },
-      "buttons": {
-        "cancel": "Kanselahin",
-        "submit": "Idagdag ang Lead"
-      }
-    },
-    "markSold": {
-      "title": "Markahan Bilang Nabenta",
-      "subtitle": "Ilagay ang huling presyo ng benta",
-      "form": {
-        "salePrice": {
-          "label": "Presyo ng Benta (Dirham)",
-          "placeholder": "Halimbawa: 1500000"
-        },
-        "closedAt": {
-          "label": "Petsa ng Pagsasara"
-        }
-      },
-      "commission": {
-        "title": "Detalye ng Komisyon",
-        "total": "Kabuuang Komisyon (2%)",
-        "agent": "Bahagi ng Ahente (50%)",
-        "referrer": "Komisyon ng Tagapag-refer (20%)"
-      },
-      "buttons": {
-        "cancel": "Kanselahin",
-        "confirm": "Kumpirmahin ang Benta"
-      }
-    }
-  },
-  "messages": {
-    "success": {
-      "leadAdded": "Matagumpay na naidagdag ang lead!",
-      "leadUpdated": "Na-update ang lead!",
-      "leadMarkedSold": "Naimarkahan ang lead bilang nabenta!",
-      "statusChanged": "Matagumpay na nabago ang katayuan!"
-    },
-    "error": {
-      "general": "May naganap na pagkakamali",
-      "loadingFailed": "Nabigong mag-load ng datos",
-      "invalidData": "Hindi wastong datos",
-      "required": "Kinakailangan ang field na ito",
-      "invalidEmail": "Hindi wastong email",
-      "invalidPhone": "Hindi wastong numero ng telepono",
-      "invalidBudget": "Hindi wastong badyet"
-    },
-    "validation": {
-      "minBudget": "Ang badyet ay dapat na higit sa 0",
-      "maxBudget": "Ang badyet ay hindi maaaring lumampas sa 100 milyong Dirham",
-      "phoneFormat": "Pormat: +971 XX XXX XXXX"
-    }
-  }
+  "dashboard_title": "Dashboard ng Referrer",
+  "welcome": "Maligayang pagdating",
+  "my_stats": "Aking Estadistika",
+  "total_earnings": "Kabuuang Kita",
+  "active_leads": "Aktibong mga Lead",
+  "closed_sales": "Natapos na Benta",
+  "add_lead": "Magdagdag ng Lead",
+  "my_leads": "Aking mga Lead",
+  "client_name": "Pangalan ng Kliyente",
+  "property_type": "Uri ng Ari-arian",
+  "budget": "Badyet",
+  "status": "Katayuan",
+  "commission": "Komisyon",
+  "no_leads": "Wala pang mga lead",
+  "start_adding": "Magsimulang magdagdag ng mga lead upang kumita ng komisyon!",
+  "logout": "Mag-logout",
+  "contract_required": "Kinakailangan ang Kontrata",
+  "contract_warning_message": "Dapat mong i-download at pirmahan ang kasunduan ng referrer bago magdagdag ng mga lead.",
+  "upload_contract_now": "I-upload ang aking kontrata ngayon",
+  "contract_required_to_add_lead": "Dapat mong i-upload ang iyong nilagdaang kontrata bago magdagdag ng mga lead.",
+  "download_contract_template": "I-download ang blangkong kontrata",
+  "upload_instructions": "I-download, i-print, pirmahan at i-scan ang kontrata, pagkatapos ay i-upload ito sa ibaba.",
+  "choose_file": "Pumili ng file",
+  "submit_contract": "Isumite ang nilagdaang kontrata",
+  "contract_pending": "Kontrata ay naghihintay ng pagpapatunay",
+  "contract_pending_message": "Ang iyong kontrata ay naisumite na at pinag-aaralan ng administrator.",
+  "contract_approved": "Kontrata ay naaprubahan",
+  "contract_rejected": "Kontrata ay tinanggihan",
+  "contract_rejected_message": "Ang iyong kontrata ay tinanggihan. Mangyaring i-download ito muli kasama ang mga kinakailangang pagwawasto."
 }
