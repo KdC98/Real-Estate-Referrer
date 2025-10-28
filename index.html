@@ -673,122 +673,183 @@
                 }
             };
         }
-        async function loadDashboardContent() {
-            if (!userProfile) return;
-            
-            const isAdmin = userProfile.role === 'admin';
-            
-            let leads;
-            if (isAdmin) {
-                const { data, error } = await supabase.from('leads').select(`
-                    *,
-                    referrer:profiles!referrer_id(name)
-                `).order('created_at', { ascending: false });
-                if (error) {
-                    console.error('Error loading leads:', error);
-                    return;
-                }
-                leads = data;
-            } else {
-                const { data, error } = await supabase.from('leads').select('*').eq('referrer_id', currentUser.id).order('created_at', { ascending: false });
-                if (error) {
-                    console.error('Error loading leads:', error);
-                    return;
-                }
-                leads = data;
-            }
-            
-            const totalEarnings = leads.filter(l => l.status === 'vendu').reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
-            const activeLeads = leads.filter(l => l.status !== 'vendu').length;
-            const closedSales = leads.filter(l => l.status === 'vendu').length;
-            
-            document.getElementById('stats').innerHTML = `
-                ${isAdmin ? `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${leads.length}</div>
-                        <div class="text-gray-300">${t('dashboard:total_referrers')}</div>
-                    </div>
-                ` : `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard:total_earnings')}</div>
-                    </div>
-                `}
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                    <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
-                    <div class="text-gray-300">${t('dashboard:active_leads')}</div>
-                </div>
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                    <div class="text-3xl font-bold text-yellow-500">${closedSales}</div>
-                    <div class="text-gray-300">${t('dashboard:closed_sales')}</div>
-                </div>
-                ${isAdmin ? `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard:commissions_paid')}</div>
-                    </div>
-                ` : ''}
-            `;
-            
-            const statusColors = {
-                'nouveau': 'bg-blue-500',
-                'visite': 'bg-yellow-500',
-                'offre': 'bg-orange-500',
-                'vendu': 'bg-green-500'
-            };
-            
+        // ✅ FONCTION CORRIGÉE - À remplacer dans index.html
+// Remplace la fonction loadDashboardContent() existante (vers la ligne 1090)
+
+async function loadDashboardContent() {
+    if (!userProfile) return;
+    
+    const isAdmin = userProfile.role === 'admin';
+    
+    let leads;
+    let profiles = {};
+    
+    if (isAdmin) {
+        // ✅ CORRECTION: Charger les leads ET les profiles séparément
+        console.log('📊 Loading leads for admin...');
+        const { data: leadsData, error: leadsError } = await supabase
+            .from('leads')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (leadsError) {
+            console.error('❌ Error loading leads:', leadsError);
             document.getElementById('leadsTable').innerHTML = `
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-gray-700">
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:referrer')}</th>` : ''}
-                            <th class="text-left py-3 px-4">${t('dashboard:client_name')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:property_type')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:budget')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:status')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:commission')}</th>
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:actions')}</th>` : ''}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${leads.map(lead => `
-                            <tr class="border-b border-gray-700">
-                                ${isAdmin ? `<td class="py-3 px-4">${lead.referrer?.name || 'N/A'}</td>` : ''}
-                                <td class="py-3 px-4">${lead.client_name}</td>
-                                <td class="py-3 px-4">${t('dashboard:' + lead.property_type)}</td>
-                                <td class="py-3 px-4">${lead.budget?.toLocaleString()} AED</td>
-                                <td class="py-3 px-4">
-                                    ${isAdmin ? `
-                                        <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard:status_new')}</option>
-                                            <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard:status_visit')}</option>
-                                            <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard:status_offer')}</option>
-                                            <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard:status_sold')}</option>
-                                        </select>
-                                    ` : `
-                                        <span class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            ${t('dashboard:status_' + lead.status.replace('é', 'e'))}
-                                        </span>
-                                    `}
-                                </td>
-                                <td class="py-3 px-4 font-bold text-yellow-500">
-                                    ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
-                                </td>
-                                ${isAdmin ? `
-                                    <td class="py-3 px-4">
-                                        ${lead.status !== 'vendu' ? `
-                                            <button onclick="markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
-                                                ${t('dashboard:mark_sold')}
-                                            </button>
-                                        ` : '-'}
-                                    </td>
-                                ` : ''}
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
+                <div class="text-red-400 p-4">
+                    Erreur lors du chargement des leads: ${leadsError.message}
+                </div>
             `;
+            return;
         }
+        
+        console.log('✅ Leads loaded:', leadsData?.length);
+        
+        // Charger tous les profils
+        console.log('👥 Loading all profiles...');
+        const { data: profilesData, error: profilesError } = await supabase
+            .from('profiles')
+            .select('*');
+        
+        if (profilesError) {
+            console.error('❌ Error loading profiles:', profilesError);
+        } else {
+            console.log('✅ Profiles loaded:', profilesData?.length);
+            // Créer un dictionnaire id -> profile pour lookup rapide
+            profilesData.forEach(profile => {
+                profiles[profile.id] = profile;
+            });
+        }
+        
+        // Joindre les données côté client
+        leads = leadsData.map(lead => ({
+            ...lead,
+            referrer_name: profiles[lead.referrer_id]?.name || 'N/A'
+        }));
+        
+    } else {
+        // Pour les apporteurs, charger uniquement leurs leads
+        console.log('📊 Loading leads for referrer...');
+        const { data, error } = await supabase
+            .from('leads')
+            .select('*')
+            .eq('referrer_id', currentUser.id)
+            .order('created_at', { ascending: false });
+        
+        if (error) {
+            console.error('❌ Error loading leads:', error);
+            document.getElementById('leadsTable').innerHTML = `
+                <div class="text-red-400 p-4">
+                    Erreur lors du chargement des leads: ${error.message}
+                </div>
+            `;
+            return;
+        }
+        
+        console.log('✅ Leads loaded:', data?.length);
+        leads = data;
+    }
+    
+    // Calculer les statistiques
+    const totalEarnings = leads.filter(l => l.status === 'vendu').reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
+    const activeLeads = leads.filter(l => l.status !== 'vendu').length;
+    const closedSales = leads.filter(l => l.status === 'vendu').length;
+    
+    // Afficher les statistiques
+    document.getElementById('stats').innerHTML = `
+        ${isAdmin ? `
+            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                <div class="text-3xl font-bold text-yellow-500">${leads.length}</div>
+                <div class="text-gray-300">${t('dashboard:total_referrers')}</div>
+            </div>
+        ` : `
+            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+                <div class="text-gray-300">${t('dashboard:total_earnings')}</div>
+            </div>
+        `}
+        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+            <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
+            <div class="text-gray-300">${t('dashboard:active_leads')}</div>
+        </div>
+        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+            <div class="text-3xl font-bold text-yellow-500">${closedSales}</div>
+            <div class="text-gray-300">${t('dashboard:closed_sales')}</div>
+        </div>
+        ${isAdmin ? `
+            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+                <div class="text-gray-300">${t('dashboard:commissions_paid')}</div>
+            </div>
+        ` : ''}
+    `;
+    
+    // Couleurs des statuts
+    const statusColors = {
+        'nouveau': 'bg-blue-500',
+        'visite': 'bg-yellow-500',
+        'offre': 'bg-orange-500',
+        'vendu': 'bg-green-500'
+    };
+    
+    // Afficher le tableau des leads
+    document.getElementById('leadsTable').innerHTML = `
+        <table class="w-full">
+            <thead>
+                <tr class="border-b border-gray-700">
+                    ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:referrer')}</th>` : ''}
+                    <th class="text-left py-3 px-4">${t('dashboard:client_name')}</th>
+                    <th class="text-left py-3 px-4">${t('dashboard:property_type')}</th>
+                    <th class="text-left py-3 px-4">${t('dashboard:budget')}</th>
+                    <th class="text-left py-3 px-4">${t('dashboard:status')}</th>
+                    <th class="text-left py-3 px-4">${t('dashboard:commission')}</th>
+                    ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:actions')}</th>` : ''}
+                </tr>
+            </thead>
+            <tbody>
+                ${leads.length === 0 ? `
+                    <tr>
+                        <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
+                            ${t('dashboard:no_leads')}
+                        </td>
+                    </tr>
+                ` : leads.map(lead => `
+                    <tr class="border-b border-gray-700">
+                        ${isAdmin ? `<td class="py-3 px-4">${lead.referrer_name}</td>` : ''}
+                        <td class="py-3 px-4">${lead.client_name}</td>
+                        <td class="py-3 px-4">${t('dashboard:' + lead.property_type)}</td>
+                        <td class="py-3 px-4">${lead.budget?.toLocaleString()} AED</td>
+                        <td class="py-3 px-4">
+                            ${isAdmin ? `
+                                <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
+                                    <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard:status_new')}</option>
+                                    <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard:status_visit')}</option>
+                                    <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard:status_offer')}</option>
+                                    <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard:status_sold')}</option>
+                                </select>
+                            ` : `
+                                <span class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
+                                    ${t('dashboard:status_' + lead.status.replace('é', 'e'))}
+                                </span>
+                            `}
+                        </td>
+                        <td class="py-3 px-4 font-bold text-yellow-500">
+                            ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
+                        </td>
+                        ${isAdmin ? `
+                            <td class="py-3 px-4">
+                                ${lead.status !== 'vendu' ? `
+                                    <button onclick="markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
+                                        ${t('dashboard:mark_sold')}
+                                    </button>
+                                ` : '-'}
+                            </td>
+                        ` : ''}
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
         function showAddLeadForm() {
             // Vérifier si l'utilisateur a un contrat valide
             const hasValidContract = userProfile?.contract_status === 'signed' || userProfile?.contract_status === 'approved';
