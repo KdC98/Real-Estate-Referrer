@@ -173,7 +173,6 @@
                 </div>
             `;
         }
-
         function renderAuthPage(mode) {
             let title, buttonText, linkText, linkAction;
             
@@ -365,7 +364,6 @@
                 </div>
             `;
         }
-
         function renderDashboard() {
             if (!userProfile) {
                 return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
@@ -407,7 +405,7 @@
                                 <h3 class="text-2xl font-bold mb-4">${t('dashboard:contract_required_title')}</h3>
                                 <p class="text-lg mb-6">${t('dashboard:contract_required_message')}</p>
                                 <form id="contractForm" class="max-w-md mx-auto">
-                                    <input type="file" id="contractFile" accept=".pdf,.jpg,.jpeg,.png" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none mb-4">
+                                    <input type="file" id="contractFile" accept=".pdf" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none mb-4">
                                     <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
                                         ${t('dashboard:upload_contract')}
                                     </button>
@@ -461,35 +459,30 @@
                 </div>
             `;
         }
-
         function showLogin() {
             console.log('🔐 showLogin called');
             currentPage = 'auth-login';
             window.currentPage = 'auth-login';
             render();
         }
-
         function showSignup() {
             console.log('📝 showSignup called');
             currentPage = 'auth-signup';
             window.currentPage = 'auth-signup';
             render();
         }
-
         function showReset() {
             console.log('🔑 showReset called');
             currentPage = 'auth-reset';
             window.currentPage = 'auth-reset';
             render();
         }
-
         function backToHome() {
             console.log('🏠 backToHome called');
             currentPage = 'landing';
             window.currentPage = 'landing';
             render();
         }
-
         function prefillTestData() {
             if (document.getElementById('name')) {
                 document.getElementById('name').value = 'Test User';
@@ -508,7 +501,6 @@
                 console.log('✅ Données de test pré-remplies');
             }
         }
-
         function handleAuth(mode) {
             console.log(`🔧 handleAuth called for mode: ${mode}`);
             const form = document.getElementById('authForm');
@@ -599,7 +591,6 @@
                 }
             };
         }
-
         async function handleReset() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
@@ -623,7 +614,6 @@
                 }
             };
         }
-
         async function loadDashboardContent() {
             if (!userProfile) return;
             
@@ -740,7 +730,6 @@
                 </table>
             `;
         }
-
         function showAddLeadForm() {
             document.getElementById('addLeadModal').classList.remove('hidden');
             
@@ -771,7 +760,6 @@
                 await loadDashboardContent();
             };
         }
-
         async function updateLeadStatus(leadId, newStatus) {
             const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
             
@@ -783,7 +771,6 @@
             
             await loadDashboardContent();
         }
-
         async function markAsSold(leadId) {
             const salePrice = prompt('Prix de vente (AED):');
             if (!salePrice) return;
@@ -949,7 +936,6 @@
                 alert('Erreur lors de la déconnexion: ' + error.message);
             }
         }
-
         async function render() {
             console.log('🎨 RENDER called');
             console.log('- currentUser:', !!currentUser);
@@ -994,7 +980,6 @@
                 app.innerHTML = renderLandingPage();
             }
         }
-
         function validateName() {
             const nameInput = document.getElementById('name');
             const nameError = document.getElementById('nameError');
@@ -1028,7 +1013,6 @@
             checkFormValidity();
             return true;
         }
-
         function validatePhone() {
             const phoneInput = document.getElementById('phone');
             const phoneError = document.getElementById('phoneError');
@@ -1080,7 +1064,6 @@
             checkFormValidity();
             return true;
         }
-
         function validateEmail() {
             const emailInput = document.getElementById('email');
             const emailError = document.getElementById('emailError');
@@ -1107,7 +1090,6 @@
             checkFormValidity();
             return true;
         }
-
         function validatePassword() {
             const passwordInput = document.getElementById('password');
             const passwordError = document.getElementById('passwordError');
@@ -1206,7 +1188,6 @@
             checkFormValidity();
             return true;
         }
-
         function validateConfirmPassword() {
             const passwordInput = document.getElementById('password');
             const confirmPasswordInput = document.getElementById('confirmPassword');
@@ -1238,7 +1219,6 @@
             checkFormValidity();
             return true;
         }
-
         function checkFormValidity() {
             const submitButton = document.getElementById('submitButton');
             if (!submitButton) return;
@@ -1290,7 +1270,6 @@
                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
-
         function togglePasswordVisibility(fieldId, button) {
             const field = document.getElementById(fieldId);
             if (!field) return;
@@ -1303,7 +1282,6 @@
                 button.innerHTML = '<span class="text-xl">👁️</span>';
             }
         }
-
         // Exposer les fonctions globales
         window.showLogin = showLogin;
         window.showSignup = showSignup;
