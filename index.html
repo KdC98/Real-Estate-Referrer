@@ -412,7 +412,7 @@
                                             <!-- Colonne 2: Uploader le contrat signé -->
                                             <div class="bg-yellow-900 bg-opacity-30 p-4 rounded-lg">
                                                 <h4 class="font-bold text-yellow-300 mb-2">📤 Étape 2 : Uploader</h4>
-                                                <form id="contractForm">
+                                                <form id="contractForm" onsubmit="handleContractSubmit(event); return false;">
                                                     <input 
                                                         type="file" 
                                                         id="contractFile" 
@@ -1001,10 +1001,6 @@
                 window.currentPage = 'dashboard';
                 app.innerHTML = renderDashboard();
                 await loadDashboardContent();
-                const contractForm = document.getElementById('contractForm');
-                if (contractForm) {
-                    contractForm.addEventListener('submit', handleContractSubmit);
-                }
             } else if (currentUser && !userProfile) {
                 console.log('⏳ User connected but no profile, waiting...');
                 app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement de votre profil...</div></div></div>';
