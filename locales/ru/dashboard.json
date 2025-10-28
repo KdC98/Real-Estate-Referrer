@@ -1,174 +1,31 @@
 {
-  "referrer": {
-    "title": "Панель партнёра",
-    "stats": {
-      "totalEarnings": "Общий доход",
-      "activeLeads": "Активные клиенты",
-      "closedSales": "Закрытые сделки",
-      "currency": "дирхам"
-    },
-    "actions": {
-      "addLead": "Добавить клиента",
-      "refresh": "Обновить",
-      "logout": "Выйти"
-    },
-    "table": {
-      "title": "Мои клиенты",
-      "headers": {
-        "client": "Клиент",
-        "property": "Недвижимость",
-        "budget": "Бюджет",
-        "status": "Статус",
-        "commission": "Комиссия"
-      },
-      "empty": "Пока нет клиентов",
-      "emptyDesc": "Начните добавлять клиентов для получения комиссий!"
-    },
-    "status": {
-      "nouveau": "Новый",
-      "visite": "Просмотр",
-      "offre": "Предложение",
-      "vendu": "Продано",
-      "perdu": "Утерян"
-    },
-    "propertyTypes": {
-      "apartment": "Квартира",
-      "villa": "Вилла",
-      "penthouse": "Пентхаус",
-      "townhouse": "Таунхаус",
-      "office": "Офис",
-      "shop": "Магазин",
-      "land": "Земля"
-    }
-  },
-  "admin": {
-    "title": "Панель администратора",
-    "stats": {
-      "totalReferrers": "Партнёры",
-      "activeLeads": "Активные клиенты",
-      "totalSales": "Всего продаж",
-      "commissionsEarned": "Заработанные комиссии",
-      "commissionsPaid": "Выплаченные комиссии",
-      "currency": "дирхам"
-    },
-    "tabs": {
-      "leads": "Клиенты",
-      "contracts": "Контракты",
-      "referrers": "Партнёры"
-    },
-    "actions": {
-      "markSold": "Отметить как проданный",
-      "viewDetails": "Посмотреть детали",
-      "downloadContract": "Скачать контракт",
-      "refresh": "Обновить",
-      "logout": "Выйти"
-    },
-    "table": {
-      "headers": {
-        "referrer": "Партнёр",
-        "client": "Клиент",
-        "property": "Недвижимость",
-        "budget": "Бюджет",
-        "status": "Статус",
-        "commission": "Комиссия",
-        "actions": "Действия"
-      },
-      "empty": "Нет клиентов",
-      "contractStatus": {
-        "pending": "Ожидание",
-        "signed": "Подписан",
-        "expired": "Истёк"
-      }
-    }
-  },
-  "modal": {
-    "addLead": {
-      "title": "Добавить нового клиента",
-      "subtitle": "Заполните информацию о клиенте",
-      "form": {
-        "leadType": {
-          "label": "Тип клиента",
-          "sale": "Продажа",
-          "rent": "Аренда"
-        },
-        "clientName": {
-          "label": "Имя клиента",
-          "placeholder": "Например: Ахмед Аль Мактум"
-        },
-        "clientEmail": {
-          "label": "Email клиента",
-          "placeholder": "ahmed@example.com"
-        },
-        "clientPhone": {
-          "label": "Телефон",
-          "placeholder": "+971 50 123 4567"
-        },
-        "propertyType": {
-          "label": "Тип недвижимости",
-          "placeholder": "Выберите тип"
-        },
-        "budget": {
-          "label": "Бюджет (дирхам)",
-          "placeholder": "Например: 1500000"
-        },
-        "annualRent": {
-          "label": "Годовая аренда (дирхам)",
-          "placeholder": "Например: 80000"
-        },
-        "notes": {
-          "label": "Дополнительные заметки",
-          "placeholder": "Дополнительная информация..."
-        }
-      },
-      "buttons": {
-        "cancel": "Отменить",
-        "submit": "Добавить клиента"
-      }
-    },
-    "markSold": {
-      "title": "Отметить как проданный",
-      "subtitle": "Введите окончательную цену продажи",
-      "form": {
-        "salePrice": {
-          "label": "Цена продажи (дирхам)",
-          "placeholder": "Например: 1500000"
-        },
-        "closedAt": {
-          "label": "Дата закрытия"
-        }
-      },
-      "commission": {
-        "title": "Распределение комиссии",
-        "total": "Общая комиссия (2%)",
-        "agent": "Доля агента (50%)",
-        "referrer": "Комиссия партнёра (20%)"
-      },
-      "buttons": {
-        "cancel": "Отменить",
-        "confirm": "Подтвердить продажу"
-      }
-    }
-  },
-  "messages": {
-    "success": {
-      "leadAdded": "Клиент успешно добавлен!",
-      "leadUpdated": "Клиент обновлён!",
-      "leadMarkedSold": "Клиент отмечен как проданный!",
-      "statusChanged": "Статус успешно изменён!"
-    },
-    "error": {
-      "general": "Произошла ошибка",
-      "loadingFailed": "Не удалось загрузить данные",
-      "invalidData": "Неверные данные",
-      "required": "Это поле обязательно",
-      "invalidEmail": "Неверный email",
-      "invalidPhone": "Неверный номер телефона",
-      "invalidBudget": "Неверный бюджет"
-    },
-    "validation": {
-      "minBudget": "Бюджет должен быть больше 0",
-      "maxBudget": "Бюджет не может превышать 100 миллионов дирхам",
-      "phoneFormat": "Формат: +971 XX XXX XXXX"
-    }
-  }
+  "dashboard_title": "Панель реферера",
+  "welcome": "Добро пожаловать",
+  "my_stats": "Моя статистика",
+  "total_earnings": "Общий доход",
+  "active_leads": "Активные лиды",
+  "closed_sales": "Закрытые сделки",
+  "add_lead": "Добавить лид",
+  "my_leads": "Мои лиды",
+  "client_name": "Имя клиента",
+  "property_type": "Тип недвижимости",
+  "budget": "Бюджет",
+  "status": "Статус",
+  "commission": "Комиссия",
+  "no_leads": "Пока нет лидов",
+  "start_adding": "Начните добавлять лиды, чтобы зарабатывать комиссионные!",
+  "logout": "Выйти",
+  "contract_required": "Требуется контракт",
+  "contract_warning_message": "Вы должны скачать и подписать договор реферера перед добавлением лидов.",
+  "upload_contract_now": "Загрузить контракт сейчас",
+  "contract_required_to_add_lead": "Вы должны загрузить подписанный контракт перед добавлением лидов.",
+  "download_contract_template": "Скачать пустой контракт",
+  "upload_instructions": "Скачайте, распечатайте, подпишите и отсканируйте контракт, затем загрузите его ниже.",
+  "choose_file": "Выбрать файл",
+  "submit_contract": "Отправить подписанный контракт",
+  "contract_pending": "Контракт на проверке",
+  "contract_pending_message": "Ваш контракт отправлен и проверяется администратором.",
+  "contract_approved": "Контракт одобрен",
+  "contract_rejected": "Контракт отклонен",
+  "contract_rejected_message": "Ваш контракт был отклонен. Пожалуйста, загрузите его снова с необходимыми исправлениями."
 }
