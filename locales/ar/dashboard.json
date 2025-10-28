@@ -1,174 +1,31 @@
 {
-  "referrer": {
-    "title": "لوحة تحكم مُحيل الأعمال",
-    "stats": {
-      "totalEarnings": "إجمالي الأرباح",
-      "activeLeads": "العملاء النشطون",
-      "closedSales": "المبيعات المُنجزة",
-      "currency": "درهم"
-    },
-    "actions": {
-      "addLead": "إضافة عميل",
-      "refresh": "تحديث",
-      "logout": "تسجيل الخروج"
-    },
-    "table": {
-      "title": "عملائي",
-      "headers": {
-        "client": "العميل",
-        "property": "العقار",
-        "budget": "الميزانية",
-        "status": "الحالة",
-        "commission": "العمولة"
-      },
-      "empty": "لا يوجد عملاء بعد",
-      "emptyDesc": "ابدأ بإضافة عملاء لكسب العمولات!"
-    },
-    "status": {
-      "nouveau": "جديد",
-      "visite": "زيارة",
-      "offre": "عرض",
-      "vendu": "مُباع",
-      "perdu": "ضائع"
-    },
-    "propertyTypes": {
-      "apartment": "شقة",
-      "villa": "فيلا",
-      "penthouse": "بنتهاوس",
-      "townhouse": "تاون هاوس",
-      "office": "مكتب",
-      "shop": "محل تجاري",
-      "land": "أرض"
-    }
-  },
-  "admin": {
-    "title": "لوحة تحكم المسؤول",
-    "stats": {
-      "totalReferrers": "مُحيلو الأعمال",
-      "activeLeads": "العملاء النشطون",
-      "totalSales": "إجمالي المبيعات",
-      "commissionsEarned": "العمولات المكتسبة",
-      "commissionsPaid": "العمولات المدفوعة",
-      "currency": "درهم"
-    },
-    "tabs": {
-      "leads": "العملاء",
-      "contracts": "العقود",
-      "referrers": "مُحيلو الأعمال"
-    },
-    "actions": {
-      "markSold": "تحديد كمُباع",
-      "viewDetails": "عرض التفاصيل",
-      "downloadContract": "تحميل العقد",
-      "refresh": "تحديث",
-      "logout": "تسجيل الخروج"
-    },
-    "table": {
-      "headers": {
-        "referrer": "مُحيل الأعمال",
-        "client": "العميل",
-        "property": "العقار",
-        "budget": "الميزانية",
-        "status": "الحالة",
-        "commission": "العمولة",
-        "actions": "الإجراءات"
-      },
-      "empty": "لا يوجد عملاء",
-      "contractStatus": {
-        "pending": "قيد الانتظار",
-        "signed": "موقّع",
-        "expired": "منتهي الصلاحية"
-      }
-    }
-  },
-  "modal": {
-    "addLead": {
-      "title": "إضافة عميل جديد",
-      "subtitle": "املأ معلومات العميل",
-      "form": {
-        "leadType": {
-          "label": "نوع العميل",
-          "sale": "بيع",
-          "rent": "إيجار"
-        },
-        "clientName": {
-          "label": "اسم العميل",
-          "placeholder": "مثال: أحمد المكتوم"
-        },
-        "clientEmail": {
-          "label": "البريد الإلكتروني",
-          "placeholder": "ahmed@example.com"
-        },
-        "clientPhone": {
-          "label": "رقم الهاتف",
-          "placeholder": "٠٥٠ ١٢٣ ٤٥٦٧ ٩٧١+"
-        },
-        "propertyType": {
-          "label": "نوع العقار",
-          "placeholder": "اختر نوعاً"
-        },
-        "budget": {
-          "label": "الميزانية (درهم)",
-          "placeholder": "مثال: ١٥٠٠٠٠٠"
-        },
-        "annualRent": {
-          "label": "الإيجار السنوي (درهم)",
-          "placeholder": "مثال: ٨٠٠٠٠"
-        },
-        "notes": {
-          "label": "ملاحظات إضافية",
-          "placeholder": "معلومات إضافية..."
-        }
-      },
-      "buttons": {
-        "cancel": "إلغاء",
-        "submit": "إضافة العميل"
-      }
-    },
-    "markSold": {
-      "title": "تحديد كمُباع",
-      "subtitle": "أدخل سعر البيع النهائي",
-      "form": {
-        "salePrice": {
-          "label": "سعر البيع (درهم)",
-          "placeholder": "مثال: ١٥٠٠٠٠٠"
-        },
-        "closedAt": {
-          "label": "تاريخ الإغلاق"
-        }
-      },
-      "commission": {
-        "title": "تفصيل العمولات",
-        "total": "إجمالي العمولة (٢٪)",
-        "agent": "حصة الوكيل (٥٠٪)",
-        "referrer": "عمولة المُحيل (٢٠٪)"
-      },
-      "buttons": {
-        "cancel": "إلغاء",
-        "confirm": "تأكيد البيع"
-      }
-    }
-  },
-  "messages": {
-    "success": {
-      "leadAdded": "تمت إضافة العميل بنجاح!",
-      "leadUpdated": "تم تحديث العميل!",
-      "leadMarkedSold": "تم تحديد العميل كمُباع!",
-      "statusChanged": "تم تغيير الحالة بنجاح!"
-    },
-    "error": {
-      "general": "حدث خطأ",
-      "loadingFailed": "فشل تحميل البيانات",
-      "invalidData": "بيانات غير صحيحة",
-      "required": "هذا الحقل مطلوب",
-      "invalidEmail": "بريد إلكتروني غير صحيح",
-      "invalidPhone": "رقم هاتف غير صحيح",
-      "invalidBudget": "ميزانية غير صحيحة"
-    },
-    "validation": {
-      "minBudget": "يجب أن تكون الميزانية أكبر من ٠",
-      "maxBudget": "لا يمكن أن تتجاوز الميزانية ١٠٠ مليون درهم",
-      "phoneFormat": "الشكل: ٩٧١+ XX XXX XXXX"
-    }
-  }
+  "dashboard_title": "لوحة تحكم المُحيل",
+  "welcome": "مرحباً",
+  "my_stats": "إحصائياتي",
+  "total_earnings": "إجمالي الأرباح",
+  "active_leads": "العملاء المحتملون النشطون",
+  "closed_sales": "المبيعات المكتملة",
+  "add_lead": "إضافة عميل محتمل",
+  "my_leads": "عملائي المحتملون",
+  "client_name": "اسم العميل",
+  "property_type": "نوع العقار",
+  "budget": "الميزانية",
+  "status": "الحالة",
+  "commission": "العمولة",
+  "no_leads": "لا يوجد عملاء محتملون حتى الآن",
+  "start_adding": "ابدأ بإضافة عملاء محتملين لكسب العمولات!",
+  "logout": "تسجيل الخروج",
+  "contract_required": "العقد مطلوب",
+  "contract_warning_message": "يجب عليك تنزيل وتوقيع اتفاقية المُحيل قبل إضافة العملاء المحتملين.",
+  "upload_contract_now": "تحميل العقد الآن",
+  "contract_required_to_add_lead": "يجب عليك تحميل العقد الموقع قبل إضافة العملاء المحتملين.",
+  "download_contract_template": "تنزيل العقد الفارغ",
+  "upload_instructions": "قم بتنزيل العقد وطباعته وتوقيعه ومسحه ضوئياً، ثم قم بتحميله أدناه.",
+  "choose_file": "اختر الملف",
+  "submit_contract": "إرسال العقد الموقع",
+  "contract_pending": "العقد قيد المراجعة",
+  "contract_pending_message": "تم إرسال عقدك وهو قيد المراجعة من قبل المسؤول.",
+  "contract_approved": "تمت الموافقة على العقد",
+  "contract_rejected": "تم رفض العقد",
+  "contract_rejected_message": "تم رفض عقدك. يرجى تنزيله مرة أخرى مع التصحيحات اللازمة."
 }
