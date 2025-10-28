@@ -249,7 +249,9 @@ Loyer annuel : 100,000 AED
 
 **Objectif** : 80% de l'application traduite
 
-### **🟡 PRIORITÉ 3 - Sécurité RLS (avant lancement public)**
+### **🟡 PRIORITÉ 3 - Sécurité (avant lancement public)**
+
+#### **A. Réactiver Row Level Security (RLS)**
 
 **Réactiver Row Level Security** avec fonction PostgreSQL pour éviter récursion :
 
@@ -272,6 +274,55 @@ ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 -- (Politiques détaillées dans le README original v2.1.0)
 ```
 
+#### **B. 🆕 Implémenter 2FA (Two-Factor Authentication)**
+
+**Service** : Itooki.fr (SMS)  
+**Durée estimée** : 1-2 jours
+
+**Étapes d'implémentation** :
+1. [ ] Créer compte sur Itooki.fr
+2. [ ] Obtenir clés API Itooki
+3. [ ] Ajouter colonne `phone_verified` et `two_factor_enabled` dans table `profiles`
+4. [ ] Créer fonction d'envoi de code SMS via API Itooki
+5. [ ] Ajouter page/modal de vérification de code
+6. [ ] Modifier flux de connexion pour inclure 2FA si activé
+7. [ ] Créer paramètre dans dashboard pour activer/désactiver 2FA
+8. [ ] Tester avec numéros UAE (+971)
+
+**Avantages 2FA** :
+- ✅ Sécurité renforcée pour les comptes
+- ✅ Protection contre le vol de mot de passe
+- ✅ Conformité avec les meilleures pratiques de sécurité
+- ✅ Confiance accrue des apporteurs
+
+**Configuration Itooki.fr** :
+```javascript
+// À implémenter dans index.html
+const ITOOKI_API_URL = 'https://api.itooki.fr/v1/sms';
+const ITOOKI_API_KEY = 'VOTRE_CLE_API';
+
+async function sendVerificationCode(phoneNumber) {
+  const code = Math.floor(100000 + Math.random() * 900000); // 6 digits
+  const message = `Votre code de vérification Real Estate Referrer : ${code}`;
+  
+  const response = await fetch(ITOOKI_API_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${ITOOKI_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      to: phoneNumber,
+      message: message
+    })
+  });
+  
+  return code; // Stocker dans session temporaire
+}
+```
+
+**Note** : Le 2FA peut être optionnel au début, puis obligatoire pour admin après la phase bêta.
+
 ### **🟢 PRIORITÉ 4 - Conformité RERA & Légal (3-4 semaines)**
 
 **Avant lancement public** :
@@ -286,6 +337,7 @@ ALTER TABLE leads ENABLE ROW LEVEL SECURITY;
 
 - [ ] Tester avec 2-3 apporteurs bêta
 - [ ] Valider workflow complet (inscription → contrat → leads → commission)
+- [ ] Tester 2FA avec différents opérateurs UAE (Etisalat, Du)
 - [ ] Corrections bugs identifiés
 
 ---
@@ -324,6 +376,15 @@ SELECT
 FROM profiles p
 WHERE contract_status != 'pending'
 ORDER BY p.created_at DESC;
+
+-- Vérifier statut 2FA des utilisateurs
+SELECT 
+  name,
+  phone,
+  phone_verified,
+  two_factor_enabled
+FROM profiles
+WHERE role = 'referrer';
 ```
 
 ---
@@ -365,12 +426,17 @@ Le système multilingue utilise :
 ### **2. RLS désactivé**
 - **Status** : ⚠️ Connu, acceptable en développement
 - **Impact** : Tous les utilisateurs authentifiés peuvent voir toutes les données
-- **Solution** : Réactiver avec fonction PostgreSQL (PRIORITÉ 3)
+- **Solution** : Réactiver avec fonction PostgreSQL (PRIORITÉ 3A)
 
 ### **3. Traductions incomplètes**
 - **Status** : ⏳ En cours (70% fait)
 - **Pages restantes** : Dashboard, how-it-works, terms, contract
 - **Solution** : Création des JSON manquants (PRIORITÉ 2)
+
+### **4. 2FA non implémenté**
+- **Status** : 📋 Sur la roadmap (PRIORITÉ 3B)
+- **Impact** : Sécurité de base OK, mais 2FA recommandé pour production
+- **Solution** : Intégration Itooki.fr SMS
 
 ---
 
@@ -389,6 +455,7 @@ Le système multilingue utilise :
 - ✅ Page privacy.html complète avec 5 sections RGPD
 - ✅ Traductions complètes en 8 langues pour privacy.html
 - 🔴 Identification problème contrat "otp_expired"
+- 📋 Ajout 2FA Itooki.fr dans la todolist
 
 **v3.0.0** (20-27 octobre 2025)
 - ✅ Implémentation système multilingue i18next
@@ -422,7 +489,7 @@ Le système multilingue utilise :
 **Ce qui doit être corrigé en priorité** :
 1. 🔴 Système de contrat (download + upload)
 2. 🟡 Finaliser traductions (80% objectif)
-3. 🟡 Réactiver RLS avant production publique
+3. 🟡 Réactiver RLS + Implémenter 2FA avant production publique
 4. 🟢 Conformité RERA avant lancement
 
 **État général** : Application fonctionnelle à 85%, prête pour tests internes, corrections nécessaires avant lancement public.
@@ -431,4 +498,4 @@ Le système multilingue utilise :
 
 **📅 Prochaine session : Correction du système de contrat**
 
-_Document créé le 28 octobre 2025 - Version 3.5.0_
+_Document mis à jour le 28 octobre 2025 - Version 3.5.0 - Ajout 2FA_
