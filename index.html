@@ -771,8 +771,12 @@
                     
                     if (error) throw error;
                     
-                    console.log('✅ Password updated successfully');
-                    alert('✅ Mot de passe changé avec succès !');
+                     console.log('✅ Password updated successfully');
+            
+            // ✅ Réinitialiser le flag
+            isPasswordRecoveryMode = false;
+            
+            alert('✅ Mot de passe changé avec succès !');
                     
                     await supabase.auth.signOut();
                     showLogin();
@@ -1567,11 +1571,13 @@
         window.prefillTestData = prefillTestData;
         window.render = render;
         window.handleChangePassword = handleChangePassword;
-        
-        console.log('⏳ Displaying initial loader');
+       console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         
         let initialLoadComplete = false;
+        
+        // ✅ Flag pour bloquer la connexion automatique pendant le reset
+        let isPasswordRecoveryMode = false;
         
         // ✅ CRITIQUE - Détection PASSWORD_RECOVERY pour le reset password
         supabase.auth.onAuthStateChange(async (event, session) => {
@@ -1579,10 +1585,19 @@
             
             // ✅ NOUVEAU - Détection du reset password
             if (event === 'PASSWORD_RECOVERY') {
-                console.log('🔑 Password recovery detected - redirecting to change password');
+                console.log('🔑 Password recovery detected - blocking auto-login');
+                isPasswordRecoveryMode = true;
                 currentPage = 'change-password';
                 window.currentPage = 'change-password';
+                currentUser = session?.user || null;
+                window.currentUser = currentUser;
                 render();
+                return;
+            }
+            
+            // ✅ Si on est en mode recovery, ignorer les autres événements
+            if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
+                console.log('⚠️ Ignoring event during password recovery:', event);
                 return;
             }
             
