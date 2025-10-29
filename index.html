@@ -69,6 +69,9 @@
         let userProfile = null;
         let currentPage = 'landing';
         let isPasswordRecoveryMode = false;
+        let is2FAMode = false;
+        let tempUserId = null;
+        let tempUserProfile = null;
 
         window.currentUser = null;
         window.userProfile = null;
@@ -231,7 +234,39 @@
 
         function renderAuthPage(mode) {
             let title, buttonText, linkText, linkAction;
-            
+            if (is2FAMode) {
+    return `
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
+                <h2 class="text-3xl font-bold mb-6 text-center">${t('auth:two_factor.title')}</h2>
+                <p class="text-center mb-6 text-gray-300">${t('auth:two_factor.description')}</p>
+                
+                <form onsubmit="handle2FASubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">${t('auth:two_factor.code_label')}</label>
+                        <input 
+                            type="text" 
+                            id="code2fa"
+                            maxlength="6"
+                            pattern="[0-9]{6}"
+                            class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-yellow-400 text-white text-center text-2xl tracking-widest"
+                            placeholder="000000"
+                            required
+                        />
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition">
+                        ${t('auth:two_factor.verify_button')}
+                    </button>
+                    
+                    <button type="button" onclick="resend2FACode()" class="w-full text-yellow-400 hover:text-yellow-300 transition py-2">
+                        ${t('auth:two_factor.resend_button')}
+                    </button>
+                </form>
+            </div>
+        </div>
+    `;
+}
             if (mode === 'login') {
                 title = t('auth:login_title');
                 buttonText = t('auth:login_button');
@@ -742,7 +777,103 @@
                 }
             };
         }
+async function send2FACode(userId) {
+    try {
+        const { data: { session } } = await supabase.auth.getSession();
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify({ userId })
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.error || 'Erreur envoi SMS');
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Erreur send2FACode:', error);
+        alert(t('auth:errors.sms_failed'));
+        return false;
+    }
+}
 
+async function verify2FACode(code) {
+    try {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(code);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        
+        const { data: codes, error } = await supabase
+            .from('verification_codes')
+            .select('*')
+            .eq('user_id', tempUserId)
+            .eq('code_hash', codeHash)
+            .eq('used', false)
+            .gt('expires_at', new Date().toISOString())
+            .order('created_at', { ascending: false })
+            .limit(1);
+        
+        if (error) throw error;
+        
+        if (!codes || codes.length === 0) {
+            const { error: updateError } = await supabase
+                .from('verification_codes')
+                .update({ attempts: supabase.raw('attempts + 1') })
+                .eq('user_id', tempUserId)
+                .eq('used', false);
+            
+            return false;
+        }
+        
+        const { error: markError } = await supabase
+            .from('verification_codes')
+            .update({ used: true })
+            .eq('id', codes[0].id);
+        
+        if (markError) throw markError;
+        
+        currentUser = { id: tempUserId };
+        userProfile = tempUserProfile;
+        currentPage = tempUserProfile.role === 'admin' ? 'admin' : 'referrer';
+        is2FAMode = false;
+        tempUserId = null;
+        tempUserProfile = null;
+        
+        return true;
+    } catch (error) {
+        console.error('Erreur verify2FACode:', error);
+        return false;
+    }
+}
+
+async function handle2FASubmit(event) {
+    event.preventDefault();
+    const code = document.getElementById('code2fa').value;
+    
+    const isValid = await verify2FACode(code);
+    
+    if (isValid) {
+        render();
+    } else {
+        alert(t('auth:errors.invalid_2fa_code'));
+    }
+}
+
+async function resend2FACode() {
+    if (tempUserId) {
+        const success = await send2FACode(tempUserId);
+        if (success) {
+            alert(t('auth:two_factor.code_sent'));
+        }
+    }
+}
         async function handleChangePassword() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
@@ -1638,6 +1769,8 @@
         window.render = render;
         window.handleChangePassword = handleChangePassword;
         window.downloadContractTemplate = downloadContractTemplate;
+        window.handle2FASubmit = handle2FASubmit;
+        window.resend2FACode = resend2FACode;
 
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
@@ -1685,6 +1818,15 @@
                     userProfile = null;
                     window.userProfile = null;
                 }
+                else if (userProfile && userProfile.phone && userProfile.phone.trim() !== '') {
+        console.log('📱 Phone detected, activating 2FA mode');
+        tempUserId = currentUser.id;
+        tempUserProfile = userProfile;
+        is2FAMode = true;
+        currentUser = null;
+        userProfile = null;
+        await send2FACode(tempUserId);
+    }
             }
 
             render();
