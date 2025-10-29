@@ -288,7 +288,7 @@
                                 </div>
                             ` : ''}
                             
-                            <div ${mode === 'change-password' ? 'style="display:none"' : ''}>
+                            </div>
                                 <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
                                 <input 
                                     type="email" 
@@ -299,7 +299,7 @@
                                     ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
                                 >
                                 ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
-                            </div>
+                            <div>
                             
                             ${mode !== 'reset' ? `
                                 <div>
