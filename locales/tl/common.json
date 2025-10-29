@@ -1,0 +1,29 @@
+{
+  "loading": "Naglo-load...",
+  "error": "Error",
+  "success": "Tagumpay",
+  "save": "I-save",
+  "delete": "Tanggalin",
+  "edit": "I-edit",
+  "close": "Isara",
+  "yes": "Oo",
+  "no": "Hindi",
+  "submit": "Isumite",
+  "search": "Maghanap",
+  "footer": {
+    "navigation_title": "Nabigasyon",
+    "legal_title": "Legal",
+    "contact_title": "Kontakin",
+    "home": "Home",
+    "how_it_works": "Paano Gumagana",
+    "login": "Mag-login",
+    "signup": "Mag-sign Up",
+    "terms": "Mga Tuntunin",
+    "privacy": "Privacy",
+    "contract_template": "Template ng Kontrata",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "Dubai, UAE",
+    "copyright": "© 2025 Real Estate Referrer. Lahat ng karapatan ay nakalaan."
+  }
+}
