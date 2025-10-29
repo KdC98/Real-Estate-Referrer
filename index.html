@@ -22,11 +22,7 @@
     <div id="app"></div>
     <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    
     (async () => {
-        // ✅ AJOUT : Déclaration manquante
-        let isPasswordRecoveryMode = false;
-        
         await i18next
             .use(i18nextHttpBackend)
             .use(i18nextBrowserLanguageDetector)
@@ -44,11 +40,11 @@
                     caches: ['localStorage']
                 }
             });
-        
+
         console.log('🌐 Loading translations...');
         await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
         console.log('✅ All translations loaded!');
-        
+
         const t = (key) => i18next.t(key);
         async function changeLanguage(langCode) {
             try {
@@ -60,39 +56,1474 @@
             }
         }
         window.changeLanguage = changeLanguage;
-        
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         window.supabase = supabase;
-        
+
         let currentUser = null;
         let userProfile = null;
         let currentPage = 'landing';
-        
+
         window.currentUser = null;
         window.userProfile = null;
         window.currentPage = 'landing';
-        
-        // [Vos fonctions renderLandingPage, renderAuthPage, renderDashboard restent identiques]
-        // ... (le code reste le même jusqu'à la fonction checkFormValidity)
-        
+
+        function renderLandingPage() {
+            return `
+                <div class="min-h-screen">
+                    <header class="container mx-auto px-4 py-6">
+                        <div class="flex justify-between items-center">
+                            <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
+                            <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                                    <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
+                                    <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
+                                    <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
+                                    <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
+                                    <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
+                                    <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
+                                    <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
+                                    <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
+                                </div>
+                                <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
+                                <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
+                                <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
+                            </div>
+                        </div>
+                    </header>
+                    <main class="container mx-auto px-4 py-20">
+                        <div class="text-center mb-12">
+                            <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                                ${t('hero.title')}
+                            </h2>
+                            <p class="text-xl text-gray-300 mb-8">
+                                ${t('hero.subtitle')}
+                            </p>
+                            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
+                                ${t('hero.cta_button')}
+                            </button>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-6 my-16">
+                            <div class="rounded-xl overflow-hidden shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="rounded-xl overflow-hidden shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" alt="Dubai Marina" class="w-full h-64 object-cover">
+                            </div>
+                            <div class="rounded-xl overflow-hidden shadow-2xl">
+                                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-3 gap-8 mt-20">
+                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
+                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
+                                <div class="text-gray-300">${t('stats.commission_label')}</div>
+                            </div>
+                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
+                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.support_value')}</div>
+                                <div class="text-gray-300">${t('stats.support_label')}</div>
+                            </div>
+                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
+                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.timeline_value')}</div>
+                                <div class="text-gray-300">${t('stats.timeline_label')}</div>
+                            </div>
+                        </div>
+                        <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
+                            <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
+                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
+                                    <div class="space-y-3 text-gray-300">
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.sale_example_1_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_1_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.sale_example_2_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_2_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.sale_example_3_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_3_commission')}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
+                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
+                                    <div class="space-y-3 text-gray-300">
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.rental_example_1_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_1_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.rental_example_2_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_2_commission')}</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span>${t('gains.rental_example_3_property')}</span>
+                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_3_commission')}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                    
+                    <footer class="bg-gray-900 bg-opacity-80 backdrop-blur-md mt-20">
+                        <div class="container mx-auto px-4 py-12">
+                            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                                <div>
+                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.navigation_title')}</h3>
+                                    <ul class="space-y-2">
+                                        <li><button onclick="backToHome()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.home')}</button></li>
+                                        <li><a href="how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.how_it_works')}</a></li>
+                                        <li><button onclick="showLogin()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.login')}</button></li>
+                                        <li><button onclick="showSignup()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.signup')}</button></li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.legal_title')}</h3>
+                                    <ul class="space-y-2">
+                                        <li><a href="terms.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.terms')}</a></li>
+                                        <li><a href="privacy.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.privacy')}</a></li>
+                                        <li><button onclick="downloadContractTemplate()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.contract_template')}</button></li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.contact_title')}</h3>
+                                    <ul class="space-y-3 text-gray-300">
+                                        <li class="flex items-center gap-2">
+                                            <span>📧</span>
+                                            <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <span>📱</span>
+                                            <span>${t('common:footer.phone')}</span>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <span>📍</span>
+                                            <span>${t('common:footer.location')}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+                                ${t('common:footer.copyright')}
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            `;
+        }
+
+        function renderAuthPage(mode) {
+            let title, buttonText, linkText, linkAction;
+
+            if (mode === 'login') {
+                title = t('auth:login_title');
+                buttonText = t('auth:login_button');
+                linkText = t('auth:no_account');
+                linkAction = 'showSignup()';
+            } else if (mode === 'signup') {
+                title = t('auth:signup_title');
+                buttonText = t('auth:signup_button');
+                linkText = t('auth:have_account');
+                linkAction = 'showLogin()';
+            } else if (mode === 'reset') {
+                title = t('auth:reset_title');
+                buttonText = t('auth:reset_button');
+                linkText = t('auth:back_to_login');
+                linkAction = 'showLogin()';
+            } else if (mode === 'change-password') {
+                title = 'Nouveau mot de passe';
+                buttonText = 'Changer le mot de passe';
+                linkText = 'Retour à la connexion';
+                linkAction = 'showLogin()';
+            }
+
+            return `
+                <div class="min-h-screen flex items-center justify-center px-4">
+                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
+                        <button onclick="backToHome()" class="text-gray-400 hover:text-white mb-6 flex items-center">
+                            ← ${t('auth:back_home')}
+                        </button>
+                        <h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>
+                        <form id="authForm" class="space-y-4">
+                            ${mode === 'signup' ? `
+                                <div>
+                                    <label class="block mb-2 font-medium">${t('auth:name_label')}</label>
+                                    <input 
+                                        type="text" 
+                                        id="name" 
+                                        required 
+                                        minlength="2"
+                                        maxlength="100"
+                                        placeholder="John Doe"
+                                        class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                        oninput="validateName()"
+                                    >
+                                    <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
+                                </div>
+                                <div>
+                                    <label class="block mb-2 font-medium">${t('auth:phone_label')}</label>
+                                    <div class="relative">
+                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">+971</span>
+                                        <input 
+                                            type="tel" 
+                                            id="phone" 
+                                            required 
+                                            pattern="[0-9]{9}"
+                                            placeholder="505059595"
+                                            maxlength="9"
+                                            class="w-full pl-16 pr-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                            oninput="validatePhone()"
+                                        >
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-1">Format: 9 chiffres après +971 (ex: 501234567)</div>
+                                    <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
+                                </div>
+                            ` : ''}
+                            
+                            <div ${mode === 'change-password' ? 'style="display:none"' : ''}>
+                            </div>
+                                <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
+                                <input 
+                                    type="email" 
+                                    id="email" 
+                                    required 
+                                    placeholder="exemple@email.com"
+                                    class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                    ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
+                                >
+                                ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
+                            </div>
+                            <div>
+                            
+                            ${mode !== 'reset' ? `
+                                <div>
+                                    <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Nouveau mot de passe' : t('auth:password_label')}</label>
+                                    <div class="relative">
+                                        <input 
+                                            type="password" 
+                                            id="${mode === 'change-password' ? 'newPassword' : 'password'}" 
+                                            required 
+                                            minlength="8" 
+                                            placeholder="••••••••"
+                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
+                                            ${mode === 'signup' || mode === 'change-password' ? 'oninput="validatePassword()"' : ''}
+                                        >
+                                        <button 
+                                            type="button" 
+                                            onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" 
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                            aria-label="Afficher/masquer le mot de passe"
+                                        >
+                                            <span class="text-xl">👁️</span>
+                                        </button>
+                                    </div>
+                                    ${mode === 'signup' || mode === 'change-password' ? `
+                                        <div class="mt-2">
+                                            <div class="flex items-center gap-2 text-xs text-gray-400">
+                                                <div id="passwordStrength" class="flex-1 h-1.5 bg-gray-600 rounded-full overflow-hidden">
+                                                    <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300"></div>
+                                                </div>
+                                                <span id="passwordStrengthText" class="min-w-[60px]"></span>
+                                            </div>
+                                            <div class="text-xs text-gray-400 mt-1.5 space-y-0.5">
+                                                <div id="req-length" class="flex items-center gap-1">
+                                                    <span class="w-3">•</span>
+                                                    <span>Minimum 8 caractères</span>
+                                                </div>
+                                                <div id="req-letter" class="flex items-center gap-1">
+                                                    <span class="w-3">•</span>
+                                                    <span>Au moins une lettre</span>
+                                                </div>
+                                                <div id="req-number" class="flex items-center gap-1">
+                                                    <span class="w-3">•</span>
+                                                    <span>Au moins un chiffre</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ` : `<div class="text-sm text-gray-400 mt-1">${t('auth:password_hint')}</div>`}
+                                    <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
+                                </div>
+                            ` : ''}
+                            
+                            ${mode === 'signup' || mode === 'change-password' ? `
+                                <div>
+                                    <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Confirmer le nouveau mot de passe' : t('auth:confirm_password_label')}</label>
+                                    <div class="relative">
+                                        <input 
+                                            type="password" 
+                                            id="${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}" 
+                                            required 
+                                            minlength="8" 
+                                            placeholder="••••••••"
+                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
+                                            oninput="validateConfirmPassword()"
+                                        >
+                                        <button 
+                                            type="button" 
+                                            onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" 
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                            aria-label="Afficher/masquer la confirmation"
+                                        >
+                                            <span class="text-xl">👁️</span>
+                                        </button>
+                                    </div>
+                                    <div id="confirmPasswordError" class="text-red-400 text-sm mt-1 hidden"></div>
+                                    <div id="confirmPasswordSuccess" class="text-green-400 text-sm mt-1 hidden flex items-center gap-1">
+                                        <span>✓</span>
+                                        <span>Les mots de passe correspondent</span>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            
+                            ${mode === 'login' ? `
+                                <div class="text-right">
+                                    <button type="button" onclick="showReset()" class="text-yellow-400 hover:text-yellow-300 text-sm transition-colors">
+                                        ${t('auth:forgot_password')}
+                                    </button>
+                                </div>
+                            ` : ''}
+                            
+                            <div id="authError" class="text-red-400 text-sm hidden bg-red-900/20 border border-red-500/50 rounded-lg p-3"></div>
+                            
+                            <button 
+                                type="submit" 
+                                id="submitButton"
+                                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                ${mode === 'signup' ? 'disabled' : ''}
+                            >
+                                ${buttonText}
+                            </button>
+                        </form>
+                        <p class="text-center mt-6 text-gray-400">
+                            <button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">
+                                ${linkText}
+                            </button>
+                        </p>
+                        ${mode === 'signup' ? `
+                            <div class="text-center mt-4">
+                                <button type="button" onclick="prefillTestData()" class="text-sm text-gray-400 hover:text-white border border-gray-600 px-3 py-1 rounded">
+                                    Remplir avec les données de test
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ✅ FIN PARTIE 1 - Continue avec PARTIE 2
+        // ✅ DÉBUT PARTIE 2 - Dashboard et fonctions
+
+        function renderDashboard() {
+            if (!userProfile) {
+                return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
+            }
+            const isAdmin = userProfile.role === 'admin';
+            const hasValidContract = userProfile.contract_status === 'signed' || userProfile.contract_status === 'approved';
+            const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
+
+            return `
+                <div class="min-h-screen">
+                    <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md">
+                        <div class="container mx-auto px-4 py-4">
+                            <div class="flex justify-between items-center">
+                                <h1 class="text-2xl font-bold text-yellow-400">${dashboardTitle}</h1>
+                                <div class="flex items-center gap-4">
+                                    <span class="text-gray-300">${userProfile.name}</span>
+                                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
+                                        ${t('dashboard:logout')}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <main class="container mx-auto px-4 py-8">
+                        ${!hasValidContract && !isAdmin ? `
+                            <div class="mb-6 bg-red-900 bg-opacity-50 border-l-4 border-red-500 p-6 rounded-lg shadow-lg">
+                                <div class="flex items-start gap-4">
+                                    <div class="text-3xl flex-shrink-0">⚠️</div>
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-bold text-red-300 mb-2">${t('dashboard:contract_required')}</h3>
+                                        <p class="text-gray-300 mb-4">${t('dashboard:contract_warning_message')}</p>
+                                        
+                                        <div class="grid md:grid-cols-2 gap-4">
+                                            <div class="bg-blue-900 bg-opacity-30 p-4 rounded-lg">
+                                                <h4 class="font-bold text-blue-300 mb-2">📥 Étape 1 : Télécharger</h4>
+                                                <p class="text-sm text-gray-300 mb-3">${t('dashboard:upload_instructions')}</p>
+                                                <button 
+                                                    onclick="downloadContractTemplate()" 
+                                                    class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition"
+                                                >
+                                                    ${t('dashboard:download_contract_template')}
+                                                </button>
+                                            </div>
+                                            
+                                            <div class="bg-yellow-900 bg-opacity-30 p-4 rounded-lg">
+                                                <h4 class="font-bold text-yellow-300 mb-2">📤 Étape 2 : Uploader</h4>
+                                                <form id="contractForm">
+                                                    <input 
+                                                        type="file" 
+                                                        id="contractFile" 
+                                                        accept=".pdf" 
+                                                        required 
+                                                        class="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none mb-3 text-sm"
+                                                    >
+                                                    <button 
+                                                        type="submit" 
+                                                        id="contractSubmitBtn"
+                                                        class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded-lg transition"
+                                                    >
+                                                        ${t('dashboard:submit_contract')}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
+                        
+                        ${!isAdmin ? `
+                            <div class="mb-6">
+                                <button 
+                                    id="addLeadBtn"
+                                    onclick="showAddLeadForm()" 
+                                    ${!hasValidContract ? 'disabled' : ''}
+                                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition ${!hasValidContract ? 'opacity-50 cursor-not-allowed' : ''}"
+                                >
+                                    ${t('dashboard:add_lead')}
+                                </button>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-8">
+                            <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
+                            <div id="leadsTable" class="overflow-x-auto"></div>
+                        </div>
+                    </main>
+                    
+                    <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                        <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full">
+                            <h3 class="text-2xl font-bold mb-6">${t('dashboard:add_lead')}</h3>
+                            <form id="addLeadForm" class="space-y-4">
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block mb-2">${t('dashboard:client_name')}</label>
+                                        <input type="text" id="clientName" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2">${t('dashboard:client_email')}</label>
+                                        <input type="email" id="clientEmail" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2">${t('dashboard:client_phone')}</label>
+                                        <input type="tel" id="clientPhone" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2">${t('dashboard:property_type')}</label>
+                                        <select id="propertyType" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                            <option value="">${t('dashboard:select_type')}</option>
+                                            <option value="sale_buyer">${t('dashboard:sale_buyer')}</option>
+                                            <option value="sale_seller">${t('dashboard:sale_seller')}</option>
+                                            <option value="rental_landlord">${t('dashboard:rental_landlord')}</option>
+                                            <option value="rental_tenant">${t('dashboard:rental_tenant')}</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block mb-2">${t('dashboard:budget')}</label>
+                                        <input type="number" id="budget" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                                        ${t('dashboard:add')}
+                                    </button>
+                                    <button type="button" onclick="document.getElementById('addLeadModal').classList.add('hidden')" class="flex-1 bg-gray-600 hover:bg-gray-700 py-3 rounded-lg transition">
+                                        ${t('dashboard:cancel')}
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showLogin() {
+            console.log('🔐 showLogin called');
+            currentPage = 'auth-login';
+            window.currentPage = 'auth-login';
+            render();
+        }
+
+        function showSignup() {
+            console.log('📝 showSignup called');
+            currentPage = 'auth-signup';
+            window.currentPage = 'auth-signup';
+            render();
+        }
+
+        function showReset() {
+            console.log('🔑 showReset called');
+            currentPage = 'auth-reset';
+            window.currentPage = 'auth-reset';
+            render();
+        }
+
+        function backToHome() {
+            console.log('🏠 backToHome called');
+            currentPage = 'landing';
+            window.currentPage = 'landing';
+            render();
+        }
+
+        function prefillTestData() {
+            if (document.getElementById('name')) {
+                document.getElementById('name').value = 'Test User';
+                document.getElementById('phone').value = '505059595';
+                document.getElementById('email').value = 'karyne@itooki.fr';
+                document.getElementById('password').value = 'wyqsuc-Necxur-Tpedpy';
+                document.getElementById('confirmPassword').value = 'wyqsuc-Necxur-Tpedpy';
+
+                validateName();
+                validatePhone();
+                validateEmail();
+                validatePassword();
+                validateConfirmPassword();
+
+                console.log('✅ Données de test pré-remplies');
+            }
+        }
+
+        function handleAuth(mode) {
+            console.log(`🔧 handleAuth called for mode: ${mode}`);
+            const form = document.getElementById('authForm');
+            const errorDiv = document.getElementById('authError');
+
+            if (errorDiv) {
+                errorDiv.textContent = '';
+                errorDiv.classList.add('hidden');
+            }
+
+            if (!form) {
+                console.error('❌ Form not found');
+                return;
+            }
+
+            console.log('✅ Form found, attaching handler');
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                console.log(`📤 Form submitted for ${mode}`);
+                errorDiv.classList.add('hidden');
+
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password')?.value;
+
+                try {
+                    if (mode === 'signup') {
+                        console.log('📝 Processing signup');
+
+                        const name = document.getElementById('name').value.trim();
+                        let phone = document.getElementById('phone').value.trim();
+
+                        phone = phone.replace(/[^\d]/g, '');
+                        if (phone.startsWith('971')) {
+                            phone = phone.substring(3);
+                        }
+                        if (phone.length > 9) {
+                            phone = phone.substring(0, 9);
+                        }
+
+                        const confirmPassword = document.getElementById('confirmPassword').value;
+
+                        if (!validateName()) throw new Error('Nom invalide');
+                        if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
+                        if (!validateEmail()) throw new Error('Email invalide');
+                        if (!validatePassword()) throw new Error('Mot de passe invalide');
+                        if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
+
+                        const fullPhone = '+971' + phone;
+                        const submitButton = document.getElementById('submitButton');
+                        submitButton.disabled = true;
+                        submitButton.textContent = 'Inscription en cours...';
+
+                        console.log('📤 Signup data:', { email, name, phone: fullPhone });
+
+                        const { data, error } = await supabase.auth.signUp({
+                            email,
+                            password,
+                            options: {
+                                data: { name, phone: fullPhone }
+                            }
+                        });
+
+                        if (error) throw error;
+                        console.log('✅ Signup successful');
+                        alert(t('auth:signup_success'));
+                        showLogin();
+
+                    } else if (mode === 'login') {
+                        console.log('🔐 Processing login');
+                        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                        if (error) throw error;
+                        console.log('✅ Login successful');
+                    }
+                } catch (error) {
+                    console.error('❌ Auth error:', error);
+
+                    let errorMessage = error.message;
+
+                    if (error.message.includes('Invalid login credentials')) {
+                        errorMessage = 'Email ou mot de passe incorrect';
+                    } else if (error.message.includes('Email not confirmed')) {
+                        errorMessage = 'Veuillez confirmer votre email avant de vous connecter';
+                    } else if (error.message.includes('User already registered')) {
+                        errorMessage = 'Cet email est déjà utilisé';
+                    } else if (error.message.includes('Password should be at least')) {
+                        errorMessage = 'Le mot de passe doit contenir au moins 8 caractères';
+                    }
+
+                    errorDiv.textContent = errorMessage;
+                    errorDiv.classList.remove('hidden');
+                    if (mode === 'signup') {
+                        const submitButton = document.getElementById('submitButton');
+                        submitButton.disabled = false;
+                        submitButton.textContent = t('auth:signup_button');
+                    }
+                }
+            };
+        }
+
+        async function handleReset() {
+            const form = document.getElementById('authForm');
+            const errorDiv = document.getElementById('authError');
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                errorDiv.classList.add('hidden');
+                const email = document.getElementById('email').value;
+
+                try {
+                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                        redirectTo: window.location.origin
+                    });
+                    if (error) throw error;
+                    alert(t('auth:reset_email_sent'));
+                    showLogin();
+                } catch (error) {
+                    console.error('Reset error:', error);
+                    errorDiv.textContent = error.message;
+                    errorDiv.classList.remove('hidden');
+                }
+            };
+        }
+
+        // ✅ NOUVELLE FONCTION - Fix reset password
+        async function handleChangePassword() {
+            const form = document.getElementById('authForm');
+            const errorDiv = document.getElementById('authError');
+
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                errorDiv.classList.add('hidden');
+
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmNewPassword').value;
+
+                if (newPassword !== confirmPassword) {
+                    errorDiv.textContent = 'Les mots de passe ne correspondent pas';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+
+                if (newPassword.length < 8) {
+                    errorDiv.textContent = 'Le mot de passe doit contenir au moins 8 caractères';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+
+                if (!/[a-zA-Z]/.test(newPassword)) {
+                    errorDiv.textContent = 'Le mot de passe doit contenir au moins une lettre';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+
+                if (!/[0-9]/.test(newPassword)) {
+                    errorDiv.textContent = 'Le mot de passe doit contenir au moins un chiffre';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+
+                try {
+                    console.log('🔑 Updating password...');
+                    const { error } = await supabase.auth.updateUser({ 
+                        password: newPassword 
+                    });
+
+                    if (error) throw error;
+
+                     console.log('✅ Password updated successfully');
+
+            // ✅ Réinitialiser le flag
+            isPasswordRecoveryMode = false;
+
+            alert('✅ Mot de passe changé avec succès !');
+
+                    await supabase.auth.signOut();
+                    showLogin();
+                } catch (error) {
+                    console.error('❌ Change password error:', error);
+                    errorDiv.textContent = error.message;
+                    errorDiv.classList.remove('hidden');
+                }
+            };
+        }
+
+        async function loadDashboardContent() {
+            if (!userProfile) return;
+
+            const isAdmin = userProfile.role === 'admin';
+
+            let leads;
+            let profiles = {};
+
+            if (isAdmin) {
+                console.log('📊 Loading leads for admin...');
+                const { data: leadsData, error: leadsError } = await supabase
+                    .from('leads')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (leadsError) {
+                    console.error('❌ Error loading leads:', leadsError);
+                    document.getElementById('leadsTable').innerHTML = `
+                        <div class="text-red-400 p-4">
+                            Erreur lors du chargement des leads: ${leadsError.message}
+                        </div>
+                    `;
+                    return;
+                }
+
+                console.log('✅ Leads loaded:', leadsData?.length);
+
+                console.log('👥 Loading all profiles...');
+                const { data: profilesData, error: profilesError } = await supabase
+                    .from('profiles')
+                    .select('*');
+
+                if (profilesError) {
+                    console.error('❌ Error loading profiles:', profilesError);
+                } else {
+                    console.log('✅ Profiles loaded:', profilesData?.length);
+                    profilesData.forEach(profile => {
+                        profiles[profile.id] = profile;
+                    });
+                }
+
+                leads = leadsData.map(lead => ({
+                    ...lead,
+                    referrer_name: profiles[lead.referrer_id]?.name || 'N/A'
+                }));
+
+            } else {
+                console.log('📊 Loading leads for referrer...');
+                const { data, error } = await supabase
+                    .from('leads')
+                    .select('*')
+                    .eq('referrer_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('❌ Error loading leads:', error);
+                    document.getElementById('leadsTable').innerHTML = `
+                        <div class="text-red-400 p-4">
+                            Erreur lors du chargement des leads: ${error.message}
+                        </div>
+                    `;
+                    return;
+                }
+
+                console.log('✅ Leads loaded:', data?.length);
+                leads = data;
+            }
+
+            const totalEarnings = leads.filter(l => l.status === 'vendu').reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
+            const activeLeads = leads.filter(l => l.status !== 'vendu').length;
+            const closedSales = leads.filter(l => l.status === 'vendu').length;
+
+            document.getElementById('stats').innerHTML = `
+                ${isAdmin ? `
+                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                        <div class="text-3xl font-bold text-yellow-500">${leads.length}</div>
+                        <div class="text-gray-300">${t('dashboard:total_referrers')}</div>
+                    </div>
+                ` : `
+                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+                        <div class="text-gray-300">${t('dashboard:total_earnings')}</div>
+                    </div>
+                `}
+                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                    <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
+                    <div class="text-gray-300">${t('dashboard:active_leads')}</div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                    <div class="text-3xl font-bold text-yellow-500">${closedSales}</div>
+                    <div class="text-gray-300">${t('dashboard:closed_sales')}</div>
+                </div>
+                ${isAdmin ? `
+                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
+                        <div class="text-gray-300">${t('dashboard:commissions_paid')}</div>
+                    </div>
+                ` : ''}
+            `;
+
+            const statusColors = {
+                'nouveau': 'bg-blue-500',
+                'visite': 'bg-yellow-500',
+                'offre': 'bg-orange-500',
+                'vendu': 'bg-green-500'
+            };
+
+            document.getElementById('leadsTable').innerHTML = `
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-gray-700">
+                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:referrer')}</th>` : ''}
+                            <th class="text-left py-3 px-4">${t('dashboard:client_name')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:property_type')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:budget')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:status')}</th>
+                            <th class="text-left py-3 px-4">${t('dashboard:commission')}</th>
+                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:actions')}</th>` : ''}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${leads.length === 0 ? `
+                            <tr>
+                                <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
+                                    ${t('dashboard:no_leads')}
+                                </td>
+                            </tr>
+                        ` : leads.map(lead => `
+                            <tr class="border-b border-gray-700">
+                                ${isAdmin ? `<td class="py-3 px-4">${lead.referrer_name}</td>` : ''}
+                                <td class="py-3 px-4">${lead.client_name}</td>
+                                <td class="py-3 px-4">${t('dashboard:' + lead.property_type)}</td>
+                                <td class="py-3 px-4">${lead.budget?.toLocaleString()} AED</td>
+                                <td class="py-3 px-4">
+                                    ${isAdmin ? `
+                                        <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
+                                            <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard:status_new')}</option>
+                                            <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard:status_visit')}</option>
+                                            <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard:status_offer')}</option>
+                                            <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard:status_sold')}</option>
+                                        </select>
+                                    ` : `
+                                        <span class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
+                                            ${t('dashboard:status_' + lead.status.replace('é', 'e'))}
+                                        </span>
+                                    `}
+                                </td>
+                                <td class="py-3 px-4 font-bold text-yellow-500">
+                                    ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
+                                </td>
+                                ${isAdmin ? `
+                                    <td class="py-3 px-4">
+                                        ${lead.status !== 'vendu' ? `
+                                            <button onclick="markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
+                                                ${t('dashboard:mark_sold')}
+                                            </button>
+                                        ` : '-'}
+                                    </td>
+                                ` : ''}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function showAddLeadForm() {
+            const hasValidContract = userProfile?.contract_status === 'signed' || userProfile?.contract_status === 'approved';
+            if (!hasValidContract) {
+                alert(t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
+                return;
+            }
+
+            document.getElementById('addLeadModal').classList.remove('hidden');
+
+            const form = document.getElementById('addLeadForm');
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+
+                const leadData = {
+                    referrer_id: currentUser.id,
+                    client_name: document.getElementById('clientName').value,
+                    client_email: document.getElementById('clientEmail').value,
+                    client_phone: document.getElementById('clientPhone').value,
+                    property_type: document.getElementById('propertyType').value,
+                    budget: parseFloat(document.getElementById('budget').value),
+                    status: 'nouveau'
+                };
+
+                const { error } = await supabase.from('leads').insert([leadData]);
+
+                if (error) {
+                    console.error('Error adding lead:', error);
+                    alert('Erreur lors de l\'ajout du lead');
+                    return;
+                }
+
+                document.getElementById('addLeadModal').classList.add('hidden');
+                form.reset();
+                await loadDashboardContent();
+            };
+        }
+
+        async function updateLeadStatus(leadId, newStatus) {
+            const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
+
+            if (error) {
+                console.error('Error updating status:', error);
+                alert('Erreur lors de la mise à jour du statut');
+                return;
+            }
+
+            await loadDashboardContent();
+        }
+
+        async function markAsSold(leadId) {
+            const salePrice = prompt('Prix de vente (AED):');
+            if (!salePrice) return;
+
+            const price = parseFloat(salePrice);
+            const agentCommission = price * 0.01;
+            const referrerCommission = agentCommission * 0.20;
+
+            const { error } = await supabase.from('leads').update({
+                status: 'vendu',
+                sale_price: price,
+                agent_commission: agentCommission,
+                referrer_commission: referrerCommission,
+                closed_at: new Date().toISOString()
+            }).eq('id', leadId);
+
+            if (error) {
+                console.error('Error marking as sold:', error);
+                alert('Erreur lors de la vente');
+                return;
+            }
+
+            await loadDashboardContent();
+        }
+
+        async function loadUserProfile(user = null) {
+            const targetUser = user || currentUser;
+            console.log('🔍 loadUserProfile called for user:', targetUser?.id);
+
+            if (!targetUser || !targetUser.id) {
+                console.error('❌ No user provided to loadUserProfile');
+                return false;
+            }
+
+            try {
+                console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
+                const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).single();
+
+                if (error) {
+                    console.error('❌ Error loading profile:', error);
+
+                    if (error.code === 'PGRST116') {
+                        console.log('📝 Profile does not exist, creating it...');
+                        const { data: newProfile, error: insertError } = await supabase.from('profiles').insert([{
+                            id: targetUser.id,
+                            name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
+                            phone: targetUser.user_metadata?.phone || '',
+                            role: 'referrer',
+                            contract_status: 'pending'
+                        }]).select().single();
+
+                        if (insertError) {
+                            console.error('❌ Error creating profile:', insertError);
+                            alert('Erreur lors de la création du profil: ' + insertError.message);
+                            return false;
+                        }
+
+                        console.log('✅ Profile created:', newProfile);
+                        userProfile = newProfile;
+                        window.userProfile = newProfile;
+                        return true;
+                    }
+
+                    alert('Erreur lors du chargement du profil: ' + error.message);
+                    return false;
+                }
+
+                console.log('✅ Profile data retrieved:', data);
+
+                if (data && data.contract_status) {
+                    data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
+                }
+
+                userProfile = data;
+                window.userProfile = data;
+                console.log('✅ userProfile set:', userProfile);
+                return true;
+            } catch (error) {
+                console.error('❌ Exception loading profile:', error);
+                alert('Exception lors du chargement du profil: ' + error.message);
+                return false;
+            }
+        }
+
+        window.loadUserProfile = loadUserProfile;
+
+        async function logout() {
+            console.log('🚪 Logout called');
+
+            const logoutBtn = document.querySelector('button[onclick="logout()"]');
+            if (logoutBtn) {
+                logoutBtn.disabled = true;
+                logoutBtn.textContent = 'Déconnexion...';
+            }
+
+            try {
+                console.log('🔓 Signing out from Supabase...');
+                const { error } = await supabase.auth.signOut();
+
+                if (error) {
+                    console.error('❌ Logout error:', error);
+                    alert('Erreur lors de la déconnexion: ' + error.message);
+                    if (logoutBtn) {
+                        logoutBtn.disabled = false;
+                        logoutBtn.textContent = 'Déconnexion';
+                    }
+                    return;
+                }
+
+                console.log('✅ Supabase signOut successful');
+
+                currentUser = null;
+                userProfile = null;
+                currentPage = 'landing';
+                window.currentUser = null;
+                window.userProfile = null;
+                window.currentPage = 'landing';
+
+                localStorage.removeItem('supabase.auth.token');
+
+                console.log('✅ Local state cleaned');
+                console.log('🏠 Redirecting to landing page...');
+
+                render();
+
+            } catch (error) {
+                console.error('❌ Logout exception:', error);
+                alert('Erreur lors de la déconnexion: ' + error.message);
+                if (logoutBtn) {
+                    logoutBtn.disabled = false;
+                    logoutBtn.textContent = 'Déconnexion';
+                }
+            }
+        }
+
+        // ✅ FIN PARTIE 2 - Continue avec PARTIE 3
+        // ✅ DÉBUT PARTIE 3 - Render, validation et PASSWORD_RECOVERY fix
+
+        async function render() {
+    console.log('🎨 RENDER called');
+    console.log('- currentUser:', !!currentUser);
+    console.log('- userProfile:', !!userProfile);
+    console.log('- currentPage:', currentPage);
+    console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
+
+    const app = document.getElementById('app');
+
+    // ✅ PRIORITÉ 1 : Si on est en mode reset password, afficher le formulaire
+    if (isPasswordRecoveryMode && currentPage === 'change-password') {
+        console.log('🔑 Password recovery mode - showing change password form');
+        app.innerHTML = renderAuthPage('change-password');
+        setTimeout(() => handleChangePassword(), 500);
+        return;
+    }
+
+    if (currentUser && userProfile) {
+        console.log('✅ User connected with profile, showing dashboard');
+        currentPage = 'dashboard';
+        window.currentPage = 'dashboard';
+        app.innerHTML = renderDashboard();
+        await loadDashboardContent();
+
+                if (userProfile.role !== 'admin') {
+                    const contractForm = document.getElementById('contractForm');
+                    if (contractForm) {
+                        console.log('✅ Contract form found, attaching submit handler');
+                        contractForm.addEventListener('submit', async (e) => {
+                            e.preventDefault();
+                            console.log('📄 Starting contract upload...');
+
+                            const fileInput = document.getElementById('contractFile');
+                            const file = fileInput.files[0];
+
+                            if (!file) {
+                                alert('Veuillez sélectionner un fichier');
+                                return;
+                            }
+
+                            if (file.type !== 'application/pdf') {
+                                alert('Seuls les fichiers PDF sont acceptés');
+                                return;
+                            }
+
+                            const maxSize = 5 * 1024 * 1024;
+                            if (file.size > maxSize) {
+                                alert('Le fichier est trop volumineux. Taille maximum : 5MB');
+                                return;
+                            }
+
+                            console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+
+                            const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+                            console.log('📄 Uploading to Storage with name:', fileName);
+
+                            const { data: uploadData, error: uploadError } = await supabase.storage
+                                .from('contracts')
+                                .upload(fileName, file);
+
+                            if (uploadError) {
+                                console.error('❌ Error uploading contract:', uploadError);
+                                alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
+                                return;
+                            }
+
+                            console.log('✅ File uploaded successfully to Storage');
+
+                            const { error: updateError } = await supabase.from('profiles').update({
+                                contract_status: 'uploaded',
+                                contract_file_url: fileName
+                            }).eq('id', currentUser.id);
+
+                            if (updateError) {
+                                console.error('❌ Error updating profile:', updateError);
+                                alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
+                                return;
+                            }
+
+                            console.log('✅ Profile updated successfully');
+                            alert('✅ Contrat uploadé avec succès !');
+
+                            await loadUserProfile();
+                            render();
+                        });
+                    } else {
+                        console.log('ℹ️ Contract form not found');
+                    }
+                } else {
+                    console.log('ℹ️ Admin user - no contract form needed');
+                }
+            } else if (currentUser && !userProfile) {
+                console.log('⏳ User connected but no profile, waiting...');
+                app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement de votre profil...</div></div></div>';
+            } else if (currentPage === 'auth-login') {
+                console.log('🔐 Rendering login page');
+                app.innerHTML = renderAuthPage('login');
+                setTimeout(() => {
+                    console.log('⏱️ Attempting to attach login handler');
+                    handleAuth('login');
+                }, 500);
+            } else if (currentPage === 'auth-signup') {
+                console.log('📝 Rendering signup page');
+                app.innerHTML = renderAuthPage('signup');
+                setTimeout(() => {
+                    console.log('⏱️ Attempting to attach signup handler');
+                    handleAuth('signup');
+                }, 500);
+            } else if (currentPage === 'auth-reset') {
+                console.log('🔑 Rendering reset page');
+                app.innerHTML = renderAuthPage('reset');
+                setTimeout(() => handleReset(), 500);
+            } else if (currentPage === 'change-password') {
+                console.log('🔑 Rendering change password page');
+                app.innerHTML = renderAuthPage('change-password');
+                setTimeout(() => handleChangePassword(), 500);
+            } else {
+                console.log('🏠 Rendering landing page');
+                app.innerHTML = renderLandingPage();
+            }
+        }
+
+        function validateName() {
+            const nameInput = document.getElementById('name');
+            const nameError = document.getElementById('nameError');
+            if (!nameInput || !nameError) return true;
+            const name = nameInput.value.trim();
+            if (name.length === 0) {
+                nameError.textContent = '';
+                nameError.classList.add('hidden');
+                nameInput.classList.remove('border-green-500', 'border-red-500');
+                return false;
+            }
+            if (name.length < 2) {
+                nameError.textContent = 'Le nom doit contenir au moins 2 caractères';
+                nameError.classList.remove('hidden');
+                nameInput.classList.add('border-red-500');
+                nameInput.classList.remove('border-green-500');
+                return false;
+            }
+            const nameRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
+            if (!nameRegex.test(name)) {
+                nameError.textContent = 'Le nom ne peut contenir que des lettres, espaces, tirets et apostrophes';
+                nameError.classList.remove('hidden');
+                nameInput.classList.add('border-red-500');
+                nameInput.classList.remove('border-green-500');
+                return false;
+            }
+            nameError.textContent = '';
+            nameError.classList.add('hidden');
+            nameInput.classList.remove('border-red-500');
+            nameInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+
+        function validatePhone() {
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            if (!phoneInput || !phoneError) return true;
+
+            let phone = phoneInput.value.trim();
+            phone = phone.replace(/^\+971\s*/, '');
+            phone = phone.replace(/\s/g, '');
+            phone = phone.replace(/-/g, '');
+
+            if (phone.length === 0) {
+                phoneError.textContent = '';
+                phoneError.classList.add('hidden');
+                phoneInput.classList.remove('border-green-500', 'border-red-500');
+                return false;
+            }
+
+            const phoneRegex = /^[0-9]{9}$/;
+            if (!phoneRegex.test(phone)) {
+                if (phone.length < 9) {
+                    phoneError.textContent = `Il manque ${9 - phone.length} chiffre(s)`;
+                } else {
+                    phoneError.textContent = 'Le numéro doit contenir exactement 9 chiffres';
+                }
+                phoneError.classList.remove('hidden');
+                phoneInput.classList.add('border-red-500');
+                phoneInput.classList.remove('border-green-500');
+                return false;
+            }
+
+            const validPrefixes = ['50', '52', '54', '55', '56', '58', '59', '2', '3', '4', '6', '7', '9'];
+            const prefix = phone.substring(0, 2);
+
+            if (!validPrefixes.includes(prefix) && !['2','3','4','6','7','9'].includes(phone.charAt(0))) {
+                phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56, 58, 59 ou un numéro fixe';
+                phoneError.classList.remove('hidden');
+                phoneInput.classList.add('border-red-500');
+                phoneInput.classList.remove('border-green-500');
+                return false;
+            }
+
+            phoneError.textContent = '';
+            phoneError.classList.add('hidden');
+            phoneInput.classList.remove('border-red-500');
+            phoneInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+
+        function validateEmail() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            if (!emailInput || !emailError) return true;
+            const email = emailInput.value.trim();
+            if (email.length === 0) {
+                emailError.textContent = '';
+                emailError.classList.add('hidden');
+                emailInput.classList.remove('border-green-500', 'border-red-500');
+                return false;
+            }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailError.textContent = "Format d'email invalide";
+                emailError.classList.remove('hidden');
+                emailInput.classList.add('border-red-500');
+                emailInput.classList.remove('border-green-500');
+                return false;
+            }
+            emailError.textContent = '';
+            emailError.classList.add('hidden');
+            emailInput.classList.remove('border-red-500');
+            emailInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+
+        function validatePassword() {
+            const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
+            const passwordError = document.getElementById('passwordError');
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            const strengthText = document.getElementById('passwordStrengthText');
+            const reqLength = document.getElementById('req-length');
+            const reqLetter = document.getElementById('req-letter');
+            const reqNumber = document.getElementById('req-number');
+            if (!passwordInput) return true;
+            const password = passwordInput.value;
+            if (reqLength && reqLetter && reqNumber) {
+                if (password.length >= 8) {
+                    reqLength.classList.add('text-green-400');
+                    reqLength.querySelector('span:first-child').textContent = '✓';
+                } else {
+                    reqLength.classList.remove('text-green-400');
+                    reqLength.querySelector('span:first-child').textContent = '•';
+                }
+                if (/[a-zA-Z]/.test(password)) {
+                    reqLetter.classList.add('text-green-400');
+                    reqLetter.querySelector('span:first-child').textContent = '✓';
+                } else {
+                    reqLetter.classList.remove('text-green-400');
+                    reqLetter.querySelector('span:first-child').textContent = '•';
+                }
+                if (/[0-9]/.test(password)) {
+                    reqNumber.classList.add('text-green-400');
+                    reqNumber.querySelector('span:first-child').textContent = '✓';
+                } else {
+                    reqNumber.classList.remove('text-green-400');
+                    reqNumber.querySelector('span:first-child').textContent = '•';
+                }
+            }
+            if (strengthBar && strengthText) {
+                let strength = 0;
+                if (password.length >= 8) strength++;
+                if (password.length >= 12) strength++;
+                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^a-zA-Z0-9]/.test(password)) strength++;
+                let color, text, width;
+                if (password.length === 0) {
+                    width = 0; text = ''; color = 'bg-gray-600';
+                } else if (strength <= 1) {
+                    width = 25; text = 'Faible'; color = 'bg-red-500';
+                } else if (strength === 2) {
+                    width = 50; text = 'Moyen'; color = 'bg-yellow-500';
+                } else if (strength === 3) {
+                    width = 75; text = 'Bon'; color = 'bg-blue-500';
+                } else {
+                    width = 100; text = 'Excellent'; color = 'bg-green-500';
+                }
+                strengthBar.style.width = width + '%';
+                strengthBar.className = `h-full transition-all duration-300 ${color}`;
+                strengthText.textContent = text;
+                strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
+            }
+            if (!passwordError) return true;
+            if (password.length === 0) {
+                passwordError.classList.add('hidden');
+                passwordInput.classList.remove('border-green-500', 'border-red-500');
+                checkFormValidity();
+                return false;
+            }
+            if (password.length < 8) {
+                passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('border-red-500');
+                passwordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            if (!/[a-zA-Z]/.test(password)) {
+                passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre';
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('border-red-500');
+                passwordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            if (!/[0-9]/.test(password)) {
+                passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
+                passwordError.classList.remove('hidden');
+                passwordInput.classList.add('border-red-500');
+                passwordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            passwordError.classList.add('hidden');
+            passwordInput.classList.remove('border-red-500');
+            passwordInput.classList.add('border-green-500');
+            const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
+            if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
+                validateConfirmPassword();
+            }
+            checkFormValidity();
+            return true;
+        }
+
+        function validateConfirmPassword() {
+            const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            const confirmPasswordSuccess = document.getElementById('confirmPasswordSuccess');
+            if (!passwordInput || !confirmPasswordInput || !confirmPasswordError || !confirmPasswordSuccess) return true;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            if (confirmPassword.length === 0) {
+                confirmPasswordError.classList.add('hidden');
+                confirmPasswordSuccess.classList.add('hidden');
+                confirmPasswordInput.classList.remove('border-green-500', 'border-red-500');
+                checkFormValidity();
+                return false;
+            }
+            if (password !== confirmPassword) {
+                confirmPasswordError.textContent = 'Les mots de passe ne correspondent pas';
+                confirmPasswordError.classList.remove('hidden');
+                confirmPasswordSuccess.classList.add('hidden');
+                confirmPasswordInput.classList.add('border-red-500');
+                confirmPasswordInput.classList.remove('border-green-500');
+                checkFormValidity();
+                return false;
+            }
+            confirmPasswordError.classList.add('hidden');
+            confirmPasswordSuccess.classList.remove('hidden');
+            confirmPasswordInput.classList.remove('border-red-500');
+            confirmPasswordInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+
         function checkFormValidity() {
             const submitButton = document.getElementById('submitButton');
             if (!submitButton) return;
-            
+
             const nameInput = document.getElementById('name');
             const phoneInput = document.getElementById('phone');
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
-            
+
             const nameValid = !nameInput || nameInput.value.trim().length >= 2;
             const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-            
-            let phoneValid = !phoneInput; // Si pas de champ phone, considéré valide
-            
-            if (phoneInput) {
+
+            let phoneValid = !phoneInput;  // Si pas de champ phone, considéré valide
+if (phoneInput) {
+    phoneValid = false;
+    // ... tout le code de validation reste identique
+}
                 let phone = phoneInput.value.trim();
                 phone = phone.replace(/^\+971\s*/, '');
                 phone = phone.replace(/[\s\-\(\)]/g, '');
@@ -100,19 +1531,21 @@
                            (['50','52','54','55','56','58','59'].includes(phone.substring(0,2)) || 
                             ['2','3','4','6','7','9'].includes(phone.charAt(0)));
             }
-            
+
+            const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+
             let passwordValid = false;
             if (passwordInput) {
                 const pwd = passwordInput.value;
                 passwordValid = pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd);
             }
-            
-            const confirmPasswordValid = !confirmPasswordInput || 
-                                        (confirmPasswordInput.value.length > 0 && 
-                                         confirmPasswordInput.value === passwordInput?.value);
-            
+
+            const confirmPasswordValid = confirmPasswordInput && 
+                                        confirmPasswordInput.value.length > 0 && 
+                                        confirmPasswordInput.value === passwordInput?.value;
+
             const allValid = nameValid && phoneValid && emailValid && passwordValid && confirmPasswordValid;
-            
+
             if (allValid) {
                 submitButton.disabled = false;
                 submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -121,10 +1554,169 @@
                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
-        
-        // [Le reste de votre code reste identique]
-        
+
+        function togglePasswordVisibility(fieldId, button) {
+            const field = document.getElementById(fieldId);
+            if (!field) return;
+
+            if (field.type === 'password') {
+                field.type = 'text';
+                button.innerHTML = '<span class="text-xl">🙈</span>';
+            } else {
+                field.type = 'password';
+                button.innerHTML = '<span class="text-xl">👁️</span>';
+            }
+        }
+
+        window.showLogin = showLogin;
+        window.showSignup = showSignup;
+        window.showReset = showReset;
+        window.logout = logout;
+        window.backToHome = backToHome;
+        window.showAddLeadForm = showAddLeadForm;
+        window.updateLeadStatus = updateLeadStatus;
+        window.markAsSold = markAsSold;
+        window.togglePasswordVisibility = togglePasswordVisibility;
+        window.validateName = validateName;
+        window.validatePhone = validatePhone;
+        window.validateEmail = validateEmail;
+        window.validatePassword = validatePassword;
+        window.validateConfirmPassword = validateConfirmPassword;
+        window.checkFormValidity = checkFormValidity;
+        window.prefillTestData = prefillTestData;
+        window.render = render;
+        window.handleChangePassword = handleChangePassword;
+       console.log('⏳ Displaying initial loader');
+        document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
+
+        let initialLoadComplete = false;
+
+        // ✅ Flag pour bloquer la connexion automatique pendant le reset
+        let isPasswordRecoveryMode = false;
+
+        // ✅ CRITIQUE - Détection PASSWORD_RECOVERY pour le reset password
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log('🔔 Auth state changed:', event);
+
+            // ✅ NOUVEAU - Détection du reset password
+            if (event === 'PASSWORD_RECOVERY') {
+                console.log('🔑 Password recovery detected - blocking auto-login');
+                isPasswordRecoveryMode = true;
+                currentPage = 'change-password';
+                window.currentPage = 'change-password';
+                currentUser = session?.user || null;
+                window.currentUser = currentUser;
+                render();
+                return;
+            }
+
+            // ✅ Si on est en mode recovery, ignorer les autres événements
+            if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
+                console.log('⚠️ Ignoring event during password recovery:', event);
+                return;
+            }
+
+            currentUser = session?.user || null;
+            window.currentUser = currentUser;
+
+            if (currentUser && !currentUser.email_confirmed_at) {
+                console.warn('⚠️ Email not confirmed, signing out');
+                await supabase.auth.signOut();
+                currentUser = null;
+                window.currentUser = null;
+            }
+
+            if (currentUser) {
+                console.log('👤 User authenticated, loading profile...');
+                const profileLoaded = await loadUserProfile(currentUser);
+                if (!profileLoaded) {
+                    console.error('❌ Failed to load profile, signing out');
+                    await supabase.auth.signOut();
+                    currentUser = null;
+                    window.currentUser = null;
+                    userProfile = null;
+                    window.userProfile = null;
+                }
+            }
+            render();
+        });
+
+        console.log('🔍 Getting initial session...');
+        supabase.auth.getSession().then(async ({ data: { session }, error }) => {
+            if (error) {
+                console.error('❌ Session error:', error);
+                currentUser = null;
+                window.currentUser = null;
+                render();
+                initialLoadComplete = true;
+                return;
+            }
+
+            currentUser = session?.user || null;
+            window.currentUser = currentUser;
+
+            if (currentUser && !currentUser.email_confirmed_at) {
+                console.warn('⚠️ Email not confirmed on init, cleaning session');
+                await supabase.auth.signOut();
+                localStorage.clear();
+                sessionStorage.clear();
+                currentUser = null;
+                window.currentUser = null;
+                render();
+                initialLoadComplete = true;
+                return;
+            }
+
+            if (currentUser) {
+                console.log('👤 Session found, loading profile...');
+                const profileLoaded = await loadUserProfile(currentUser);
+                if (!profileLoaded) {
+                    console.error('❌ Failed to load profile on init, signing out');
+                    await supabase.auth.signOut();
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    currentUser = null;
+                    window.currentUser = null;
+                    userProfile = null;
+                    window.userProfile = null;
+                }
+            }
+            render();
+            initialLoadComplete = true;
+        }).catch((err) => {
+            console.error('❌ Fatal session error:', err);
+            currentUser = null;
+            window.currentUser = null;
+            render();
+            initialLoadComplete = true;
+        });
     })();
+
+        async function downloadContractTemplate() {
+            try {
+                console.log('📥 Downloading contract template...');
+
+                const { data, error } = await supabase.storage
+                    .from('contracts')
+                    .getPublicUrl('contract_template_en.pdf');
+
+                if (error) {
+                    console.error('❌ Error getting template URL:', error);
+                    alert('Error downloading contract. Please contact support.');
+                    return;
+                }
+
+                console.log('✅ Template URL:', data.publicUrl);
+
+                window.open(data.publicUrl, '_blank');
+
+            } catch (error) {
+                console.error('❌ Exception downloading template:', error);
+                alert('Error downloading: ' + error.message);
+            }
+        }
+
+        window.downloadContractTemplate = downloadContractTemplate;
     </script>
 </body>
 </html>
