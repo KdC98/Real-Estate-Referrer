@@ -22,6 +22,7 @@
     <div id="app"></div>
     <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
     (async () => {
         await i18next
             .use(i18nextHttpBackend)
@@ -46,6 +47,7 @@
         console.log('✅ All translations loaded!');
 
         const t = (key) => i18next.t(key);
+
         async function changeLanguage(langCode) {
             try {
                 await i18next.changeLanguage(langCode);
@@ -56,14 +58,17 @@
             }
         }
         window.changeLanguage = changeLanguage;
+
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
+
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         window.supabase = supabase;
 
         let currentUser = null;
         let userProfile = null;
         let currentPage = 'landing';
+        let isPasswordRecoveryMode = false;
 
         window.currentUser = null;
         window.userProfile = null;
@@ -92,6 +97,7 @@
                             </div>
                         </div>
                     </header>
+
                     <main class="container mx-auto px-4 py-20">
                         <div class="text-center mb-12">
                             <h2 class="text-5xl md:text-6xl font-bold mb-6">
@@ -104,6 +110,7 @@
                                 ${t('hero.cta_button')}
                             </button>
                         </div>
+
                         <div class="grid md:grid-cols-3 gap-6 my-16">
                             <div class="rounded-xl overflow-hidden shadow-2xl">
                                 <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
@@ -115,6 +122,7 @@
                                 <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
                             </div>
                         </div>
+
                         <div class="grid md:grid-cols-3 gap-8 mt-20">
                             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                                 <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
@@ -129,6 +137,7 @@
                                 <div class="text-gray-300">${t('stats.timeline_label')}</div>
                             </div>
                         </div>
+
                         <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
                             <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
                             <div class="grid md:grid-cols-2 gap-8">
@@ -222,7 +231,7 @@
 
         function renderAuthPage(mode) {
             let title, buttonText, linkText, linkAction;
-
+            
             if (mode === 'login') {
                 title = t('auth:login_title');
                 buttonText = t('auth:login_button');
@@ -251,7 +260,9 @@
                         <button onclick="backToHome()" class="text-gray-400 hover:text-white mb-6 flex items-center">
                             ← ${t('auth:back_home')}
                         </button>
+                        
                         <h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>
+                        
                         <form id="authForm" class="space-y-4">
                             ${mode === 'signup' ? `
                                 <div>
@@ -268,6 +279,7 @@
                                     >
                                     <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
+                                
                                 <div>
                                     <label class="block mb-2 font-medium">${t('auth:phone_label')}</label>
                                     <div class="relative">
@@ -288,20 +300,20 @@
                                 </div>
                             ` : ''}
                             
-                            <div ${mode === 'change-password' ? 'style="display:none"' : ''}>
-                            </div>
-                                <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
-                                <input 
-                                    type="email" 
-                                    id="email" 
-                                    required 
-                                    placeholder="exemple@email.com"
-                                    class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                    ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
-                                >
-                                ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
-                            </div>
-                            <div>
+                            ${mode !== 'change-password' ? `
+                                <div>
+                                    <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        required 
+                                        placeholder="exemple@email.com"
+                                        class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                        ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
+                                    >
+                                    ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
+                                </div>
+                            ` : ''}
                             
                             ${mode !== 'reset' ? `
                                 <div>
@@ -397,16 +409,18 @@
                                 type="submit" 
                                 id="submitButton"
                                 class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                ${mode === 'signup' ? 'disabled' : ''}
+                                ${mode === 'signup' || mode === 'change-password' ? 'disabled' : ''}
                             >
                                 ${buttonText}
                             </button>
                         </form>
+                        
                         <p class="text-center mt-6 text-gray-400">
                             <button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">
                                 ${linkText}
                             </button>
                         </p>
+                        
                         ${mode === 'signup' ? `
                             <div class="text-center mt-4">
                                 <button type="button" onclick="prefillTestData()" class="text-sm text-gray-400 hover:text-white border border-gray-600 px-3 py-1 rounded">
@@ -418,14 +432,11 @@
                 </div>
             `;
         }
-
-        // ✅ FIN PARTIE 1 - Continue avec PARTIE 2
-        // ✅ DÉBUT PARTIE 2 - Dashboard et fonctions
-
         function renderDashboard() {
             if (!userProfile) {
                 return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
             }
+
             const isAdmin = userProfile.role === 'admin';
             const hasValidContract = userProfile.contract_status === 'signed' || userProfile.contract_status === 'approved';
             const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
@@ -445,6 +456,7 @@
                             </div>
                         </div>
                     </header>
+
                     <main class="container mx-auto px-4 py-8">
                         ${!hasValidContract && !isAdmin ? `
                             <div class="mb-6 bg-red-900 bg-opacity-50 border-l-4 border-red-500 p-6 rounded-lg shadow-lg">
@@ -584,6 +596,7 @@
             console.log('🏠 backToHome called');
             currentPage = 'landing';
             window.currentPage = 'landing';
+            isPasswordRecoveryMode = false;
             render();
         }
 
@@ -592,24 +605,22 @@
                 document.getElementById('name').value = 'Test User';
                 document.getElementById('phone').value = '505059595';
                 document.getElementById('email').value = 'karyne@itooki.fr';
-                document.getElementById('password').value = 'wyqsuc-Necxur-Tpedpy';
-                document.getElementById('confirmPassword').value = 'wyqsuc-Necxur-Tpedpy';
-
+                document.getElementById('password').value = 'Test1234';
+                document.getElementById('confirmPassword').value = 'Test1234';
                 validateName();
                 validatePhone();
                 validateEmail();
                 validatePassword();
                 validateConfirmPassword();
-
                 console.log('✅ Données de test pré-remplies');
             }
         }
 
         function handleAuth(mode) {
-            console.log(`🔧 handleAuth called for mode: ${mode}`);
+            console.log('🔧 handleAuth called for mode:', mode);
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
-
+            
             if (errorDiv) {
                 errorDiv.textContent = '';
                 errorDiv.classList.add('hidden');
@@ -621,22 +632,21 @@
             }
 
             console.log('✅ Form found, attaching handler');
-
+            
             form.onsubmit = async (e) => {
                 e.preventDefault();
-                console.log(`📤 Form submitted for ${mode}`);
+                console.log('📤 Form submitted for', mode);
                 errorDiv.classList.add('hidden');
-
+                
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password')?.value;
 
                 try {
                     if (mode === 'signup') {
                         console.log('📝 Processing signup');
-
                         const name = document.getElementById('name').value.trim();
                         let phone = document.getElementById('phone').value.trim();
-
+                        
                         phone = phone.replace(/[^\d]/g, '');
                         if (phone.startsWith('971')) {
                             phone = phone.substring(3);
@@ -644,22 +654,23 @@
                         if (phone.length > 9) {
                             phone = phone.substring(0, 9);
                         }
-
+                        
                         const confirmPassword = document.getElementById('confirmPassword').value;
-
+                        
                         if (!validateName()) throw new Error('Nom invalide');
                         if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
                         if (!validateEmail()) throw new Error('Email invalide');
                         if (!validatePassword()) throw new Error('Mot de passe invalide');
                         if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
-
+                        
                         const fullPhone = '+971' + phone;
+                        
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = true;
                         submitButton.textContent = 'Inscription en cours...';
-
+                        
                         console.log('📤 Signup data:', { email, name, phone: fullPhone });
-
+                        
                         const { data, error } = await supabase.auth.signUp({
                             email,
                             password,
@@ -669,10 +680,10 @@
                         });
 
                         if (error) throw error;
+                        
                         console.log('✅ Signup successful');
                         alert(t('auth:signup_success'));
                         showLogin();
-
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
                         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -681,9 +692,8 @@
                     }
                 } catch (error) {
                     console.error('❌ Auth error:', error);
-
                     let errorMessage = error.message;
-
+                    
                     if (error.message.includes('Invalid login credentials')) {
                         errorMessage = 'Email ou mot de passe incorrect';
                     } else if (error.message.includes('Email not confirmed')) {
@@ -693,9 +703,10 @@
                     } else if (error.message.includes('Password should be at least')) {
                         errorMessage = 'Le mot de passe doit contenir au moins 8 caractères';
                     }
-
+                    
                     errorDiv.textContent = errorMessage;
                     errorDiv.classList.remove('hidden');
+                    
                     if (mode === 'signup') {
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = false;
@@ -708,17 +719,20 @@
         async function handleReset() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
-
+            
             form.onsubmit = async (e) => {
                 e.preventDefault();
                 errorDiv.classList.add('hidden');
+                
                 const email = document.getElementById('email').value;
 
                 try {
                     const { error } = await supabase.auth.resetPasswordForEmail(email, {
                         redirectTo: window.location.origin
                     });
+                    
                     if (error) throw error;
+                    
                     alert(t('auth:reset_email_sent'));
                     showLogin();
                 } catch (error) {
@@ -729,15 +743,14 @@
             };
         }
 
-        // ✅ NOUVELLE FONCTION - Fix reset password
         async function handleChangePassword() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
-
+            
             form.onsubmit = async (e) => {
                 e.preventDefault();
                 errorDiv.classList.add('hidden');
-
+                
                 const newPassword = document.getElementById('newPassword').value;
                 const confirmPassword = document.getElementById('confirmNewPassword').value;
 
@@ -770,16 +783,12 @@
                     const { error } = await supabase.auth.updateUser({ 
                         password: newPassword 
                     });
-
+                    
                     if (error) throw error;
-
-                     console.log('✅ Password updated successfully');
-
-            // ✅ Réinitialiser le flag
-            isPasswordRecoveryMode = false;
-
-            alert('✅ Mot de passe changé avec succès !');
-
+                    
+                    console.log('✅ Password updated successfully');
+                    isPasswordRecoveryMode = false;
+                    alert('✅ Mot de passe changé avec succès !');
                     await supabase.auth.signOut();
                     showLogin();
                 } catch (error) {
@@ -794,7 +803,6 @@
             if (!userProfile) return;
 
             const isAdmin = userProfile.role === 'admin';
-
             let leads;
             let profiles = {};
 
@@ -835,7 +843,6 @@
                     ...lead,
                     referrer_name: profiles[lead.referrer_id]?.name || 'N/A'
                 }));
-
             } else {
                 console.log('📊 Loading leads for referrer...');
                 const { data, error } = await supabase
@@ -958,17 +965,18 @@
 
         function showAddLeadForm() {
             const hasValidContract = userProfile?.contract_status === 'signed' || userProfile?.contract_status === 'approved';
+            
             if (!hasValidContract) {
                 alert(t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
                 return;
             }
 
             document.getElementById('addLeadModal').classList.remove('hidden');
-
+            
             const form = document.getElementById('addLeadForm');
             form.onsubmit = async (e) => {
                 e.preventDefault();
-
+                
                 const leadData = {
                     referrer_id: currentUser.id,
                     client_name: document.getElementById('clientName').value,
@@ -980,7 +988,7 @@
                 };
 
                 const { error } = await supabase.from('leads').insert([leadData]);
-
+                
                 if (error) {
                     console.error('Error adding lead:', error);
                     alert('Erreur lors de l\'ajout du lead');
@@ -995,7 +1003,7 @@
 
         async function updateLeadStatus(leadId, newStatus) {
             const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
-
+            
             if (error) {
                 console.error('Error updating status:', error);
                 alert('Erreur lors de la mise à jour du statut');
@@ -1045,7 +1053,7 @@
 
                 if (error) {
                     console.error('❌ Error loading profile:', error);
-
+                    
                     if (error.code === 'PGRST116') {
                         console.log('📝 Profile does not exist, creating it...');
                         const { data: newProfile, error: insertError } = await supabase.from('profiles').insert([{
@@ -1067,13 +1075,13 @@
                         window.userProfile = newProfile;
                         return true;
                     }
-
+                    
                     alert('Erreur lors du chargement du profil: ' + error.message);
                     return false;
                 }
 
                 console.log('✅ Profile data retrieved:', data);
-
+                
                 if (data && data.contract_status) {
                     data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
                 }
@@ -1093,8 +1101,8 @@
 
         async function logout() {
             console.log('🚪 Logout called');
-
             const logoutBtn = document.querySelector('button[onclick="logout()"]');
+            
             if (logoutBtn) {
                 logoutBtn.disabled = true;
                 logoutBtn.textContent = 'Déconnexion...';
@@ -1103,7 +1111,7 @@
             try {
                 console.log('🔓 Signing out from Supabase...');
                 const { error } = await supabase.auth.signOut();
-
+                
                 if (error) {
                     console.error('❌ Logout error:', error);
                     alert('Erreur lors de la déconnexion: ' + error.message);
@@ -1115,21 +1123,21 @@
                 }
 
                 console.log('✅ Supabase signOut successful');
-
+                
                 currentUser = null;
                 userProfile = null;
                 currentPage = 'landing';
+                isPasswordRecoveryMode = false;
+                
                 window.currentUser = null;
                 window.userProfile = null;
                 window.currentPage = 'landing';
-
+                
                 localStorage.removeItem('supabase.auth.token');
-
                 console.log('✅ Local state cleaned');
+                
                 console.log('🏠 Redirecting to landing page...');
-
                 render();
-
             } catch (error) {
                 console.error('❌ Logout exception:', error);
                 alert('Erreur lors de la déconnexion: ' + error.message);
@@ -1139,33 +1147,28 @@
                 }
             }
         }
-
-        // ✅ FIN PARTIE 2 - Continue avec PARTIE 3
-        // ✅ DÉBUT PARTIE 3 - Render, validation et PASSWORD_RECOVERY fix
-
         async function render() {
-    console.log('🎨 RENDER called');
-    console.log('- currentUser:', !!currentUser);
-    console.log('- userProfile:', !!userProfile);
-    console.log('- currentPage:', currentPage);
-    console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
+            console.log('🎨 RENDER called');
+            console.log('- currentUser:', !!currentUser);
+            console.log('- userProfile:', !!userProfile);
+            console.log('- currentPage:', currentPage);
+            console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
+            
+            const app = document.getElementById('app');
 
-    const app = document.getElementById('app');
+            if (isPasswordRecoveryMode && currentPage === 'change-password') {
+                console.log('🔑 Password recovery mode - showing change password form');
+                app.innerHTML = renderAuthPage('change-password');
+                setTimeout(() => handleChangePassword(), 500);
+                return;
+            }
 
-    // ✅ PRIORITÉ 1 : Si on est en mode reset password, afficher le formulaire
-    if (isPasswordRecoveryMode && currentPage === 'change-password') {
-        console.log('🔑 Password recovery mode - showing change password form');
-        app.innerHTML = renderAuthPage('change-password');
-        setTimeout(() => handleChangePassword(), 500);
-        return;
-    }
-
-    if (currentUser && userProfile) {
-        console.log('✅ User connected with profile, showing dashboard');
-        currentPage = 'dashboard';
-        window.currentPage = 'dashboard';
-        app.innerHTML = renderDashboard();
-        await loadDashboardContent();
+            if (currentUser && userProfile) {
+                console.log('✅ User connected with profile, showing dashboard');
+                currentPage = 'dashboard';
+                window.currentPage = 'dashboard';
+                app.innerHTML = renderDashboard();
+                await loadDashboardContent();
 
                 if (userProfile.role !== 'admin') {
                     const contractForm = document.getElementById('contractForm');
@@ -1174,7 +1177,7 @@
                         contractForm.addEventListener('submit', async (e) => {
                             e.preventDefault();
                             console.log('📄 Starting contract upload...');
-
+                            
                             const fileInput = document.getElementById('contractFile');
                             const file = fileInput.files[0];
 
@@ -1195,7 +1198,7 @@
                             }
 
                             console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-
+                            
                             const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
                             console.log('📄 Uploading to Storage with name:', fileName);
 
@@ -1224,7 +1227,6 @@
 
                             console.log('✅ Profile updated successfully');
                             alert('✅ Contrat uploadé avec succès !');
-
                             await loadUserProfile();
                             render();
                         });
@@ -1268,14 +1270,18 @@
         function validateName() {
             const nameInput = document.getElementById('name');
             const nameError = document.getElementById('nameError');
+            
             if (!nameInput || !nameError) return true;
+
             const name = nameInput.value.trim();
+
             if (name.length === 0) {
                 nameError.textContent = '';
                 nameError.classList.add('hidden');
                 nameInput.classList.remove('border-green-500', 'border-red-500');
                 return false;
             }
+
             if (name.length < 2) {
                 nameError.textContent = 'Le nom doit contenir au moins 2 caractères';
                 nameError.classList.remove('hidden');
@@ -1283,6 +1289,7 @@
                 nameInput.classList.remove('border-green-500');
                 return false;
             }
+
             const nameRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
             if (!nameRegex.test(name)) {
                 nameError.textContent = 'Le nom ne peut contenir que des lettres, espaces, tirets et apostrophes';
@@ -1291,6 +1298,7 @@
                 nameInput.classList.remove('border-green-500');
                 return false;
             }
+
             nameError.textContent = '';
             nameError.classList.add('hidden');
             nameInput.classList.remove('border-red-500');
@@ -1302,6 +1310,7 @@
         function validatePhone() {
             const phoneInput = document.getElementById('phone');
             const phoneError = document.getElementById('phoneError');
+            
             if (!phoneInput || !phoneError) return true;
 
             let phone = phoneInput.value.trim();
@@ -1331,7 +1340,6 @@
 
             const validPrefixes = ['50', '52', '54', '55', '56', '58', '59', '2', '3', '4', '6', '7', '9'];
             const prefix = phone.substring(0, 2);
-
             if (!validPrefixes.includes(prefix) && !['2','3','4','6','7','9'].includes(phone.charAt(0))) {
                 phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56, 58, 59 ou un numéro fixe';
                 phoneError.classList.remove('hidden');
@@ -1351,14 +1359,18 @@
         function validateEmail() {
             const emailInput = document.getElementById('email');
             const emailError = document.getElementById('emailError');
+            
             if (!emailInput || !emailError) return true;
+
             const email = emailInput.value.trim();
+
             if (email.length === 0) {
                 emailError.textContent = '';
                 emailError.classList.add('hidden');
                 emailInput.classList.remove('border-green-500', 'border-red-500');
                 return false;
             }
+
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 emailError.textContent = "Format d'email invalide";
@@ -1367,6 +1379,7 @@
                 emailInput.classList.remove('border-green-500');
                 return false;
             }
+
             emailError.textContent = '';
             emailError.classList.add('hidden');
             emailInput.classList.remove('border-red-500');
@@ -1383,8 +1396,11 @@
             const reqLength = document.getElementById('req-length');
             const reqLetter = document.getElementById('req-letter');
             const reqNumber = document.getElementById('req-number');
+
             if (!passwordInput) return true;
+
             const password = passwordInput.value;
+
             if (reqLength && reqLetter && reqNumber) {
                 if (password.length >= 8) {
                     reqLength.classList.add('text-green-400');
@@ -1393,6 +1409,7 @@
                     reqLength.classList.remove('text-green-400');
                     reqLength.querySelector('span:first-child').textContent = '•';
                 }
+
                 if (/[a-zA-Z]/.test(password)) {
                     reqLetter.classList.add('text-green-400');
                     reqLetter.querySelector('span:first-child').textContent = '✓';
@@ -1400,6 +1417,7 @@
                     reqLetter.classList.remove('text-green-400');
                     reqLetter.querySelector('span:first-child').textContent = '•';
                 }
+
                 if (/[0-9]/.test(password)) {
                     reqNumber.classList.add('text-green-400');
                     reqNumber.querySelector('span:first-child').textContent = '✓';
@@ -1408,6 +1426,7 @@
                     reqNumber.querySelector('span:first-child').textContent = '•';
                 }
             }
+
             if (strengthBar && strengthText) {
                 let strength = 0;
                 if (password.length >= 8) strength++;
@@ -1415,6 +1434,7 @@
                 if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
                 if (/[0-9]/.test(password)) strength++;
                 if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
                 let color, text, width;
                 if (password.length === 0) {
                     width = 0; text = ''; color = 'bg-gray-600';
@@ -1427,18 +1447,22 @@
                 } else {
                     width = 100; text = 'Excellent'; color = 'bg-green-500';
                 }
+
                 strengthBar.style.width = width + '%';
                 strengthBar.className = `h-full transition-all duration-300 ${color}`;
                 strengthText.textContent = text;
                 strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
             }
+
             if (!passwordError) return true;
+
             if (password.length === 0) {
                 passwordError.classList.add('hidden');
                 passwordInput.classList.remove('border-green-500', 'border-red-500');
                 checkFormValidity();
                 return false;
             }
+
             if (password.length < 8) {
                 passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
                 passwordError.classList.remove('hidden');
@@ -1447,6 +1471,7 @@
                 checkFormValidity();
                 return false;
             }
+
             if (!/[a-zA-Z]/.test(password)) {
                 passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre';
                 passwordError.classList.remove('hidden');
@@ -1455,6 +1480,7 @@
                 checkFormValidity();
                 return false;
             }
+
             if (!/[0-9]/.test(password)) {
                 passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
                 passwordError.classList.remove('hidden');
@@ -1463,13 +1489,16 @@
                 checkFormValidity();
                 return false;
             }
+
             passwordError.classList.add('hidden');
             passwordInput.classList.remove('border-red-500');
             passwordInput.classList.add('border-green-500');
+
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
             if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
                 validateConfirmPassword();
             }
+
             checkFormValidity();
             return true;
         }
@@ -1479,9 +1508,12 @@
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
             const confirmPasswordError = document.getElementById('confirmPasswordError');
             const confirmPasswordSuccess = document.getElementById('confirmPasswordSuccess');
+
             if (!passwordInput || !confirmPasswordInput || !confirmPasswordError || !confirmPasswordSuccess) return true;
+
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
+
             if (confirmPassword.length === 0) {
                 confirmPasswordError.classList.add('hidden');
                 confirmPasswordSuccess.classList.add('hidden');
@@ -1489,6 +1521,7 @@
                 checkFormValidity();
                 return false;
             }
+
             if (password !== confirmPassword) {
                 confirmPasswordError.textContent = 'Les mots de passe ne correspondent pas';
                 confirmPasswordError.classList.remove('hidden');
@@ -1498,6 +1531,7 @@
                 checkFormValidity();
                 return false;
             }
+
             confirmPasswordError.classList.add('hidden');
             confirmPasswordSuccess.classList.remove('hidden');
             confirmPasswordInput.classList.remove('border-red-500');
@@ -1519,11 +1553,9 @@
             const nameValid = !nameInput || nameInput.value.trim().length >= 2;
             const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
 
-            let phoneValid = !phoneInput;  // Si pas de champ phone, considéré valide
-if (phoneInput) {
-    phoneValid = false;
-    // ... tout le code de validation reste identique
-}
+            let phoneValid = !phoneInput;
+            if (phoneInput) {
+                phoneValid = false;
                 let phone = phoneInput.value.trim();
                 phone = phone.replace(/^\+971\s*/, '');
                 phone = phone.replace(/[\s\-\(\)]/g, '');
@@ -1532,17 +1564,15 @@ if (phoneInput) {
                             ['2','3','4','6','7','9'].includes(phone.charAt(0)));
             }
 
-            const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-
             let passwordValid = false;
             if (passwordInput) {
                 const pwd = passwordInput.value;
                 passwordValid = pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd);
             }
 
-            const confirmPasswordValid = confirmPasswordInput && 
-                                        confirmPasswordInput.value.length > 0 && 
-                                        confirmPasswordInput.value === passwordInput?.value;
+            const confirmPasswordValid = !confirmPasswordInput || 
+                                        (confirmPasswordInput.value.length > 0 && 
+                                         confirmPasswordInput.value === passwordInput?.value);
 
             const allValid = nameValid && phoneValid && emailValid && passwordValid && confirmPasswordValid;
 
@@ -1568,6 +1598,27 @@ if (phoneInput) {
             }
         }
 
+        async function downloadContractTemplate() {
+            try {
+                console.log('📥 Downloading contract template...');
+                const { data, error } = await supabase.storage
+                    .from('contracts')
+                    .getPublicUrl('contract_template_en.pdf');
+
+                if (error) {
+                    console.error('❌ Error getting template URL:', error);
+                    alert('Error downloading contract. Please contact support.');
+                    return;
+                }
+
+                console.log('✅ Template URL:', data.publicUrl);
+                window.open(data.publicUrl, '_blank');
+            } catch (error) {
+                console.error('❌ Exception downloading template:', error);
+                alert('Error downloading: ' + error.message);
+            }
+        }
+
         window.showLogin = showLogin;
         window.showSignup = showSignup;
         window.showReset = showReset;
@@ -1586,19 +1637,16 @@ if (phoneInput) {
         window.prefillTestData = prefillTestData;
         window.render = render;
         window.handleChangePassword = handleChangePassword;
-       console.log('⏳ Displaying initial loader');
+        window.downloadContractTemplate = downloadContractTemplate;
+
+        console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
 
         let initialLoadComplete = false;
 
-        // ✅ Flag pour bloquer la connexion automatique pendant le reset
-        let isPasswordRecoveryMode = false;
-
-        // ✅ CRITIQUE - Détection PASSWORD_RECOVERY pour le reset password
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
 
-            // ✅ NOUVEAU - Détection du reset password
             if (event === 'PASSWORD_RECOVERY') {
                 console.log('🔑 Password recovery detected - blocking auto-login');
                 isPasswordRecoveryMode = true;
@@ -1610,7 +1658,6 @@ if (phoneInput) {
                 return;
             }
 
-            // ✅ Si on est en mode recovery, ignorer les autres événements
             if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
                 console.log('⚠️ Ignoring event during password recovery:', event);
                 return;
@@ -1629,6 +1676,7 @@ if (phoneInput) {
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
                 const profileLoaded = await loadUserProfile(currentUser);
+                
                 if (!profileLoaded) {
                     console.error('❌ Failed to load profile, signing out');
                     await supabase.auth.signOut();
@@ -1638,6 +1686,7 @@ if (phoneInput) {
                     window.userProfile = null;
                 }
             }
+
             render();
         });
 
@@ -1670,6 +1719,7 @@ if (phoneInput) {
             if (currentUser) {
                 console.log('👤 Session found, loading profile...');
                 const profileLoaded = await loadUserProfile(currentUser);
+                
                 if (!profileLoaded) {
                     console.error('❌ Failed to load profile on init, signing out');
                     await supabase.auth.signOut();
@@ -1681,6 +1731,7 @@ if (phoneInput) {
                     window.userProfile = null;
                 }
             }
+
             render();
             initialLoadComplete = true;
         }).catch((err) => {
@@ -1691,32 +1742,6 @@ if (phoneInput) {
             initialLoadComplete = true;
         });
     })();
-
-        async function downloadContractTemplate() {
-            try {
-                console.log('📥 Downloading contract template...');
-
-                const { data, error } = await supabase.storage
-                    .from('contracts')
-                    .getPublicUrl('contract_template_en.pdf');
-
-                if (error) {
-                    console.error('❌ Error getting template URL:', error);
-                    alert('Error downloading contract. Please contact support.');
-                    return;
-                }
-
-                console.log('✅ Template URL:', data.publicUrl);
-
-                window.open(data.publicUrl, '_blank');
-
-            } catch (error) {
-                console.error('❌ Exception downloading template:', error);
-                alert('Error downloading: ' + error.message);
-            }
-        }
-
-        window.downloadContractTemplate = downloadContractTemplate;
     </script>
 </body>
 </html>
