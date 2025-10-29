@@ -1,0 +1,29 @@
+{
+  "loading": "Loading...",
+  "error": "Error",
+  "success": "Success",
+  "save": "Save",
+  "delete": "Delete",
+  "edit": "Edit",
+  "close": "Close",
+  "yes": "Yes",
+  "no": "No",
+  "submit": "Submit",
+  "search": "Search",
+  "footer": {
+    "navigation_title": "Navigation",
+    "legal_title": "Legal",
+    "contact_title": "Contact",
+    "home": "Home",
+    "how_it_works": "How it Works",
+    "login": "Login",
+    "signup": "Sign Up",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "contract_template": "Contract Template",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "Dubai, UAE",
+    "copyright": "© 2025 Real Estate Referrer. All rights reserved."
+  }
+}
