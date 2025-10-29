@@ -1516,10 +1516,14 @@
             const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
             
-            const nameValid = nameInput && nameInput.value.trim().length >= 2;
+            const nameValid = !nameInput || nameInput.value.trim().length >= 2;
+            const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
             
-            let phoneValid = false;
-            if (phoneInput) {
+            let phoneValid = !phoneInput;  // Si pas de champ phone, considéré valide
+if (phoneInput) {
+    phoneValid = false;
+    // ... tout le code de validation reste identique
+}
                 let phone = phoneInput.value.trim();
                 phone = phone.replace(/^\+971\s*/, '');
                 phone = phone.replace(/[\s\-\(\)]/g, '');
@@ -1528,7 +1532,7 @@
                             ['2','3','4','6','7','9'].includes(phone.charAt(0)));
             }
             
-            const emailValid = emailInput && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+            const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
             
             let passwordValid = false;
             if (passwordInput) {
