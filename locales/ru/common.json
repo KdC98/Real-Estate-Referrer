@@ -1,0 +1,29 @@
+{
+  "loading": "Загрузка...",
+  "error": "Ошибка",
+  "success": "Успех",
+  "save": "Сохранить",
+  "delete": "Удалить",
+  "edit": "Редактировать",
+  "close": "Закрыть",
+  "yes": "Да",
+  "no": "Нет",
+  "submit": "Отправить",
+  "search": "Поиск",
+  "footer": {
+    "navigation_title": "Навигация",
+    "legal_title": "Юридическая информация",
+    "contact_title": "Контакты",
+    "home": "Главная",
+    "how_it_works": "Как это работает",
+    "login": "Вход",
+    "signup": "Регистрация",
+    "terms": "Условия",
+    "privacy": "Конфиденциальность",
+    "contract_template": "Шаблон контракта",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "Дубай, ОАЭ",
+    "copyright": "© 2025 Real Estate Referrer. Все права защищены."
+  }
+}
