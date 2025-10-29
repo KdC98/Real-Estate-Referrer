@@ -1142,19 +1142,28 @@
         // ✅ DÉBUT PARTIE 3 - Render, validation et PASSWORD_RECOVERY fix
         
         async function render() {
-            console.log('🎨 RENDER called');
-            console.log('- currentUser:', !!currentUser);
-            console.log('- userProfile:', !!userProfile);
-            console.log('- currentPage:', currentPage);
-            
-            const app = document.getElementById('app');
-            
-            if (currentUser && userProfile) {
-                console.log('✅ User connected with profile, showing dashboard');
-                currentPage = 'dashboard';
-                window.currentPage = 'dashboard';
-                app.innerHTML = renderDashboard();
-                await loadDashboardContent();
+    console.log('🎨 RENDER called');
+    console.log('- currentUser:', !!currentUser);
+    console.log('- userProfile:', !!userProfile);
+    console.log('- currentPage:', currentPage);
+    console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
+    
+    const app = document.getElementById('app');
+    
+    // ✅ PRIORITÉ 1 : Si on est en mode reset password, afficher le formulaire
+    if (isPasswordRecoveryMode && currentPage === 'change-password') {
+        console.log('🔑 Password recovery mode - showing change password form');
+        app.innerHTML = renderAuthPage('change-password');
+        setTimeout(() => handleChangePassword(), 500);
+        return;
+    }
+    
+    if (currentUser && userProfile) {
+        console.log('✅ User connected with profile, showing dashboard');
+        currentPage = 'dashboard';
+        window.currentPage = 'dashboard';
+        app.innerHTML = renderDashboard();
+        await loadDashboardContent();
                 
                 if (userProfile.role !== 'admin') {
                     const contractForm = document.getElementById('contractForm');
