@@ -1,0 +1,29 @@
+{
+  "loading": "لوڈ ہو رہا ہے...",
+  "error": "خرابی",
+  "success": "کامیابی",
+  "save": "محفوظ کریں",
+  "delete": "حذف کریں",
+  "edit": "ترمیم کریں",
+  "close": "بند کریں",
+  "yes": "ہاں",
+  "no": "نہیں",
+  "submit": "جمع کرائیں",
+  "search": "تلاش کریں",
+  "footer": {
+    "navigation_title": "نیویگیشن",
+    "legal_title": "قانونی",
+    "contact_title": "رابطہ",
+    "home": "ہوم",
+    "how_it_works": "یہ کیسے کام کرتا ہے",
+    "login": "لاگ ان",
+    "signup": "سائن اپ",
+    "terms": "شرائط",
+    "privacy": "رازداری",
+    "contract_template": "معاہدہ ٹیمپلیٹ",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "دبئی، متحدہ عرب امارات",
+    "copyright": "© 2025 Real Estate Referrer. تمام حقوق محفوظ ہیں۔"
+  }
+}
