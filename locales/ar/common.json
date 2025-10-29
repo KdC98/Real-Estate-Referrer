@@ -1,0 +1,29 @@
+{
+  "loading": "جاري التحميل...",
+  "error": "خطأ",
+  "success": "نجح",
+  "save": "حفظ",
+  "delete": "حذف",
+  "edit": "تعديل",
+  "close": "إغلاق",
+  "yes": "نعم",
+  "no": "لا",
+  "submit": "إرسال",
+  "search": "بحث",
+  "footer": {
+    "navigation_title": "التنقل",
+    "legal_title": "قانوني",
+    "contact_title": "اتصل بنا",
+    "home": "الرئيسية",
+    "how_it_works": "كيف يعمل",
+    "login": "تسجيل الدخول",
+    "signup": "التسجيل",
+    "terms": "الشروط",
+    "privacy": "الخصوصية",
+    "contract_template": "نموذج العقد",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "دبي، الإمارات",
+    "copyright": "© 2025 Real Estate Referrer. جميع الحقوق محفوظة."
+  }
+}
