@@ -1,0 +1,29 @@
+{
+  "loading": "लोड हो रहा है...",
+  "error": "त्रुटि",
+  "success": "सफलता",
+  "save": "सहेजें",
+  "delete": "हटाएं",
+  "edit": "संपादित करें",
+  "close": "बंद करें",
+  "yes": "हां",
+  "no": "नहीं",
+  "submit": "जमा करें",
+  "search": "खोजें",
+  "footer": {
+    "navigation_title": "नेविगेशन",
+    "legal_title": "कानूनी",
+    "contact_title": "संपर्क",
+    "home": "होम",
+    "how_it_works": "यह कैसे काम करता है",
+    "login": "लॉगिन",
+    "signup": "साइन अप",
+    "terms": "शर्तें",
+    "privacy": "गोपनीयता",
+    "contract_template": "अनुबंध टेम्पलेट",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "दुबई, संयुक्त अरब अमीरात",
+    "copyright": "© 2025 Real Estate Referrer. सर्वाधिकार सुरक्षित।"
+  }
+}
