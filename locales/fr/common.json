@@ -9,5 +9,21 @@
   "yes": "Oui",
   "no": "Non",
   "submit": "Soumettre",
-  "search": "Rechercher"
+  "search": "Rechercher",
+  "footer": {
+    "navigation_title": "Navigation",
+    "legal_title": "Légal",
+    "contact_title": "Contact",
+    "home": "Accueil",
+    "how_it_works": "Comment ça marche",
+    "login": "Connexion",
+    "signup": "Inscription",
+    "terms": "Conditions générales",
+    "privacy": "Confidentialité",
+    "contract_template": "Modèle de contrat",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "Dubai, UAE",
+    "copyright": "© 2025 Real Estate Referrer. Tous droits réservés."
+  }
 }
