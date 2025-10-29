@@ -170,6 +170,53 @@
                             </div>
                         </div>
                     </main>
+                    
+                    <footer class="bg-gray-900 bg-opacity-80 backdrop-blur-md mt-20">
+                        <div class="container mx-auto px-4 py-12">
+                            <div class="grid md:grid-cols-3 gap-8 mb-8">
+                                <div>
+                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.navigation_title')}</h3>
+                                    <ul class="space-y-2">
+                                        <li><button onclick="backToHome()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.home')}</button></li>
+                                        <li><a href="how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.how_it_works')}</a></li>
+                                        <li><button onclick="showLogin()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.login')}</button></li>
+                                        <li><button onclick="showSignup()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.signup')}</button></li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.legal_title')}</h3>
+                                    <ul class="space-y-2">
+                                        <li><a href="terms.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.terms')}</a></li>
+                                        <li><a href="privacy.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.privacy')}</a></li>
+                                        <li><button onclick="downloadContractTemplate()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.contract_template')}</button></li>
+                                    </ul>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.contact_title')}</h3>
+                                    <ul class="space-y-3 text-gray-300">
+                                        <li class="flex items-center gap-2">
+                                            <span>📧</span>
+                                            <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <span>📱</span>
+                                            <span>${t('common:footer.phone')}</span>
+                                        </li>
+                                        <li class="flex items-center gap-2">
+                                            <span>📍</span>
+                                            <span>${t('common:footer.location')}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+                                ${t('common:footer.copyright')}
+                            </div>
+                        </div>
+                    </footer>
                 </div>
             `;
         }
