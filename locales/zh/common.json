@@ -1,0 +1,29 @@
+{
+  "loading": "加载中...",
+  "error": "错误",
+  "success": "成功",
+  "save": "保存",
+  "delete": "删除",
+  "edit": "编辑",
+  "close": "关闭",
+  "yes": "是",
+  "no": "否",
+  "submit": "提交",
+  "search": "搜索",
+  "footer": {
+    "navigation_title": "导航",
+    "legal_title": "法律",
+    "contact_title": "联系我们",
+    "home": "首页",
+    "how_it_works": "如何运作",
+    "login": "登录",
+    "signup": "注册",
+    "terms": "条款",
+    "privacy": "隐私",
+    "contract_template": "合同模板",
+    "email": "contact@real-estate-referrer.com",
+    "phone": "+971 XX XXX XXXX",
+    "location": "迪拜，阿联酋",
+    "copyright": "© 2025 Real Estate Referrer. 版权所有。"
+  }
+}
