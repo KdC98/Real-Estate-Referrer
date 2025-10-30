@@ -834,40 +834,58 @@
             };
         }
 
-        async function send2FACode(userId, session, language = 'fr') {
-            try {
-                console.log('📱 Sending 2FA code for user:', userId, 'language:', language);
-                
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${session.access_token}`
-                    },
-                    body: JSON.stringify({ 
-                        userId: userId,
-                        language: language
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(result.error || 'Erreur envoi SMS');
-                }
-                
-                console.log('✅ SMS sent successfully');
-                if (result.warning) {
-                    console.warn('⚠️ SMS warning:', result.warning);
-                }
-                
+       async function send2FACode(userId, session, language = 'fr') {
+    try {
+        console.log('📱 Sending 2FA code for user:', userId, 'language:', language);
+        
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify({ 
+                userId: userId,
+                language: language
+            })
+        });
+        
+        const result = await response.json();
+        
+        // ⚠️ CORRECTION : Vérifier si c'est l'erreur 80 (warning, pas une vraie erreur)
+        if (!response.ok) {
+            const errorMsg = result.error || 'Erreur envoi SMS';
+            
+            // Si c'est l'erreur 80, on ignore (SMS envoyé quand même)
+            if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
+                console.log('✅ SMS sent despite error 80 (warning only)');
                 return true;
-            } catch (error) {
-                console.error('❌ Erreur send2FACode:', error);
-                alert(t('auth:errors.sms_failed'));
-                return false;
             }
+            
+            // Pour les autres erreurs, on lance l'exception
+            throw new Error(errorMsg);
         }
+        
+        console.log('✅ SMS sent successfully');
+        if (result.warning) {
+            console.warn('⚠️ SMS warning:', result.warning);
+        }
+        
+        return true;
+    } catch (error) {
+        const errorMsg = error.message || '';
+        
+        // Dernière chance : vérifier l'erreur 80 dans le catch
+        if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
+            console.log('✅ SMS sent despite error 80 (caught in catch)');
+            return true;
+        }
+        
+        console.error('❌ Erreur send2FACode:', error);
+        alert(t('auth:errors.sms_failed'));
+        return false;
+    }
+}
 
         async function verify2FACode(code) {
             try {
