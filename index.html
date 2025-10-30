@@ -890,11 +890,23 @@
                 if (error) throw error;
                 
                 if (!codes || codes.length === 0) {
-                    const { error: updateError } = await supabase
+                    console.log('❌ Code not found or invalid');
+                    
+                    // Incrémenter attempts (sans utiliser raw() qui n'existe pas en JS)
+                    const { data: currentCodes } = await supabase
                         .from('verification_codes')
-                        .update({ attempts: supabase.raw('attempts + 1') })
+                        .select('id, attempts')
                         .eq('user_id', tempUserId)
-                        .eq('used', false);
+                        .eq('used', false)
+                        .order('created_at', { ascending: false })
+                        .limit(1);
+                    
+                    if (currentCodes && currentCodes.length > 0) {
+                        await supabase
+                            .from('verification_codes')
+                            .update({ attempts: currentCodes[0].attempts + 1 })
+                            .eq('id', currentCodes[0].id);
+                    }
                     
                     return false;
                 }
