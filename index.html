@@ -777,9 +777,9 @@
                 }
             };
         }
-async function send2FACode(userId) {
+async function send2FACode(userId, session) {
     try {
-        const { data: { session } } = await supabase.auth.getSession();
+        // const { data: { session } } = await supabase.auth.getSession();
         const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
             method: 'POST',
             headers: {
@@ -1819,13 +1819,20 @@ async function resend2FACode() {
                     window.userProfile = null;
                 }
                 else if (userProfile && userProfile.phone && userProfile.phone.trim() !== '') {
-        console.log('📱 Phone detected, activating 2FA mode');
-        tempUserId = currentUser.id;
-        tempUserProfile = userProfile;
-        is2FAMode = true;
-        currentUser = null;
-        userProfile = null;
-        await send2FACode(tempUserId);
+    console.log('📱 Phone detected, activating 2FA mode');
+    
+    // Récupérer la session AVANT de vider currentUser
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    tempUserId = currentUser.id;
+    tempUserProfile = userProfile;
+    is2FAMode = true;
+    currentUser = null;
+    userProfile = null;
+    
+    // Passer la session en paramètre
+    await send2FACode(tempUserId, session);
+}
     }
             }
 
