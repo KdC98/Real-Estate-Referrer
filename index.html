@@ -1834,9 +1834,7 @@ async function resend2FACode() {
     await send2FACode(tempUserId, session);
 }
 
-        });
-
-        console.log('🔍 Getting initial session...');
+       console.log('🔍 Getting initial session...');
         supabase.auth.getSession().then(async ({ data: { session }, error }) => {
             if (error) {
                 console.error('❌ Session error:', error);
