@@ -748,11 +748,31 @@
                             console.error('❌ Error creating profile:', profileError);
                         }
                         
+                        // Stocker tempUserProfile avec email et password pour reconnecter après 2FA
+                        tempUserProfile = {
+                            id: data.user.id,
+                            name: name,
+                            phone: fullPhone,
+                            email: email,
+                            role: 'referrer',
+                            contract_status: 'pending',
+                            phone_verified: false
+                        };
+                        window.tempPassword = password;
+                        
+                        console.log('📱 Sending 2FA code...');
                         const { data: { session } } = await supabase.auth.getSession();
+                        
+                        // Stocker le token temporairement pour permettre resend2FACode
+                        window.tempAccessToken = session.access_token;
                         
                         is2FAMode = true;
                         const currentLang = i18next.language || 'fr';
                         await send2FACode(data.user.id, session, currentLang);
+                        
+                        // CRITIQUE: Se déconnecter pour éviter la redirection auto vers le dashboard
+                        console.log('🔓 Signing out to prevent auto-redirect to dashboard');
+                        await supabase.auth.signOut();
                         
                         render();
                     } else if (mode === 'login') {
@@ -897,19 +917,45 @@
 
                 console.log('✅ Phone marked as verified');
                 
-                console.log('✅ 2FA code validated, retrieving full session...');
+                console.log('✅ 2FA code validated, reconnecting user...');
                 
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-                
-                if (sessionError || !session) {
-                    console.error('❌ Failed to get session after 2FA:', sessionError);
-                    throw new Error('Failed to restore session');
+                // CRITIQUE: Reconnecter l'utilisateur avec email et mot de passe
+                if (!tempUserProfile || !tempUserProfile.email || !window.tempPassword) {
+                    throw new Error('Données de connexion manquantes');
                 }
                 
-                currentUser = session.user;
-                window.currentUser = session.user;
-                userProfile = tempUserProfile;
-                window.userProfile = tempUserProfile;
+                const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+                    email: tempUserProfile.email,
+                    password: window.tempPassword
+                });
+                
+                if (signInError) {
+                    console.error('❌ Error signing in after 2FA:', signInError);
+                    throw signInError;
+                }
+                
+                console.log('✅ User signed in successfully after 2FA');
+                
+                // Nettoyer les données temporaires
+                delete window.tempPassword;
+                delete window.tempAccessToken;
+                
+                // Charger le profil complet
+                const { data: profileData, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', signInData.user.id)
+                    .single();
+                
+                if (profileError) {
+                    console.error('❌ Error loading profile:', profileError);
+                } else {
+                    userProfile = profileData;
+                    window.userProfile = profileData;
+                }
+                
+                currentUser = signInData.user;
+                window.currentUser = signInData.user;
                 currentPage = tempUserProfile.role === 'admin' ? 'admin' : 'referrer';
                 is2FAMode = false;
                 tempUserId = null;
@@ -939,11 +985,22 @@
 
         async function resend2FACode() {
             if (tempUserId) {
-                const { data: { session } } = await supabase.auth.getSession();
                 const currentLang = i18next.language || 'fr';
-                const success = await send2FACode(tempUserId, session, currentLang);
-                if (success) {
-                    alert(t('auth:two_factor.code_sent'));
+                
+                // Utiliser le token temporaire si disponible (mode inscription)
+                if (window.tempAccessToken) {
+                    const tempSession = { access_token: window.tempAccessToken };
+                    const success = await send2FACode(tempUserId, tempSession, currentLang);
+                    if (success) {
+                        alert(t('auth:two_factor.code_sent'));
+                    }
+                } else {
+                    // Sinon utiliser la session actuelle (mode connexion)
+                    const { data: { session } } = await supabase.auth.getSession();
+                    const success = await send2FACode(tempUserId, session, currentLang);
+                    if (success) {
+                        alert(t('auth:two_factor.code_sent'));
+                    }
                 }
             }
         }
