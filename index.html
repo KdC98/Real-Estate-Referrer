@@ -1833,7 +1833,7 @@ async function resend2FACode() {
     // Passer la session en paramètre
     await send2FACode(tempUserId, session);
 }
-
+       else {
        console.log('🔍 Getting initial session...');
         supabase.auth.getSession().then(async ({ data: { session }, error }) => {
             if (error) {
@@ -1885,6 +1885,7 @@ async function resend2FACode() {
             render();
             initialLoadComplete = true;
         });
+           }
     </script>
 </body>
 </html>
