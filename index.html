@@ -332,6 +332,12 @@
                                         >
                                     </div>
                                     <div class="text-xs text-gray-400 mt-1">Format: 9 chiffres après +971 (ex: 501234567)</div>
+                                    <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
+                                        <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
+                                        <p class="text-xs text-blue-200">
+                                            <strong>Important :</strong> Ce numéro sera utilisé pour l'authentification à deux facteurs (2FA). Vous recevrez un code SMS à chaque connexion. Assurez-vous de saisir le bon numéro !
+                                        </p>
+                                    </div>
                                     <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
                             ` : ''}
@@ -1317,61 +1323,85 @@
                     const contractForm = document.getElementById('contractForm');
                     if (contractForm) {
                         console.log('✅ Contract form found, attaching submit handler');
+                        
+                        let isUploading = false;
+                        
                         contractForm.addEventListener('submit', async (e) => {
                             e.preventDefault();
+                            
+                            if (isUploading) {
+                                console.log('⚠️ Upload already in progress, ignoring duplicate submit');
+                                return;
+                            }
+                            
+                            isUploading = true;
                             console.log('📄 Starting contract upload...');
                             
-                            const fileInput = document.getElementById('contractFile');
-                            const file = fileInput.files[0];
-
-                            if (!file) {
-                                alert('Veuillez sélectionner un fichier');
-                                return;
-                            }
-
-                            if (file.type !== 'application/pdf') {
-                                alert('Seuls les fichiers PDF sont acceptés');
-                                return;
-                            }
-
-                            const maxSize = 5 * 1024 * 1024;
-                            if (file.size > maxSize) {
-                                alert('Le fichier est trop volumineux. Taille maximum : 5MB');
-                                return;
-                            }
-
-                            console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+                            const submitBtn = document.getElementById('contractSubmitBtn');
+                            const originalText = submitBtn.textContent;
+                            submitBtn.disabled = true;
+                            submitBtn.textContent = 'Upload en cours...';
                             
-                            const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-                            console.log('📄 Uploading to Storage with name:', fileName);
+                            try {
+                                const fileInput = document.getElementById('contractFile');
+                                const file = fileInput.files[0];
 
-                            const { data: uploadData, error: uploadError } = await supabase.storage
-                                .from('contracts')
-                                .upload(fileName, file);
+                                if (!file) {
+                                    alert('Veuillez sélectionner un fichier');
+                                    return;
+                                }
 
-                            if (uploadError) {
-                                console.error('❌ Error uploading contract:', uploadError);
-                                alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
-                                return;
+                                if (file.type !== 'application/pdf') {
+                                    alert('Seuls les fichiers PDF sont acceptés');
+                                    return;
+                                }
+
+                                const maxSize = 5 * 1024 * 1024;
+                                if (file.size > maxSize) {
+                                    alert('Le fichier est trop volumineux. Taille maximum : 5MB');
+                                    return;
+                                }
+
+                                console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+                                
+                                const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+                                console.log('📄 Uploading to Storage with name:', fileName);
+
+                                const { data: uploadData, error: uploadError } = await supabase.storage
+                                    .from('contracts')
+                                    .upload(fileName, file);
+
+                                if (uploadError) {
+                                    console.error('❌ Error uploading contract:', uploadError);
+                                    alert('Erreur lors de l\'upload du contrat: ' + uploadError.message);
+                                    return;
+                                }
+
+                                console.log('✅ File uploaded successfully to Storage');
+
+                                const { error: updateError } = await supabase.from('profiles').update({
+                                    contract_status: 'uploaded',
+                                    contract_file_url: fileName
+                                }).eq('id', currentUser.id);
+
+                                if (updateError) {
+                                    console.error('❌ Error updating profile:', updateError);
+                                    alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
+                                    return;
+                                }
+
+                                console.log('✅ Profile updated successfully');
+                                alert('✅ Contrat uploadé avec succès !');
+                                await loadUserProfile();
+                                render();
+                            } catch (error) {
+                                console.error('❌ Upload exception:', error);
+                                alert('Erreur lors de l\'upload: ' + error.message);
+                            } finally {
+                                isUploading = false;
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = originalText;
                             }
-
-                            console.log('✅ File uploaded successfully to Storage');
-
-                            const { error: updateError } = await supabase.from('profiles').update({
-                                contract_status: 'uploaded',
-                                contract_file_url: fileName
-                            }).eq('id', currentUser.id);
-
-                            if (updateError) {
-                                console.error('❌ Error updating profile:', updateError);
-                                alert('Erreur lors de la mise à jour du profil: ' + updateError.message);
-                                return;
-                            }
-
-                            console.log('✅ Profile updated successfully');
-                            alert('✅ Contrat uploadé avec succès !');
-                            await loadUserProfile();
-                            render();
                         });
                     } else {
                         console.log('ℹ️ Contract form not found');
