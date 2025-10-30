@@ -733,6 +733,12 @@
                         
                         console.log('✅ Signup successful, user:', data.user);
                         
+                        // CRITIQUE: Se déconnecter IMMÉDIATEMENT pour éviter l'événement SIGNED_IN
+                        console.log('🔓 Signing out IMMEDIATELY to prevent auto-redirect');
+                        const sessionToUse = data.session; // Sauvegarder la session avant signOut
+                        await supabase.auth.signOut();
+                        console.log('✅ Signed out, now safe to proceed with 2FA');
+                        
                         tempUserId = data.user.id;
                         
                         const { error: profileError } = await supabase.from('profiles').insert({
@@ -760,19 +766,13 @@
                         };
                         window.tempPassword = password;
                         
-                        console.log('📱 Sending 2FA code...');
-                        const { data: { session } } = await supabase.auth.getSession();
-                        
                         // Stocker le token temporairement pour permettre resend2FACode
-                        window.tempAccessToken = session.access_token;
+                        window.tempAccessToken = sessionToUse.access_token;
                         
                         is2FAMode = true;
+                        console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
-                        await send2FACode(data.user.id, session, currentLang);
-                        
-                        // CRITIQUE: Se déconnecter pour éviter la redirection auto vers le dashboard
-                        console.log('🔓 Signing out to prevent auto-redirect to dashboard');
-                        await supabase.auth.signOut();
+                        await send2FACode(data.user.id, sessionToUse, currentLang);
                         
                         render();
                     } else if (mode === 'login') {
