@@ -847,12 +847,25 @@
                 
                 if (markError) throw markError;
                 
-                currentUser = { id: tempUserId };
+                console.log('✅ 2FA code validated, retrieving full session...');
+                
+                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+                
+                if (sessionError || !session) {
+                    console.error('❌ Failed to get session after 2FA:', sessionError);
+                    throw new Error('Failed to restore session');
+                }
+                
+                currentUser = session.user;
+                window.currentUser = session.user;
                 userProfile = tempUserProfile;
+                window.userProfile = tempUserProfile;
                 currentPage = tempUserProfile.role === 'admin' ? 'admin' : 'referrer';
                 is2FAMode = false;
                 tempUserId = null;
                 tempUserProfile = null;
+                
+                console.log('✅ Session restored, currentUser:', currentUser);
                 
                 return true;
             } catch (error) {
