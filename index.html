@@ -318,24 +318,37 @@
                                 
                                 <div>
                                     <label class="block mb-2 font-medium">${t('auth:phone_label')}</label>
-                                    <div class="relative">
-                                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">+971</span>
+                                    <div class="flex gap-2">
+                                        <select 
+                                            id="countryCode" 
+                                            class="w-32 px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                        >
+                                            <option value="+971">🇦🇪 +971</option>
+                                            <option value="+33">🇫🇷 +33</option>
+                                            <option value="+44">🇬🇧 +44</option>
+                                            <option value="+966">🇸🇦 +966</option>
+                                            <option value="+91">🇮🇳 +91</option>
+                                            <option value="+92">🇵🇰 +92</option>
+                                            <option value="+86">🇨🇳 +86</option>
+                                            <option value="+63">🇵🇭 +63</option>
+                                            <option value="+7">🇷🇺 +7</option>
+                                            <option value="+20">🇪🇬 +20</option>
+                                            <option value="+1">🇺🇸 +1</option>
+                                        </select>
                                         <input 
                                             type="tel" 
                                             id="phone" 
                                             required 
-                                            pattern="[0-9]{9}"
-                                            placeholder="505059595"
-                                            maxlength="9"
-                                            class="w-full pl-16 pr-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                            placeholder="612345678"
+                                            class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
                                             oninput="validatePhone()"
                                         >
                                     </div>
-                                    <div class="text-xs text-gray-400 mt-1">Format: 9 chiffres après +971 (ex: 501234567)</div>
+                                    <div class="text-xs text-gray-400 mt-1">${t('auth:phone_info')}</div>
                                     <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                         <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
                                         <p class="text-xs text-blue-200">
-                                            <strong>Important :</strong> Ce numéro sera utilisé pour l'authentification à deux facteurs (2FA). Vous recevrez un code SMS à chaque connexion. Assurez-vous de saisir le bon numéro !
+                                            <strong>Important :</strong> Vous recevrez un code SMS de vérification UNIQUEMENT à l'inscription. Ensuite, la connexion se fera par email et mot de passe.
                                         </p>
                                     </div>
                                     <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
@@ -646,7 +659,8 @@
         function prefillTestData() {
             if (document.getElementById('name')) {
                 document.getElementById('name').value = 'Test User';
-                document.getElementById('phone').value = '505059595';
+                document.getElementById('countryCode').value = '+33';
+                document.getElementById('phone').value = '612345678';
                 document.getElementById('email').value = 'karyne@itooki.fr';
                 document.getElementById('password').value = 'Test1234';
                 document.getElementById('confirmPassword').value = 'Test1234';
@@ -688,15 +702,8 @@
                     if (mode === 'signup') {
                         console.log('📝 Processing signup');
                         const name = document.getElementById('name').value.trim();
-                        let phone = document.getElementById('phone').value.trim();
-                        
-                        phone = phone.replace(/[^\d]/g, '');
-                        if (phone.startsWith('971')) {
-                            phone = phone.substring(3);
-                        }
-                        if (phone.length > 9) {
-                            phone = phone.substring(0, 9);
-                        }
+                        const phone = document.getElementById('phone').value.trim();
+                        const countryCode = document.getElementById('countryCode').value;
                         
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         
@@ -706,7 +713,7 @@
                         if (!validatePassword()) throw new Error('Mot de passe invalide');
                         if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
                         
-                        const fullPhone = '+971' + phone;
+                        const fullPhone = countryCode + phone;
                         
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = true;
@@ -724,9 +731,30 @@
 
                         if (error) throw error;
                         
-                        console.log('✅ Signup successful');
-                        alert(t('auth:signup_success'));
-                        showLogin();
+                        console.log('✅ Signup successful, user:', data.user);
+                        
+                        tempUserId = data.user.id;
+                        
+                        const { error: profileError } = await supabase.from('profiles').insert({
+                            id: data.user.id,
+                            name: name,
+                            phone: fullPhone,
+                            role: 'referrer',
+                            contract_status: 'pending',
+                            phone_verified: false
+                        });
+                        
+                        if (profileError) {
+                            console.error('❌ Error creating profile:', profileError);
+                        }
+                        
+                        const { data: { session } } = await supabase.auth.getSession();
+                        
+                        is2FAMode = true;
+                        const currentLang = i18next.language || 'fr';
+                        await send2FACode(data.user.id, session, currentLang);
+                        
+                        render();
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
                         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -786,25 +814,36 @@
             };
         }
 
-        async function send2FACode(userId, session) {
+        async function send2FACode(userId, session, language = 'fr') {
             try {
+                console.log('📱 Sending 2FA code for user:', userId, 'language:', language);
+                
                 const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${session.access_token}`
                     },
-                    body: JSON.stringify({ userId })
+                    body: JSON.stringify({ 
+                        userId: userId,
+                        language: language
+                    })
                 });
                 
+                const result = await response.json();
+                
                 if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.error || 'Erreur envoi SMS');
+                    throw new Error(result.error || 'Erreur envoi SMS');
+                }
+                
+                console.log('✅ SMS sent successfully');
+                if (result.warning) {
+                    console.warn('⚠️ SMS warning:', result.warning);
                 }
                 
                 return true;
             } catch (error) {
-                console.error('Erreur send2FACode:', error);
+                console.error('❌ Erreur send2FACode:', error);
                 alert(t('auth:errors.sms_failed'));
                 return false;
             }
@@ -846,6 +885,17 @@
                     .eq('id', codes[0].id);
                 
                 if (markError) throw markError;
+                
+                const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ phone_verified: true })
+                    .eq('id', tempUserId);
+
+                if (updateError) {
+                    console.error('❌ Error updating phone_verified:', updateError);
+                }
+
+                console.log('✅ Phone marked as verified');
                 
                 console.log('✅ 2FA code validated, retrieving full session...');
                 
@@ -890,7 +940,8 @@
         async function resend2FACode() {
             if (tempUserId) {
                 const { data: { session } } = await supabase.auth.getSession();
-                const success = await send2FACode(tempUserId, session);
+                const currentLang = i18next.language || 'fr';
+                const success = await send2FACode(tempUserId, session, currentLang);
                 if (success) {
                     alert(t('auth:two_factor.code_sent'));
                 }
@@ -1393,7 +1444,7 @@
                                 console.log('✅ File uploaded successfully to Storage');
 
                                 const { error: updateError } = await supabase.from('profiles').update({
-                                    contract_status: 'uploaded',
+                                    contract_status: 'signed',
                                     contract_file_url: fileName
                                 }).eq('id', currentUser.id);
 
@@ -1494,50 +1545,32 @@
         }
 
         function validatePhone() {
-            const phoneInput = document.getElementById('phone');
+            const phoneField = document.getElementById('phone');
             const phoneError = document.getElementById('phoneError');
             
-            if (!phoneInput || !phoneError) return true;
+            if (!phoneField || !phoneError) return true;
 
-            let phone = phoneInput.value.trim();
-            phone = phone.replace(/^\+971\s*/, '');
-            phone = phone.replace(/\s/g, '');
-            phone = phone.replace(/-/g, '');
-
-            if (phone.length === 0) {
-                phoneError.textContent = '';
-                phoneError.classList.add('hidden');
-                phoneInput.classList.remove('border-green-500', 'border-red-500');
-                return false;
-            }
-
-            const phoneRegex = /^[0-9]{9}$/;
-            if (!phoneRegex.test(phone)) {
-                if (phone.length < 9) {
-                    phoneError.textContent = `Il manque ${9 - phone.length} chiffre(s)`;
-                } else {
-                    phoneError.textContent = 'Le numéro doit contenir exactement 9 chiffres';
-                }
+            const phone = phoneField.value.trim();
+            
+            const internationalPattern = /^[0-9]{6,15}$/;
+            
+            if (!phone) {
+                phoneError.textContent = t('auth:errors.phone_required') || 'Le numéro de téléphone est requis';
                 phoneError.classList.remove('hidden');
-                phoneInput.classList.add('border-red-500');
-                phoneInput.classList.remove('border-green-500');
+                phoneField.classList.add('border-red-500');
                 return false;
             }
-
-            const validPrefixes = ['50', '52', '54', '55', '56', '58', '59', '2', '3', '4', '6', '7', '9'];
-            const prefix = phone.substring(0, 2);
-            if (!validPrefixes.includes(prefix) && !['2','3','4','6','7','9'].includes(phone.charAt(0))) {
-                phoneError.textContent = 'Préfixe invalide. Utilisez: 50, 52, 54, 55, 56, 58, 59 ou un numéro fixe';
+            
+            if (!internationalPattern.test(phone)) {
+                phoneError.textContent = t('auth:errors.phone_invalid') || 'Le numéro doit contenir entre 6 et 15 chiffres';
                 phoneError.classList.remove('hidden');
-                phoneInput.classList.add('border-red-500');
-                phoneInput.classList.remove('border-green-500');
+                phoneField.classList.add('border-red-500');
                 return false;
             }
-
-            phoneError.textContent = '';
+            
             phoneError.classList.add('hidden');
-            phoneInput.classList.remove('border-red-500');
-            phoneInput.classList.add('border-green-500');
+            phoneField.classList.remove('border-red-500');
+            phoneField.classList.add('border-green-500');
             checkFormValidity();
             return true;
         }
@@ -1741,13 +1774,8 @@
 
             let phoneValid = !phoneInput;
             if (phoneInput) {
-                phoneValid = false;
-                let phone = phoneInput.value.trim();
-                phone = phone.replace(/^\+971\s*/, '');
-                phone = phone.replace(/[\s\-\(\)]/g, '');
-                phoneValid = /^[0-9]{9}$/.test(phone) && 
-                           (['50','52','54','55','56','58','59'].includes(phone.substring(0,2)) || 
-                            ['2','3','4','6','7','9'].includes(phone.charAt(0)));
+                const phone = phoneInput.value.trim();
+                phoneValid = /^[0-9]{6,15}$/.test(phone);
             }
 
             let passwordValid = false;
@@ -1870,18 +1898,6 @@
                     window.currentUser = null;
                     userProfile = null;
                     window.userProfile = null;
-                } else if (userProfile && userProfile.phone && userProfile.phone.trim() !== '') {
-                    console.log('📱 Phone detected, activating 2FA mode');
-                    
-                    const { data: { session: currentSession } } = await supabase.auth.getSession();
-                    
-                    tempUserId = currentUser.id;
-                    tempUserProfile = userProfile;
-                    is2FAMode = true;
-                    currentUser = null;
-                    userProfile = null;
-                    
-                    await send2FACode(tempUserId, currentSession);
                 }
             }
 
