@@ -3,2154 +3,1268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
+    <title>Real Estate Referrer - Karyne de Clercq</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <style>
-        body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
-            min-height: 100vh;
-        }
-    </style>
 </head>
-<body class="text-white">
-    <div id="app"></div>
-    <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+<body class="bg-gradient-to-br from-blue-900 via-blue-800 to-amber-600 min-h-screen">
 
-    (async () => {
-        await i18next
-            .use(i18nextHttpBackend)
-            .use(i18nextBrowserLanguageDetector)
-            .init({
-                fallbackLng: 'fr',
-                debug: true,
-                load: 'languageOnly',
-                ns: ['translation', 'auth', 'dashboard', 'common'],
-                defaultNS: 'translation',
-                backend: {
-                    loadPath: '/locales/{{lng}}/{{ns}}.json'
-                },
-                detection: {
-                    order: ['localStorage', 'navigator'],
-                    caches: ['localStorage']
-                }
-            });
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 text-center">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600 mx-auto mb-4"></div>
+            <p class="text-gray-700 text-lg font-semibold" data-i18n="connecting_google">Connexion avec Google...</p>
+        </div>
+    </div>
 
-        console.log('🌐 Loading translations...');
-        await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
-        console.log('✅ All translations loaded!');
+    <!-- Landing Page -->
+    <div id="landingPage" class="container mx-auto px-4 py-12">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-5xl font-bold text-white mb-4" data-i18n="landing_title">Devenez Apporteur d'Affaires Immobilier</h1>
+            <p class="text-2xl text-blue-100 mb-8" data-i18n="landing_subtitle">Gagnez jusqu'à 20% de commission sur chaque vente</p>
+        </div>
 
-        const t = (key) => i18next.t(key);
+        <!-- CTA Section -->
+        <div class="max-w-md mx-auto bg-white rounded-lg shadow-2xl p-8 mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center" data-i18n="landing_cta_title">Commencez à gagner aujourd'hui</h2>
+            
+            <!-- OAuth Buttons -->
+            <div class="space-y-4 mb-6">
+                <!-- Google Sign In -->
+                <button onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span data-i18n="sign_in_google">Sign in with Google</span>
+                </button>
 
-        async function changeLanguage(langCode) {
-            try {
-                await i18next.changeLanguage(langCode);
-                localStorage.setItem('i18nextLng', langCode);
-                window.location.reload();
-            } catch (error) {
-                console.error('Erreur changement de langue:', error);
-            }
-        }
-        window.changeLanguage = changeLanguage;
+                <!-- Apple Sign In -->
+                <button onclick="signInWithApple()" class="w-full flex items-center justify-center gap-3 bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-900 transition-all shadow-sm">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    <span data-i18n="sign_in_apple">Sign in with Apple</span>
+                </button>
+            </div>
 
+            <!-- Separator -->
+            <div class="relative mb-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500" data-i18n="or_email">Ou avec votre email</span>
+                </div>
+            </div>
+
+            <!-- Email Sign In Button -->
+            <button onclick="showSignupForm()" class="w-full bg-gradient-to-r from-blue-600 to-amber-500 text-white px-8 py-3 rounded-lg font-bold text-lg hover:from-blue-700 hover:to-amber-600 transition-all shadow-lg">
+                <span data-i18n="landing_cta_button">Créer mon compte gratuit</span>
+            </button>
+            
+            <p class="text-center mt-4 text-gray-600">
+                <span data-i18n="already_account">Déjà inscrit ?</span>
+                <a href="#" onclick="showLoginForm(); return false;" class="text-blue-600 hover:underline font-semibold" data-i18n="login_here">Connectez-vous ici</a>
+            </p>
+        </div>
+
+        <!-- Benefits Section -->
+        <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 text-center">
+                <div class="text-4xl font-bold text-amber-400 mb-2">20%</div>
+                <p class="text-white text-lg" data-i18n="benefit_commission">De commission sur chaque vente</p>
+            </div>
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 text-center">
+                <div class="text-4xl font-bold text-amber-400 mb-2">24/7</div>
+                <p class="text-white text-lg" data-i18n="benefit_support">Support et suivi en temps réel</p>
+            </div>
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-lg p-6 text-center">
+                <div class="text-4xl font-bold text-amber-400 mb-2">48h</div>
+                <p class="text-white text-lg" data-i18n="benefit_payment">Paiement après signature</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Form (Hidden by default) -->
+    <div id="loginForm" class="hidden container mx-auto px-4 py-12 max-w-md">
+        <div class="bg-white rounded-lg shadow-2xl p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center" data-i18n="login_title">Connexion</h2>
+            
+            <!-- OAuth Buttons in Login -->
+            <div class="space-y-4 mb-6">
+                <button onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span data-i18n="sign_in_google">Sign in with Google</span>
+                </button>
+
+                <button onclick="signInWithApple()" class="w-full flex items-center justify-center gap-3 bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-900 transition-all shadow-sm">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    <span data-i18n="sign_in_apple">Sign in with Apple</span>
+                </button>
+            </div>
+
+            <div class="relative mb-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500" data-i18n="or_email">Ou avec votre email</span>
+                </div>
+            </div>
+
+            <form id="loginFormElement" onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="email">Email</label>
+                    <input type="email" id="loginEmail" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="password">Mot de passe</label>
+                    <input type="password" id="loginPassword" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-amber-500 text-white px-8 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-amber-600 transition-all">
+                    <span data-i18n="login_button">Se connecter</span>
+                </button>
+            </form>
+
+            <div class="mt-4 text-center">
+                <a href="#" onclick="showForgotPasswordForm(); return false;" class="text-blue-600 hover:underline text-sm" data-i18n="forgot_password">Mot de passe oublié ?</a>
+            </div>
+
+            <p class="text-center mt-6 text-gray-600">
+                <span data-i18n="no_account">Pas encore inscrit ?</span>
+                <a href="#" onclick="showSignupForm(); return false;" class="text-blue-600 hover:underline font-semibold" data-i18n="signup_here">Créez votre compte</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Signup Form (Hidden by default) -->
+    <div id="signupForm" class="hidden container mx-auto px-4 py-12 max-w-md">
+        <div class="bg-white rounded-lg shadow-2xl p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center" data-i18n="signup_title">Créer un compte</h2>
+            
+            <!-- OAuth Buttons in Signup -->
+            <div class="space-y-4 mb-6">
+                <button onclick="signInWithGoogle()" class="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all shadow-sm">
+                    <svg width="20" height="20" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    <span data-i18n="sign_in_google">Sign in with Google</span>
+                </button>
+
+                <button onclick="signInWithApple()" class="w-full flex items-center justify-center gap-3 bg-black text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-900 transition-all shadow-sm">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                    </svg>
+                    <span data-i18n="sign_in_apple">Sign in with Apple</span>
+                </button>
+            </div>
+
+            <div class="relative mb-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500" data-i18n="or_email">Ou avec votre email</span>
+                </div>
+            </div>
+
+            <form id="signupFormElement" onsubmit="handleSignup(event)">
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="full_name">Nom complet</label>
+                    <input type="text" id="signupName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="phone">Téléphone</label>
+                    <div class="flex gap-2">
+                        <select id="signupCountryCode" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="+971">🇦🇪 +971</option>
+                            <option value="+33">🇫🇷 +33</option>
+                            <option value="+44">🇬🇧 +44</option>
+                            <option value="+1">🇺🇸 +1</option>
+                            <option value="+91">🇮🇳 +91</option>
+                            <option value="+86">🇨🇳 +86</option>
+                            <option value="+7">🇷🇺 +7</option>
+                            <option value="+63">🇵🇭 +63</option>
+                        </select>
+                        <input type="tel" id="signupPhone" required class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="612345678">
+                    </div>
+                    <div class="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p class="text-sm text-blue-800" data-i18n="sms_verification_notice">Un code SMS de vérification vous sera envoyé lors de l'inscription.</p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="email">Email</label>
+                    <input type="email" id="signupEmail" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="password">Mot de passe</label>
+                    <div class="relative">
+                        <input type="password" id="signupPassword" required minlength="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" oninput="checkPasswordStrength()">
+                        <button type="button" onclick="togglePasswordVisibility('signupPassword')" class="absolute right-3 top-2.5 text-gray-600">
+                            👁️
+                        </button>
+                    </div>
+                    <div id="passwordStrength" class="mt-2 hidden">
+                        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="strengthBar" class="h-full transition-all duration-300"></div>
+                        </div>
+                        <p id="strengthText" class="text-sm mt-1"></p>
+                        <ul class="text-xs mt-2 space-y-1">
+                            <li id="check8chars" class="text-gray-500">✗ <span data-i18n="password_8_chars">Minimum 8 caractères</span></li>
+                            <li id="checkLetter" class="text-gray-500">✗ <span data-i18n="password_letter">Au moins une lettre</span></li>
+                            <li id="checkNumber" class="text-gray-500">✗ <span data-i18n="password_number">Au moins un chiffre</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="confirm_password">Confirmer le mot de passe</label>
+                    <div class="relative">
+                        <input type="password" id="signupPasswordConfirm" required minlength="8" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button type="button" onclick="togglePasswordVisibility('signupPasswordConfirm')" class="absolute right-3 top-2.5 text-gray-600">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-amber-500 text-white px-8 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-amber-600 transition-all">
+                    <span data-i18n="signup_button">Créer mon compte</span>
+                </button>
+            </form>
+
+            <p class="text-center mt-6 text-gray-600">
+                <span data-i18n="already_account">Déjà inscrit ?</span>
+                <a href="#" onclick="showLoginForm(); return false;" class="text-blue-600 hover:underline font-semibold" data-i18n="login_here">Connectez-vous ici</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Forgot Password Form -->
+    <div id="forgotPasswordForm" class="hidden container mx-auto px-4 py-12 max-w-md">
+        <div class="bg-white rounded-lg shadow-2xl p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center" data-i18n="forgot_password_title">Mot de passe oublié</h2>
+            <p class="text-gray-600 mb-6 text-center" data-i18n="forgot_password_description">Entrez votre email pour recevoir un lien de réinitialisation</p>
+            
+            <form id="forgotPasswordFormElement" onsubmit="handleForgotPassword(event)">
+                <div class="mb-6">
+                    <label class="block text-gray-700 font-semibold mb-2" data-i18n="email">Email</label>
+                    <input type="email" id="forgotEmail" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-amber-500 text-white px-8 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-amber-600 transition-all">
+                    <span data-i18n="send_reset_link">Envoyer le lien</span>
+                </button>
+            </form>
+
+            <p class="text-center mt-6 text-gray-600">
+                <a href="#" onclick="showLoginForm(); return false;" class="text-blue-600 hover:underline" data-i18n="back_to_login">Retour à la connexion</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Dashboard Apporteur -->
+    <div id="dashboardReferrer" class="hidden">
+        <div class="bg-gradient-to-br from-blue-900 via-blue-800 to-amber-600 min-h-screen">
+            <!-- Header -->
+            <div class="bg-white shadow-lg">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-amber-500" data-i18n="dashboard_referrer_title">Dashboard Apporteur</h1>
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-700" id="userName"></span>
+                        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                            <span data-i18n="logout">Déconnexion</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contract Required Alert -->
+            <div id="contractAlert" class="container mx-auto px-4 py-6">
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg shadow-lg">
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <p class="text-lg font-bold" data-i18n="contract_required_title">Contrat requis</p>
+                            <p class="mt-1" data-i18n="contract_required_description">Veuillez télécharger et signer le contrat d'apporteur avant d'ajouter des leads</p>
+                            
+                            <div class="mt-4 grid md:grid-cols-2 gap-4">
+                                <div class="bg-white bg-opacity-50 rounded-lg p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-2xl">📥</span>
+                                        <h3 class="font-bold" data-i18n="step1_download">Étape 1 : Télécharger</h3>
+                                    </div>
+                                    <p class="text-sm mb-3" id="upload_instructions" data-i18n="upload_instructions"></p>
+                                    <button onclick="downloadContractTemplate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                                        <span data-i18n="download_contract_template">download_contract_template</span>
+                                    </button>
+                                </div>
+
+                                <div class="bg-white bg-opacity-50 rounded-lg p-4">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <span class="text-2xl">📤</span>
+                                        <h3 class="font-bold" data-i18n="step2_upload">Étape 2 : Uploader</h3>
+                                    </div>
+                                    <form id="contractForm" onsubmit="submitContract(event)" class="space-y-3">
+                                        <input type="file" id="contractFile" accept=".pdf" required class="w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-amber-500 file:text-white hover:file:bg-amber-600 file:cursor-pointer">
+                                        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                                            <span data-i18n="submit_contract">submit_contract</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="container mx-auto px-4 py-8">
+                <!-- Stats Cards -->
+                <div class="grid md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-gray-600 text-sm font-semibold mb-2" data-i18n="total_earnings">Gains totaux</h3>
+                        <p class="text-3xl font-bold text-blue-600"><span id="totalEarnings">0</span> AED</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-gray-600 text-sm font-semibold mb-2" data-i18n="active_leads">Leads en cours</h3>
+                        <p class="text-3xl font-bold text-amber-500" id="activeLeads">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-gray-600 text-sm font-semibold mb-2" data-i18n="closed_sales">Ventes conclues</h3>
+                        <p class="text-3xl font-bold text-green-600" id="closedSales">0</p>
+                    </div>
+                </div>
+
+                <!-- Add Lead Button -->
+                <div class="mb-6">
+                    <button id="addLeadBtn" onclick="showAddLeadForm()" disabled class="bg-gradient-to-r from-blue-600 to-amber-500 text-white px-6 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-amber-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        + <span data-i18n="add_lead">Ajouter un lead</span>
+                    </button>
+                </div>
+
+                <!-- Leads Table -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="client_name">Nom du client</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="lead_type">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="property_type">Type de propriété</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="budget">Budget</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="status">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="commission">Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leadsTableBody" class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500" data-i18n="no_leads_yet">Aucun lead pour le moment</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Admin -->
+    <div id="dashboardAdmin" class="hidden">
+        <div class="bg-gradient-to-br from-blue-900 via-blue-800 to-amber-600 min-h-screen">
+            <div class="bg-white shadow-lg">
+                <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-amber-500" data-i18n="dashboard_admin_title">Dashboard Admin</h1>
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-700" id="adminName"></span>
+                        <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-all">
+                            <span data-i18n="logout">Déconnexion</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mx-auto px-4 py-8">
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-gray-600 text-sm font-semibold mb-2" data-i18n="total_referrers">Apporteurs</h3>
+                        <p class="text-3xl font-bold text-blue-600" id="totalReferrers">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-gray-600 text-sm font-semibold mb-2" data-i18n="active_leads">Leads actifs</h3>
+                        <p class="text-3xl font-bold text-amber-500" id="adminActiveLeads">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-gray-600 text-sm font-semibold mb-2" data-i18n="total_sales">Ventes totales</h3>
+                        <p class="text-3xl font-bold text-green-600" id="totalSales">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-gray-600 text-sm font-semibold mb-2" data-i18n="commissions_paid">Commissions versées</h3>
+                        <p class="text-3xl font-bold text-purple-600"><span id="totalCommissions">0</span> AED</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="referrer">Apporteur</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="client_name">Client</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="lead_type">Type</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="property_type">Propriété</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="budget">Budget</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="status">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="actions">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminLeadsTableBody" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Lead Modal -->
+    <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800" data-i18n="add_lead_title">Ajouter un lead</h2>
+                    <button onclick="closeAddLeadForm()" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                </div>
+
+                <form id="addLeadFormElement" onsubmit="handleAddLead(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" data-i18n="lead_type">Type de lead</label>
+                        <select id="leadType" onchange="updateLeadForm()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="sale_buyer" data-i18n="sale_buyer">Achat - Acheteur</option>
+                            <option value="sale_seller" data-i18n="sale_seller">Vente - Vendeur</option>
+                            <option value="rental_landlord" data-i18n="rental_landlord">Location - Propriétaire</option>
+                            <option value="rental_tenant" data-i18n="rental_tenant">Location - Locataire</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" data-i18n="client_name">Nom du client</label>
+                        <input type="text" id="clientName" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" data-i18n="client_email">Email du client</label>
+                        <input type="email" id="clientEmail" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" data-i18n="client_phone">Téléphone du client</label>
+                        <input type="tel" id="clientPhone" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" data-i18n="property_type">Type de propriété</label>
+                        <select id="propertyType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option value="apartment" data-i18n="apartment">Appartement</option>
+                            <option value="villa" data-i18n="villa">Villa</option>
+                            <option value="townhouse" data-i18n="townhouse">Townhouse</option>
+                            <option value="penthouse" data-i18n="penthouse">Penthouse</option>
+                            <option value="studio" data-i18n="studio">Studio</option>
+                        </select>
+                    </div>
+
+                    <div id="budgetField" class="mb-4">
+                        <label class="block text-gray-700 font-semibold mb-2" data-i18n="budget">Budget (AED)</label>
+                        <input type="number" id="budget" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button type="button" onclick="closeAddLeadForm()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-3 rounded-lg font-bold transition-all">
+                            <span data-i18n="cancel">Annuler</span>
+                        </button>
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-amber-500 text-white px-6 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-amber-600 transition-all">
+                            <span data-i18n="add_lead">Ajouter</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase configuration
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
-
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        window.supabase = supabase;
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkwMDY0MTIsImV4cCI6MjA0NDU4MjQxMn0.Y2vMUusE5LTJX3FwUZGd84Ll9NJW4LDz-Xj6z0b4aqM';
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
         let userProfile = null;
         let currentPage = 'landing';
         let isPasswordRecoveryMode = false;
         let is2FAMode = false;
-        let isSignupInProgress = false;
-        let tempUserId = null;
-        let tempUserProfile = null;
-        
-        let globalIsUploading = false;
 
-        window.currentUser = null;
-        window.userProfile = null;
-        window.currentPage = 'landing';
+        // OAuth Popup Manager
+        let oauthPopup = null;
 
-        function renderLandingPage() {
-            return `
-                <div class="min-h-screen">
-                    <header class="container mx-auto px-4 py-6">
-                        <div class="flex justify-between items-center">
-                            <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
-                            <div class="flex items-center gap-3">
-                                <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                                    <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
-                                    <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
-                                    <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
-                                    <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
-                                    <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
-                                    <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
-                                    <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
-                                    <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
-                                </div>
-                                <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
-                                <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
-                                <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
-                            </div>
-                        </div>
-                    </header>
+        // Initialize i18next
+        i18next.use(i18nextHttpBackend).init({
+            lng: 'fr',
+            fallbackLng: 'fr',
+            backend: {
+                loadPath: '/locales/{{lng}}/translation.json'
+            }
+        }, function(err, t) {
+            updateContent();
+        });
 
-                    <main class="container mx-auto px-4 py-20">
-                        <div class="text-center mb-12">
-                            <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                                ${t('hero.title')}
-                            </h2>
-                            <p class="text-xl text-gray-300 mb-8">
-                                ${t('hero.subtitle')}
-                            </p>
-                            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
-                                ${t('hero.cta_button')}
-                            </button>
-                        </div>
-
-                        <div class="grid md:grid-cols-3 gap-6 my-16">
-                            <div class="rounded-xl overflow-hidden shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
-                            </div>
-                            <div class="rounded-xl overflow-hidden shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" alt="Dubai Marina" class="w-full h-64 object-cover">
-                            </div>
-                            <div class="rounded-xl overflow-hidden shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
-                            </div>
-                        </div>
-
-                        <div class="grid md:grid-cols-3 gap-8 mt-20">
-                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
-                                <div class="text-gray-300">${t('stats.commission_label')}</div>
-                            </div>
-                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.support_value')}</div>
-                                <div class="text-gray-300">${t('stats.support_label')}</div>
-                            </div>
-                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.timeline_value')}</div>
-                                <div class="text-gray-300">${t('stats.timeline_label')}</div>
-                            </div>
-                        </div>
-
-                        <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
-                            <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
-                            <div class="grid md:grid-cols-2 gap-8">
-                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
-                                    <div class="space-y-3 text-gray-300">
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.sale_example_1_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_1_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.sale_example_2_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_2_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.sale_example_3_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_3_commission')}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
-                                    <div class="space-y-3 text-gray-300">
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.rental_example_1_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_1_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.rental_example_2_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_2_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.rental_example_3_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_3_commission')}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                    
-                    <footer class="bg-gray-900 bg-opacity-80 backdrop-blur-md mt-20">
-                        <div class="container mx-auto px-4 py-12">
-                            <div class="grid md:grid-cols-3 gap-8 mb-8">
-                                <div>
-                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.navigation_title')}</h3>
-                                    <ul class="space-y-2">
-                                        <li><button onclick="backToHome()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.home')}</button></li>
-                                        <li><a href="how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.how_it_works')}</a></li>
-                                        <li><button onclick="showLogin()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.login')}</button></li>
-                                        <li><button onclick="showSignup()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.signup')}</button></li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.legal_title')}</h3>
-                                    <ul class="space-y-2">
-                                        <li><a href="terms.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.terms')}</a></li>
-                                        <li><a href="privacy.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.privacy')}</a></li>
-                                        <li><button onclick="downloadContractTemplate()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.contract_template')}</button></li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.contact_title')}</h3>
-                                    <ul class="space-y-3 text-gray-300">
-                                        <li class="flex items-center gap-2">
-                                            <span>📧</span>
-                                            <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a>
-                                        </li>
-                                        <li class="flex items-center gap-2">
-                                            <span>📱</span>
-                                            <span>${t('common:footer.phone')}</span>
-                                        </li>
-                                        <li class="flex items-center gap-2">
-                                            <span>📍</span>
-                                            <span>${t('common:footer.location')}</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
-                                ${t('common:footer.copyright')}
-                            </div>
-                        </div>
-                    </footer>
-                </div>
-            `;
+        function updateContent() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                element.textContent = i18next.t(key);
+            });
         }
 
-        function renderAuthPage(mode) {
-            let title, buttonText, linkText, linkAction;
-            if (is2FAMode) {
-                return `
-                    <div class="min-h-screen flex items-center justify-center p-4">
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
-                            <h2 class="text-3xl font-bold mb-6 text-center">${t('auth:two_factor.title')}</h2>
-                            <p class="text-center mb-6 text-gray-300">${t('auth:two_factor.description')}</p>
-                            
-                            <form onsubmit="handle2FASubmit(event)" class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">${t('auth:two_factor.code_label')}</label>
-                                    <input 
-                                        type="text" 
-                                        id="code2fa"
-                                        maxlength="6"
-                                        pattern="[0-9]{6}"
-                                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-yellow-400 text-white text-center text-2xl tracking-widest"
-                                        placeholder="000000"
-                                        required
-                                    />
-                                </div>
-                                
-                                <button type="submit" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition">
-                                    ${t('auth:two_factor.verify_button')}
-                                </button>
-                                
-                                <button type="button" onclick="resend2FACode()" class="w-full text-yellow-400 hover:text-yellow-300 transition py-2">
-                                    ${t('auth:two_factor.resend_button')}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                `;
-            }
+        // Check if we're in a popup opened for OAuth
+        if (window.opener && !window.opener.closed) {
+            // We're in a popup - check for auth state change
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_IN' && session) {
+                    // Send message to parent window
+                    window.opener.postMessage({ type: 'OAUTH_SUCCESS', session: session }, window.location.origin);
+                    // Close popup
+                    window.close();
+                }
+            });
+        }
+
+        // Listen for messages from OAuth popup
+        window.addEventListener('message', async (event) => {
+            if (event.origin !== window.location.origin) return;
             
-            if (mode === 'login') {
-                title = t('auth:login_title');
-                buttonText = t('auth:login_button');
-                linkText = t('auth:no_account');
-                linkAction = 'showSignup()';
-            } else if (mode === 'signup') {
-                title = t('auth:signup_title');
-                buttonText = t('auth:signup_button');
-                linkText = t('auth:have_account');
-                linkAction = 'showLogin()';
-            } else if (mode === 'reset') {
-                title = t('auth:reset_title');
-                buttonText = t('auth:reset_button');
-                linkText = t('auth:back_to_login');
-                linkAction = 'showLogin()';
-            } else if (mode === 'change-password') {
-                title = 'Nouveau mot de passe';
-                buttonText = 'Changer le mot de passe';
-                linkText = 'Retour à la connexion';
-                linkAction = 'showLogin()';
+            if (event.data.type === 'OAUTH_SUCCESS') {
+                console.log('OAuth success, refreshing session...');
+                // Refresh the session in the main window
+                const { data: { session }, error } = await supabase.auth.getSession();
+                if (session) {
+                    await checkAuth();
+                }
             }
+        });
 
-            return `
-                <div class="min-h-screen flex items-center justify-center px-4">
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
-                        <button onclick="backToHome()" class="text-gray-400 hover:text-white mb-6 flex items-center">
-                            ← ${t('auth:back_home')}
-                        </button>
-                        
-                        <h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>
-                        
-                        ${mode === 'login' || mode === 'signup' ? `
-                            <!-- Boutons OAuth -->
-                            <div class="space-y-3 mb-6">
-                                <button 
-                                    onclick="signInWithGoogle()" 
-                                    class="w-full bg-white hover:bg-gray-100 text-gray-800 font-semibold py-3 px-4 rounded-lg transition flex items-center justify-center gap-3 border border-gray-300"
-                                >
-                                    <svg class="w-5 h-5" viewBox="0 0 24 24">
-                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                                    </svg>
-                                    <span>Continuer avec Google</span>
-                                </button>
-                                
-                                <button 
-                                    onclick="signInWithApple()" 
-                                    class="w-full bg-black hover:bg-gray-900 text-white font-semibold py-3 px-4 rounded-lg transition flex items-center justify-center gap-3 border border-gray-700"
-                                >
-                                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-                                    </svg>
-                                    <span>Continuer avec Apple</span>
-                                </button>
-                            </div>
-                            
-                            <div class="relative my-6">
-                                <div class="absolute inset-0 flex items-center">
-                                    <div class="w-full border-t border-gray-600"></div>
-                                </div>
-                                <div class="relative flex justify-center text-sm">
-                                    <span class="px-4 bg-gray-800 text-gray-400">Ou avec votre email</span>
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        <form id="authForm" class="space-y-4">
-                            ${mode === 'signup' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${t('auth:name_label')}</label>
-                                    <input 
-                                        type="text" 
-                                        id="name" 
-                                        required 
-                                        minlength="2"
-                                        maxlength="100"
-                                        placeholder="John Doe"
-                                        class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                        oninput="validateName()"
-                                    >
-                                    <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                </div>
-                                
-                                <div>
-                                    <label class="block mb-2 font-medium">${t('auth:phone_label')}</label>
-                                    <div class="flex gap-2">
-                                        <select 
-                                            id="countryCode" 
-                                            class="w-32 px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                        >
-                                            <option value="+971">🇦🇪 +971</option>
-                                            <option value="+33">🇫🇷 +33</option>
-                                            <option value="+44">🇬🇧 +44</option>
-                                            <option value="+966">🇸🇦 +966</option>
-                                            <option value="+91">🇮🇳 +91</option>
-                                            <option value="+92">🇵🇰 +92</option>
-                                            <option value="+86">🇨🇳 +86</option>
-                                            <option value="+63">🇵🇭 +63</option>
-                                            <option value="+7">🇷🇺 +7</option>
-                                            <option value="+20">🇪🇬 +20</option>
-                                            <option value="+1">🇺🇸 +1</option>
-                                        </select>
-                                        <input 
-                                            type="tel" 
-                                            id="phone" 
-                                            required 
-                                            placeholder="612345678"
-                                            class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                            oninput="validatePhone()"
-                                        >
-                                    </div>
-                                    <div class="text-xs text-gray-400 mt-1">${t('auth:phone_info')}</div>
-                                    <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
-                                        <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
-                                        <p class="text-xs text-blue-200">
-                                            <strong>Important :</strong> Vous recevrez un code SMS de vérification UNIQUEMENT à l'inscription. Ensuite, la connexion se fera par email et mot de passe.
-                                        </p>
-                                    </div>
-                                    <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                </div>
-                            ` : ''}
-                            
-                            ${mode !== 'change-password' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
-                                    <input 
-                                        type="email" 
-                                        id="email" 
-                                        required 
-                                        placeholder="exemple@email.com"
-                                        class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                        ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
-                                    >
-                                    ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
-                                </div>
-                            ` : ''}
-                            
-                            ${mode !== 'reset' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Nouveau mot de passe' : t('auth:password_label')}</label>
-                                    <div class="relative">
-                                        <input 
-                                            type="password" 
-                                            id="${mode === 'change-password' ? 'newPassword' : 'password'}" 
-                                            required 
-                                            minlength="8" 
-                                            placeholder="••••••••"
-                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
-                                            ${mode === 'signup' || mode === 'change-password' ? 'oninput="validatePassword()"' : ''}
-                                        >
-                                        <button 
-                                            type="button" 
-                                            onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" 
-                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                                            aria-label="Afficher/masquer le mot de passe"
-                                        >
-                                            <span class="text-xl">👁️</span>
-                                        </button>
-                                    </div>
-                                    ${mode === 'signup' || mode === 'change-password' ? `
-                                        <div class="mt-2">
-                                            <div class="flex items-center gap-2 text-xs text-gray-400">
-                                                <div id="passwordStrength" class="flex-1 h-1.5 bg-gray-600 rounded-full overflow-hidden">
-                                                    <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300"></div>
-                                                </div>
-                                                <span id="passwordStrengthText" class="min-w-[60px]"></span>
-                                            </div>
-                                            <div class="text-xs text-gray-400 mt-1.5 space-y-0.5">
-                                                <div id="req-length" class="flex items-center gap-1">
-                                                    <span class="w-3">•</span>
-                                                    <span>Minimum 8 caractères</span>
-                                                </div>
-                                                <div id="req-letter" class="flex items-center gap-1">
-                                                    <span class="w-3">•</span>
-                                                    <span>Au moins une lettre</span>
-                                                </div>
-                                                <div id="req-number" class="flex items-center gap-1">
-                                                    <span class="w-3">•</span>
-                                                    <span>Au moins un chiffre</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ` : `<div class="text-sm text-gray-400 mt-1">${t('auth:password_hint')}</div>`}
-                                    <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                </div>
-                            ` : ''}
-                            
-                            ${mode === 'signup' || mode === 'change-password' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Confirmer le nouveau mot de passe' : t('auth:confirm_password_label')}</label>
-                                    <div class="relative">
-                                        <input 
-                                            type="password" 
-                                            id="${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}" 
-                                            required 
-                                            minlength="8" 
-                                            placeholder="••••••••"
-                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
-                                            oninput="validateConfirmPassword()"
-                                        >
-                                        <button 
-                                            type="button" 
-                                            onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" 
-                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                                            aria-label="Afficher/masquer la confirmation"
-                                        >
-                                            <span class="text-xl">👁️</span>
-                                        </button>
-                                    </div>
-                                    <div id="confirmPasswordError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                    <div id="confirmPasswordSuccess" class="text-green-400 text-sm mt-1 hidden flex items-center gap-1">
-                                        <span>✓</span>
-                                        <span>Les mots de passe correspondent</span>
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            ${mode === 'login' ? `
-                                <div class="text-right">
-                                    <button type="button" onclick="showReset()" class="text-yellow-400 hover:text-yellow-300 text-sm transition-colors">
-                                        ${t('auth:forgot_password')}
-                                    </button>
-                                </div>
-                            ` : ''}
-                            
-                            <div id="authError" class="text-red-400 text-sm hidden bg-red-900/20 border border-red-500/50 rounded-lg p-3"></div>
-                            
-                            <button 
-                                type="submit" 
-                                id="submitButton"
-                                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                ${mode === 'signup' || mode === 'change-password' ? 'disabled' : ''}
-                            >
-                                ${buttonText}
-                            </button>
-                        </form>
-                        
-                        <p class="text-center mt-6 text-gray-400">
-                            <button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">
-                                ${linkText}
-                            </button>
-                        </p>
-                        
-                        ${mode === 'signup' ? `
-                            <div class="text-center mt-4">
-                                <button type="button" onclick="prefillTestData()" class="text-sm text-gray-400 hover:text-white border border-gray-600 px-3 py-1 rounded">
-                                    Remplir avec les données de test
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-        }
-
-        // 🔵 Fonction Google Sign-In
+        // Google Sign In with Popup
         async function signInWithGoogle() {
             try {
-                console.log('🔵 Initiating Google Sign-In...');
+                console.log('Starting Google Sign In with popup...');
+                showLoading(true);
+
+                // Get the OAuth URL
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: window.location.origin
+                        redirectTo: window.location.origin,
+                        skipBrowserRedirect: true
                     }
                 });
 
                 if (error) throw error;
-                console.log('✅ Google Sign-In initiated, redirecting...');
+
+                // Open popup
+                const width = 600;
+                const height = 700;
+                const left = window.screen.width / 2 - width / 2;
+                const top = window.screen.height / 2 - height / 2;
+
+                oauthPopup = window.open(
+                    data.url,
+                    'Google Sign In',
+                    `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes,resizable=yes`
+                );
+
+                if (!oauthPopup) {
+                    // Popup blocked - fallback to redirect
+                    console.log('Popup blocked, falling back to redirect');
+                    window.location.href = data.url;
+                    return;
+                }
+
+                // Check if popup was closed manually
+                const popupTimer = setInterval(() => {
+                    if (oauthPopup.closed) {
+                        clearInterval(popupTimer);
+                        showLoading(false);
+                        console.log('Popup closed');
+                    }
+                }, 500);
+
             } catch (error) {
-                console.error('❌ Google Sign-In error:', error);
-                alert('Erreur lors de la connexion avec Google: ' + error.message);
+                console.error('Error signing in with Google:', error);
+                alert(i18next.t('error_google_signin') || 'Erreur lors de la connexion avec Google');
+                showLoading(false);
             }
         }
 
-        // 🍎 Fonction Apple Sign-In
+        // Apple Sign In with Popup
         async function signInWithApple() {
             try {
-                console.log('🍎 Initiating Apple Sign-In...');
+                console.log('Starting Apple Sign In with popup...');
+                showLoading(true);
+
+                // Get the OAuth URL
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'apple',
                     options: {
-                        redirectTo: window.location.origin
+                        redirectTo: window.location.origin,
+                        skipBrowserRedirect: true
                     }
                 });
 
-                if (error) {
-                    if (error.message.includes('not enabled') || error.message.includes('not configured')) {
-                        alert('⚠️ Apple Sign-In sera disponible prochainement. En attente de l\'approbation du compte Apple Developer.');
-                        return;
-                    }
-                    throw error;
+                if (error) throw error;
+
+                // Open popup
+                const width = 600;
+                const height = 700;
+                const left = window.screen.width / 2 - width / 2;
+                const top = window.screen.height / 2 - height / 2;
+
+                oauthPopup = window.open(
+                    data.url,
+                    'Apple Sign In',
+                    `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes,resizable=yes`
+                );
+
+                if (!oauthPopup) {
+                    // Popup blocked - fallback to redirect
+                    console.log('Popup blocked, falling back to redirect');
+                    window.location.href = data.url;
+                    return;
                 }
-                
-                console.log('✅ Apple Sign-In initiated, redirecting...');
+
+                // Check if popup was closed manually
+                const popupTimer = setInterval(() => {
+                    if (oauthPopup.closed) {
+                        clearInterval(popupTimer);
+                        showLoading(false);
+                        console.log('Popup closed');
+                    }
+                }, 500);
+
             } catch (error) {
-                console.error('❌ Apple Sign-In error:', error);
-                alert('Erreur lors de la connexion avec Apple: ' + error.message);
+                console.error('Error signing in with Apple:', error);
+                alert(i18next.t('error_apple_signin') || 'Erreur lors de la connexion avec Apple');
+                showLoading(false);
             }
         }
 
-        window.signInWithGoogle = signInWithGoogle;
-        window.signInWithApple = signInWithApple;
-
-        function renderDashboard() {
-            if (!userProfile) {
-                return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
             }
-
-            const isAdmin = userProfile.role === 'admin';
-            const hasValidContract = userProfile.contract_status === 'signed' || userProfile.contract_status === 'approved';
-            const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
-
-            return `
-                <div class="min-h-screen">
-                    <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md">
-                        <div class="container mx-auto px-4 py-4">
-                            <div class="flex justify-between items-center">
-                                <h1 class="text-2xl font-bold text-yellow-400">${dashboardTitle}</h1>
-                                <div class="flex items-center gap-4">
-                                    <span class="text-gray-300">${userProfile.name}</span>
-                                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
-                                        ${t('dashboard:logout')}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    <main class="container mx-auto px-4 py-8">
-                        ${!hasValidContract && !isAdmin ? `
-                            <div class="mb-6 bg-red-900 bg-opacity-50 border-l-4 border-red-500 p-6 rounded-lg shadow-lg">
-                                <div class="flex items-start gap-4">
-                                    <div class="text-3xl flex-shrink-0">⚠️</div>
-                                    <div class="flex-1">
-                                        <h3 class="text-xl font-bold text-red-300 mb-2">${t('dashboard:contract_required')}</h3>
-                                        <p class="text-gray-300 mb-4">${t('dashboard:contract_warning_message')}</p>
-                                        
-                                        <div class="grid md:grid-cols-2 gap-4">
-                                            <div class="bg-blue-900 bg-opacity-30 p-4 rounded-lg">
-                                                <h4 class="font-bold text-blue-300 mb-2">📥 Étape 1 : Télécharger</h4>
-                                                <p class="text-sm text-gray-300 mb-3">${t('dashboard:upload_instructions')}</p>
-                                                <button 
-                                                    onclick="downloadContractTemplate()" 
-                                                    class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition"
-                                                >
-                                                    ${t('dashboard:download_contract_template')}
-                                                </button>
-                                            </div>
-                                            
-                                            <div class="bg-yellow-900 bg-opacity-30 p-4 rounded-lg">
-                                                <h4 class="font-bold text-yellow-300 mb-2">📤 Étape 2 : Uploader</h4>
-                                                <form id="contractForm">
-                                                    <input 
-                                                        type="file" 
-                                                        id="contractFile" 
-                                                        accept=".pdf" 
-                                                        required 
-                                                        class="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none mb-3 text-sm"
-                                                    >
-                                                    <button 
-                                                        type="submit" 
-                                                        id="contractSubmitBtn"
-                                                        class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded-lg transition"
-                                                    >
-                                                        ${t('dashboard:submit_contract')}
-                                                    </button>
-                                                    <div id="uploadError" class="hidden text-red-300 text-xs mt-2 bg-red-900/50 p-2 rounded"></div>
-                                                    <div id="uploadProgress" class="hidden text-blue-300 text-xs mt-2"></div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
-                        
-                        ${!isAdmin ? `
-                            <div class="mb-6">
-                                <button 
-                                    id="addLeadBtn"
-                                    onclick="showAddLeadForm()" 
-                                    ${!hasValidContract ? 'disabled' : ''}
-                                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition ${!hasValidContract ? 'opacity-50 cursor-not-allowed' : ''}"
-                                >
-                                    ${t('dashboard:add_lead')}
-                                </button>
-                            </div>
-                        ` : ''}
-                        
-                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-8">
-                            <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
-                            <div id="leadsTable" class="overflow-x-auto"></div>
-                        </div>
-                    </main>
-                    
-                    <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                        <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full">
-                            <h3 class="text-2xl font-bold mb-6">${t('dashboard:add_lead')}</h3>
-                            <form id="addLeadForm" class="space-y-4">
-                                <div class="grid md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:client_name')}</label>
-                                        <input type="text" id="clientName" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:client_email')}</label>
-                                        <input type="email" id="clientEmail" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:client_phone')}</label>
-                                        <input type="tel" id="clientPhone" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:property_type')}</label>
-                                        <select id="propertyType" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                            <option value="">${t('dashboard:select_type')}</option>
-                                            <option value="sale_buyer">${t('dashboard:sale_buyer')}</option>
-                                            <option value="sale_seller">${t('dashboard:sale_seller')}</option>
-                                            <option value="rental_landlord">${t('dashboard:rental_landlord')}</option>
-                                            <option value="rental_tenant">${t('dashboard:rental_tenant')}</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:budget')}</label>
-                                        <input type="number" id="budget" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                </div>
-                                <div class="flex gap-4">
-                                    <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                                        ${t('dashboard:add')}
-                                    </button>
-                                    <button type="button" onclick="document.getElementById('addLeadModal').classList.add('hidden')" class="flex-1 bg-gray-600 hover:bg-gray-700 py-3 rounded-lg transition">
-                                        ${t('dashboard:cancel')}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            `;
         }
 
-        function showLogin() {
-            console.log('🔐 showLogin called');
-            currentPage = 'auth-login';
-            window.currentPage = 'auth-login';
-            render();
-        }
-
-        function showSignup() {
-            console.log('📝 showSignup called');
-            currentPage = 'auth-signup';
-            window.currentPage = 'auth-signup';
-            render();
-        }
-
-        function showReset() {
-            console.log('🔑 showReset called');
-            currentPage = 'auth-reset';
-            window.currentPage = 'auth-reset';
-            render();
-        }
-
-        function backToHome() {
-            console.log('🏠 backToHome called');
+        // Navigation functions
+        function showLandingPage() {
+            hideAll();
+            document.getElementById('landingPage').classList.remove('hidden');
             currentPage = 'landing';
-            window.currentPage = 'landing';
-            isPasswordRecoveryMode = false;
-            render();
         }
 
-        function prefillTestData() {
-            if (document.getElementById('name')) {
-                document.getElementById('name').value = 'Test User';
-                document.getElementById('countryCode').value = '+33';
-                document.getElementById('phone').value = '612345678';
-                document.getElementById('email').value = 'karyne@itooki.fr';
-                document.getElementById('password').value = 'Test1234';
-                document.getElementById('confirmPassword').value = 'Test1234';
-                validateName();
-                validatePhone();
-                validateEmail();
-                validatePassword();
-                validateConfirmPassword();
-                console.log('✅ Données de test pré-remplies');
-            }
+        function showLoginForm() {
+            hideAll();
+            document.getElementById('loginForm').classList.remove('hidden');
+            currentPage = 'login';
         }
 
-        function handleAuth(mode) {
-            console.log('🔧 handleAuth called for mode:', mode);
-            const form = document.getElementById('authForm');
-            const errorDiv = document.getElementById('authError');
+        function showSignupForm() {
+            hideAll();
+            document.getElementById('signupForm').classList.remove('hidden');
+            currentPage = 'signup';
+        }
+
+        function showForgotPasswordForm() {
+            hideAll();
+            document.getElementById('forgotPasswordForm').classList.remove('hidden');
+            currentPage = 'forgot';
+        }
+
+        function hideAll() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('forgotPasswordForm').classList.add('hidden');
+            document.getElementById('dashboardReferrer').classList.add('hidden');
+            document.getElementById('dashboardAdmin').classList.add('hidden');
+        }
+
+        // Password strength checker
+        function checkPasswordStrength() {
+            const password = document.getElementById('signupPassword').value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
             
-            if (errorDiv) {
-                errorDiv.textContent = '';
-                errorDiv.classList.add('hidden');
+            strengthDiv.classList.remove('hidden');
+            
+            let strength = 0;
+            const checks = {
+                length: password.length >= 8,
+                letter: /[a-zA-Z]/.test(password),
+                number: /\d/.test(password)
+            };
+            
+            document.getElementById('check8chars').className = checks.length ? 'text-green-600' : 'text-gray-500';
+            document.getElementById('check8chars').innerHTML = (checks.length ? '✓' : '✗') + ' ' + document.getElementById('check8chars').querySelector('span').outerHTML;
+            
+            document.getElementById('checkLetter').className = checks.letter ? 'text-green-600' : 'text-gray-500';
+            document.getElementById('checkLetter').innerHTML = (checks.letter ? '✓' : '✗') + ' ' + document.getElementById('checkLetter').querySelector('span').outerHTML;
+            
+            document.getElementById('checkNumber').className = checks.number ? 'text-green-600' : 'text-gray-500';
+            document.getElementById('checkNumber').innerHTML = (checks.number ? '✓' : '✗') + ' ' + document.getElementById('checkNumber').querySelector('span').outerHTML;
+            
+            strength = Object.values(checks).filter(Boolean).length;
+            
+            if (strength === 0) {
+                strengthBar.className = 'h-full bg-red-500 w-0';
+                strengthText.textContent = '';
+            } else if (strength === 1) {
+                strengthBar.className = 'h-full bg-red-500 w-1/3 transition-all duration-300';
+                strengthText.textContent = i18next.t('password_weak') || 'Faible';
+                strengthText.className = 'text-sm mt-1 text-red-600';
+            } else if (strength === 2) {
+                strengthBar.className = 'h-full bg-yellow-500 w-2/3 transition-all duration-300';
+                strengthText.textContent = i18next.t('password_medium') || 'Moyen';
+                strengthText.className = 'text-sm mt-1 text-yellow-600';
+            } else {
+                strengthBar.className = 'h-full bg-green-500 w-full transition-all duration-300';
+                strengthText.textContent = i18next.t('password_strong') || 'Fort';
+                strengthText.className = 'text-sm mt-1 text-green-600';
             }
+        }
 
-            if (!form) {
-                console.error('❌ Form not found');
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        // Auth handlers
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                await checkAuth();
+            } catch (error) {
+                console.error('Error logging in:', error);
+                alert(i18next.t('error_login') || error.message);
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const countryCode = document.getElementById('signupCountryCode').value;
+            const phone = document.getElementById('signupPhone').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const passwordConfirm = document.getElementById('signupPasswordConfirm').value;
+
+            if (password !== passwordConfirm) {
+                alert(i18next.t('passwords_no_match') || 'Les mots de passe ne correspondent pas');
                 return;
             }
 
-            console.log('✅ Form found, attaching handler');
-            
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                console.log('📤 Form submitted for', mode);
-                errorDiv.classList.add('hidden');
-                
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password')?.value;
+            const fullPhone = countryCode + phone;
 
-                try {
-                    if (mode === 'signup') {
-                        console.log('📝 Processing signup');
-                        const name = document.getElementById('name').value.trim();
-                        const phone = document.getElementById('phone').value.trim();
-                        const countryCode = document.getElementById('countryCode').value;
-                        
-                        const confirmPassword = document.getElementById('confirmPassword').value;
-                        
-                        if (!validateName()) throw new Error('Nom invalide');
-                        if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
-                        if (!validateEmail()) throw new Error('Email invalide');
-                        if (!validatePassword()) throw new Error('Mot de passe invalide');
-                        if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
-                        
-                        const fullPhone = countryCode + phone;
-                        
-                        const submitButton = document.getElementById('submitButton');
-                        submitButton.disabled = true;
-                        submitButton.textContent = 'Inscription en cours...';
-                        
-                        console.log('📤 Signup data:', { email, name, phone: fullPhone });
-                        
-                        isSignupInProgress = true;
-                        console.log('🔒 Signup in progress - blocking renders');
-                        
-                        const { data, error } = await supabase.auth.signUp({
-                            email,
-                            password,
-                            options: {
-                                data: { name, phone: fullPhone }
-                            }
-                        });
-
-                        if (error) {
-                            isSignupInProgress = false;
-                            throw error;
-                        }
-                        
-                        console.log('✅ Signup successful, user:', data.user);
-                        
-                        console.log('🔓 Signing out IMMEDIATELY to prevent auto-redirect');
-                        const sessionToUse = data.session;
-                        await supabase.auth.signOut();
-                        console.log('✅ Signed out, now safe to proceed with 2FA');
-                        
-                        tempUserId = data.user.id;
-                        
-                        const { error: profileError } = await supabase.from('profiles').insert({
-                            id: data.user.id,
-                            name: name,
-                            phone: fullPhone,
-                            role: 'referrer',
-                            contract_status: 'pending',
-                            phone_verified: false
-                        });
-                        
-                        if (profileError) {
-                            console.error('❌ Error creating profile:', profileError);
-                        }
-                        
-                        tempUserProfile = {
-                            id: data.user.id,
-                            name: name,
-                            phone: fullPhone,
-                            email: email,
-                            role: 'referrer',
-                            contract_status: 'pending',
-                            phone_verified: false
-                        };
-                        window.tempPassword = password;
-                        window.tempAccessToken = sessionToUse.access_token;
-                        
-                        is2FAMode = true;
-                        console.log('📱 Sending 2FA code...');
-                        const currentLang = i18next.language || 'fr';
-                        await send2FACode(data.user.id, sessionToUse, currentLang);
-                        
-                        render();
-                    } else if (mode === 'login') {
-                        console.log('🔐 Processing login');
-                        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                        if (error) throw error;
-                        console.log('✅ Login successful');
-                    }
-                } catch (error) {
-                    console.error('❌ Auth error:', error);
-                    let errorMessage = error.message;
-                    
-                    if (error.message.includes('Invalid login credentials')) {
-                        errorMessage = 'Email ou mot de passe incorrect';
-                    } else if (error.message.includes('Email not confirmed')) {
-                        errorMessage = 'Veuillez confirmer votre email avant de vous connecter';
-                    } else if (error.message.includes('User already registered')) {
-                        errorMessage = 'Cet email est déjà utilisé';
-                    } else if (error.message.includes('Password should be at least')) {
-                        errorMessage = 'Le mot de passe doit contenir au moins 8 caractères';
-                    }
-                    
-                    errorDiv.textContent = errorMessage;
-                    errorDiv.classList.remove('hidden');
-                    
-                    if (mode === 'signup') {
-                        const submitButton = document.getElementById('submitButton');
-                        submitButton.disabled = false;
-                        submitButton.textContent = t('auth:signup_button');
-                    }
-                }
-            };
-        }
-
-        async function handleReset() {
-            const form = document.getElementById('authForm');
-            const errorDiv = document.getElementById('authError');
-            
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                errorDiv.classList.add('hidden');
-                
-                const email = document.getElementById('email').value;
-
-                try {
-                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                        redirectTo: window.location.origin
-                    });
-                    
-                    if (error) throw error;
-                    
-                    alert(t('auth:reset_email_sent'));
-                    showLogin();
-                } catch (error) {
-                    console.error('Reset error:', error);
-                    errorDiv.textContent = error.message;
-                    errorDiv.classList.remove('hidden');
-                }
-            };
-        }
-
-       async function send2FACode(userId, session, language = 'fr') {
-    try {
-        console.log('📱 Sending 2FA code for user:', userId, 'language:', language);
-        
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.access_token}`
-            },
-            body: JSON.stringify({ 
-                userId: userId,
-                language: language
-            })
-        });
-        
-        const result = await response.json();
-        
-        if (!response.ok) {
-            const errorMsg = result.error || 'Erreur envoi SMS';
-            
-            if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
-                console.log('✅ SMS sent despite error 80 (warning only)');
-                return true;
-            }
-            
-            throw new Error(errorMsg);
-        }
-        
-        console.log('✅ SMS sent successfully');
-        if (result.warning) {
-            console.warn('⚠️ SMS warning:', result.warning);
-        }
-        
-        return true;
-    } catch (error) {
-        const errorMsg = error.message || '';
-        
-        if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
-            console.log('✅ SMS sent despite error 80 (caught in catch)');
-            return true;
-        }
-        
-        console.error('❌ Erreur send2FACode:', error);
-        alert(t('auth:errors.sms_failed'));
-        return false;
-    }
-}
-
-        async function verify2FACode(code) {
             try {
-                const encoder = new TextEncoder();
-                const data = encoder.encode(code);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                const hashArray = Array.from(new Uint8Array(hashBuffer));
-                const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                
-                const { data: codes, error } = await supabase
-                    .from('verification_codes')
-                    .select('*')
-                    .eq('user_id', tempUserId)
-                    .eq('code_hash', codeHash)
-                    .eq('used', false)
-                    .gt('expires_at', new Date().toISOString())
-                    .order('created_at', { ascending: false })
-                    .limit(1);
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    phone: fullPhone,
+                    options: {
+                        data: {
+                            name: name,
+                            phone: fullPhone
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                alert(i18next.t('account_created') || 'Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+                showLoginForm();
+            } catch (error) {
+                console.error('Error signing up:', error);
+                alert(error.message);
+            }
+        }
+
+        async function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+
+            try {
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + '/reset-password.html'
+                });
+
+                if (error) throw error;
+
+                alert(i18next.t('reset_link_sent') || 'Un lien de réinitialisation a été envoyé à votre email');
+                showLoginForm();
+            } catch (error) {
+                console.error('Error sending reset email:', error);
+                alert(error.message);
+            }
+        }
+
+        async function logout() {
+            try {
+                console.log('Logout called');
+                console.log('Signing out from Supabase...');
+                const { error } = await supabase.auth.signOut();
+                if (error) throw error;
+
+                currentUser = null;
+                userProfile = null;
+                console.log('Signed out successfully, redirecting to landing page');
+                showLandingPage();
+            } catch (error) {
+                console.error('Error logging out:', error);
+                alert(i18next.t('error_logout') || 'Erreur lors de la déconnexion');
+            }
+        }
+
+        // Check auth state
+        async function checkAuth() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
                 
                 if (error) throw error;
-                
-                if (!codes || codes.length === 0) {
-                    console.log('❌ Code not found or invalid');
-                    
-                    const { data: currentCodes } = await supabase
-                        .from('verification_codes')
-                        .select('id, attempts')
-                        .eq('user_id', tempUserId)
-                        .eq('used', false)
-                        .order('created_at', { ascending: false })
-                        .limit(1);
-                    
-                    if (currentCodes && currentCodes.length > 0) {
-                        await supabase
-                            .from('verification_codes')
-                            .update({ attempts: currentCodes[0].attempts + 1 })
-                            .eq('id', currentCodes[0].id);
-                    }
-                    
-                    return false;
-                }
-                
-                const { error: markError } = await supabase
-                    .from('verification_codes')
-                    .update({ used: true })
-                    .eq('id', codes[0].id);
-                
-                if (markError) throw markError;
-                
-                const { error: updateError } = await supabase
-                    .from('profiles')
-                    .update({ phone_verified: true })
-                    .eq('id', tempUserId);
 
-                if (updateError) {
-                    console.error('❌ Error updating phone_verified:', updateError);
-                }
-
-                console.log('✅ Phone marked as verified');
-                console.log('✅ 2FA code validated, reconnecting user...');
-                
-                if (!tempUserProfile || !tempUserProfile.email || !window.tempPassword) {
-                    throw new Error('Données de connexion manquantes');
-                }
-                
-                const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-                    email: tempUserProfile.email,
-                    password: window.tempPassword
-                });
-                
-                if (signInError) {
-                    console.error('❌ Error signing in after 2FA:', signInError);
-                    throw signInError;
-                }
-                
-                console.log('✅ User signed in successfully after 2FA');
-                
-                delete window.tempPassword;
-                delete window.tempAccessToken;
-                
-                isSignupInProgress = false;
-                console.log('🔓 Signup complete - unblocking renders');
-                
-                const { data: profileData, error: profileError } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', signInData.user.id)
-                    .single();
-                
-                if (profileError) {
-                    console.error('❌ Error loading profile:', profileError);
+                if (session) {
+                    currentUser = session.user;
+                    await loadUserProfile();
                 } else {
-                    userProfile = profileData;
-                    window.userProfile = profileData;
+                    showLandingPage();
                 }
-                
-                currentUser = signInData.user;
-                window.currentUser = signInData.user;
-                currentPage = tempUserProfile.role === 'admin' ? 'admin' : 'referrer';
-                is2FAMode = false;
-                tempUserId = null;
-                tempUserProfile = null;
-                
-                console.log('✅ Session restored, currentUser:', currentUser);
-                
-                return true;
             } catch (error) {
-                console.error('Erreur verify2FACode:', error);
-                isSignupInProgress = false;
-                return false;
+                console.error('Error checking auth:', error);
+                showLandingPage();
             }
         }
 
-        async function handle2FASubmit(event) {
-            event.preventDefault();
-            const code = document.getElementById('code2fa').value;
-            
-            const isValid = await verify2FACode(code);
-            
-            if (isValid) {
-                render();
-            } else {
-                alert(t('auth:errors.invalid_2fa_code'));
-            }
-        }
-
-        async function resend2FACode() {
-            if (tempUserId) {
-                const currentLang = i18next.language || 'fr';
-                
-                if (window.tempAccessToken) {
-                    const tempSession = { access_token: window.tempAccessToken };
-                    const success = await send2FACode(tempUserId, tempSession, currentLang);
-                    if (success) {
-                        alert(t('auth:two_factor.code_sent'));
-                    }
-                } else {
-                    const { data: { session } } = await supabase.auth.getSession();
-                    const success = await send2FACode(tempUserId, session, currentLang);
-                    if (success) {
-                        alert(t('auth:two_factor.code_sent'));
-                    }
-                }
-            }
-        }
-
-        async function handleChangePassword() {
-            const form = document.getElementById('authForm');
-            const errorDiv = document.getElementById('authError');
-            
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                errorDiv.classList.add('hidden');
-                
-                const newPassword = document.getElementById('newPassword').value;
-                const confirmPassword = document.getElementById('confirmNewPassword').value;
-
-                if (newPassword !== confirmPassword) {
-                    errorDiv.textContent = 'Les mots de passe ne correspondent pas';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-
-                if (newPassword.length < 8) {
-                    errorDiv.textContent = 'Le mot de passe doit contenir au moins 8 caractères';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-
-                if (!/[a-zA-Z]/.test(newPassword)) {
-                    errorDiv.textContent = 'Le mot de passe doit contenir au moins une lettre';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-
-                if (!/[0-9]/.test(newPassword)) {
-                    errorDiv.textContent = 'Le mot de passe doit contenir au moins un chiffre';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-
-                try {
-                    console.log('🔑 Updating password...');
-                    const { error } = await supabase.auth.updateUser({ 
-                        password: newPassword 
-                    });
-                    
-                    if (error) throw error;
-                    
-                    console.log('✅ Password updated successfully');
-                    isPasswordRecoveryMode = false;
-                    alert('✅ Mot de passe changé avec succès !');
-                    await supabase.auth.signOut();
-                    showLogin();
-                } catch (error) {
-                    console.error('❌ Change password error:', error);
-                    errorDiv.textContent = error.message;
-                    errorDiv.classList.remove('hidden');
-                }
-            };
-        }
-
-        async function loadDashboardContent() {
-            if (!userProfile) return;
-
-            const isAdmin = userProfile.role === 'admin';
-            let leads;
-            let profiles = {};
-
-            if (isAdmin) {
-                console.log('📊 Loading leads for admin...');
-                const { data: leadsData, error: leadsError } = await supabase
-                    .from('leads')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (leadsError) {
-                    console.error('❌ Error loading leads:', leadsError);
-                    document.getElementById('leadsTable').innerHTML = `
-                        <div class="text-red-400 p-4">
-                            Erreur lors du chargement des leads: ${leadsError.message}
-                        </div>
-                    `;
-                    return;
-                }
-
-                console.log('✅ Leads loaded:', leadsData?.length);
-
-                console.log('👥 Loading all profiles...');
-                const { data: profilesData, error: profilesError } = await supabase
+        async function loadUserProfile() {
+            try {
+                const { data, error } = await supabase
                     .from('profiles')
-                    .select('*');
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
 
-                if (profilesError) {
-                    console.error('❌ Error loading profiles:', profilesError);
+                if (error) throw error;
+
+                userProfile = data;
+
+                console.log('User authenticated, loading profile...');
+                console.log('User profile:', userProfile);
+
+                if (userProfile.role === 'admin') {
+                    console.log('User is admin');
+                    await loadAdminDashboard();
                 } else {
-                    console.log('✅ Profiles loaded:', profilesData?.length);
-                    profilesData.forEach(profile => {
-                        profiles[profile.id] = profile;
-                    });
+                    console.log('User is referrer');
+                    await loadReferrerDashboard();
                 }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
 
-                leads = leadsData.map(lead => ({
-                    ...lead,
-                    referrer_name: profiles[lead.referrer_id]?.name || 'N/A'
-                }));
-            } else {
-                console.log('📊 Loading leads for referrer...');
+        async function loadReferrerDashboard() {
+            hideAll();
+            document.getElementById('dashboardReferrer').classList.remove('hidden');
+            console.log('User connected with profile, showing dashboard');
+            
+            document.getElementById('userName').textContent = userProfile.name || currentUser.email;
+
+            await checkContractStatus();
+            await loadReferrerLeads();
+        }
+
+        async function loadAdminDashboard() {
+            hideAll();
+            document.getElementById('dashboardAdmin').classList.remove('hidden');
+            
+            document.getElementById('adminName').textContent = userProfile.name || currentUser.email;
+
+            await loadAdminStats();
+            await loadAllLeads();
+        }
+
+        async function checkContractStatus() {
+            try {
+                const { data, error } = await supabase.storage
+                    .from('contracts')
+                    .list(currentUser.id);
+
+                if (error) throw error;
+
+                const hasContract = data && data.length > 0;
+                
+                if (hasContract) {
+                    document.getElementById('contractAlert').classList.add('hidden');
+                    document.getElementById('addLeadBtn').disabled = false;
+                } else {
+                    document.getElementById('contractAlert').classList.remove('hidden');
+                    document.getElementById('addLeadBtn').disabled = true;
+                }
+            } catch (error) {
+                console.error('Error checking contract:', error);
+            }
+        }
+
+        function downloadContractTemplate() {
+            const link = document.createElement('a');
+            link.href = '/contract_template.pdf';
+            link.download = 'Contrat_Apporteur_Affaires.pdf';
+            link.click();
+        }
+
+        async function submitContract(event) {
+            event.preventDefault();
+            
+            const fileInput = document.getElementById('contractFile');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert(i18next.t('please_select_file') || 'Veuillez sélectionner un fichier');
+                return;
+            }
+
+            if (file.type !== 'application/pdf') {
+                alert(i18next.t('only_pdf') || 'Seuls les fichiers PDF sont acceptés');
+                return;
+            }
+
+            try {
+                const fileName = `${currentUser.id}/${Date.now()}_${file.name}`;
+                
+                const { error } = await supabase.storage
+                    .from('contracts')
+                    .upload(fileName, file);
+
+                if (error) throw error;
+
+                alert(i18next.t('contract_uploaded') || 'Contrat uploadé avec succès !');
+                await checkContractStatus();
+                fileInput.value = '';
+            } catch (error) {
+                console.error('Error uploading contract:', error);
+                alert(i18next.t('error_upload') || 'Erreur lors de l\'upload du contrat');
+            }
+        }
+
+        async function loadReferrerLeads() {
+            try {
                 const { data, error } = await supabase
                     .from('leads')
                     .select('*')
                     .eq('referrer_id', currentUser.id)
                     .order('created_at', { ascending: false });
 
-                if (error) {
-                    console.error('❌ Error loading leads:', error);
-                    document.getElementById('leadsTable').innerHTML = `
-                        <div class="text-red-400 p-4">
-                            Erreur lors du chargement des leads: ${error.message}
-                        </div>
-                    `;
-                    return;
-                }
+                if (error) throw error;
 
-                console.log('✅ Leads loaded:', data?.length);
-                leads = data;
+                const totalEarnings = data
+                    .filter(lead => lead.status === 'vendu')
+                    .reduce((sum, lead) => sum + (lead.referrer_commission || 0), 0);
+                
+                const activeLeads = data.filter(lead => ['nouveau', 'visite', 'offre'].includes(lead.status)).length;
+                const closedSales = data.filter(lead => lead.status === 'vendu').length;
+
+                document.getElementById('totalEarnings').textContent = totalEarnings.toLocaleString();
+                document.getElementById('activeLeads').textContent = activeLeads;
+                document.getElementById('closedSales').textContent = closedSales;
+
+                displayReferrerLeads(data);
+            } catch (error) {
+                console.error('Error loading leads:', error);
             }
-
-            const totalEarnings = leads.filter(l => l.status === 'vendu').reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
-            const activeLeads = leads.filter(l => l.status !== 'vendu').length;
-            const closedSales = leads.filter(l => l.status === 'vendu').length;
-
-            document.getElementById('stats').innerHTML = `
-                ${isAdmin ? `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${leads.length}</div>
-                        <div class="text-gray-300">${t('dashboard:total_referrers')}</div>
-                    </div>
-                ` : `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard:total_earnings')}</div>
-                    </div>
-                `}
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                    <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
-                    <div class="text-gray-300">${t('dashboard:active_leads')}</div>
-                </div>
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                    <div class="text-3xl font-bold text-yellow-500">${closedSales}</div>
-                    <div class="text-gray-300">${t('dashboard:closed_sales')}</div>
-                </div>
-                ${isAdmin ? `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard:commissions_paid')}</div>
-                    </div>
-                ` : ''}
-            `;
-
-            const statusColors = {
-                'nouveau': 'bg-blue-500',
-                'visite': 'bg-yellow-500',
-                'offre': 'bg-orange-500',
-                'vendu': 'bg-green-500'
-            };
-
-            document.getElementById('leadsTable').innerHTML = `
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-gray-700">
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:referrer')}</th>` : ''}
-                            <th class="text-left py-3 px-4">${t('dashboard:client_name')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:property_type')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:budget')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:status')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:commission')}</th>
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:actions')}</th>` : ''}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${leads.length === 0 ? `
-                            <tr>
-                                <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
-                                    ${t('dashboard:no_leads')}
-                                </td>
-                            </tr>
-                        ` : leads.map(lead => `
-                            <tr class="border-b border-gray-700">
-                                ${isAdmin ? `<td class="py-3 px-4">${lead.referrer_name}</td>` : ''}
-                                <td class="py-3 px-4">${lead.client_name}</td>
-                                <td class="py-3 px-4">${t('dashboard:' + lead.property_type)}</td>
-                                <td class="py-3 px-4">${lead.budget?.toLocaleString()} AED</td>
-                                <td class="py-3 px-4">
-                                    ${isAdmin ? `
-                                        <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard:status_new')}</option>
-                                            <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard:status_visit')}</option>
-                                            <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard:status_offer')}</option>
-                                            <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard:status_sold')}</option>
-                                        </select>
-                                    ` : `
-                                        <span class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            ${t('dashboard:status_' + lead.status.replace('é', 'e'))}
-                                        </span>
-                                    `}
-                                </td>
-                                <td class="py-3 px-4 font-bold text-yellow-500">
-                                    ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
-                                </td>
-                                ${isAdmin ? `
-                                    <td class="py-3 px-4">
-                                        ${lead.status !== 'vendu' ? `
-                                            <button onclick="markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
-                                                ${t('dashboard:mark_sold')}
-                                            </button>
-                                        ` : '-'}
-                                    </td>
-                                ` : ''}
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
         }
 
-        function showAddLeadForm() {
-            const hasValidContract = userProfile?.contract_status === 'signed' || userProfile?.contract_status === 'approved';
+        function displayReferrerLeads(leads) {
+            const tbody = document.getElementById('leadsTableBody');
             
-            if (!hasValidContract) {
-                alert(t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
+            if (leads.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500" data-i18n="no_leads_yet">Aucun lead pour le moment</td></tr>`;
+                updateContent();
                 return;
             }
 
-            document.getElementById('addLeadModal').classList.remove('hidden');
-            
-            const form = document.getElementById('addLeadForm');
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                
-                const leadData = {
-                    referrer_id: currentUser.id,
-                    client_name: document.getElementById('clientName').value,
-                    client_email: document.getElementById('clientEmail').value,
-                    client_phone: document.getElementById('clientPhone').value,
-                    property_type: document.getElementById('propertyType').value,
-                    budget: parseFloat(document.getElementById('budget').value),
-                    status: 'nouveau'
+            tbody.innerHTML = leads.map(lead => {
+                const statusColors = {
+                    'nouveau': 'bg-blue-100 text-blue-800',
+                    'visite': 'bg-yellow-100 text-yellow-800',
+                    'offre': 'bg-purple-100 text-purple-800',
+                    'vendu': 'bg-green-100 text-green-800'
                 };
 
-                const { error } = await supabase.from('leads').insert([leadData]);
-                
-                if (error) {
-                    console.error('Error adding lead:', error);
-                    alert('Erreur lors de l\'ajout du lead');
-                    return;
-                }
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">${lead.client_name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${i18next.t(lead.lead_type) || lead.lead_type}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${i18next.t(lead.property_type) || lead.property_type}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${lead.budget ? lead.budget.toLocaleString() + ' AED' : '-'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${statusColors[lead.status]}">
+                                ${i18next.t('status_' + lead.status) || lead.status}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap font-semibold ${lead.referrer_commission ? 'text-green-600' : 'text-gray-400'}">
+                            ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
 
-                document.getElementById('addLeadModal').classList.add('hidden');
-                form.reset();
-                await loadDashboardContent();
-            };
+        async function loadAdminStats() {
+            try {
+                const [profilesResult, leadsResult] = await Promise.all([
+                    supabase.from('profiles').select('*').eq('role', 'referrer'),
+                    supabase.from('leads').select('*')
+                ]);
+
+                if (profilesResult.error) throw profilesResult.error;
+                if (leadsResult.error) throw leadsResult.error;
+
+                const totalReferrers = profilesResult.data.length;
+                const activeLeads = leadsResult.data.filter(lead => ['nouveau', 'visite', 'offre'].includes(lead.status)).length;
+                const totalSales = leadsResult.data.filter(lead => lead.status === 'vendu').length;
+                const totalCommissions = leadsResult.data
+                    .filter(lead => lead.status === 'vendu')
+                    .reduce((sum, lead) => sum + (lead.referrer_commission || 0), 0);
+
+                document.getElementById('totalReferrers').textContent = totalReferrers;
+                document.getElementById('adminActiveLeads').textContent = activeLeads;
+                document.getElementById('totalSales').textContent = totalSales;
+                document.getElementById('totalCommissions').textContent = totalCommissions.toLocaleString();
+            } catch (error) {
+                console.error('Error loading admin stats:', error);
+            }
+        }
+
+        async function loadAllLeads() {
+            try {
+                const { data, error } = await supabase
+                    .from('leads')
+                    .select(`
+                        *,
+                        referrer:profiles!leads_referrer_id_fkey(name)
+                    `)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displayAdminLeads(data);
+            } catch (error) {
+                console.error('Error loading all leads:', error);
+            }
+        }
+
+        function displayAdminLeads(leads) {
+            const tbody = document.getElementById('adminLeadsTableBody');
+            
+            tbody.innerHTML = leads.map(lead => {
+                const statusColors = {
+                    'nouveau': 'bg-blue-100 text-blue-800',
+                    'visite': 'bg-yellow-100 text-yellow-800',
+                    'offre': 'bg-purple-100 text-purple-800',
+                    'vendu': 'bg-green-100 text-green-800'
+                };
+
+                return `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-semibold">${lead.referrer?.name || 'N/A'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${lead.client_name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${i18next.t(lead.lead_type) || lead.lead_type}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${i18next.t(lead.property_type) || lead.property_type}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${lead.budget ? lead.budget.toLocaleString() + ' AED' : '-'}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-2 py-1 rounded-full text-xs font-semibold ${statusColors[lead.status]} border-0">
+                                <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${i18next.t('status_nouveau') || 'Nouveau'}</option>
+                                <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${i18next.t('status_visite') || 'Visite'}</option>
+                                <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${i18next.t('status_offre') || 'Offre'}</option>
+                                <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${i18next.t('status_vendu') || 'Vendu'}</option>
+                            </select>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            ${lead.status !== 'vendu' ? `
+                                <button onclick="markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-semibold">
+                                    ${i18next.t('mark_sold') || 'Marquer vendu'}
+                                </button>
+                            ` : `
+                                <span class="text-green-600 font-semibold">${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : 'Calculé'}</span>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         async function updateLeadStatus(leadId, newStatus) {
-            const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
-            
-            if (error) {
-                console.error('Error updating status:', error);
-                alert('Erreur lors de la mise à jour du statut');
-                return;
-            }
+            try {
+                const { error } = await supabase
+                    .from('leads')
+                    .update({ status: newStatus })
+                    .eq('id', leadId);
 
-            await loadDashboardContent();
+                if (error) throw error;
+
+                await loadAllLeads();
+                await loadAdminStats();
+            } catch (error) {
+                console.error('Error updating lead status:', error);
+                alert(i18next.t('error_update') || 'Erreur lors de la mise à jour');
+            }
         }
 
         async function markAsSold(leadId) {
-            const salePrice = prompt('Prix de vente (AED):');
+            const salePrice = prompt(i18next.t('enter_sale_price') || 'Entrez le prix de vente (AED):');
+            
             if (!salePrice) return;
 
             const price = parseFloat(salePrice);
-            const agentCommission = price * 0.01;
-            const referrerCommission = agentCommission * 0.20;
+            if (isNaN(price) || price <= 0) {
+                alert(i18next.t('invalid_price') || 'Prix invalide');
+                return;
+            }
 
-            const { error } = await supabase.from('leads').update({
-                status: 'vendu',
-                sale_price: price,
-                agent_commission: agentCommission,
-                referrer_commission: referrerCommission,
-                closed_at: new Date().toISOString()
-            }).eq('id', leadId);
+            try {
+                const agentCommission = price * 0.01;
+                const referrerCommission = agentCommission * 0.20;
 
-            if (error) {
+                const { error } = await supabase
+                    .from('leads')
+                    .update({
+                        status: 'vendu',
+                        sale_price: price,
+                        agent_commission: agentCommission,
+                        referrer_commission: referrerCommission,
+                        closed_at: new Date().toISOString()
+                    })
+                    .eq('id', leadId);
+
+                if (error) throw error;
+
+                alert(i18next.t('commission_calculated') || `Commissions calculées:\nAgent: ${agentCommission.toLocaleString()} AED\nApporteur: ${referrerCommission.toLocaleString()} AED`);
+                await loadAllLeads();
+                await loadAdminStats();
+            } catch (error) {
                 console.error('Error marking as sold:', error);
-                alert('Erreur lors de la vente');
-                return;
+                alert(i18next.t('error_mark_sold') || 'Erreur lors du marquage comme vendu');
             }
-
-            await loadDashboardContent();
         }
 
-        async function loadUserProfile(user = null) {
-            const targetUser = user || currentUser;
-            console.log('🔍 loadUserProfile called for user:', targetUser?.id);
+        // Add Lead Modal functions
+        function showAddLeadForm() {
+            document.getElementById('addLeadModal').classList.remove('hidden');
+        }
 
-            if (!targetUser || !targetUser.id) {
-                console.error('❌ No user provided to loadUserProfile');
-                return false;
-            }
+        function closeAddLeadForm() {
+            document.getElementById('addLeadModal').classList.add('hidden');
+            document.getElementById('addLeadFormElement').reset();
+        }
+
+        function updateLeadForm() {
+            const leadType = document.getElementById('leadType').value;
+            // Update form fields based on lead type if needed
+        }
+
+        async function handleAddLead(event) {
+            event.preventDefault();
+            
+            const leadData = {
+                referrer_id: currentUser.id,
+                lead_type: document.getElementById('leadType').value,
+                client_name: document.getElementById('clientName').value,
+                client_email: document.getElementById('clientEmail').value,
+                client_phone: document.getElementById('clientPhone').value,
+                property_type: document.getElementById('propertyType').value,
+                budget: parseFloat(document.getElementById('budget').value) || null,
+                status: 'nouveau'
+            };
 
             try {
-                console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
-                const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).single();
+                const { error } = await supabase
+                    .from('leads')
+                    .insert([leadData]);
 
-                if (error) {
-                    console.error('❌ Error loading profile:', error);
-                    
-                    if (error.code === 'PGRST116') {
-                        console.log('📝 Profile does not exist, creating it...');
-                        const { data: newProfile, error: insertError } = await supabase.from('profiles').insert([{
-                            id: targetUser.id,
-                            name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
-                            phone: targetUser.user_metadata?.phone || '',
-                            role: 'referrer',
-                            contract_status: 'pending'
-                        }]).select().single();
+                if (error) throw error;
 
-                        if (insertError) {
-                            console.error('❌ Error creating profile:', insertError);
-                            alert('Erreur lors de la création du profil: ' + insertError.message);
-                            return false;
-                        }
-
-                        console.log('✅ Profile created:', newProfile);
-                        userProfile = newProfile;
-                        window.userProfile = newProfile;
-                        return true;
-                    }
-                    
-                    alert('Erreur lors du chargement du profil: ' + error.message);
-                    return false;
-                }
-
-                console.log('✅ Profile data retrieved:', data);
-                
-                if (data && data.contract_status) {
-                    data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
-                }
-
-                userProfile = data;
-                window.userProfile = data;
-                console.log('✅ userProfile set:', userProfile);
-                return true;
+                alert(i18next.t('lead_added') || 'Lead ajouté avec succès !');
+                closeAddLeadForm();
+                await loadReferrerLeads();
             } catch (error) {
-                console.error('❌ Exception loading profile:', error);
-                alert('Exception lors du chargement du profil: ' + error.message);
-                return false;
+                console.error('Error adding lead:', error);
+                alert(i18next.t('error_add_lead') || 'Erreur lors de l\'ajout du lead');
             }
         }
 
-        window.loadUserProfile = loadUserProfile;
+        // Initialize
+        window.onload = function() {
+            console.log('RENDER called');
+            console.log('currentUser:', currentUser);
+            console.log('userProfile:', userProfile);
+            console.log('currentPage:', currentPage);
+            console.log('isPasswordRecoveryMode:', isPasswordRecoveryMode);
+            console.log('is2FAMode:', is2FAMode);
 
-        async function logout() {
-            console.log('🚪 Logout called');
-            const logoutBtn = document.querySelector('button[onclick="logout()"]');
+            checkAuth();
             
-            if (logoutBtn) {
-                logoutBtn.disabled = true;
-                logoutBtn.textContent = 'Déconnexion...';
-            }
-
-            try {
-                console.log('🔓 Signing out from Supabase...');
-                const { error } = await supabase.auth.signOut();
-                
-                if (error) {
-                    console.error('❌ Logout error:', error);
-                    alert('Erreur lors de la déconnexion: ' + error.message);
-                    if (logoutBtn) {
-                        logoutBtn.disabled = false;
-                        logoutBtn.textContent = 'Déconnexion';
-                    }
-                    return;
+            supabase.auth.onAuthStateChange((event, session) => {
+                console.log('Auth state changed:', event, session);
+                if (event === 'SIGNED_IN' && session && !window.opener) {
+                    checkAuth();
+                } else if (event === 'SIGNED_OUT') {
+                    showLandingPage();
                 }
-
-                console.log('✅ Supabase signOut successful');
-                
-                currentUser = null;
-                userProfile = null;
-                currentPage = 'landing';
-                isPasswordRecoveryMode = false;
-                
-                window.currentUser = null;
-                window.userProfile = null;
-                window.currentPage = 'landing';
-                
-                globalIsUploading = false;
-                
-                localStorage.removeItem('supabase.auth.token');
-                console.log('✅ Local state cleaned');
-                
-                console.log('🏠 Redirecting to landing page...');
-                render();
-            } catch (error) {
-                console.error('❌ Logout exception:', error);
-                alert('Erreur lors de la déconnexion: ' + error.message);
-                if (logoutBtn) {
-                    logoutBtn.disabled = false;
-                    logoutBtn.textContent = 'Déconnexion';
-                }
-            }
-        }
-
-        async function render() {
-            console.log('🎨 RENDER called');
-            console.log('- currentUser:', !!currentUser);
-            console.log('- userProfile:', !!userProfile);
-            console.log('- currentPage:', currentPage);
-            console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
-            console.log('- is2FAMode:', is2FAMode);
-            console.log('- isSignupInProgress:', isSignupInProgress);
-            
-            const app = document.getElementById('app');
-
-            if (is2FAMode) {
-                console.log('📱 2FA mode active - showing 2FA form');
-                app.innerHTML = renderAuthPage('login');
-                return;
-            }
-
-            if (isPasswordRecoveryMode && currentPage === 'change-password') {
-                console.log('🔑 Password recovery mode - showing change password form');
-                app.innerHTML = renderAuthPage('change-password');
-                setTimeout(() => handleChangePassword(), 500);
-                return;
-            }
-
-            if (currentUser && userProfile) {
-                console.log('✅ User connected with profile, showing dashboard');
-                currentPage = 'dashboard';
-                window.currentPage = 'dashboard';
-                app.innerHTML = renderDashboard();
-                await loadDashboardContent();
-
-                if (userProfile.role !== 'admin') {
-                    const contractForm = document.getElementById('contractForm');
-                    if (contractForm) {
-                        console.log('✅ Contract form found, attaching submit handler');
-                        
-                        contractForm.addEventListener('submit', async (e) => {
-                            e.preventDefault();
-                            
-                            if (globalIsUploading) {
-                                console.log('⚠️ Upload already in progress, ignoring duplicate submit');
-                                return;
-                            }
-                            
-                            globalIsUploading = true;
-                            console.log('📄 Starting contract upload...');
-                            
-                            const submitBtn = document.getElementById('contractSubmitBtn');
-                            const errorDiv = document.getElementById('uploadError');
-                            const progressDiv = document.getElementById('uploadProgress');
-                            const originalText = submitBtn.textContent;
-                            
-                            submitBtn.disabled = true;
-                            submitBtn.textContent = 'Upload en cours...';
-                            errorDiv.classList.add('hidden');
-                            progressDiv.classList.remove('hidden');
-                            progressDiv.textContent = '⏳ Préparation du fichier...';
-                            
-                            const uploadTimeout = setTimeout(() => {
-                                console.error('⏱️ Upload timeout after 30 seconds');
-                                errorDiv.textContent = 'Erreur : Le téléchargement a pris trop de temps. Veuillez réessayer avec un fichier plus petit.';
-                                errorDiv.classList.remove('hidden');
-                                progressDiv.classList.add('hidden');
-                                submitBtn.disabled = false;
-                                submitBtn.textContent = originalText;
-                                globalIsUploading = false;
-                            }, 30000);
-                            
-                            try {
-                                const fileInput = document.getElementById('contractFile');
-                                const file = fileInput.files[0];
-
-                                if (!file) {
-                                    throw new Error('Veuillez sélectionner un fichier');
-                                }
-
-                                if (file.type !== 'application/pdf') {
-                                    throw new Error('Seuls les fichiers PDF sont acceptés');
-                                }
-
-                                const maxSize = 5 * 1024 * 1024;
-                                if (file.size > maxSize) {
-                                    throw new Error('Le fichier est trop volumineux. Taille maximum : 5MB');
-                                }
-
-                                console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-                                
-                                progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
-                                
-                                const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-                                console.log('📄 Uploading to Storage with name:', fileName);
-
-                                const { data: uploadData, error: uploadError } = await supabase.storage
-                                    .from('contracts')
-                                    .upload(fileName, file, {
-                                        cacheControl: '3600',
-                                        upsert: false
-                                    });
-
-                                if (uploadError) {
-                                    console.error('❌ Error uploading contract:', uploadError);
-                                    throw new Error(`Erreur d'upload : ${uploadError.message}`);
-                                }
-
-                                console.log('✅ File uploaded successfully to Storage');
-                                
-                                progressDiv.textContent = '⏳ Mise à jour de votre profil...';
-
-                                const { error: updateError } = await supabase.from('profiles').update({
-                                    contract_status: 'signed',
-                                    contract_file_url: fileName
-                                }).eq('id', currentUser.id);
-
-                                if (updateError) {
-                                    console.error('❌ Error updating profile:', updateError);
-                                    throw new Error(`Erreur de mise à jour : ${updateError.message}`);
-                                }
-
-                                console.log('✅ Profile updated successfully');
-                                
-                                clearTimeout(uploadTimeout);
-                                
-                                alert('✅ Contrat uploadé avec succès !');
-                                await loadUserProfile();
-                                globalIsUploading = false;
-                                render();
-                            } catch (error) {
-                                clearTimeout(uploadTimeout);
-                                
-                                console.error('❌ Upload exception:', error);
-                                errorDiv.textContent = error.message;
-                                errorDiv.classList.remove('hidden');
-                                progressDiv.classList.add('hidden');
-                            } finally {
-                                submitBtn.disabled = false;
-                                submitBtn.textContent = originalText;
-                                globalIsUploading = false;
-                            }
-                        });
-                    } else {
-                        console.log('ℹ️ Contract form not found');
-                    }
-                } else {
-                    console.log('ℹ️ Admin user - no contract form needed');
-                }
-            } else if (currentUser && !userProfile) {
-                console.log('⏳ User connected but no profile, waiting...');
-                app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement de votre profil...</div></div></div>';
-            } else if (currentPage === 'auth-login') {
-                console.log('🔐 Rendering login page');
-                app.innerHTML = renderAuthPage('login');
-                setTimeout(() => {
-                    console.log('⏱️ Attempting to attach login handler');
-                    handleAuth('login');
-                }, 500);
-            } else if (currentPage === 'auth-signup') {
-                console.log('📝 Rendering signup page');
-                app.innerHTML = renderAuthPage('signup');
-                setTimeout(() => {
-                    console.log('⏱️ Attempting to attach signup handler');
-                    handleAuth('signup');
-                }, 500);
-            } else if (currentPage === 'auth-reset') {
-                console.log('🔑 Rendering reset page');
-                app.innerHTML = renderAuthPage('reset');
-                setTimeout(() => handleReset(), 500);
-            } else if (currentPage === 'change-password') {
-                console.log('🔑 Rendering change password page');
-                app.innerHTML = renderAuthPage('change-password');
-                setTimeout(() => handleChangePassword(), 500);
-            } else {
-                console.log('🏠 Rendering landing page');
-                app.innerHTML = renderLandingPage();
-            }
-        }
-
-        function validateName() {
-            const nameInput = document.getElementById('name');
-            const nameError = document.getElementById('nameError');
-            
-            if (!nameInput || !nameError) return true;
-
-            const name = nameInput.value.trim();
-
-            if (name.length === 0) {
-                nameError.textContent = '';
-                nameError.classList.add('hidden');
-                nameInput.classList.remove('border-green-500', 'border-red-500');
-                return false;
-            }
-
-            if (name.length < 2) {
-                nameError.textContent = 'Le nom doit contenir au moins 2 caractères';
-                nameError.classList.remove('hidden');
-                nameInput.classList.add('border-red-500');
-                nameInput.classList.remove('border-green-500');
-                return false;
-            }
-
-            const nameRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
-            if (!nameRegex.test(name)) {
-                nameError.textContent = 'Le nom ne peut contenir que des lettres, espaces, tirets et apostrophes';
-                nameError.classList.remove('hidden');
-                nameInput.classList.add('border-red-500');
-                nameInput.classList.remove('border-green-500');
-                return false;
-            }
-
-            nameError.textContent = '';
-            nameError.classList.add('hidden');
-            nameInput.classList.remove('border-red-500');
-            nameInput.classList.add('border-green-500');
-            checkFormValidity();
-            return true;
-        }
-
-        function validatePhone() {
-            const phoneField = document.getElementById('phone');
-            const phoneError = document.getElementById('phoneError');
-            
-            if (!phoneField || !phoneError) return true;
-
-            const phone = phoneField.value.trim();
-            
-            const internationalPattern = /^[0-9]{6,15}$/;
-            
-            if (!phone) {
-                phoneError.textContent = t('auth:errors.phone_required') || 'Le numéro de téléphone est requis';
-                phoneError.classList.remove('hidden');
-                phoneField.classList.add('border-red-500');
-                return false;
-            }
-            
-            if (!internationalPattern.test(phone)) {
-                phoneError.textContent = t('auth:errors.phone_invalid') || 'Le numéro doit contenir entre 6 et 15 chiffres';
-                phoneError.classList.remove('hidden');
-                phoneField.classList.add('border-red-500');
-                return false;
-            }
-            
-            phoneError.classList.add('hidden');
-            phoneField.classList.remove('border-red-500');
-            phoneField.classList.add('border-green-500');
-            checkFormValidity();
-            return true;
-        }
-
-        function validateEmail() {
-            const emailInput = document.getElementById('email');
-            const emailError = document.getElementById('emailError');
-            
-            if (!emailInput || !emailError) return true;
-
-            const email = emailInput.value.trim();
-
-            if (email.length === 0) {
-                emailError.textContent = '';
-                emailError.classList.add('hidden');
-                emailInput.classList.remove('border-green-500', 'border-red-500');
-                return false;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                emailError.textContent = "Format d'email invalide";
-                emailError.classList.remove('hidden');
-                emailInput.classList.add('border-red-500');
-                emailInput.classList.remove('border-green-500');
-                return false;
-            }
-
-            emailError.textContent = '';
-            emailError.classList.add('hidden');
-            emailInput.classList.remove('border-red-500');
-            emailInput.classList.add('border-green-500');
-            checkFormValidity();
-            return true;
-        }
-
-        function validatePassword() {
-            const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
-            const passwordError = document.getElementById('passwordError');
-            const strengthBar = document.getElementById('passwordStrengthBar');
-            const strengthText = document.getElementById('passwordStrengthText');
-            const reqLength = document.getElementById('req-length');
-            const reqLetter = document.getElementById('req-letter');
-            const reqNumber = document.getElementById('req-number');
-
-            if (!passwordInput) return true;
-
-            const password = passwordInput.value;
-
-            if (reqLength && reqLetter && reqNumber) {
-                if (password.length >= 8) {
-                    reqLength.classList.add('text-green-400');
-                    reqLength.querySelector('span:first-child').textContent = '✓';
-                } else {
-                    reqLength.classList.remove('text-green-400');
-                    reqLength.querySelector('span:first-child').textContent = '•';
-                }
-
-                if (/[a-zA-Z]/.test(password)) {
-                    reqLetter.classList.add('text-green-400');
-                    reqLetter.querySelector('span:first-child').textContent = '✓';
-                } else {
-                    reqLetter.classList.remove('text-green-400');
-                    reqLetter.querySelector('span:first-child').textContent = '•';
-                }
-
-                if (/[0-9]/.test(password)) {
-                    reqNumber.classList.add('text-green-400');
-                    reqNumber.querySelector('span:first-child').textContent = '✓';
-                } else {
-                    reqNumber.classList.remove('text-green-400');
-                    reqNumber.querySelector('span:first-child').textContent = '•';
-                }
-            }
-
-            if (strengthBar && strengthText) {
-                let strength = 0;
-                if (password.length >= 8) strength++;
-                if (password.length >= 12) strength++;
-                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-                if (/[0-9]/.test(password)) strength++;
-                if (/[^a-zA-Z0-9]/.test(password)) strength++;
-
-                let color, text, width;
-                if (password.length === 0) {
-                    width = 0; text = ''; color = 'bg-gray-600';
-                } else if (strength <= 1) {
-                    width = 25; text = 'Faible'; color = 'bg-red-500';
-                } else if (strength === 2) {
-                    width = 50; text = 'Moyen'; color = 'bg-yellow-500';
-                } else if (strength === 3) {
-                    width = 75; text = 'Bon'; color = 'bg-blue-500';
-                } else {
-                    width = 100; text = 'Excellent'; color = 'bg-green-500';
-                }
-
-                strengthBar.style.width = width + '%';
-                strengthBar.className = `h-full transition-all duration-300 ${color}`;
-                strengthText.textContent = text;
-                strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
-            }
-
-            if (!passwordError) return true;
-
-            if (password.length === 0) {
-                passwordError.classList.add('hidden');
-                passwordInput.classList.remove('border-green-500', 'border-red-500');
-                checkFormValidity();
-                return false;
-            }
-
-            if (password.length < 8) {
-                passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
-                passwordError.classList.remove('hidden');
-                passwordInput.classList.add('border-red-500');
-                passwordInput.classList.remove('border-green-500');
-                checkFormValidity();
-                return false;
-            }
-
-            if (!/[a-zA-Z]/.test(password)) {
-                passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre';
-                passwordError.classList.remove('hidden');
-                passwordInput.classList.add('border-red-500');
-                passwordInput.classList.remove('border-green-500');
-                checkFormValidity();
-                return false;
-            }
-
-            if (!/[0-9]/.test(password)) {
-                passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
-                passwordError.classList.remove('hidden');
-                passwordInput.classList.add('border-red-500');
-                passwordInput.classList.remove('border-green-500');
-                checkFormValidity();
-                return false;
-            }
-
-            passwordError.classList.add('hidden');
-            passwordInput.classList.remove('border-red-500');
-            passwordInput.classList.add('border-green-500');
-
-            const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
-            if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
-                validateConfirmPassword();
-            }
-
-            checkFormValidity();
-            return true;
-        }
-
-        function validateConfirmPassword() {
-            const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
-            const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
-            const confirmPasswordError = document.getElementById('confirmPasswordError');
-            const confirmPasswordSuccess = document.getElementById('confirmPasswordSuccess');
-
-            if (!passwordInput || !confirmPasswordInput || !confirmPasswordError || !confirmPasswordSuccess) return true;
-
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            if (confirmPassword.length === 0) {
-                confirmPasswordError.classList.add('hidden');
-                confirmPasswordSuccess.classList.add('hidden');
-                confirmPasswordInput.classList.remove('border-green-500', 'border-red-500');
-                checkFormValidity();
-                return false;
-            }
-
-            if (password !== confirmPassword) {
-                confirmPasswordError.textContent = 'Les mots de passe ne correspondent pas';
-                confirmPasswordError.classList.remove('hidden');
-                confirmPasswordSuccess.classList.add('hidden');
-                confirmPasswordInput.classList.add('border-red-500');
-                confirmPasswordInput.classList.remove('border-green-500');
-                checkFormValidity();
-                return false;
-            }
-
-            confirmPasswordError.classList.add('hidden');
-            confirmPasswordSuccess.classList.remove('hidden');
-            confirmPasswordInput.classList.remove('border-red-500');
-            confirmPasswordInput.classList.add('border-green-500');
-            checkFormValidity();
-            return true;
-        }
-
-        function checkFormValidity() {
-            const submitButton = document.getElementById('submitButton');
-            if (!submitButton) return;
-
-            const nameInput = document.getElementById('name');
-            const phoneInput = document.getElementById('phone');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
-            const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
-
-            const nameValid = !nameInput || nameInput.value.trim().length >= 2;
-            const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-
-            let phoneValid = !phoneInput;
-            if (phoneInput) {
-                const phone = phoneInput.value.trim();
-                phoneValid = /^[0-9]{6,15}$/.test(phone);
-            }
-
-            let passwordValid = false;
-            if (passwordInput) {
-                const pwd = passwordInput.value;
-                passwordValid = pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd);
-            }
-
-            const confirmPasswordValid = !confirmPasswordInput || 
-                                        (confirmPasswordInput.value.length > 0 && 
-                                         confirmPasswordInput.value === passwordInput?.value);
-
-            const allValid = nameValid && phoneValid && emailValid && passwordValid && confirmPasswordValid;
-
-            if (allValid) {
-                submitButton.disabled = false;
-                submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
-            } else {
-                submitButton.disabled = true;
-                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-        }
-
-        function togglePasswordVisibility(fieldId, button) {
-            const field = document.getElementById(fieldId);
-            if (!field) return;
-
-            if (field.type === 'password') {
-                field.type = 'text';
-                button.innerHTML = '<span class="text-xl">🙈</span>';
-            } else {
-                field.type = 'password';
-                button.innerHTML = '<span class="text-xl">👁️</span>';
-            }
-        }
-
-        async function downloadContractTemplate() {
-            try {
-                console.log('📥 Downloading contract template...');
-                const { data, error } = await supabase.storage
-                    .from('contracts')
-                    .getPublicUrl('contract_template_en.pdf');
-
-                if (error) {
-                    console.error('❌ Error getting template URL:', error);
-                    alert('Error downloading contract. Please contact support.');
-                    return;
-                }
-
-                console.log('✅ Template URL:', data.publicUrl);
-                window.open(data.publicUrl, '_blank');
-            } catch (error) {
-                console.error('❌ Exception downloading template:', error);
-                alert('Error downloading: ' + error.message);
-            }
-        }
-
-        window.showLogin = showLogin;
-        window.showSignup = showSignup;
-        window.showReset = showReset;
-        window.logout = logout;
-        window.backToHome = backToHome;
-        window.showAddLeadForm = showAddLeadForm;
-        window.updateLeadStatus = updateLeadStatus;
-        window.markAsSold = markAsSold;
-        window.togglePasswordVisibility = togglePasswordVisibility;
-        window.validateName = validateName;
-        window.validatePhone = validatePhone;
-        window.validateEmail = validateEmail;
-        window.validatePassword = validatePassword;
-        window.validateConfirmPassword = validateConfirmPassword;
-        window.checkFormValidity = checkFormValidity;
-        window.prefillTestData = prefillTestData;
-        window.render = render;
-        window.handleChangePassword = handleChangePassword;
-        window.downloadContractTemplate = downloadContractTemplate;
-        window.handle2FASubmit = handle2FASubmit;
-        window.resend2FACode = resend2FACode;
-
-        console.log('⏳ Displaying initial loader');
-        document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
-
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log('🔔 Auth state changed:', event);
-
-            if (isSignupInProgress) {
-                console.log('⚠️ Ignoring event during signup process:', event);
-                return;
-            }
-
-            if (event === 'PASSWORD_RECOVERY') {
-                console.log('🔑 Password recovery detected - blocking auto-login');
-                isPasswordRecoveryMode = true;
-                currentPage = 'change-password';
-                window.currentPage = 'change-password';
-                currentUser = session?.user || null;
-                window.currentUser = currentUser;
-                render();
-                return;
-            }
-
-            if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
-                console.log('⚠️ Ignoring event during password recovery:', event);
-                return;
-            }
-
-            currentUser = session?.user || null;
-            window.currentUser = currentUser;
-
-            if (currentUser && !currentUser.email_confirmed_at) {
-                console.warn('⚠️ Email not confirmed, signing out');
-                await supabase.auth.signOut();
-                currentUser = null;
-                window.currentUser = null;
-            }
-
-            if (currentUser) {
-                console.log('👤 User authenticated, loading profile...');
-                const profileLoaded = await loadUserProfile(currentUser);
-                
-                if (!profileLoaded) {
-                    console.error('❌ Failed to load profile, signing out');
-                    await supabase.auth.signOut();
-                    currentUser = null;
-                    window.currentUser = null;
-                    userProfile = null;
-                    window.userProfile = null;
-                }
-            }
-
-            render();
-        });
-
-        console.log('🔍 Getting initial session...');
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-            console.error('❌ Session error:', error);
-            currentUser = null;
-            window.currentUser = null;
-            render();
-            return;
-        }
-
-        currentUser = session?.user || null;
-        window.currentUser = currentUser;
-
-        if (currentUser && !currentUser.email_confirmed_at) {
-            console.warn('⚠️ Email not confirmed on init, cleaning session');
-            await supabase.auth.signOut();
-            localStorage.clear();
-            sessionStorage.clear();
-            currentUser = null;
-            window.currentUser = null;
-            render();
-            return;
-        }
-
-        if (currentUser) {
-            console.log('👤 Session found, loading profile...');
-            const profileLoaded = await loadUserProfile(currentUser);
-            
-            if (!profileLoaded) {
-                console.error('❌ Failed to load profile on init, signing out');
-                await supabase.auth.signOut();
-                localStorage.clear();
-                sessionStorage.clear();
-                currentUser = null;
-                window.currentUser = null;
-                userProfile = null;
-                window.userProfile = null;
-            }
-        }
-
-        render();
-    })();
+            });
+        };
     </script>
 </body>
 </html>
