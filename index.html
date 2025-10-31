@@ -519,7 +519,7 @@
         // Supabase configuration
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjkwMDY0MTIsImV4cCI6MjA0NDU4MjQxMn0.Y2vMUusE5LTJX3FwUZGd84Ll9NJW4LDz-Xj6z0b4aqM';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
         let userProfile = null;
@@ -551,7 +551,7 @@
         // Check if we're in a popup opened for OAuth
         if (window.opener && !window.opener.closed) {
             // We're in a popup - check for auth state change
-            supabase.auth.onAuthStateChange((event, session) => {
+            supabaseClient.auth.onAuthStateChange((event, session) => {
                 if (event === 'SIGNED_IN' && session) {
                     // Send message to parent window
                     window.opener.postMessage({ type: 'OAUTH_SUCCESS', session: session }, window.location.origin);
@@ -568,7 +568,7 @@
             if (event.data.type === 'OAUTH_SUCCESS') {
                 console.log('OAuth success, refreshing session...');
                 // Refresh the session in the main window
-                const { data: { session }, error } = await supabase.auth.getSession();
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
                 if (session) {
                     await checkAuth();
                 }
@@ -582,7 +582,7 @@
                 showLoading(true);
 
                 // Get the OAuth URL
-                const { data, error } = await supabase.auth.signInWithOAuth({
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
                         redirectTo: window.location.origin,
@@ -634,7 +634,7 @@
                 showLoading(true);
 
                 // Get the OAuth URL
-                const { data, error } = await supabase.auth.signInWithOAuth({
+                const { data, error } = await supabaseClient.auth.signInWithOAuth({
                     provider: 'apple',
                     options: {
                         redirectTo: window.location.origin,
@@ -779,7 +779,7 @@
             const password = document.getElementById('loginPassword').value;
 
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -811,7 +811,7 @@
             const fullPhone = countryCode + phone;
 
             try {
-                const { data, error } = await supabase.auth.signUp({
+                const { data, error } = await supabaseClient.auth.signUp({
                     email: email,
                     password: password,
                     phone: fullPhone,
@@ -838,7 +838,7 @@
             const email = document.getElementById('forgotEmail').value;
 
             try {
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
                     redirectTo: window.location.origin + '/reset-password.html'
                 });
 
@@ -856,7 +856,7 @@
             try {
                 console.log('Logout called');
                 console.log('Signing out from Supabase...');
-                const { error } = await supabase.auth.signOut();
+                const { error } = await supabaseClient.auth.signOut();
                 if (error) throw error;
 
                 currentUser = null;
@@ -872,7 +872,7 @@
         // Check auth state
         async function checkAuth() {
             try {
-                const { data: { session }, error } = await supabase.auth.getSession();
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
                 
                 if (error) throw error;
 
@@ -890,7 +890,7 @@
 
         async function loadUserProfile() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('profiles')
                     .select('*')
                     .eq('id', currentUser.id)
@@ -938,7 +938,7 @@
 
         async function checkContractStatus() {
             try {
-                const { data, error } = await supabase.storage
+                const { data, error } = await supabaseClient.storage
                     .from('contracts')
                     .list(currentUser.id);
 
@@ -984,7 +984,7 @@
             try {
                 const fileName = `${currentUser.id}/${Date.now()}_${file.name}`;
                 
-                const { error } = await supabase.storage
+                const { error } = await supabaseClient.storage
                     .from('contracts')
                     .upload(fileName, file);
 
@@ -1001,7 +1001,7 @@
 
         async function loadReferrerLeads() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('leads')
                     .select('*')
                     .eq('referrer_id', currentUser.id)
@@ -1065,8 +1065,8 @@
         async function loadAdminStats() {
             try {
                 const [profilesResult, leadsResult] = await Promise.all([
-                    supabase.from('profiles').select('*').eq('role', 'referrer'),
-                    supabase.from('leads').select('*')
+                    supabaseClient.from('profiles').select('*').eq('role', 'referrer'),
+                    supabaseClient.from('leads').select('*')
                 ]);
 
                 if (profilesResult.error) throw profilesResult.error;
@@ -1090,7 +1090,7 @@
 
         async function loadAllLeads() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('leads')
                     .select(`
                         *,
@@ -1148,7 +1148,7 @@
 
         async function updateLeadStatus(leadId, newStatus) {
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('leads')
                     .update({ status: newStatus })
                     .eq('id', leadId);
@@ -1178,7 +1178,7 @@
                 const agentCommission = price * 0.01;
                 const referrerCommission = agentCommission * 0.20;
 
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('leads')
                     .update({
                         status: 'vendu',
@@ -1230,7 +1230,7 @@
             };
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('leads')
                     .insert([leadData]);
 
@@ -1256,7 +1256,7 @@
 
             checkAuth();
             
-            supabase.auth.onAuthStateChange((event, session) => {
+            supabaseClient.auth.onAuthStateChange((event, session) => {
                 console.log('Auth state changed:', event, session);
                 if (event === 'SIGNED_IN' && session && !window.opener) {
                     checkAuth();
