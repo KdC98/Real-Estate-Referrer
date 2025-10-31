@@ -70,6 +70,7 @@
         let currentPage = 'landing';
         let isPasswordRecoveryMode = false;
         let is2FAMode = false;
+        let isSignupInProgress = false;  // 🆕 NOUVEAU FLAG pour bloquer le render pendant inscription
         let tempUserId = null;
         let tempUserProfile = null;
         
@@ -726,6 +727,10 @@
                         
                         console.log('📤 Signup data:', { email, name, phone: fullPhone });
                         
+                        // 🆕 BLOQUER LE RENDER PENDANT L'INSCRIPTION
+                        isSignupInProgress = true;
+                        console.log('🔒 Signup in progress - blocking renders');
+                        
                         const { data, error } = await supabase.auth.signUp({
                             email,
                             password,
@@ -734,13 +739,15 @@
                             }
                         });
 
-                        if (error) throw error;
+                        if (error) {
+                            isSignupInProgress = false;  // 🆕 Débloquer en cas d'erreur
+                            throw error;
+                        }
                         
                         console.log('✅ Signup successful, user:', data.user);
                         
-                        // CRITIQUE: Se déconnecter IMMÉDIATEMENT pour éviter l'événement SIGNED_IN
                         console.log('🔓 Signing out IMMEDIATELY to prevent auto-redirect');
-                        const sessionToUse = data.session; // Sauvegarder la session avant signOut
+                        const sessionToUse = data.session;
                         await supabase.auth.signOut();
                         console.log('✅ Signed out, now safe to proceed with 2FA');
                         
@@ -759,7 +766,6 @@
                             console.error('❌ Error creating profile:', profileError);
                         }
                         
-                        // Stocker tempUserProfile avec email et password pour reconnecter après 2FA
                         tempUserProfile = {
                             id: data.user.id,
                             name: name,
@@ -770,8 +776,6 @@
                             phone_verified: false
                         };
                         window.tempPassword = password;
-                        
-                        // Stocker le token temporairement pour permettre resend2FACode
                         window.tempAccessToken = sessionToUse.access_token;
                         
                         is2FAMode = true;
@@ -779,6 +783,7 @@
                         const currentLang = i18next.language || 'fr';
                         await send2FACode(data.user.id, sessionToUse, currentLang);
                         
+                        // 🆕 LE FLAG RESTE À true JUSQU'À LA VALIDATION 2FA
                         render();
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
@@ -857,17 +862,14 @@
         
         const result = await response.json();
         
-        // ⚠️ CORRECTION : Vérifier si c'est l'erreur 80 (warning, pas une vraie erreur)
         if (!response.ok) {
             const errorMsg = result.error || 'Erreur envoi SMS';
             
-            // Si c'est l'erreur 80, on ignore (SMS envoyé quand même)
             if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
                 console.log('✅ SMS sent despite error 80 (warning only)');
                 return true;
             }
             
-            // Pour les autres erreurs, on lance l'exception
             throw new Error(errorMsg);
         }
         
@@ -880,7 +882,6 @@
     } catch (error) {
         const errorMsg = error.message || '';
         
-        // Dernière chance : vérifier l'erreur 80 dans le catch
         if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
             console.log('✅ SMS sent despite error 80 (caught in catch)');
             return true;
@@ -915,7 +916,6 @@
                 if (!codes || codes.length === 0) {
                     console.log('❌ Code not found or invalid');
                     
-                    // Incrémenter attempts (sans utiliser raw() qui n'existe pas en JS)
                     const { data: currentCodes } = await supabase
                         .from('verification_codes')
                         .select('id, attempts')
@@ -951,10 +951,8 @@
                 }
 
                 console.log('✅ Phone marked as verified');
-                
                 console.log('✅ 2FA code validated, reconnecting user...');
                 
-                // CRITIQUE: Reconnecter l'utilisateur avec email et mot de passe
                 if (!tempUserProfile || !tempUserProfile.email || !window.tempPassword) {
                     throw new Error('Données de connexion manquantes');
                 }
@@ -971,11 +969,13 @@
                 
                 console.log('✅ User signed in successfully after 2FA');
                 
-                // Nettoyer les données temporaires
                 delete window.tempPassword;
                 delete window.tempAccessToken;
                 
-                // Charger le profil complet
+                // 🆕 DÉBLOQUER LE RENDER APRÈS VALIDATION 2FA
+                isSignupInProgress = false;
+                console.log('🔓 Signup complete - unblocking renders');
+                
                 const { data: profileData, error: profileError } = await supabase
                     .from('profiles')
                     .select('*')
@@ -1001,6 +1001,7 @@
                 return true;
             } catch (error) {
                 console.error('Erreur verify2FACode:', error);
+                isSignupInProgress = false;  // 🆕 Débloquer en cas d'erreur
                 return false;
             }
         }
@@ -1022,7 +1023,6 @@
             if (tempUserId) {
                 const currentLang = i18next.language || 'fr';
                 
-                // Utiliser le token temporaire si disponible (mode inscription)
                 if (window.tempAccessToken) {
                     const tempSession = { access_token: window.tempAccessToken };
                     const success = await send2FACode(tempUserId, tempSession, currentLang);
@@ -1030,7 +1030,6 @@
                         alert(t('auth:two_factor.code_sent'));
                     }
                 } else {
-                    // Sinon utiliser la session actuelle (mode connexion)
                     const { data: { session } } = await supabase.auth.getSession();
                     const success = await send2FACode(tempUserId, session, currentLang);
                     if (success) {
@@ -1430,7 +1429,6 @@
                 window.userProfile = null;
                 window.currentPage = 'landing';
                 
-                // 🔧 CORRECTION : Réinitialiser le flag d'upload global
                 globalIsUploading = false;
                 
                 localStorage.removeItem('supabase.auth.token');
@@ -1455,6 +1453,7 @@
             console.log('- currentPage:', currentPage);
             console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
             console.log('- is2FAMode:', is2FAMode);
+            console.log('- isSignupInProgress:', isSignupInProgress);  // 🆕 LOG
             
             const app = document.getElementById('app');
 
@@ -1486,7 +1485,6 @@
                         contractForm.addEventListener('submit', async (e) => {
                             e.preventDefault();
                             
-                            // 🔧 CORRECTION : Utiliser le flag global
                             if (globalIsUploading) {
                                 console.log('⚠️ Upload already in progress, ignoring duplicate submit');
                                 return;
@@ -1506,7 +1504,6 @@
                             progressDiv.classList.remove('hidden');
                             progressDiv.textContent = '⏳ Préparation du fichier...';
                             
-                            // 🔧 NOUVEAU : Timeout de sécurité de 30 secondes
                             const uploadTimeout = setTimeout(() => {
                                 console.error('⏱️ Upload timeout after 30 seconds');
                                 errorDiv.textContent = 'Erreur : Le téléchargement a pris trop de temps. Veuillez réessayer avec un fichier plus petit.';
@@ -1515,7 +1512,7 @@
                                 submitBtn.disabled = false;
                                 submitBtn.textContent = originalText;
                                 globalIsUploading = false;
-                            }, 30000); // 30 secondes
+                            }, 30000);
                             
                             try {
                                 const fileInput = document.getElementById('contractFile');
@@ -1569,7 +1566,6 @@
 
                                 console.log('✅ Profile updated successfully');
                                 
-                                // 🔧 CORRECTION : Annuler le timeout avant le succès
                                 clearTimeout(uploadTimeout);
                                 
                                 alert('✅ Contrat uploadé avec succès !');
@@ -1577,7 +1573,6 @@
                                 globalIsUploading = false;
                                 render();
                             } catch (error) {
-                                // 🔧 CORRECTION : Annuler le timeout en cas d'erreur
                                 clearTimeout(uploadTimeout);
                                 
                                 console.error('❌ Upload exception:', error);
@@ -1983,6 +1978,12 @@
 
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
+
+            // 🆕 IGNORER TOUS LES ÉVÉNEMENTS PENDANT L'INSCRIPTION 2FA
+            if (isSignupInProgress) {
+                console.log('⚠️ Ignoring event during signup process:', event);
+                return;
+            }
 
             if (event === 'PASSWORD_RECOVERY') {
                 console.log('🔑 Password recovery detected - blocking auto-login');
