@@ -70,11 +70,9 @@
         let currentPage = 'landing';
         let isPasswordRecoveryMode = false;
         let is2FAMode = false;
-        let isSignupInProgress = false;  // 🆕 NOUVEAU FLAG pour bloquer le render pendant inscription
+        let isSignupInProgress = false;
         let tempUserId = null;
         let tempUserProfile = null;
-        
-        // 🔧 CORRECTION : Flag global pour l'upload
         let globalIsUploading = false;
 
         window.currentUser = null;
@@ -760,7 +758,6 @@
                         
                         console.log('📤 Signup data:', { email, name, phone: fullPhone });
                         
-                        // 🆕 BLOQUER LE RENDER PENDANT L'INSCRIPTION
                         isSignupInProgress = true;
                         console.log('🔒 Signup in progress - blocking renders');
                         
@@ -773,7 +770,7 @@
                         });
 
                         if (error) {
-                            isSignupInProgress = false;  // 🆕 Débloquer en cas d'erreur
+                            isSignupInProgress = false;
                             throw error;
                         }
                         
@@ -816,7 +813,6 @@
                         const currentLang = i18next.language || 'fr';
                         await send2FACode(data.user.id, sessionToUse, currentLang);
                         
-                        // 🆕 LE FLAG RESTE À true JUSQU'À LA VALIDATION 2FA
                         render();
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
@@ -1005,7 +1001,6 @@
                 delete window.tempPassword;
                 delete window.tempAccessToken;
                 
-                // 🆕 DÉBLOQUER LE RENDER APRÈS VALIDATION 2FA
                 isSignupInProgress = false;
                 console.log('🔓 Signup complete - unblocking renders');
                 
@@ -1034,11 +1029,12 @@
                 return true;
             } catch (error) {
                 console.error('Erreur verify2FACode:', error);
-                isSignupInProgress = false;  // 🆕 Débloquer en cas d'erreur
+                isSignupInProgress = false;
                 return false;
             }
         }
-async function signInWithGoogle() {
+
+        async function signInWithGoogle() {
             try {
                 console.log('🔵 Starting Google Sign In...');
                 const { data, error } = await supabase.auth.signInWithOAuth({
@@ -1073,6 +1069,7 @@ async function signInWithGoogle() {
                 alert('Erreur lors de la connexion avec Apple: ' + error.message);
             }
         }
+
         async function handle2FASubmit(event) {
             event.preventDefault();
             const code = document.getElementById('code2fa').value;
@@ -1473,24 +1470,43 @@ async function signInWithGoogle() {
 
             try {
                 console.log('🔓 Signing out from Supabase...');
-                const { error } = await supabase.auth.signOut();
                 
-                if (error) {
-                    console.error('❌ Logout error:', error);
-                    alert('Erreur lors de la déconnexion: ' + error.message);
-                    if (logoutBtn) {
-                        logoutBtn.disabled = false;
-                        logoutBtn.textContent = 'Déconnexion';
-                    }
-                    return;
+                // Timeout de sécurité : si signOut prend plus de 3 secondes, on force la déconnexion
+                const signOutPromise = supabase.auth.signOut();
+                const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve({ timeout: true }), 3000));
+                
+                const result = await Promise.race([signOutPromise, timeoutPromise]);
+                
+                if (result?.timeout) {
+                    console.warn('⚠️ SignOut timeout - forcing logout');
+                } else if (result?.error) {
+                    console.error('❌ Logout error:', result.error);
+                } else {
+                    console.log('✅ Supabase signOut successful');
                 }
-
-                console.log('✅ Supabase signOut successful');
                 
+                // Forcer le nettoyage complet de TOUTES les données de session
+                console.log('🧹 Cleaning all session data...');
+                
+                // Nettoyer localStorage
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.includes('supabase')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                
+                // Nettoyer sessionStorage
+                sessionStorage.clear();
+                
+                // Réinitialiser les variables globales
                 currentUser = null;
                 userProfile = null;
                 currentPage = 'landing';
                 isPasswordRecoveryMode = false;
+                is2FAMode = false;
+                tempUserId = null;
+                tempUserProfile = null;
                 
                 window.currentUser = null;
                 window.userProfile = null;
@@ -1498,18 +1514,20 @@ async function signInWithGoogle() {
                 
                 globalIsUploading = false;
                 
-                localStorage.removeItem('supabase.auth.token');
                 console.log('✅ Local state cleaned');
                 
-                console.log('🏠 Redirecting to landing page...');
-                render();
+                // Forcer le rechargement de la page pour garantir un état propre
+                console.log('🔄 Reloading page...');
+                window.location.href = window.location.origin;
+                
             } catch (error) {
                 console.error('❌ Logout exception:', error);
-                alert('Erreur lors de la déconnexion: ' + error.message);
-                if (logoutBtn) {
-                    logoutBtn.disabled = false;
-                    logoutBtn.textContent = 'Déconnexion';
-                }
+                
+                // Même en cas d'erreur, forcer la déconnexion
+                console.log('🚨 Forcing logout despite error...');
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = window.location.origin;
             }
         }
 
@@ -1520,7 +1538,7 @@ async function signInWithGoogle() {
             console.log('- currentPage:', currentPage);
             console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
             console.log('- is2FAMode:', is2FAMode);
-            console.log('- isSignupInProgress:', isSignupInProgress);  // 🆕 LOG
+            console.log('- isSignupInProgress:', isSignupInProgress);
             
             const app = document.getElementById('app');
 
@@ -2039,8 +2057,6 @@ async function signInWithGoogle() {
         window.downloadContractTemplate = downloadContractTemplate;
         window.handle2FASubmit = handle2FASubmit;
         window.resend2FACode = resend2FACode;
-        window.handle2FASubmit = handle2FASubmit;
-        window.resend2FACode = resend2FACode;
         window.signInWithGoogle = signInWithGoogle;
         window.signInWithApple = signInWithApple;
 
@@ -2050,7 +2066,6 @@ async function signInWithGoogle() {
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
 
-            // 🆕 IGNORER TOUS LES ÉVÉNEMENTS PENDANT L'INSCRIPTION 2FA
             if (isSignupInProgress) {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
