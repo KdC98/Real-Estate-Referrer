@@ -1641,16 +1641,16 @@
                             progressDiv.classList.remove('hidden');
                             progressDiv.textContent = '⏳ Préparation du fichier...';
                             
-                            // ✅ TIMEOUT AUGMENTÉ À 60 SECONDES
+                            // ✅ TIMEOUT AUGMENTÉ À 120 SECONDES
                             const uploadTimeout = setTimeout(() => {
-                                console.error('⏱️ Upload timeout after 60 seconds');
+                                console.error('⏱️ Upload timeout after 120 seconds');
                                 errorDiv.textContent = 'Erreur : Le téléchargement a pris trop de temps. Veuillez réessayer avec un fichier plus petit.';
                                 errorDiv.classList.remove('hidden');
                                 progressDiv.classList.add('hidden');
                                 submitBtn.disabled = false;
                                 submitBtn.textContent = originalText;
                                 globalIsUploading = false;
-                            }, 60000); // 60 secondes au lieu de 30
+                            }, 120000); // 120 secondes = 2 minutes
                             
                             try {
                                 const fileInput = document.getElementById('contractFile');
