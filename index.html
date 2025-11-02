@@ -1623,94 +1623,111 @@
                     if (contractForm) {
                         console.log('✅ Contract form found, attaching submit handler');
                         
-                        contractForm.addEventListener('submit', async (e) => {
-                            e.preventDefault();
-                            
-                            if (globalIsUploading) {
-                                console.log('⚠️ Upload already in progress, ignoring duplicate submit');
-                                return;
-                            }
-                            
-                            globalIsUploading = true;
-                            console.log('📄 Starting contract upload...');
-                            
-                            const submitBtn = document.getElementById('contractSubmitBtn');
-                            const errorDiv = document.getElementById('uploadError');
-                            const progressDiv = document.getElementById('uploadProgress');
-                            const originalText = submitBtn.textContent;
-                            
-                            submitBtn.disabled = true;
-                            submitBtn.textContent = 'Upload en cours...';
-                            errorDiv.classList.add('hidden');
-                            progressDiv.classList.remove('hidden');
-                            progressDiv.textContent = '⏳ Préparation du fichier...';
-                            
-                            // ✅ TIMEOUT AUGMENTÉ À 120 SECONDES
-                            const uploadTimeout = setTimeout(() => {
-                                console.error('⏱️ Upload timeout after 120 seconds');
-                                errorDiv.textContent = 'Erreur : Le téléchargement a pris trop de temps. Veuillez réessayer avec un fichier plus petit.';
-                                errorDiv.classList.remove('hidden');
-                                progressDiv.classList.add('hidden');
-                                submitBtn.disabled = false;
-                                submitBtn.textContent = originalText;
-                                globalIsUploading = false;
-                            }, 120000); // 120 secondes = 2 minutes
-                            
-                            try {
-                                const fileInput = document.getElementById('contractFile');
-                                const file = fileInput.files[0];
-                                if (!file) {
-                                    throw new Error('Veuillez sélectionner un fichier');
-                                }
-                                if (file.type !== 'application/pdf') {
-                                    throw new Error('Seuls les fichiers PDF sont acceptés');
-                                }
-                                const maxSize = 10 * 1024 * 1024; // 10MB
-                                if (file.size > maxSize) {
-                                    throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
-                                }
-                                console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-                                
-                                progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
-                                
-                                const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-                                console.log('📄 Uploading to Storage with name:', fileName);
-                                const { data: uploadData, error: uploadError } = await supabase.storage
-                                    .from('contracts')
-                                    .upload(fileName, file, {
-                                        cacheControl: '3600',
-                                        upsert: false
-                                    });
-                                if (uploadError) {
-                                    console.error('❌ Error uploading contract:', uploadError);
-                                    throw new Error(`Erreur d'upload : ${uploadError.message}`);
-                                }
-                                console.log('✅ File uploaded successfully to Storage');
-                                console.log('📝 File path:', uploadData.path);
-                                
-                                progressDiv.textContent = '⏳ Mise à jour de votre profil...';
-                                
-                                // ✅ MISE À JOUR DU contract_path DANS LE PROFIL
-                                const { error: updateError } = await supabase.from('profiles').update({
-                                    contract_path: uploadData.path,
-                                    contract_status: 'signed',
-                                    contract_file_url: fileName
-                                }).eq('id', currentUser.id);
-                                
-                                if (updateError) {
-                                    console.error('❌ Error updating profile:', updateError);
-                                    throw new Error(`Erreur de mise à jour : ${updateError.message}`);
-                                }
-                                console.log('✅ Profile updated successfully with contract_path:', uploadData.path);
-                                
-                                clearTimeout(uploadTimeout);
-                                
-                                alert('✅ Contrat uploadé avec succès !');
-                                await loadUserProfile();
-                                globalIsUploading = false;
-                                render();
-                            } catch (error) {
-                                clearTimeout(uploadTimeout);
+                        // ✅ NOUVEAU CODE D'UPLOAD - Utilise l'API REST directement
+// Remplace le code existant dans la fonction contractForm.addEventListener('submit', ...)
+
+contractForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (globalIsUploading) {
+        console.log('⚠️ Upload already in progress, ignoring duplicate submit');
+        return;
+    }
+    
+    globalIsUploading = true;
+    console.log('📄 Starting contract upload...');
+    
+    const submitBtn = document.getElementById('contractSubmitBtn');
+    const errorDiv = document.getElementById('uploadError');
+    const progressDiv = document.getElementById('uploadProgress');
+    const originalText = submitBtn.textContent;
+    
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Upload en cours...';
+    errorDiv.classList.add('hidden');
+    progressDiv.classList.remove('hidden');
+    progressDiv.textContent = '⏳ Préparation du fichier...';
+    
+    try {
+        const fileInput = document.getElementById('contractFile');
+        const file = fileInput.files[0];
+        if (!file) {
+            throw new Error('Veuillez sélectionner un fichier');
+        }
+        if (file.type !== 'application/pdf') {
+            throw new Error('Seuls les fichiers PDF sont acceptés');
+        }
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (file.size > maxSize) {
+            throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
+        }
+        console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+        
+        progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
+        
+        const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+        console.log('📄 Uploading to Storage with name:', fileName);
+        
+        // ✅ UTILISER L'API REST DIRECTEMENT AU LIEU DU CLIENT JS
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            throw new Error('Session expirée, veuillez vous reconnecter');
+        }
+        
+        const uploadUrl = `${SUPABASE_URL}/storage/v1/object/contracts/${fileName}`;
+        
+        console.log('🚀 Uploading via REST API to:', uploadUrl);
+        
+        const uploadResponse = await fetch(uploadUrl, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${session.access_token}`,
+                'Content-Type': file.type,
+                'x-upsert': 'false'
+            },
+            body: file
+        });
+        
+        if (!uploadResponse.ok) {
+            const errorText = await uploadResponse.text();
+            console.error('❌ Upload failed:', uploadResponse.status, errorText);
+            throw new Error(`Erreur d'upload: ${uploadResponse.status} - ${errorText}`);
+        }
+        
+        const uploadData = await uploadResponse.json();
+        console.log('✅ File uploaded successfully to Storage');
+        console.log('📝 Upload response:', uploadData);
+        
+        progressDiv.textContent = '⏳ Mise à jour de votre profil...';
+        
+        // ✅ MISE À JOUR DU contract_path DANS LE PROFIL
+        const { error: updateError } = await supabase.from('profiles').update({
+            contract_path: fileName,
+            contract_status: 'signed',
+            contract_file_url: fileName
+        }).eq('id', currentUser.id);
+        
+        if (updateError) {
+            console.error('❌ Error updating profile:', updateError);
+            throw new Error(`Erreur de mise à jour : ${updateError.message}`);
+        }
+        console.log('✅ Profile updated successfully with contract_path:', fileName);
+        
+        alert('✅ Contrat uploadé avec succès !');
+        await loadUserProfile();
+        globalIsUploading = false;
+        render();
+    } catch (error) {
+        console.error('❌ Upload exception:', error);
+        errorDiv.textContent = error.message;
+        errorDiv.classList.remove('hidden');
+        progressDiv.classList.add('hidden');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        globalIsUploading = false;
+    }
+});
                                 
                                 console.error('❌ Upload exception:', error);
                                 errorDiv.textContent = error.message;
