@@ -442,11 +442,10 @@
                                             oninput="validatePhone()"
                                         >
                                     </div>
-                                    <div class="text-xs text-gray-400 mt-1">${t('auth:phone_info')}</div>
                                     <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                         <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
                                         <p class="text-xs text-blue-200">
-                                            <strong>Important :</strong> Vous recevrez un code SMS de vérification UNIQUEMENT à l'inscription. Ensuite, la connexion se fera par email et mot de passe.
+                                            <strong>Vérification unique :</strong> Vous recevrez un code SMS pour valider votre numéro à l'inscription.
                                         </p>
                                     </div>
                                     <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
@@ -850,12 +849,6 @@
                         
                         console.log('✅ Signup successful, user:', data.user);
                         
-                        // ✅ SAUVEGARDER LE TOKEN AVANT LE SIGNOUT
-                        const accessToken = data.session?.access_token;
-                        if (!accessToken) {
-                            throw new Error('Session access token manquant');
-                        }
-                        
                         console.log('🔓 Signing out IMMEDIATELY to prevent auto-redirect');
                         await supabase.auth.signOut();
                         console.log('✅ Signed out, now safe to proceed with 2FA');
@@ -885,12 +878,11 @@
                             phone_verified: false
                         };
                         window.tempPassword = password;
-                        window.tempAccessToken = accessToken;
                         
                         is2FAMode = true;
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
-                        await send2FACode(data.user.id, { access_token: accessToken }, currentLang);
+                        await send2FACode(data.user.id, currentLang);
                         
                         render();
                     } else if (mode === 'login') {
@@ -949,7 +941,7 @@
                 }
             };
         }
-       async function send2FACode(userId, session, language = 'fr') {
+       async function send2FACode(userId, language = 'fr') {
     try {
         console.log('📱 Sending 2FA code for user:', userId, 'language:', language);
         
@@ -957,7 +949,7 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${session.access_token}`
+                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             },
             body: JSON.stringify({ 
                 userId: userId,
@@ -1072,7 +1064,6 @@
                 console.log('✅ User signed in successfully after 2FA');
                 
                 delete window.tempPassword;
-                delete window.tempAccessToken;
                 
                 isSignupInProgress = false;
                 console.log('🔓 Signup complete - unblocking renders');
@@ -1196,19 +1187,9 @@
         async function resend2FACode() {
             if (tempUserId) {
                 const currentLang = i18next.language || 'fr';
-                
-                if (window.tempAccessToken) {
-                    const tempSession = { access_token: window.tempAccessToken };
-                    const success = await send2FACode(tempUserId, tempSession, currentLang);
-                    if (success) {
-                        alert(t('auth:two_factor.code_sent'));
-                    }
-                } else {
-                    const { data: { session } } = await supabase.auth.getSession();
-                    const success = await send2FACode(tempUserId, session, currentLang);
-                    if (success) {
-                        alert(t('auth:two_factor.code_sent'));
-                    }
+                const success = await send2FACode(tempUserId, currentLang);
+                if (success) {
+                    alert(t('auth:two_factor.code_sent'));
                 }
             }
         }
