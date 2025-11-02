@@ -1656,9 +1656,6 @@ async function checkPhoneExists(phone) {
                     if (contractForm) {
                         console.log('✅ Contract form found, attaching submit handler');
                         
-                        // ✅ NOUVEAU CODE D'UPLOAD - Utilise l'API REST directement
-// Remplace le code existant dans la fonction contractForm.addEventListener('submit', ...)
-
 contractForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
