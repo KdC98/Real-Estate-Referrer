@@ -1,241 +1,127 @@
 {
-  "meta": {
-    "title": "Paano Gumagana - Real Estate Referrer"
-  },
-  "header": {
-    "brand": "Real Estate Referrer",
-    "home": "Home",
-    "login": "Login"
-  },
   "hero": {
-    "badge": "👍 Napakadali!",
-    "title": "Paano Ito Gumagana? 🏙️",
-    "subtitle_bold": "Kumita ng 20% sa Bawat Benta",
-    "subtitle_text": "- Ang Iyong Impormasyon ay Ginto! 💰",
-    "benefits": "100% Libre · Walang Kailangang Skills · 2 Minuto Lang!"
+    "title": "Paano Ito Gumagana?",
+    "subtitle": "Maging real estate referrer sa Dubai sa 5 simpleng hakbang"
   },
   "timeline": {
-    "section_title": "🎯 5 Simpleng Hakbang",
-    "section_subtitle": "Sundin ang gabay, napakadali! 😊",
     "step1": {
-      "badge": "2 min ⚡",
-      "title": "Magrehistro",
-      "description": "📝 Gumawa ng account sa 2 minuto!",
-      "items": ["Ang iyong pangalan", "Ang iyong email", "Password"],
-      "footer": "👉 Kahit ang lola mo kaya niya!"
+      "badge": "1",
+      "title": "Mag-sign Up (2 minuto)",
+      "items": [
+        "Gumawa ng libreng account",
+        "Punan ang iyong impormasyon",
+        "Pirmahan ang referrer agreement"
+      ]
     },
     "step2": {
-      "badge": "Madali 👍",
-      "title": "Maghanap ng Clients",
-      "description": "🗣️ Sabihin sa inyong mga kakilala!",
-      "items": ["Pamilya at kaibigan", "Mga kasama sa trabaho", "Sa social media"],
-      "warning_title": "⚠️ Mahalaga: Humingi ng PAHINTULOT bago ibahagi ang kanilang contact!",
-      "footer": "💡 Siguradong may kilala kang interesado!"
+      "badge": "2",
+      "title": "Maghanap ng Mga Kliyente",
+      "items": [
+        "Sabihin sa iyong network ang tungkol sa programa",
+        "Tukuyin ang mga taong interesado sa Dubai real estate",
+        "Walang kailangang real estate license!"
+      ]
     },
     "step3": {
-      "badge": "Simple 🎯",
-      "title": "Magdagdag ng Lead",
-      "description": "➕ Simpleng form lang ang sagutan",
-      "items": ["Pangalan ng client", "Email o phone", "Uri ng property"],
-      "footer": "⏱️ 30 segundo lang!"
+      "badge": "3",
+      "title": "Idagdag ang Iyong Mga Lead",
+      "items": [
+        "Mag-log in sa iyong dashboard",
+        "I-click ang \"Magdagdag ng lead\"",
+        "Punan ang impormasyon ng kliyente"
+      ]
     },
     "step4": {
-      "badge": "Auto 🤖",
-      "title": "Subaybayan Live",
-      "description": "📊 Kami ang bahala sa LAHAT!",
+      "badge": "4",
+      "title": "Real-Time na Pagsubaybay",
+      "description": "Subaybayan ang progreso ng iyong mga lead",
       "status_new": "📄 Bago",
-      "status_visit": "🏠 Bisita",
+      "status_visit": "🏠 Pagbisita",
       "status_offer": "🤝 Alok",
       "status_sold": "✅ Nabenta",
-      "footer": "🛋️ Manood ka lang!"
+      "footer": "Ganap na transparency sa iyong mga komisyon"
     },
     "step5": {
-      "badge": "💰 Jackpot!",
-      "title": "Kunin ang Pera! 💸",
-      "description": "🎉 Tanggapin ang iyong commission",
-      "commission_text": "⭐ 20% ng agent commission",
-      "payment_delay": "Bayad sa loob ng 45-60 araw",
-      "footer": "🏆 Wala ka nang gagawin!"
-    },
-    "conclusion": {
-      "title": "✅ Ganyan nga kadali talaga!",
-      "subtitle": "Walang kailangang experience · Walang technical skills · Network mo lang"
+      "badge": "5",
+      "title": "Tanggapin ang Iyong Mga Komisyon",
+      "description": "Kapag nakumpleto ang pagbebenta, kinakalkula ang iyong komisyon",
+      "payment_delay": "Pagbabayad sa loob ng 45-60 araw",
+      "commission_text": "⭐ 20% ng komisyon ng agent"
     }
   },
   "earnings": {
-    "section_title": "💰 Magkano ang Kikitain Ko?",
-    "section_subtitle": "Spoiler: SOBRA! 😱",
+    "section_title": "💰 Magkano ang Maaari Kong Kitain?",
     "example1": {
-      "property_type": "Apartment",
-      "price": "1,000,000 AED",
-      "total_commission": "Kabuuang commission (2%)",
-      "total_amount": "20,000 AED",
-      "agent_commission": "Commission ng agent (50%)",
-      "agent_amount": "10,000 AED",
-      "your_commission": "Iyong commission (20%)",
-      "your_amount": "2,000 AED"
+      "your_amount": "2,000 AED",
+      "property_type": "Apartment - 1M AED",
+      "total_commission": "Kabuuang komisyon (2%): 20,000 AED",
+      "agent_commission": "Komisyon ng agent (50%): 10,000 AED",
+      "your_commission": "Iyong komisyon (20%): 2,000 AED"
     },
     "example2": {
-      "property_type": "Villa",
-      "price": "5,000,000 AED",
+      "your_amount": "10,000 AED",
+      "property_type": "Villa - 5M AED",
       "total_amount": "100,000 AED",
-      "agent_amount": "50,000 AED",
-      "your_amount": "10,000 AED"
+      "agent_amount": "50,000 AED"
     },
     "example3": {
-      "property_type": "Penthouse",
-      "price": "10,000,000 AED",
+      "your_amount": "20,000 AED",
+      "property_type": "Penthouse - 10M AED",
       "total_amount": "200,000 AED",
-      "agent_amount": "100,000 AED",
-      "your_amount": "20,000 AED"
+      "agent_amount": "100,000 AED"
     },
-    "unlimited": "Walang limitasyon sa kita!",
-    "unlimited_subtitle": "Mas maraming clients, mas maraming kita"
+    "unlimited": "✨ Walang limitasyon! Mas maraming kliyente ang iyong dadalhin, mas marami kang kikitain."
   },
   "lead_criteria": {
-    "section_title": "🎯 Ano ang MAGANDANG Lead?",
-    "section_subtitle": "Huwag mag-panic, madaling kilalanin! 😊",
+    "section_title": "📋 Mga Pamantayan ng Magandang Lead",
     "good_lead": {
-      "title": "TOP Lead! 🌟",
-      "subtitle": "= Garantisadong commission 💰",
-      "consent_title": "KAILANGAN: Pahintulot ng client",
-      "consent_text": "Bago ibahagi ang contact ng isang tao, KAILANGAN mo ng kanilang malinaw na pahintulot. Ito ang batas (GDPR)! ⚖️",
-      "consent_example": "Halimbawa: \"Kilala ko ang magaling na agent, pwede ko bang ibigay ang number mo?\" → Sinabi nila OO → OK ✅",
+      "title": "Kwalipikadong Lead",
       "criteria": [
-        "Talagang gustong bumili o mag-rent",
-        "May malinaw na budget",
-        "Naghahanap ngayon (hindi 2 taon pa!)",
-        "Madali mong makakausap",
-        "Alam nila ang gusto nila"
-      ],
-      "summary": "💡 Sa madaling salita: isang SERYOSONG tao na talagang naghahanap (at nagbigay ng pahintulot!)!"
+        "Talagang gustong bumili o umupa",
+        "May malinaw na badyet sa isip",
+        "Naghahanap ngayon (hindi sa loob ng 2 taon!)",
+        "Madaling makausap",
+        "Alam ang gusto nila"
+      ]
     },
     "bad_lead": {
-      "title": "Hindi magandang lead... 😬",
-      "subtitle": "= Sayang sa oras 🚫",
+      "title": "Hindi Kwalipikadong Lead",
       "criteria": [
-        "Curious lang, hindi talaga interesado",
-        "Walang ideya sa budget (o hindi realistic)",
-        "Malayo pa ang plano (1 taon+)",
-        "Hindi maabot o pekeng contact",
+        "Curious lang, hindi talagang interesado",
+        "Walang ideya sa badyet (o hindi realistic)",
+        "Naghahanap sa malayong hinaharap (1 taon+)",
+        "Hindi maabot o pekeng contact details",
         "Hindi alam kung ano ang gusto"
-      ],
-      "summary": "🚨 Sa madaling salita: isang \"titingnan ko mamaya\"!"
-    },
-    "golden_rule": "🎓 Gintong tuntunin:",
-    "golden_rule_good": "1 SERYOSONG lead",
-    "golden_rule_vs": "mas mabuti kaysa",
-    "golden_rule_bad": "10 curious"
-  },
-  "security": {
-    "section_title": "Seguridad at Transparency",
-    "ownership": {
-      "title": "Garantisadong pagmamay-ari",
-      "description": "Ang iyong leads ay eksklusibo mo"
-    },
-    "transparency": {
-      "title": "Ganap na transparency",
-      "description": "Real-time dashboard 24/7"
-    },
-    "history": {
-      "title": "Kumpletong kasaysayan",
-      "description": "Lahat ng transactions naka-archive"
-    },
-    "calculation": {
-      "title": "Automatic na kalkulasyon",
-      "description": "Commissions tumpak na kinakalkula"
+      ]
     }
   },
   "faq": {
-    "section_title": "Mga Madalas Itanong",
-    "q0": {
-      "question": "Kailangan ko bang ipakita ang mga property?",
-      "answer_bold": "⚠️ HINDI! HUWAG!",
-      "answer_items": [
-        "Paliwanag: Mga agent na may RERA license lang ang pwedeng magpakita ng property.",
-        "Ang papel mo: Ipasa lang ang impormasyon (lead) sa agency.",
-        "Magandang balita: Wala ka nang gagawin!"
-      ]
-    },
-    "q_consent": {
-      "question": "Kailangan ko bang humingi ng pahintulot bago ibahagi ang contact?",
-      "answer_bold": "OO, TALAGA! Ito ay KAILANGAN. ⚖️",
-      "answer_items": [
-        "Ang batas (GDPR): HINDI mo pwedeng ibahagi ang personal data ng isang tao nang walang pahintulot.",
-        "Sa praktikal: Tanungin lang \"Pwede ko bang ibigay ang details mo sa real estate agent?\"",
-        "Kung sinabi nila OO: Perfect, pwede mo nang gawing lead ✅",
-        "Kung sinabi nila HINDI: Respetuhin ang desisyon, huwag ibahagi ❌"
-      ],
-      "warning": "⚠️ Ang pagbabahagi ng contact nang walang pahintulot ay maaaring magresulta sa pagsasara ng account at legal action."
-    },
+    "section_title": "❓ Mga Madalas Itanong",
     "q1": {
-      "question": "Ilang leads ang pwede kong dalhin?",
-      "answer": "Walang limitasyon! Walang restriction sa bilang ng leads na pwede mong dalhin. Mas maraming qualified clients na dadalhin mo, mas maraming kikitain mo. Ang iba ay nag-manage ng 1-2 leads monthly, ang iba ay 10+. Ikaw ang magpapasya sa level ng involvement mo."
+      "question": "Ilang lead ang maaari kong dalhin?",
+      "answer": "Walang limitasyon! Mas marami ang dadalhin, mas marami ang kikitain."
     },
     "q2": {
       "question": "Kailangan ko ba ng real estate license?",
-      "answer": "Hindi! Ang referrer program ay bukas sa lahat, walang kailangang license. Hindi mo kailangan ng special na kaalaman sa real estate. Ang papel mo lang ay ikonekta ang mga interesadong tao sa aming agency. Kami ang bahala sa lahat ng legal at technical."
+      "answer": "Hindi! Bukas ang programa para sa lahat."
     },
     "q3": {
-      "question": "Kailan ako makakatanggap ng bayad?",
-      "answer_intro": "45-60 araw pagkatapos pirmahan ang sale o rental contract. Ito ang proseso:",
-      "answer_steps": [
-        "Pipirmahan ng client ang contract",
-        "Magiging final ang transaction",
-        "Tatanggapin ng agency ang commission",
-        "Automatic na kakalkulahin ang iyong commission (20%)",
-        "Bayad sa loob ng 45-60 araw"
-      ],
-      "answer_conclusion": "Ang delay ay para masigurado na final ang transaction at natanggap na lahat ng bayad."
+      "question": "Kailan ako mababayaran?",
+      "answer_intro": "45-60 araw pagkatapos ng pagpirma ng kontrata."
     },
     "q4": {
-      "question": "Pwede ko bang i-refer ang ibang referrers?",
-      "answer_part1": "Oo! May referral program kami na nagbibigay ng extra commission sa pag-recruit ng ibang referrers. Kontakin kami sa",
-      "email": "contact@real-estate-referrer.com",
-      "answer_part2": "para malaman ang mga terms at benefits ng referral program."
+      "question": "Maaari ko bang i-sponsor ang ibang mga referrer?",
+      "answer_part1": "Oo! Makipag-ugnayan sa amin sa",
+      "email": "contact@real-estate-referrer.com"
     },
     "q5": {
-      "question": "Ano ang mangyayari kung hindi bumili ang client?",
-      "answer": "Walang problema! Wala kang mawawala. Ang lead ay mananatili sa history mo at pwede kang magpatuloy sa pagdadala ng ibang clients. Walang financial commitment sa iyong parte. Kikita ka lang kung may nabentang sale o rental. Zero risk para sa iyo!"
-    },
-    "q6": {
-      "question": "Gaano katagal ang proseso?",
-      "answer_intro": "Depende sa client at market, pero ito ang average:",
-      "answer_timeline": [
-        "1-2 linggo: Unang contact at bisita",
-        "2-4 linggo: Paghahanap at pagpili",
-        "1-2 buwan: Negotiation at alok",
-        "Total: 2-3 buwan sa average"
-      ],
-      "answer_conclusion": "Ang ibang clients ay nagdedesisyon sa ilang araw, ang iba ay ilang buwan. Mino-monitor mo ang lahat real-time sa dashboard."
+      "question": "Ano ang mangyayari kung hindi bibili ang kliyente?",
+      "answer": "Walang problema! Wala kang mawawala."
     }
   },
   "cta": {
-    "title": "Kaya, Magsimula Na?",
-    "subtitle_part1": "Ito ay",
-    "subtitle_free": "libre",
-    "subtitle_part2": ",",
-    "subtitle_easy": "madali",
-    "subtitle_part3": ", at makakapagsimula ka sa",
-    "subtitle_time": "2 minuto",
-    "subtitle_part4": "!",
-    "button_signup": "Tara Na!",
-    "button_login": "Mayroon na akong account",
-    "benefits": "✅ Walang credit card · ✅ Walang commitment · ✅ Cancel anytime",
-    "testimonial": "💬 \"Kumita ako ng 4,000 AED sa 2 buwan nang walang komplikadong ginawa!\" - Sarah, referrer 3 months"
-  },
-  "footer": {
-    "brand": "Real Estate Referrer",
-    "navigation_title": "Navigation",
-    "navigation_home": "Home",
-    "navigation_how": "Paano Gumagana",
-    "navigation_login": "Login",
-    "navigation_signup": "Sign Up",
-    "legal_title": "Legal",
-    "legal_terms": "Terms",
-    "legal_privacy": "Privacy",
-    "legal_contract": "Contract Template",
-    "contact_title": "Contact",
-    "copyright": "© 2025 Real Estate Referrer. All rights reserved."
+    "title": "Handa Nang Magsimula?",
+    "subtitle_part1": "Mag-sign up ngayon at magsimulang kumita ng mga komisyon ngayong araw",
+    "button_signup": "Tara Na! 🚀"
   }
 }
