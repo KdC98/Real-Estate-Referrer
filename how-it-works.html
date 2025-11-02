@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comment ça marche - Real Estate Referrer</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/i18next@23.7.6/dist/umd/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
     
@@ -14,7 +16,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <a href="index.html" class="text-white text-xl font-bold">Real Estate Referrer</a>
+                    <a href="index.html" class="text-white text-xl font-bold" data-i18n="header.brand">Real Estate Referrer</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <!-- Sélecteur de langue -->
@@ -28,7 +30,7 @@
                         <option value="zh">🇨🇳 中文</option>
                         <option value="tl">🇵🇭 Tagalog</option>
                     </select>
-                    <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="nav.login">Connexion</a>
+                    <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.login">Connexion</a>
                 </div>
             </div>
         </div>
@@ -38,10 +40,10 @@
     <div class="relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <div class="text-center">
-                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6" data-i18n="how.hero.title">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6" data-i18n="hero.title">
                     Comment ça marche ?
                 </h1>
-                <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto" data-i18n="how.hero.subtitle">
+                <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto" data-i18n="hero.subtitle">
                     Devenez apporteur d'affaires immobilier à Dubai en 5 étapes simples
                 </p>
             </div>
@@ -60,19 +62,19 @@
                         </div>
                     </div>
                     <div class="ml-6">
-                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="how.step1.title">Inscription (2 min)</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step1.title">Inscription (2 min)</h3>
                         <ul class="text-blue-100 space-y-2">
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step1.item1">Créez votre compte gratuitement</span>
+                                <span data-i18n="timeline.step1.items[0]">Créez votre compte gratuitement</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step1.item2">Renseignez vos informations</span>
+                                <span data-i18n="timeline.step1.items[1]">Renseignez vos informations</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step1.item3">Signez le contrat d'apporteur</span>
+                                <span data-i18n="timeline.step1.items[2]">Signez le contrat d'apporteur</span>
                             </li>
                         </ul>
                     </div>
@@ -88,19 +90,19 @@
                         </div>
                     </div>
                     <div class="ml-6">
-                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="how.step2.title">Trouvez des clients</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step2.title">Trouvez des clients</h3>
                         <ul class="text-blue-100 space-y-2">
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step2.item1">Parlez du programme à votre réseau</span>
+                                <span data-i18n="timeline.step2.items[0]">Parlez du programme à votre réseau</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step2.item2">Identifiez des personnes intéressées par l'immobilier à Dubai</span>
+                                <span data-i18n="timeline.step2.items[1]">Identifiez des personnes intéressées par l'immobilier à Dubai</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step2.item3">Aucune licence immobilière requise !</span>
+                                <span data-i18n="timeline.step2.items[2]">Aucune licence immobilière requise !</span>
                             </li>
                         </ul>
                     </div>
@@ -116,19 +118,19 @@
                         </div>
                     </div>
                     <div class="ml-6">
-                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="how.step3.title">Ajoutez vos leads</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step3.title">Ajoutez vos leads</h3>
                         <ul class="text-blue-100 space-y-2">
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step3.item1">Connectez-vous à votre dashboard</span>
+                                <span data-i18n="timeline.step3.items[0]">Connectez-vous à votre dashboard</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step3.item2">Cliquez sur "Ajouter un lead"</span>
+                                <span data-i18n="timeline.step3.items[1]">Cliquez sur "Ajouter un lead"</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step3.item3">Remplissez les informations client</span>
+                                <span data-i18n="timeline.step3.items[2]">Remplissez les informations client</span>
                             </li>
                         </ul>
                     </div>
@@ -144,19 +146,24 @@
                         </div>
                     </div>
                     <div class="ml-6">
-                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="how.step4.title">Suivi en temps réel</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step4.title">Suivi en temps réel</h3>
                         <ul class="text-blue-100 space-y-2">
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step4.item1">Suivez l'avancement de vos leads</span>
+                                <span data-i18n="timeline.step4.description">Suivez l'avancement de vos leads</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step4.item2">Statuts : Nouveau → Visite → Offre → Vendu</span>
+                                <span>
+                                    <span data-i18n="timeline.step4.status_new">📄 Nouveau</span> → 
+                                    <span data-i18n="timeline.step4.status_visit">🏠 Visite</span> → 
+                                    <span data-i18n="timeline.step4.status_offer">🤝 Offre</span> → 
+                                    <span data-i18n="timeline.step4.status_sold">✅ Vendu</span>
+                                </span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-blue-400 mr-2">→</span>
-                                <span data-i18n="how.step4.item3">Transparence totale sur vos commissions</span>
+                                <span data-i18n="timeline.step4.footer">Transparence totale sur vos commissions</span>
                             </li>
                         </ul>
                     </div>
@@ -172,19 +179,19 @@
                         </div>
                     </div>
                     <div class="ml-6">
-                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="how.step5.title">Recevez vos commissions</h3>
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step5.title">Recevez vos commissions</h3>
                         <ul class="text-blue-100 space-y-2">
                             <li class="flex items-start">
                                 <span class="text-green-400 mr-2">→</span>
-                                <span data-i18n="how.step5.item1">Dès qu'une vente est conclue, votre commission est calculée</span>
+                                <span data-i18n="timeline.step5.description">Dès qu'une vente est conclue, votre commission est calculée</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-green-400 mr-2">→</span>
-                                <span data-i18n="how.step5.item2">Paiement sous 48h après signature du contrat</span>
+                                <span data-i18n="timeline.step5.payment_delay">Paiement dans les 45-60 jours</span>
                             </li>
                             <li class="flex items-start">
                                 <span class="text-green-400 mr-2">→</span>
-                                <span data-i18n="how.step5.item3">20% de la commission agent = 0.2% du prix de vente</span>
+                                <span data-i18n="timeline.step5.commission_text">⭐ 20% de la commission agent</span>
                             </li>
                         </ul>
                     </div>
@@ -196,7 +203,7 @@
     <!-- Combien puis-je gagner ? -->
     <div class="bg-gradient-to-r from-green-900/40 to-emerald-900/40 border-t border-b border-green-500/30 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="how.earnings.title">
+            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="earnings.section_title">
                 💰 Combien puis-je gagner ?
             </h2>
             
@@ -204,12 +211,12 @@
                 <!-- Exemple 1 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
                     <div class="text-center">
-                        <div class="text-4xl font-bold text-green-400 mb-2">2,000 AED</div>
-                        <div class="text-blue-100 mb-4" data-i18n="how.earnings.example1.desc">Villa à 1M AED</div>
-                        <div class="text-sm text-blue-200" data-i18n="how.earnings.example1.calc">
-                            Commission totale: 20,000 AED<br>
-                            Part agent: 10,000 AED<br>
-                            Votre part: 2,000 AED (20%)
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example1.your_amount">2,000 AED</div>
+                        <div class="text-blue-100 mb-4" data-i18n="earnings.example1.property_type">Appartement - 1M AED</div>
+                        <div class="text-sm text-blue-200">
+                            <div data-i18n="earnings.example1.total_commission">Commission totale (2%): 20,000 AED</div>
+                            <div data-i18n="earnings.example1.agent_commission">Commission agent (50%): 10,000 AED</div>
+                            <div data-i18n="earnings.example1.your_commission">Votre commission (20%): 2,000 AED</div>
                         </div>
                     </div>
                 </div>
@@ -217,12 +224,12 @@
                 <!-- Exemple 2 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
                     <div class="text-center">
-                        <div class="text-4xl font-bold text-green-400 mb-2">6,000 AED</div>
-                        <div class="text-blue-100 mb-4" data-i18n="how.earnings.example2.desc">Appartement à 3M AED</div>
-                        <div class="text-sm text-blue-200" data-i18n="how.earnings.example2.calc">
-                            Commission totale: 60,000 AED<br>
-                            Part agent: 30,000 AED<br>
-                            Votre part: 6,000 AED (20%)
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example2.your_amount">10,000 AED</div>
+                        <div class="text-blue-100 mb-4" data-i18n="earnings.example2.property_type">Villa - 5M AED</div>
+                        <div class="text-sm text-blue-200">
+                            <div data-i18n="earnings.example2.total_amount">100,000 AED</div>
+                            <div data-i18n="earnings.example2.agent_amount">50,000 AED</div>
+                            <div data-i18n="earnings.example2.your_amount">10,000 AED</div>
                         </div>
                     </div>
                 </div>
@@ -230,18 +237,18 @@
                 <!-- Exemple 3 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
                     <div class="text-center">
-                        <div class="text-4xl font-bold text-green-400 mb-2">10,000 AED</div>
-                        <div class="text-blue-100 mb-4" data-i18n="how.earnings.example3.desc">Propriété à 5M AED</div>
-                        <div class="text-sm text-blue-200" data-i18n="how.earnings.example3.calc">
-                            Commission totale: 100,000 AED<br>
-                            Part agent: 50,000 AED<br>
-                            Votre part: 10,000 AED (20%)
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example3.your_amount">20,000 AED</div>
+                        <div class="text-blue-100 mb-4" data-i18n="earnings.example3.property_type">Penthouse - 10M AED</div>
+                        <div class="text-sm text-blue-200">
+                            <div data-i18n="earnings.example3.total_amount">200,000 AED</div>
+                            <div data-i18n="earnings.example3.agent_amount">100,000 AED</div>
+                            <div data-i18n="earnings.example3.your_amount">20,000 AED</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <p class="text-center text-blue-100 mt-8 text-lg" data-i18n="how.earnings.unlimited">
+            <p class="text-center text-blue-100 mt-8 text-lg" data-i18n="earnings.unlimited">
                 ✨ Pas de limite ! Plus vous apportez de clients, plus vous gagnez.
             </p>
         </div>
@@ -249,7 +256,7 @@
 
     <!-- Critères d'un bon lead -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="how.criteria.title">
+        <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="lead_criteria.section_title">
             📋 Critères d'un bon lead
         </h2>
 
@@ -258,24 +265,28 @@
             <div class="bg-green-900/30 rounded-xl p-8 border border-green-500/30">
                 <h3 class="text-2xl font-bold text-green-400 mb-6 flex items-center">
                     <span class="mr-3">✅</span>
-                    <span data-i18n="how.criteria.qualified.title">Lead qualifié</span>
+                    <span data-i18n="lead_criteria.good_lead.title">Lead qualifié</span>
                 </h3>
                 <ul class="space-y-3 text-blue-100">
                     <li class="flex items-start">
                         <span class="text-green-400 mr-2">✓</span>
-                        <span data-i18n="how.criteria.qualified.item1">Personne réellement intéressée par un achat</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[0]">Ils veulent vraiment acheter ou louer</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-green-400 mr-2">✓</span>
-                        <span data-i18n="how.criteria.qualified.item2">Budget défini et réaliste</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[1]">Ils ont un budget clair en tête</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-green-400 mr-2">✓</span>
-                        <span data-i18n="how.criteria.qualified.item3">Recherche active (0-3 mois)</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[2]">Ils cherchent maintenant (pas dans 2 ans !)</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-green-400 mr-2">✓</span>
-                        <span data-i18n="how.criteria.qualified.item4">Coordonnées complètes et exactes</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[3]">Vous pouvez les joindre facilement</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[4]">Ils savent ce qu'ils veulent</span>
                     </li>
                 </ul>
             </div>
@@ -284,24 +295,28 @@
             <div class="bg-red-900/30 rounded-xl p-8 border border-red-500/30">
                 <h3 class="text-2xl font-bold text-red-400 mb-6 flex items-center">
                     <span class="mr-3">❌</span>
-                    <span data-i18n="how.criteria.unqualified.title">Lead non qualifié</span>
+                    <span data-i18n="lead_criteria.bad_lead.title">Lead non qualifié</span>
                 </h3>
                 <ul class="space-y-3 text-blue-100">
                     <li class="flex items-start">
                         <span class="text-red-400 mr-2">✗</span>
-                        <span data-i18n="how.criteria.unqualified.item1">Simple curiosité sans intention d'achat</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[0]">Juste curieux, pas vraiment intéressé</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-red-400 mr-2">✗</span>
-                        <span data-i18n="how.criteria.unqualified.item2">Pas de budget défini</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[1]">Aucune idée de leur budget (ou irréaliste)</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-red-400 mr-2">✗</span>
-                        <span data-i18n="how.criteria.unqualified.item3">Projet à très long terme (1+ an)</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[2]">Cherchent très loin dans le futur (1 an+)</span>
                     </li>
                     <li class="flex items-start">
                         <span class="text-red-400 mr-2">✗</span>
-                        <span data-i18n="how.criteria.unqualified.item4">Coordonnées fausses ou incomplètes</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[3]">Injoignable ou fausses coordonnées</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">✗</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[4]">Ne savent pas du tout ce qu'ils veulent</span>
                     </li>
                 </ul>
             </div>
@@ -311,58 +326,59 @@
     <!-- FAQ -->
     <div class="bg-white/5 border-t border-white/10 py-16">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="how.faq.title">
+            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="faq.section_title">
                 ❓ Questions fréquentes
             </h2>
 
             <div class="space-y-6">
                 <!-- Q1 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.faq.q1.question">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q1.question">
                         Combien de leads puis-je apporter ?
                     </h3>
-                    <p class="text-blue-100" data-i18n="how.faq.q1.answer">
-                        Illimité ! Plus vous apportez, plus vous gagnez. Certains apporteurs gagnent plus de 50,000 AED par an.
+                    <p class="text-blue-100" data-i18n="faq.q1.answer">
+                        Illimité ! Plus vous apportez, plus vous gagnez.
                     </p>
                 </div>
 
                 <!-- Q2 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.faq.q2.question">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q2.question">
                         Dois-je avoir une licence immobilière ?
                     </h3>
-                    <p class="text-blue-100" data-i18n="how.faq.q2.answer">
-                        Non ! Le programme est ouvert à tous. Vous ne faites que recommander des clients, je m'occupe de tout le reste.
+                    <p class="text-blue-100" data-i18n="faq.q2.answer">
+                        Non ! Le programme est ouvert à tous.
                     </p>
                 </div>
 
                 <!-- Q3 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.faq.q3.question">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q3.question">
                         Quand suis-je payé ?
                     </h3>
-                    <p class="text-blue-100" data-i18n="how.faq.q3.answer">
-                        Vous êtes payé dans les 48h suivant la signature du contrat de vente. Paiement rapide et garanti.
+                    <p class="text-blue-100" data-i18n="faq.q3.answer_intro">
+                        45-60 jours après la signature du contrat.
                     </p>
                 </div>
 
                 <!-- Q4 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.faq.q4.question">
-                        Que se passe-t-il si le client n'achète pas ?
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q4.question">
+                        Puis-je parrainer d'autres apporteurs ?
                     </h3>
-                    <p class="text-blue-100" data-i18n="how.faq.q4.answer">
-                        Aucun problème ! Vous pouvez continuer à apporter d'autres leads. Vous êtes payé uniquement sur les ventes conclues.
+                    <p class="text-blue-100">
+                        <span data-i18n="faq.q4.answer_part1">Oui ! Contactez-nous à</span>
+                        <span data-i18n="faq.q4.email">contact@real-estate-referrer.com</span>
                     </p>
                 </div>
 
                 <!-- Q5 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="how.faq.q5.question">
-                        Y a-t-il des frais d'inscription ?
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q5.question">
+                        Que se passe-t-il si le client n'achète pas ?
                     </h3>
-                    <p class="text-blue-100" data-i18n="how.faq.q5.answer">
-                        Non, l'inscription est 100% gratuite. Aucun frais caché, aucun abonnement.
+                    <p class="text-blue-100" data-i18n="faq.q5.answer">
+                        Aucun problème ! Vous ne perdez rien.
                     </p>
                 </div>
             </div>
@@ -372,13 +388,13 @@
     <!-- CTA Final -->
     <div class="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" data-i18n="how.cta.title">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" data-i18n="cta.title">
                 Prêt à commencer ?
             </h2>
-            <p class="text-xl text-blue-100 mb-8" data-i18n="how.cta.subtitle">
+            <p class="text-xl text-blue-100 mb-8" data-i18n="cta.subtitle_part1">
                 Inscrivez-vous maintenant et commencez à gagner des commissions dès aujourd'hui
             </p>
-            <a href="index.html?action=signup" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-bold hover:bg-blue-50 transition duration-300 shadow-xl" data-i18n="how.cta.button">
+            <a href="index.html?action=signup" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-bold hover:bg-blue-50 transition duration-300 shadow-xl" data-i18n="cta.button_signup">
                 Je me lance ! 🚀
             </a>
         </div>
@@ -388,902 +404,59 @@
     <footer class="bg-slate-900 border-t border-white/10 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center text-blue-200">
-                <p>&copy; 2025 Real Estate Referrer Dubai. <span data-i18n="footer.rights">Tous droits réservés.</span></p>
+                <p>&copy; 2025 Real Estate Referrer Dubai. <span data-i18n="footer.copyright">Tous droits réservés.</span></p>
                 <div class="mt-4 space-x-4">
-                    <a href="index.html" class="hover:text-white transition" data-i18n="footer.home">Accueil</a>
-                    <a href="how-it-works.html" class="hover:text-white transition" data-i18n="footer.how">Comment ça marche</a>
+                    <a href="index.html" class="hover:text-white transition" data-i18n="footer.navigation_home">Accueil</a>
+                    <a href="how-it-works.html" class="hover:text-white transition" data-i18n="footer.navigation_how">Comment ça marche</a>
                 </div>
             </div>
         </div>
     </footer>
 
     <script>
-        // Traductions i18next
-        const translations = {
-            fr: {
-                nav: {
-                    login: "Connexion"
-                },
-                how: {
-                    hero: {
-                        title: "Comment ça marche ?",
-                        subtitle: "Devenez apporteur d'affaires immobilier à Dubai en 5 étapes simples"
+        // ✅ CHARGEMENT I18NEXT AVEC BACKEND
+        (async () => {
+            await i18next
+                .use(i18nextHttpBackend)
+                .use(i18nextBrowserLanguageDetector)
+                .init({
+                    fallbackLng: 'fr',
+                    debug: true,
+                    load: 'languageOnly',
+                    ns: ['how-it-works'],
+                    defaultNS: 'how-it-works',
+                    backend: {
+                        loadPath: '/locales/{{lng}}/{{ns}}.json'
                     },
-                    step1: {
-                        title: "Inscription (2 min)",
-                        item1: "Créez votre compte gratuitement",
-                        item2: "Renseignez vos informations",
-                        item3: "Signez le contrat d'apporteur"
-                    },
-                    step2: {
-                        title: "Trouvez des clients",
-                        item1: "Parlez du programme à votre réseau",
-                        item2: "Identifiez des personnes intéressées par l'immobilier à Dubai",
-                        item3: "Aucune licence immobilière requise !"
-                    },
-                    step3: {
-                        title: "Ajoutez vos leads",
-                        item1: "Connectez-vous à votre dashboard",
-                        item2: "Cliquez sur \"Ajouter un lead\"",
-                        item3: "Remplissez les informations client"
-                    },
-                    step4: {
-                        title: "Suivi en temps réel",
-                        item1: "Suivez l'avancement de vos leads",
-                        item2: "Statuts : Nouveau → Visite → Offre → Vendu",
-                        item3: "Transparence totale sur vos commissions"
-                    },
-                    step5: {
-                        title: "Recevez vos commissions",
-                        item1: "Dès qu'une vente est conclue, votre commission est calculée",
-                        item2: "Paiement sous 48h après signature du contrat",
-                        item3: "20% de la commission agent = 0.2% du prix de vente"
-                    },
-                    earnings: {
-                        title: "💰 Combien puis-je gagner ?",
-                        example1: {
-                            desc: "Villa à 1M AED",
-                            calc: "Commission totale: 20,000 AED<br>Part agent: 10,000 AED<br>Votre part: 2,000 AED (20%)"
-                        },
-                        example2: {
-                            desc: "Appartement à 3M AED",
-                            calc: "Commission totale: 60,000 AED<br>Part agent: 30,000 AED<br>Votre part: 6,000 AED (20%)"
-                        },
-                        example3: {
-                            desc: "Propriété à 5M AED",
-                            calc: "Commission totale: 100,000 AED<br>Part agent: 50,000 AED<br>Votre part: 10,000 AED (20%)"
-                        },
-                        unlimited: "✨ Pas de limite ! Plus vous apportez de clients, plus vous gagnez."
-                    },
-                    criteria: {
-                        title: "📋 Critères d'un bon lead",
-                        qualified: {
-                            title: "Lead qualifié",
-                            item1: "Personne réellement intéressée par un achat",
-                            item2: "Budget défini et réaliste",
-                            item3: "Recherche active (0-3 mois)",
-                            item4: "Coordonnées complètes et exactes"
-                        },
-                        unqualified: {
-                            title: "Lead non qualifié",
-                            item1: "Simple curiosité sans intention d'achat",
-                            item2: "Pas de budget défini",
-                            item3: "Projet à très long terme (1+ an)",
-                            item4: "Coordonnées fausses ou incomplètes"
-                        }
-                    },
-                    faq: {
-                        title: "❓ Questions fréquentes",
-                        q1: {
-                            question: "Combien de leads puis-je apporter ?",
-                            answer: "Illimité ! Plus vous apportez, plus vous gagnez. Certains apporteurs gagnent plus de 50,000 AED par an."
-                        },
-                        q2: {
-                            question: "Dois-je avoir une licence immobilière ?",
-                            answer: "Non ! Le programme est ouvert à tous. Vous ne faites que recommander des clients, je m'occupe de tout le reste."
-                        },
-                        q3: {
-                            question: "Quand suis-je payé ?",
-                            answer: "Vous êtes payé dans les 48h suivant la signature du contrat de vente. Paiement rapide et garanti."
-                        },
-                        q4: {
-                            question: "Que se passe-t-il si le client n'achète pas ?",
-                            answer: "Aucun problème ! Vous pouvez continuer à apporter d'autres leads. Vous êtes payé uniquement sur les ventes conclues."
-                        },
-                        q5: {
-                            question: "Y a-t-il des frais d'inscription ?",
-                            answer: "Non, l'inscription est 100% gratuite. Aucun frais caché, aucun abonnement."
-                        }
-                    },
-                    cta: {
-                        title: "Prêt à commencer ?",
-                        subtitle: "Inscrivez-vous maintenant et commencez à gagner des commissions dès aujourd'hui",
-                        button: "Je me lance ! 🚀"
+                    detection: {
+                        order: ['localStorage', 'navigator'],
+                        caches: ['localStorage']
                     }
-                },
-                footer: {
-                    rights: "Tous droits réservés.",
-                    home: "Accueil",
-                    how: "Comment ça marche"
-                }
-            },
-            en: {
-                nav: {
-                    login: "Login"
-                },
-                how: {
-                    hero: {
-                        title: "How It Works",
-                        subtitle: "Become a real estate referrer in Dubai in 5 simple steps"
-                    },
-                    step1: {
-                        title: "Sign Up (2 min)",
-                        item1: "Create your free account",
-                        item2: "Fill in your information",
-                        item3: "Sign the referrer contract"
-                    },
-                    step2: {
-                        title: "Find Clients",
-                        item1: "Tell your network about the program",
-                        item2: "Identify people interested in Dubai real estate",
-                        item3: "No real estate license required!"
-                    },
-                    step3: {
-                        title: "Add Your Leads",
-                        item1: "Log in to your dashboard",
-                        item2: "Click \"Add a lead\"",
-                        item3: "Fill in client information"
-                    },
-                    step4: {
-                        title: "Real-Time Tracking",
-                        item1: "Track your leads' progress",
-                        item2: "Statuses: New → Visit → Offer → Sold",
-                        item3: "Full transparency on your commissions"
-                    },
-                    step5: {
-                        title: "Receive Your Commissions",
-                        item1: "Once a sale is completed, your commission is calculated",
-                        item2: "Payment within 48h after contract signing",
-                        item3: "20% of agent commission = 0.2% of sale price"
-                    },
-                    earnings: {
-                        title: "💰 How Much Can I Earn?",
-                        example1: {
-                            desc: "Villa at 1M AED",
-                            calc: "Total commission: 20,000 AED<br>Agent share: 10,000 AED<br>Your share: 2,000 AED (20%)"
-                        },
-                        example2: {
-                            desc: "Apartment at 3M AED",
-                            calc: "Total commission: 60,000 AED<br>Agent share: 30,000 AED<br>Your share: 6,000 AED (20%)"
-                        },
-                        example3: {
-                            desc: "Property at 5M AED",
-                            calc: "Total commission: 100,000 AED<br>Agent share: 50,000 AED<br>Your share: 10,000 AED (20%)"
-                        },
-                        unlimited: "✨ No limit! The more clients you bring, the more you earn."
-                    },
-                    criteria: {
-                        title: "📋 Criteria for a Good Lead",
-                        qualified: {
-                            title: "Qualified Lead",
-                            item1: "Person genuinely interested in purchasing",
-                            item2: "Defined and realistic budget",
-                            item3: "Active search (0-3 months)",
-                            item4: "Complete and accurate contact details"
-                        },
-                        unqualified: {
-                            title: "Unqualified Lead",
-                            item1: "Simple curiosity with no purchase intent",
-                            item2: "No defined budget",
-                            item3: "Very long-term project (1+ year)",
-                            item4: "False or incomplete contact details"
-                        }
-                    },
-                    faq: {
-                        title: "❓ Frequently Asked Questions",
-                        q1: {
-                            question: "How many leads can I bring?",
-                            answer: "Unlimited! The more you bring, the more you earn. Some referrers earn over 50,000 AED per year."
-                        },
-                        q2: {
-                            question: "Do I need a real estate license?",
-                            answer: "No! The program is open to everyone. You only recommend clients, I handle everything else."
-                        },
-                        q3: {
-                            question: "When do I get paid?",
-                            answer: "You are paid within 48h after the sales contract is signed. Fast and guaranteed payment."
-                        },
-                        q4: {
-                            question: "What happens if the client doesn't buy?",
-                            answer: "No problem! You can continue bringing other leads. You're only paid on completed sales."
-                        },
-                        q5: {
-                            question: "Are there any registration fees?",
-                            answer: "No, registration is 100% free. No hidden fees, no subscription."
-                        }
-                    },
-                    cta: {
-                        title: "Ready to Start?",
-                        subtitle: "Sign up now and start earning commissions today",
-                        button: "Let's Go! 🚀"
-                    }
-                },
-                footer: {
-                    rights: "All rights reserved.",
-                    home: "Home",
-                    how: "How It Works"
-                }
-            },
-            ar: {
-                nav: {
-                    login: "تسجيل الدخول"
-                },
-                how: {
-                    hero: {
-                        title: "كيف يعمل البرنامج؟",
-                        subtitle: "كن وسيط عقاري في دبي في 5 خطوات بسيطة"
-                    },
-                    step1: {
-                        title: "التسجيل (دقيقتان)",
-                        item1: "أنشئ حسابك مجاناً",
-                        item2: "أدخل معلوماتك",
-                        item3: "وقع عقد الوسيط"
-                    },
-                    step2: {
-                        title: "ابحث عن العملاء",
-                        item1: "أخبر شبكتك عن البرنامج",
-                        item2: "حدد الأشخاص المهتمين بالعقارات في دبي",
-                        item3: "لا يتطلب ترخيص عقاري!"
-                    },
-                    step3: {
-                        title: "أضف عملاءك المحتملين",
-                        item1: "سجل دخولك إلى لوحة التحكم",
-                        item2: "انقر على \"إضافة عميل محتمل\"",
-                        item3: "املأ معلومات العميل"
-                    },
-                    step4: {
-                        title: "تتبع فوري",
-                        item1: "تتبع تقدم عملائك المحتملين",
-                        item2: "الحالات: جديد ← زيارة ← عرض ← مباع",
-                        item3: "شفافية كاملة بشأن عمولاتك"
-                    },
-                    step5: {
-                        title: "احصل على عمولاتك",
-                        item1: "بمجرد إتمام البيع، يتم حساب عمولتك",
-                        item2: "الدفع خلال 48 ساعة بعد توقيع العقد",
-                        item3: "20٪ من عمولة الوكيل = 0.2٪ من سعر البيع"
-                    },
-                    earnings: {
-                        title: "💰 كم يمكنني أن أكسب؟",
-                        example1: {
-                            desc: "فيلا بسعر 1 مليون درهم",
-                            calc: "العمولة الإجمالية: 20,000 درهم<br>حصة الوكيل: 10,000 درهم<br>حصتك: 2,000 درهم (20٪)"
-                        },
-                        example2: {
-                            desc: "شقة بسعر 3 ملايين درهم",
-                            calc: "العمولة الإجمالية: 60,000 درهم<br>حصة الوكيل: 30,000 درهم<br>حصتك: 6,000 درهم (20٪)"
-                        },
-                        example3: {
-                            desc: "عقار بسعر 5 ملايين درهم",
-                            calc: "العمولة الإجمالية: 100,000 درهم<br>حصة الوكيل: 50,000 درهم<br>حصتك: 10,000 درهم (20٪)"
-                        },
-                        unlimited: "✨ لا حدود! كلما أحضرت المزيد من العملاء، كلما ربحت أكثر."
-                    },
-                    criteria: {
-                        title: "📋 معايير العميل المحتمل الجيد",
-                        qualified: {
-                            title: "عميل محتمل مؤهل",
-                            item1: "شخص مهتم حقاً بالشراء",
-                            item2: "ميزانية محددة وواقعية",
-                            item3: "بحث نشط (0-3 أشهر)",
-                            item4: "تفاصيل اتصال كاملة ودقيقة"
-                        },
-                        unqualified: {
-                            title: "عميل محتمل غير مؤهل",
-                            item1: "فضول بسيط دون نية شراء",
-                            item2: "لا توجد ميزانية محددة",
-                            item3: "مشروع طويل الأجل جداً (سنة+)",
-                            item4: "تفاصيل اتصال خاطئة أو غير كاملة"
-                        }
-                    },
-                    faq: {
-                        title: "❓ الأسئلة الشائعة",
-                        q1: {
-                            question: "كم عدد العملاء المحتملين الذين يمكنني إحضارهم؟",
-                            answer: "غير محدود! كلما أحضرت أكثر، كلما ربحت أكثر. بعض الوسطاء يكسبون أكثر من 50,000 درهم سنوياً."
-                        },
-                        q2: {
-                            question: "هل أحتاج إلى ترخيص عقاري؟",
-                            answer: "لا! البرنامج مفتوح للجميع. أنت فقط توصي بالعملاء، وأنا أتولى كل شيء آخر."
-                        },
-                        q3: {
-                            question: "متى أحصل على أموالي؟",
-                            answer: "تحصل على أموالك خلال 48 ساعة بعد توقيع عقد البيع. دفع سريع ومضمون."
-                        },
-                        q4: {
-                            question: "ماذا يحدث إذا لم يشتري العميل؟",
-                            answer: "لا مشكلة! يمكنك الاستمرار في إحضار عملاء محتملين آخرين. تحصل على أموالك فقط عند إتمام المبيعات."
-                        },
-                        q5: {
-                            question: "هل هناك رسوم تسجيل؟",
-                            answer: "لا، التسجيل مجاني 100٪. لا توجد رسوم خفية، ولا اشتراك."
-                        }
-                    },
-                    cta: {
-                        title: "مستعد للبدء؟",
-                        subtitle: "سجل الآن وابدأ في كسب العمولات اليوم",
-                        button: "لننطلق! 🚀"
-                    }
-                },
-                footer: {
-                    rights: "جميع الحقوق محفوظة.",
-                    home: "الرئيسية",
-                    how: "كيف يعمل"
-                }
-            },
-            ru: {
-                nav: {
-                    login: "Войти"
-                },
-                how: {
-                    hero: {
-                        title: "Как это работает",
-                        subtitle: "Станьте риелтором в Дубае за 5 простых шагов"
-                    },
-                    step1: {
-                        title: "Регистрация (2 мин)",
-                        item1: "Создайте бесплатный аккаунт",
-                        item2: "Заполните информацию",
-                        item3: "Подпишите договор партнера"
-                    },
-                    step2: {
-                        title: "Найдите клиентов",
-                        item1: "Расскажите о программе своим знакомым",
-                        item2: "Найдите людей, заинтересованных в недвижимости Дубая",
-                        item3: "Лицензия риелтора не требуется!"
-                    },
-                    step3: {
-                        title: "Добавьте лиды",
-                        item1: "Войдите в свою панель",
-                        item2: "Нажмите \"Добавить лид\"",
-                        item3: "Заполните информацию о клиенте"
-                    },
-                    step4: {
-                        title: "Отслеживание в реальном времени",
-                        item1: "Следите за прогрессом ваших лидов",
-                        item2: "Статусы: Новый → Просмотр → Предложение → Продано",
-                        item3: "Полная прозрачность ваших комиссий"
-                    },
-                    step5: {
-                        title: "Получите комиссию",
-                        item1: "После завершения сделки ваша комиссия рассчитывается",
-                        item2: "Оплата в течение 48 часов после подписания договора",
-                        item3: "20% комиссии агента = 0.2% от цены продажи"
-                    },
-                    earnings: {
-                        title: "💰 Сколько я могу заработать?",
-                        example1: {
-                            desc: "Вилла за 1M AED",
-                            calc: "Общая комиссия: 20,000 AED<br>Доля агента: 10,000 AED<br>Ваша доля: 2,000 AED (20%)"
-                        },
-                        example2: {
-                            desc: "Квартира за 3M AED",
-                            calc: "Общая комиссия: 60,000 AED<br>Доля агента: 30,000 AED<br>Ваша доля: 6,000 AED (20%)"
-                        },
-                        example3: {
-                            desc: "Недвижимость за 5M AED",
-                            calc: "Общая комиссия: 100,000 AED<br>Доля агента: 50,000 AED<br>Ваша доля: 10,000 AED (20%)"
-                        },
-                        unlimited: "✨ Без ограничений! Чем больше клиентов, тем больше заработок."
-                    },
-                    criteria: {
-                        title: "📋 Критерии хорошего лида",
-                        qualified: {
-                            title: "Квалифицированный лид",
-                            item1: "Человек действительно заинтересован в покупке",
-                            item2: "Определенный и реалистичный бюджет",
-                            item3: "Активный поиск (0-3 месяца)",
-                            item4: "Полные и точные контактные данные"
-                        },
-                        unqualified: {
-                            title: "Неквалифицированный лид",
-                            item1: "Простое любопытство без намерения купить",
-                            item2: "Нет определенного бюджета",
-                            item3: "Долгосрочный проект (1+ год)",
-                            item4: "Ложные или неполные контактные данные"
-                        }
-                    },
-                    faq: {
-                        title: "❓ Часто задаваемые вопросы",
-                        q1: {
-                            question: "Сколько лидов я могу привести?",
-                            answer: "Без ограничений! Чем больше приводите, тем больше зарабатываете. Некоторые партнеры зарабатывают более 50,000 AED в год."
-                        },
-                        q2: {
-                            question: "Нужна ли мне лицензия риелтора?",
-                            answer: "Нет! Программа открыта для всех. Вы только рекомендуете клиентов, я занимаюсь всем остальным."
-                        },
-                        q3: {
-                            question: "Когда я получу оплату?",
-                            answer: "Вы получите оплату в течение 48 часов после подписания договора купли-продажи. Быстрая и гарантированная оплата."
-                        },
-                        q4: {
-                            question: "Что если клиент не купит?",
-                            answer: "Нет проблем! Вы можете продолжать приводить других лидов. Вы получаете оплату только за завершенные сделки."
-                        },
-                        q5: {
-                            question: "Есть ли регистрационные сборы?",
-                            answer: "Нет, регистрация 100% бесплатная. Никаких скрытых платежей, никаких подписок."
-                        }
-                    },
-                    cta: {
-                        title: "Готовы начать?",
-                        subtitle: "Зарегистрируйтесь сейчас и начните зарабатывать комиссии сегодня",
-                        button: "Поехали! 🚀"
-                    }
-                },
-                footer: {
-                    rights: "Все права защищены.",
-                    home: "Главная",
-                    how: "Как это работает"
-                }
-            },
-            hi: {
-                nav: {
-                    login: "लॉगिन"
-                },
-                how: {
-                    hero: {
-                        title: "यह कैसे काम करता है",
-                        subtitle: "5 सरल चरणों में दुबई में रियल एस्टेट रेफ़रर बनें"
-                    },
-                    step1: {
-                        title: "पंजीकरण (2 मिनट)",
-                        item1: "अपना मुफ़्त खाता बनाएँ",
-                        item2: "अपनी जानकारी भरें",
-                        item3: "रेफ़रर अनुबंध पर हस्ताक्षर करें"
-                    },
-                    step2: {
-                        title: "ग्राहक खोजें",
-                        item1: "अपने नेटवर्क को कार्यक्रम के बारे में बताएं",
-                        item2: "दुबई रियल एस्टेट में रुचि रखने वाले लोगों की पहचान करें",
-                        item3: "किसी रियल एस्टेट लाइसेंस की आवश्यकता नहीं!"
-                    },
-                    step3: {
-                        title: "अपने लीड जोड़ें",
-                        item1: "अपने डैशबोर्ड में लॉगिन करें",
-                        item2: "\"लीड जोड़ें\" पर क्लिक करें",
-                        item3: "ग्राहक जानकारी भरें"
-                    },
-                    step4: {
-                        title: "वास्तविक समय ट्रैकिंग",
-                        item1: "अपने लीड की प्रगति को ट्रैक करें",
-                        item2: "स्थिति: नया → दौरा → प्रस्ताव → बेचा गया",
-                        item3: "आपके कमीशन पर पूर्ण पारदर्शिता"
-                    },
-                    step5: {
-                        title: "अपना कमीशन प्राप्त करें",
-                        item1: "बिक्री पूर्ण होने के बाद, आपका कमीशन गणना की जाती है",
-                        item2: "अनुबंध हस्ताक्षर के 48 घंटों के भीतर भुगतान",
-                        item3: "एजेंट कमीशन का 20% = बिक्री मूल्य का 0.2%"
-                    },
-                    earnings: {
-                        title: "💰 मैं कितना कमा सकता हूँ?",
-                        example1: {
-                            desc: "1M AED का विला",
-                            calc: "कुल कमीशन: 20,000 AED<br>एजेंट का हिस्सा: 10,000 AED<br>आपका हिस्सा: 2,000 AED (20%)"
-                        },
-                        example2: {
-                            desc: "3M AED का अपार्टमेंट",
-                            calc: "कुल कमीशन: 60,000 AED<br>एजेंट का हिस्सा: 30,000 AED<br>आपका हिस्सा: 6,000 AED (20%)"
-                        },
-                        example3: {
-                            desc: "5M AED की संपत्ति",
-                            calc: "कुल कमीशन: 100,000 AED<br>एजेंट का हिस्सा: 50,000 AED<br>आपका हिस्सा: 10,000 AED (20%)"
-                        },
-                        unlimited: "✨ कोई सीमा नहीं! जितने अधिक ग्राहक लाते हैं, उतना अधिक कमाते हैं।"
-                    },
-                    criteria: {
-                        title: "📋 एक अच्छे लीड के मानदंड",
-                        qualified: {
-                            title: "योग्य लीड",
-                            item1: "वास्तव में खरीदने में रुचि रखने वाला व्यक्ति",
-                            item2: "परिभाषित और यथार्थवादी बजट",
-                            item3: "सक्रिय खोज (0-3 महीने)",
-                            item4: "पूर्ण और सटीक संपर्क विवरण"
-                        },
-                        unqualified: {
-                            title: "अयोग्य लीड",
-                            item1: "खरीदने के इरादे के बिना सरल जिज्ञासा",
-                            item2: "कोई परिभाषित बजट नहीं",
-                            item3: "बहुत लंबी अवधि की परियोजना (1+ वर्ष)",
-                            item4: "गलत या अधूरे संपर्क विवरण"
-                        }
-                    },
-                    faq: {
-                        title: "❓ अक्सर पूछे जाने वाले प्रश्न",
-                        q1: {
-                            question: "मैं कितने लीड ला सकता हूँ?",
-                            answer: "असीमित! जितने अधिक लाते हैं, उतना अधिक कमाते हैं। कुछ रेफ़रर प्रति वर्ष 50,000 AED से अधिक कमाते हैं।"
-                        },
-                        q2: {
-                            question: "क्या मुझे रियल एस्टेट लाइसेंस चाहिए?",
-                            answer: "नहीं! कार्यक्रम सभी के लिए खुला है। आप केवल ग्राहकों की सिफारिश करते हैं, बाकी सब मैं संभालता हूँ।"
-                        },
-                        q3: {
-                            question: "मुझे भुगतान कब मिलेगा?",
-                            answer: "बिक्री अनुबंध पर हस्ताक्षर के 48 घंटों के भीतर भुगतान मिलता है। तेज़ और गारंटीकृत भुगतान।"
-                        },
-                        q4: {
-                            question: "अगर ग्राहक नहीं खरीदता है तो क्या होगा?",
-                            answer: "कोई समस्या नहीं! आप अन्य लीड लाना जारी रख सकते हैं। आपको केवल पूर्ण बिक्री पर भुगतान मिलता है।"
-                        },
-                        q5: {
-                            question: "क्या कोई पंजीकरण शुल्क है?",
-                            answer: "नहीं, पंजीकरण 100% मुफ़्त है। कोई छिपी हुई फीस नहीं, कोई सदस्यता नहीं।"
-                        }
-                    },
-                    cta: {
-                        title: "शुरू करने के लिए तैयार हैं?",
-                        subtitle: "अभी साइन अप करें और आज ही कमीशन कमाना शुरू करें",
-                        button: "चलो शुरू करें! 🚀"
-                    }
-                },
-                footer: {
-                    rights: "सर्वाधिकार सुरक्षित।",
-                    home: "होम",
-                    how: "यह कैसे काम करता है"
-                }
-            },
-            ur: {
-                nav: {
-                    login: "لاگ ان"
-                },
-                how: {
-                    hero: {
-                        title: "یہ کیسے کام کرتا ہے",
-                        subtitle: "5 آسان مراحل میں دبئی میں رئیل اسٹیٹ ریفرر بنیں"
-                    },
-                    step1: {
-                        title: "رجسٹریشن (2 منٹ)",
-                        item1: "اپنا مفت اکاؤنٹ بنائیں",
-                        item2: "اپنی معلومات بھریں",
-                        item3: "ریفرر معاہدے پر دستخط کریں"
-                    },
-                    step2: {
-                        title: "گاہک تلاش کریں",
-                        item1: "اپنے نیٹ ورک کو پروگرام کے بارے میں بتائیں",
-                        item2: "دبئی کی رئیل اسٹیٹ میں دلچسپی رکھنے والے لوگوں کی شناخت کریں",
-                        item3: "کسی رئیل اسٹیٹ لائسنس کی ضرورت نہیں!"
-                    },
-                    step3: {
-                        title: "اپنی لیڈز شامل کریں",
-                        item1: "اپنے ڈیش بورڈ میں لاگ ان کریں",
-                        item2: "\"لیڈ شامل کریں\" پر کلک کریں",
-                        item3: "گاہک کی معلومات بھریں"
-                    },
-                    step4: {
-                        title: "حقیقی وقت میں ٹریکنگ",
-                        item1: "اپنی لیڈز کی پیشرفت کو ٹریک کریں",
-                        item2: "حیثیت: نیا ← دورہ ← پیشکش ← فروخت",
-                        item3: "آپ کے کمیشن پر مکمل شفافیت"
-                    },
-                    step5: {
-                        title: "اپنا کمیشن وصول کریں",
-                        item1: "فروخت مکمل ہونے کے بعد، آپ کا کمیشن شمار کیا جاتا ہے",
-                        item2: "معاہدے پر دستخط کے 48 گھنٹے بعد ادائیگی",
-                        item3: "ایجنٹ کمیشن کا 20% = فروخت کی قیمت کا 0.2%"
-                    },
-                    earnings: {
-                        title: "💰 میں کتنا کما سکتا ہوں؟",
-                        example1: {
-                            desc: "1M AED کا ولا",
-                            calc: "کل کمیشن: 20,000 AED<br>ایجنٹ کا حصہ: 10,000 AED<br>آپ کا حصہ: 2,000 AED (20%)"
-                        },
-                        example2: {
-                            desc: "3M AED کا اپارٹمنٹ",
-                            calc: "کل کمیشن: 60,000 AED<br>ایجنٹ کا حصہ: 30,000 AED<br>آپ کا حصہ: 6,000 AED (20%)"
-                        },
-                        example3: {
-                            desc: "5M AED کی جائیداد",
-                            calc: "کل کمیشن: 100,000 AED<br>ایجنٹ کا حصہ: 50,000 AED<br>آپ کا حصہ: 10,000 AED (20%)"
-                        },
-                        unlimited: "✨ کوئی حد نہیں! جتنے زیادہ گاہک لائیں، اتنا زیادہ کمائیں۔"
-                    },
-                    criteria: {
-                        title: "📋 اچھی لیڈ کا معیار",
-                        qualified: {
-                            title: "قابل لیڈ",
-                            item1: "واقعی خریدنے میں دلچسپی رکھنے والا شخص",
-                            item2: "متعین اور حقیقت پسندانہ بجٹ",
-                            item3: "فعال تلاش (0-3 ماہ)",
-                            item4: "مکمل اور درست رابطہ کی تفصیلات"
-                        },
-                        unqualified: {
-                            title: "ناقابل لیڈ",
-                            item1: "خریدنے کے ارادے کے بغیر سادہ تجسس",
-                            item2: "کوئی متعین بجٹ نہیں",
-                            item3: "بہت طویل مدتی منصوبہ (1+ سال)",
-                            item4: "غلط یا نامکمل رابطہ کی تفصیلات"
-                        }
-                    },
-                    faq: {
-                        title: "❓ اکثر پوچھے گئے سوالات",
-                        q1: {
-                            question: "میں کتنی لیڈز لا سکتا ہوں؟",
-                            answer: "لامحدود! جتنی زیادہ لائیں، اتنا زیادہ کمائیں۔ کچھ ریفررز سالانہ 50,000 AED سے زیادہ کماتے ہیں۔"
-                        },
-                        q2: {
-                            question: "کیا مجھے رئیل اسٹیٹ لائسنس کی ضرورت ہے؟",
-                            answer: "نہیں! یہ پروگرام سب کے لیے کھلا ہے۔ آپ صرف گاہکوں کی سفارش کرتے ہیں، باقی سب میں سنبھالتا ہوں۔"
-                        },
-                        q3: {
-                            question: "مجھے ادائیگی کب ملے گی؟",
-                            answer: "فروخت کے معاہدے پر دستخط کے 48 گھنٹوں کے اندر ادائیگی ملتی ہے۔ تیز اور مضمون ادائیگی۔"
-                        },
-                        q4: {
-                            question: "اگر گاہک نہیں خریدتا تو کیا ہوگا؟",
-                            answer: "کوئی مسئلہ نہیں! آپ دوسری لیڈز لانا جاری رکھ سکتے ہیں۔ آپ کو صرف مکمل فروخت پر ادائیگی ملتی ہے۔"
-                        },
-                        q5: {
-                            question: "کیا کوئی رجسٹریشن فیس ہے؟",
-                            answer: "نہیں، رجسٹریشن 100% مفت ہے۔ کوئی پوشیدہ فیس نہیں، کوئی سبسکرپشن نہیں۔"
-                        }
-                    },
-                    cta: {
-                        title: "شروع کرنے کے لیے تیار ہیں؟",
-                        subtitle: "ابھی سائن اپ کریں اور آج ہی کمیشن کمانا شروع کریں",
-                        button: "چلو شروع کریں! 🚀"
-                    }
-                },
-                footer: {
-                    rights: "تمام حقوق محفوظ ہیں۔",
-                    home: "ہوم",
-                    how: "یہ کیسے کام کرتا ہے"
-                }
-            },
-            zh: {
-                nav: {
-                    login: "登录"
-                },
-                how: {
-                    hero: {
-                        title: "如何运作",
-                        subtitle: "通过5个简单步骤成为迪拜房地产推荐人"
-                    },
-                    step1: {
-                        title: "注册（2分钟）",
-                        item1: "免费创建您的账户",
-                        item2: "填写您的信息",
-                        item3: "签署推荐人合同"
-                    },
-                    step2: {
-                        title: "寻找客户",
-                        item1: "向您的网络介绍该计划",
-                        item2: "确定对迪拜房地产感兴趣的人",
-                        item3: "无需房地产许可证！"
-                    },
-                    step3: {
-                        title: "添加您的潜在客户",
-                        item1: "登录您的仪表板",
-                        item2: "点击"添加潜在客户"",
-                        item3: "填写客户信息"
-                    },
-                    step4: {
-                        title: "实时跟踪",
-                        item1: "跟踪您的潜在客户进展",
-                        item2: "状态：新建 → 访问 → 报价 → 已售",
-                        item3: "完全透明的佣金"
-                    },
-                    step5: {
-                        title: "收取您的佣金",
-                        item1: "销售完成后，您的佣金将被计算",
-                        item2: "合同签署后48小时内付款",
-                        item3: "代理佣金的20% = 销售价格的0.2%"
-                    },
-                    earnings: {
-                        title: "💰 我能赚多少？",
-                        example1: {
-                            desc: "100万迪拉姆的别墅",
-                            calc: "总佣金：20,000迪拉姆<br>代理份额：10,000迪拉姆<br>您的份额：2,000迪拉姆（20%）"
-                        },
-                        example2: {
-                            desc: "300万迪拉姆的公寓",
-                            calc: "总佣金：60,000迪拉姆<br>代理份额：30,000迪拉姆<br>您的份额：6,000迪拉姆（20%）"
-                        },
-                        example3: {
-                            desc: "500万迪拉姆的房产",
-                            calc: "总佣金：100,000迪拉姆<br>代理份额：50,000迪拉姆<br>您的份额：10,000迪拉姆（20%）"
-                        },
-                        unlimited: "✨ 无限制！您带来的客户越多，赚得越多。"
-                    },
-                    criteria: {
-                        title: "📋 好的潜在客户标准",
-                        qualified: {
-                            title: "合格的潜在客户",
-                            item1: "真正有兴趣购买的人",
-                            item2: "明确且现实的预算",
-                            item3: "积极搜索（0-3个月）",
-                            item4: "完整准确的联系方式"
-                        },
-                        unqualified: {
-                            title: "不合格的潜在客户",
-                            item1: "仅仅是好奇，没有购买意图",
-                            item2: "没有明确的预算",
-                            item3: "非常长期的项目（1年以上）",
-                            item4: "错误或不完整的联系方式"
-                        }
-                    },
-                    faq: {
-                        title: "❓ 常见问题",
-                        q1: {
-                            question: "我可以带来多少潜在客户？",
-                            answer: "无限制！您带来的越多，赚得越多。一些推荐人每年赚取超过50,000迪拉姆。"
-                        },
-                        q2: {
-                            question: "我需要房地产许可证吗？",
-                            answer: "不需要！该计划对所有人开放。您只需推荐客户，其余的我来处理。"
-                        },
-                        q3: {
-                            question: "我什么时候能收到付款？",
-                            answer: "销售合同签署后48小时内付款。快速且有保障的付款。"
-                        },
-                        q4: {
-                            question: "如果客户不购买会怎样？",
-                            answer: "没问题！您可以继续带来其他潜在客户。您只在完成销售时获得报酬。"
-                        },
-                        q5: {
-                            question: "有注册费吗？",
-                            answer: "没有，注册100%免费。没有隐藏费用，没有订阅。"
-                        }
-                    },
-                    cta: {
-                        title: "准备开始了吗？",
-                        subtitle: "立即注册，今天就开始赚取佣金",
-                        button: "开始吧！🚀"
-                    }
-                },
-                footer: {
-                    rights: "版权所有。",
-                    home: "主页",
-                    how: "如何运作"
-                }
-            },
-            tl: {
-                nav: {
-                    login: "Mag-login"
-                },
-                how: {
-                    hero: {
-                        title: "Paano Ito Gumagana",
-                        subtitle: "Maging real estate referrer sa Dubai sa 5 simpleng hakbang"
-                    },
-                    step1: {
-                        title: "Mag-rehistro (2 minuto)",
-                        item1: "Gumawa ng libreng account",
-                        item2: "Punan ang iyong impormasyon",
-                        item3: "Pirmahan ang referrer contract"
-                    },
-                    step2: {
-                        title: "Maghanap ng Kliyente",
-                        item1: "Sabihin sa iyong network ang tungkol sa program",
-                        item2: "Tukuyin ang mga taong interesado sa Dubai real estate",
-                        item3: "Walang kailangang real estate license!"
-                    },
-                    step3: {
-                        title: "Magdagdag ng Leads",
-                        item1: "Mag-login sa iyong dashboard",
-                        item2: "I-click ang \"Magdagdag ng lead\"",
-                        item3: "Punan ang impormasyon ng kliyente"
-                    },
-                    step4: {
-                        title: "Real-Time Tracking",
-                        item1: "Subaybayan ang progreso ng iyong leads",
-                        item2: "Mga Status: Bago → Bisita → Alok → Nabili",
-                        item3: "Ganap na transparency sa iyong commission"
-                    },
-                    step5: {
-                        title: "Tanggapin ang Iyong Commission",
-                        item1: "Kapag nakumpleto ang benta, kinakalkula ang iyong commission",
-                        item2: "Pagbabayad sa loob ng 48 oras pagkatapos ng contract signing",
-                        item3: "20% ng agent commission = 0.2% ng selling price"
-                    },
-                    earnings: {
-                        title: "💰 Magkano ang Makikita Ko?",
-                        example1: {
-                            desc: "Villa sa 1M AED",
-                            calc: "Kabuuang commission: 20,000 AED<br>Agent share: 10,000 AED<br>Iyong share: 2,000 AED (20%)"
-                        },
-                        example2: {
-                            desc: "Apartment sa 3M AED",
-                            calc: "Kabuuang commission: 60,000 AED<br>Agent share: 30,000 AED<br>Iyong share: 6,000 AED (20%)"
-                        },
-                        example3: {
-                            desc: "Property sa 5M AED",
-                            calc: "Kabuuang commission: 100,000 AED<br>Agent share: 50,000 AED<br>Iyong share: 10,000 AED (20%)"
-                        },
-                        unlimited: "✨ Walang limitasyon! Mas maraming kliyente, mas maraming kita."
-                    },
-                    criteria: {
-                        title: "📋 Pamantayan ng Magandang Lead",
-                        qualified: {
-                            title: "Qualified Lead",
-                            item1: "Tunay na interesado sa pagbili",
-                            item2: "Tukoy at realistic na budget",
-                            item3: "Aktibong paghahanap (0-3 buwan)",
-                            item4: "Kumpleto at tumpak na contact details"
-                        },
-                        unqualified: {
-                            title: "Unqualified Lead",
-                            item1: "Simpleng curiosity lang walang intensyon na bumili",
-                            item2: "Walang tukoy na budget",
-                            item3: "Napakahaba ng plano (1+ taon)",
-                            item4: "Mali o kulang ang contact details"
-                        }
-                    },
-                    faq: {
-                        title: "❓ Mga Madalas na Tanong",
-                        q1: {
-                            question: "Ilang leads ang pwede kong dalhin?",
-                            answer: "Walang limitasyon! Mas marami ang dala, mas maraming kita. Ang iba ay kumikita ng higit sa 50,000 AED bawat taon."
-                        },
-                        q2: {
-                            question: "Kailangan ko ba ng real estate license?",
-                            answer: "Hindi! Bukas ang program sa lahat. Ikaw lang ay magrerekomenda ng kliyente, ako na ang bahala sa iba."
-                        },
-                        q3: {
-                            question: "Kailan ako makakakuha ng bayad?",
-                            answer: "Makakakuha ng bayad sa loob ng 48 oras pagkatapos ng contract signing. Mabilis at garantisadong bayad."
-                        },
-                        q4: {
-                            question: "Paano kung hindi bumili ang kliyente?",
-                            answer: "Walang problema! Pwede kang magpatuloy na magdagdag ng ibang leads. Babayaran ka lang sa mga nakumpletong benta."
-                        },
-                        q5: {
-                            question: "May bayad ba sa pag-register?",
-                            answer: "Wala, 100% libre ang registration. Walang hidden fees, walang subscription."
-                        }
-                    },
-                    cta: {
-                        title: "Handa na bang Magsimula?",
-                        subtitle: "Mag-sign up ngayon at magsimulang kumita ng commission ngayong araw",
-                        button: "Tara na! 🚀"
-                    }
-                },
-                footer: {
-                    rights: "Lahat ng karapatan ay nakalaan.",
-                    home: "Home",
-                    how: "Paano Ito Gumagana"
-                }
-            }
-        };
+                });
+            
+            console.log('🌐 Translations loaded!');
+            updateContent();
+        })();
 
-        // Initialize i18next
-        i18next.init({
-            lng: 'fr',
-            resources: translations
-        }, function(err, t) {
-            // Update content
+        // Changement de langue
+        document.getElementById('languageSelector').addEventListener('change', async function(e) {
+            await i18next.changeLanguage(e.target.value);
+            localStorage.setItem('i18nextLng', e.target.value);
             updateContent();
         });
 
-        // Language selector change
-        document.getElementById('languageSelector').addEventListener('change', function(e) {
-            i18next.changeLanguage(e.target.value, function(err, t) {
-                updateContent();
-            });
-        });
-
+        // Fonction pour mettre à jour le contenu
         function updateContent() {
             document.querySelectorAll('[data-i18n]').forEach(function(element) {
                 const key = element.getAttribute('data-i18n');
                 const translation = i18next.t(key);
                 
-                // Check if translation contains HTML
-                if (translation.includes('<br>')) {
-                    element.innerHTML = translation;
-                } else {
-                    element.textContent = translation;
+                if (translation && translation !== key) {
+                    if (translation.includes('<br>')) {
+                        element.innerHTML = translation;
+                    } else {
+                        element.textContent = translation;
+                    }
                 }
             });
         }
