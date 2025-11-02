@@ -855,7 +855,7 @@ async function checkPhoneExists(phone) {
                 const phoneCheck = await checkPhoneExists(fullPhone);
                 
                 if (phoneCheck.exists) {
-                    const message = `Ce numéro de téléphone est déjà utilisé par ${phoneCheck.userName || 'un autre utilisateur'}`;
+                   const message = 'Ce numéro de téléphone est déjà associé à un compte existant';
                     const errorDiv = document.getElementById('signup-error') || document.getElementById('authError');
                     if (errorDiv) {
                         errorDiv.textContent = message;
