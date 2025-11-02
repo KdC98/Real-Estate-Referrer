@@ -585,6 +585,13 @@
             `;
         }
         function renderDashboard() {
+            console.log('🧭 DEBUG renderDashboard called', {
+        userProfile,
+        role: userProfile?.role,
+        contract_path: userProfile?.contract_path,
+        contract_file_url: userProfile?.contract_file_url,
+        contract_status: userProfile?.contract_status,
+    });
             if (!userProfile) {
                 return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
             }
@@ -1655,6 +1662,12 @@ async function checkPhoneExists(phone) {
                     const contractForm = document.getElementById('contractForm');
                     if (contractForm) {
                         console.log('✅ Contract form found, attaching submit handler');
+                        console.log('🔍 DEBUG before attaching upload', { 
+                    currentUser, 
+                    userProfile,
+                    hasCurrentUser: !!currentUser,
+                    hasUserProfile: !!userProfile
+                });
                         
 contractForm.addEventListener('submit', async (e) => {
     e.preventDefault();
