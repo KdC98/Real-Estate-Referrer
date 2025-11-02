@@ -17,7 +17,7 @@
   "logout": "Logout",
   "contract_required": "Contract Required",
   "contract_warning_message": "Please download and sign the referrer agreement before adding leads",
-  "upload_contract_now": "Upload Contract Now",
+  "upload_contract_now": "Download contract now",
   "admin_title": "Admin Dashboard",
   "referrer_title": "Referrer Dashboard",
   "actions": "Actions",
@@ -27,10 +27,10 @@
   "total_referrers": "Active Referrers",
   "commissions_paid": "Commissions Paid",
   "referrer": "Referrer",
-  "mark_sold": "Mark as Sold",
+  "mark_sold": "Mark Sold",
   "client_email": "Client Email",
   "client_phone": "Client Phone",
-  "select_type": "Select type",
+  "select_type": "Select Type",
   "sale_buyer": "Sale - Buyer",
   "sale_seller": "Sale - Seller",
   "rental_landlord": "Rental - Landlord",
@@ -38,5 +38,7 @@
   "status_new": "New",
   "status_visit": "Visit",
   "status_offer": "Offer",
-  "status_sold": "Sold"
+  "status_sold": "Sold",
+  "contract_uploaded_title": "Perfect! You can start!",
+  "contract_uploaded_message": "Your contract has been received and will be validated by our team within the next 24-48 hours. Don't worry, you can already start working and add your first leads."
 }
