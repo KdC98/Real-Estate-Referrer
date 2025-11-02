@@ -23,7 +23,6 @@
     <div id="oauthWarningModal" class="hidden"></div>
     <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
     (async () => {
         await i18next
             .use(i18nextHttpBackend)
@@ -42,13 +41,10 @@
                     caches: ['localStorage']
                 }
             });
-
         console.log('🌐 Loading translations...');
         await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
         console.log('✅ All translations loaded!');
-
         const t = (key) => i18next.t(key);
-
         async function changeLanguage(langCode) {
             try {
                 await i18next.changeLanguage(langCode);
@@ -59,13 +55,10 @@
             }
         }
         window.changeLanguage = changeLanguage;
-
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
-
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         window.supabase = supabase;
-
         let currentUser = null;
         let userProfile = null;
         let currentPage = 'landing';
@@ -75,11 +68,9 @@
         let tempUserId = null;
         let tempUserProfile = null;
         let globalIsUploading = false;
-
         window.currentUser = null;
         window.userProfile = null;
         window.currentPage = 'landing';
-
         function renderLandingPage() {
             return `
                 <div class="min-h-screen">
@@ -103,7 +94,6 @@
                             </div>
                         </div>
                     </header>
-
                     <main class="container mx-auto px-4 py-20">
                         <div class="text-center mb-12">
                             <h2 class="text-5xl md:text-6xl font-bold mb-6">
@@ -116,7 +106,6 @@
                                 ${t('hero.cta_button')}
                             </button>
                         </div>
-
                         <div class="grid md:grid-cols-3 gap-6 my-16">
                             <div class="rounded-xl overflow-hidden shadow-2xl">
                                 <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
@@ -128,7 +117,6 @@
                                 <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
                             </div>
                         </div>
-
                         <div class="grid md:grid-cols-3 gap-8 mt-20">
                             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
                                 <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
@@ -143,7 +131,6 @@
                                 <div class="text-gray-300">${t('stats.timeline_label')}</div>
                             </div>
                         </div>
-
                         <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
                             <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
                             <div class="grid md:grid-cols-2 gap-8">
@@ -234,7 +221,6 @@
                 </div>
             `;
         }
-
         function renderAuthPage(mode) {
             let title, buttonText, linkText, linkAction;
             if (is2FAMode) {
@@ -292,7 +278,6 @@
                 linkText = 'Retour à la connexion';
                 linkAction = 'showLogin()';
             }
-
             return `
                 <div class="min-h-screen flex items-center justify-center px-4">
                     <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
@@ -523,16 +508,26 @@
                 </div>
             `;
         }
-
         function renderDashboard() {
             if (!userProfile) {
                 return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
             }
-
             const isAdmin = userProfile.role === 'admin';
-            const hasValidContract = userProfile.contract_status === 'signed' || userProfile.contract_status === 'approved';
+            
+            // ✅ VÉRIFICATION AMÉLIORÉE DU CONTRAT
+            const hasValidContract = userProfile.contract_path || 
+                                    userProfile.contract_file_url || 
+                                    userProfile.contract_status === 'signed' || 
+                                    userProfile.contract_status === 'approved';
+            
+            console.log('📄 Contract check:', {
+                contract_path: userProfile.contract_path,
+                contract_file_url: userProfile.contract_file_url,
+                contract_status: userProfile.contract_status,
+                hasValidContract: hasValidContract
+            });
+            
             const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
-
             return `
                 <div class="min-h-screen">
                     <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md">
@@ -548,10 +543,9 @@
                             </div>
                         </div>
                     </header>
-
                     <main class="container mx-auto px-4 py-8">
                         ${!hasValidContract && !isAdmin ? `
-                            <div class="mb-6 bg-red-900 bg-opacity-50 border-l-4 border-red-500 p-6 rounded-lg shadow-lg">
+                            <div id="contractRequirement" class="mb-6 bg-red-900 bg-opacity-50 border-l-4 border-red-500 p-6 rounded-lg shadow-lg">
                                 <div class="flex items-start gap-4">
                                     <div class="text-3xl flex-shrink-0">⚠️</div>
                                     <div class="flex-1">
@@ -592,6 +586,18 @@
                                                 </form>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${hasValidContract && !isAdmin ? `
+                            <div id="contractUploaded" class="mb-6 bg-green-900 bg-opacity-50 border-l-4 border-green-500 p-6 rounded-lg shadow-lg">
+                                <div class="flex items-center gap-4">
+                                    <div class="text-3xl flex-shrink-0">✅</div>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-green-300">Contrat signé et validé</h3>
+                                        <p class="text-gray-300">Vous pouvez maintenant ajouter des leads</p>
                                     </div>
                                 </div>
                             </div>
@@ -664,28 +670,24 @@
                 </div>
             `;
         }
-
         function showLogin() {
             console.log('🔐 showLogin called');
             currentPage = 'auth-login';
             window.currentPage = 'auth-login';
             render();
         }
-
         function showSignup() {
             console.log('📝 showSignup called');
             currentPage = 'auth-signup';
             window.currentPage = 'auth-signup';
             render();
         }
-
         function showReset() {
             console.log('🔑 showReset called');
             currentPage = 'auth-reset';
             window.currentPage = 'auth-reset';
             render();
         }
-
         function backToHome() {
             console.log('🏠 backToHome called');
             currentPage = 'landing';
@@ -693,7 +695,6 @@
             isPasswordRecoveryMode = false;
             render();
         }
-
         function prefillTestData() {
             if (document.getElementById('name')) {
                 document.getElementById('name').value = 'Test User';
@@ -710,7 +711,6 @@
                 console.log('✅ Données de test pré-remplies');
             }
         }
-
         function handleAuth(mode) {
             console.log('🔧 handleAuth called for mode:', mode);
             const form = document.getElementById('authForm');
@@ -720,12 +720,10 @@
                 errorDiv.textContent = '';
                 errorDiv.classList.add('hidden');
             }
-
             if (!form) {
                 console.error('❌ Form not found');
                 return;
             }
-
             console.log('✅ Form found, attaching handler');
             
             form.onsubmit = async (e) => {
@@ -735,7 +733,6 @@
                 
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password')?.value;
-
                 try {
                     if (mode === 'signup') {
                         console.log('📝 Processing signup');
@@ -769,7 +766,6 @@
                                 data: { name, phone: fullPhone }
                             }
                         });
-
                         if (error) {
                             isSignupInProgress = false;
                             throw error;
@@ -846,7 +842,6 @@
                 }
             };
         }
-
         async function handleReset() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
@@ -856,7 +851,6 @@
                 errorDiv.classList.add('hidden');
                 
                 const email = document.getElementById('email').value;
-
                 try {
                     const { error } = await supabase.auth.resetPasswordForEmail(email, {
                         redirectTo: window.location.origin
@@ -873,7 +867,6 @@
                 }
             };
         }
-
        async function send2FACode(userId, session, language = 'fr') {
     try {
         console.log('📱 Sending 2FA code for user:', userId, 'language:', language);
@@ -922,7 +915,6 @@
         return false;
     }
 }
-
         async function verify2FACode(code) {
             try {
                 const encoder = new TextEncoder();
@@ -975,11 +967,9 @@
                     .from('profiles')
                     .update({ phone_verified: true })
                     .eq('id', tempUserId);
-
                 if (updateError) {
                     console.error('❌ Error updating phone_verified:', updateError);
                 }
-
                 console.log('✅ Phone marked as verified');
                 console.log('✅ 2FA code validated, reconnecting user...');
                 
@@ -1034,7 +1024,6 @@
                 return false;
             }
         }
-
         function showOAuthWarning(provider) {
             const modal = document.getElementById('oauthWarningModal');
             const providerName = provider === 'google' ? 'Google' : 'Apple';
@@ -1076,13 +1065,11 @@
             `;
             modal.classList.remove('hidden');
         }
-
         function closeOAuthWarning() {
             const modal = document.getElementById('oauthWarningModal');
             modal.classList.add('hidden');
             modal.innerHTML = '';
         }
-
         async function proceedWithOAuth(provider) {
             closeOAuthWarning();
             
@@ -1102,15 +1089,12 @@
                 alert(`Erreur lors de la connexion avec ${provider}: ` + error.message);
             }
         }
-
         async function signInWithGoogle() {
             showOAuthWarning('google');
         }
-
         async function signInWithApple() {
             showOAuthWarning('apple');
         }
-
         async function handle2FASubmit(event) {
             event.preventDefault();
             const code = document.getElementById('code2fa').value;
@@ -1123,7 +1107,6 @@
                 alert(t('auth:errors.invalid_2fa_code'));
             }
         }
-
         async function resend2FACode() {
             if (tempUserId) {
                 const currentLang = i18next.language || 'fr';
@@ -1143,7 +1126,6 @@
                 }
             }
         }
-
         async function handleChangePassword() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
@@ -1154,31 +1136,26 @@
                 
                 const newPassword = document.getElementById('newPassword').value;
                 const confirmPassword = document.getElementById('confirmNewPassword').value;
-
                 if (newPassword !== confirmPassword) {
                     errorDiv.textContent = 'Les mots de passe ne correspondent pas';
                     errorDiv.classList.remove('hidden');
                     return;
                 }
-
                 if (newPassword.length < 8) {
                     errorDiv.textContent = 'Le mot de passe doit contenir au moins 8 caractères';
                     errorDiv.classList.remove('hidden');
                     return;
                 }
-
                 if (!/[a-zA-Z]/.test(newPassword)) {
                     errorDiv.textContent = 'Le mot de passe doit contenir au moins une lettre';
                     errorDiv.classList.remove('hidden');
                     return;
                 }
-
                 if (!/[0-9]/.test(newPassword)) {
                     errorDiv.textContent = 'Le mot de passe doit contenir au moins un chiffre';
                     errorDiv.classList.remove('hidden');
                     return;
                 }
-
                 try {
                     console.log('🔑 Updating password...');
                     const { error } = await supabase.auth.updateUser({ 
@@ -1199,21 +1176,19 @@
                 }
             };
         }
-
+        
+        // ✅ FONCTION loadDashboardContent() AMÉLIORÉE
         async function loadDashboardContent() {
             if (!userProfile) return;
-
             const isAdmin = userProfile.role === 'admin';
             let leads;
             let profiles = {};
-
             if (isAdmin) {
                 console.log('📊 Loading leads for admin...');
                 const { data: leadsData, error: leadsError } = await supabase
                     .from('leads')
                     .select('*')
                     .order('created_at', { ascending: false });
-
                 if (leadsError) {
                     console.error('❌ Error loading leads:', leadsError);
                     document.getElementById('leadsTable').innerHTML = `
@@ -1223,14 +1198,11 @@
                     `;
                     return;
                 }
-
                 console.log('✅ Leads loaded:', leadsData?.length);
-
                 console.log('👥 Loading all profiles...');
                 const { data: profilesData, error: profilesError } = await supabase
                     .from('profiles')
                     .select('*');
-
                 if (profilesError) {
                     console.error('❌ Error loading profiles:', profilesError);
                 } else {
@@ -1239,7 +1211,6 @@
                         profiles[profile.id] = profile;
                     });
                 }
-
                 leads = leadsData.map(lead => ({
                     ...lead,
                     referrer_name: profiles[lead.referrer_id]?.name || 'N/A'
@@ -1251,7 +1222,6 @@
                     .select('*')
                     .eq('referrer_id', currentUser.id)
                     .order('created_at', { ascending: false });
-
                 if (error) {
                     console.error('❌ Error loading leads:', error);
                     document.getElementById('leadsTable').innerHTML = `
@@ -1261,15 +1231,12 @@
                     `;
                     return;
                 }
-
                 console.log('✅ Leads loaded:', data?.length);
                 leads = data;
             }
-
             const totalEarnings = leads.filter(l => l.status === 'vendu').reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
             const activeLeads = leads.filter(l => l.status !== 'vendu').length;
             const closedSales = leads.filter(l => l.status === 'vendu').length;
-
             document.getElementById('stats').innerHTML = `
                 ${isAdmin ? `
                     <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
@@ -1297,14 +1264,12 @@
                     </div>
                 ` : ''}
             `;
-
             const statusColors = {
                 'nouveau': 'bg-blue-500',
                 'visite': 'bg-yellow-500',
                 'offre': 'bg-orange-500',
                 'vendu': 'bg-green-500'
             };
-
             document.getElementById('leadsTable').innerHTML = `
                 <table class="w-full">
                     <thead>
@@ -1363,15 +1328,17 @@
                 </table>
             `;
         }
-
+        
         function showAddLeadForm() {
-            const hasValidContract = userProfile?.contract_status === 'signed' || userProfile?.contract_status === 'approved';
+            const hasValidContract = userProfile?.contract_path || 
+                                    userProfile?.contract_file_url || 
+                                    userProfile?.contract_status === 'signed' || 
+                                    userProfile?.contract_status === 'approved';
             
             if (!hasValidContract) {
                 alert(t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
                 return;
             }
-
             document.getElementById('addLeadModal').classList.remove('hidden');
             
             const form = document.getElementById('addLeadForm');
@@ -1387,7 +1354,6 @@
                     budget: parseFloat(document.getElementById('budget').value),
                     status: 'nouveau'
                 };
-
                 const { error } = await supabase.from('leads').insert([leadData]);
                 
                 if (error) {
@@ -1395,13 +1361,11 @@
                     alert('Erreur lors de l\'ajout du lead');
                     return;
                 }
-
                 document.getElementById('addLeadModal').classList.add('hidden');
                 form.reset();
                 await loadDashboardContent();
             };
         }
-
         async function updateLeadStatus(leadId, newStatus) {
             const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
             
@@ -1410,18 +1374,14 @@
                 alert('Erreur lors de la mise à jour du statut');
                 return;
             }
-
             await loadDashboardContent();
         }
-
         async function markAsSold(leadId) {
             const salePrice = prompt('Prix de vente (AED):');
             if (!salePrice) return;
-
             const price = parseFloat(salePrice);
             const agentCommission = price * 0.01;
             const referrerCommission = agentCommission * 0.20;
-
             const { error } = await supabase.from('leads').update({
                 status: 'vendu',
                 sale_price: price,
@@ -1429,29 +1389,23 @@
                 referrer_commission: referrerCommission,
                 closed_at: new Date().toISOString()
             }).eq('id', leadId);
-
             if (error) {
                 console.error('Error marking as sold:', error);
                 alert('Erreur lors de la vente');
                 return;
             }
-
             await loadDashboardContent();
         }
-
         async function loadUserProfile(user = null) {
             const targetUser = user || currentUser;
             console.log('🔍 loadUserProfile called for user:', targetUser?.id);
-
             if (!targetUser || !targetUser.id) {
                 console.error('❌ No user provided to loadUserProfile');
                 return false;
             }
-
             try {
                 console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
                 const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).single();
-
                 if (error) {
                     console.error('❌ Error loading profile:', error);
                     
@@ -1464,13 +1418,11 @@
                             role: 'referrer',
                             contract_status: 'pending'
                         }]).select().single();
-
                         if (insertError) {
                             console.error('❌ Error creating profile:', insertError);
                             alert('Erreur lors de la création du profil: ' + insertError.message);
                             return false;
                         }
-
                         console.log('✅ Profile created:', newProfile);
                         userProfile = newProfile;
                         window.userProfile = newProfile;
@@ -1480,13 +1432,11 @@
                     alert('Erreur lors du chargement du profil: ' + error.message);
                     return false;
                 }
-
                 console.log('✅ Profile data retrieved:', data);
                 
                 if (data && data.contract_status) {
                     data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
                 }
-
                 userProfile = data;
                 window.userProfile = data;
                 console.log('✅ userProfile set:', userProfile);
@@ -1497,9 +1447,7 @@
                 return false;
             }
         }
-
         window.loadUserProfile = loadUserProfile;
-
         async function logout() {
             console.log('🚪 Logout called');
             const logoutBtn = document.querySelector('button[onclick="logout()"]');
@@ -1508,7 +1456,6 @@
                 logoutBtn.disabled = true;
                 logoutBtn.textContent = 'Déconnexion...';
             }
-
             try {
                 console.log('🔓 Signing out from Supabase...');
                 
@@ -1571,7 +1518,6 @@
                 window.location.href = window.location.origin;
             }
         }
-
         async function render() {
             console.log('🎨 RENDER called');
             console.log('- currentUser:', !!currentUser);
@@ -1582,27 +1528,25 @@
             console.log('- isSignupInProgress:', isSignupInProgress);
             
             const app = document.getElementById('app');
-
             if (is2FAMode) {
                 console.log('📱 2FA mode active - showing 2FA form');
                 app.innerHTML = renderAuthPage('login');
                 return;
             }
-
             if (isPasswordRecoveryMode && currentPage === 'change-password') {
                 console.log('🔑 Password recovery mode - showing change password form');
                 app.innerHTML = renderAuthPage('change-password');
                 setTimeout(() => handleChangePassword(), 500);
                 return;
             }
-
             if (currentUser && userProfile) {
                 console.log('✅ User connected with profile, showing dashboard');
                 currentPage = 'dashboard';
                 window.currentPage = 'dashboard';
                 app.innerHTML = renderDashboard();
                 await loadDashboardContent();
-
+                
+                // ✅ GESTION AMÉLIORÉE DE L'UPLOAD DE CONTRAT
                 if (userProfile.role !== 'admin') {
                     const contractForm = document.getElementById('contractForm');
                     if (contractForm) {
@@ -1630,67 +1574,63 @@
                             progressDiv.classList.remove('hidden');
                             progressDiv.textContent = '⏳ Préparation du fichier...';
                             
+                            // ✅ TIMEOUT AUGMENTÉ À 60 SECONDES
                             const uploadTimeout = setTimeout(() => {
-                                console.error('⏱️ Upload timeout after 30 seconds');
+                                console.error('⏱️ Upload timeout after 60 seconds');
                                 errorDiv.textContent = 'Erreur : Le téléchargement a pris trop de temps. Veuillez réessayer avec un fichier plus petit.';
                                 errorDiv.classList.remove('hidden');
                                 progressDiv.classList.add('hidden');
                                 submitBtn.disabled = false;
                                 submitBtn.textContent = originalText;
                                 globalIsUploading = false;
-                            }, 30000);
+                            }, 60000); // 60 secondes au lieu de 30
                             
                             try {
                                 const fileInput = document.getElementById('contractFile');
                                 const file = fileInput.files[0];
-
                                 if (!file) {
                                     throw new Error('Veuillez sélectionner un fichier');
                                 }
-
                                 if (file.type !== 'application/pdf') {
                                     throw new Error('Seuls les fichiers PDF sont acceptés');
                                 }
-
-                                const maxSize = 5 * 1024 * 1024;
+                                const maxSize = 10 * 1024 * 1024; // 10MB
                                 if (file.size > maxSize) {
-                                    throw new Error('Le fichier est trop volumineux. Taille maximum : 5MB');
+                                    throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
                                 }
-
                                 console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
                                 
                                 progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
                                 
                                 const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
                                 console.log('📄 Uploading to Storage with name:', fileName);
-
                                 const { data: uploadData, error: uploadError } = await supabase.storage
                                     .from('contracts')
                                     .upload(fileName, file, {
                                         cacheControl: '3600',
                                         upsert: false
                                     });
-
                                 if (uploadError) {
                                     console.error('❌ Error uploading contract:', uploadError);
                                     throw new Error(`Erreur d'upload : ${uploadError.message}`);
                                 }
-
                                 console.log('✅ File uploaded successfully to Storage');
+                                console.log('📝 File path:', uploadData.path);
                                 
                                 progressDiv.textContent = '⏳ Mise à jour de votre profil...';
-
+                                
+                                // ✅ MISE À JOUR DU contract_path DANS LE PROFIL
                                 const { error: updateError } = await supabase.from('profiles').update({
+                                    contract_path: uploadData.path,
                                     contract_status: 'signed',
                                     contract_file_url: fileName
                                 }).eq('id', currentUser.id);
-
+                                
                                 if (updateError) {
                                     console.error('❌ Error updating profile:', updateError);
                                     throw new Error(`Erreur de mise à jour : ${updateError.message}`);
                                 }
-
-                                console.log('✅ Profile updated successfully');
+                                console.log('✅ Profile updated successfully with contract_path:', uploadData.path);
                                 
                                 clearTimeout(uploadTimeout);
                                 
@@ -1712,7 +1652,7 @@
                             }
                         });
                     } else {
-                        console.log('ℹ️ Contract form not found');
+                        console.log('ℹ️ Contract form not found (contract already uploaded or admin user)');
                     }
                 } else {
                     console.log('ℹ️ Admin user - no contract form needed');
@@ -1747,22 +1687,18 @@
                 app.innerHTML = renderLandingPage();
             }
         }
-
         function validateName() {
             const nameInput = document.getElementById('name');
             const nameError = document.getElementById('nameError');
             
             if (!nameInput || !nameError) return true;
-
             const name = nameInput.value.trim();
-
             if (name.length === 0) {
                 nameError.textContent = '';
                 nameError.classList.add('hidden');
                 nameInput.classList.remove('border-green-500', 'border-red-500');
                 return false;
             }
-
             if (name.length < 2) {
                 nameError.textContent = 'Le nom doit contenir au moins 2 caractères';
                 nameError.classList.remove('hidden');
@@ -1770,7 +1706,6 @@
                 nameInput.classList.remove('border-green-500');
                 return false;
             }
-
             const nameRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
             if (!nameRegex.test(name)) {
                 nameError.textContent = 'Le nom ne peut contenir que des lettres, espaces, tirets et apostrophes';
@@ -1779,7 +1714,6 @@
                 nameInput.classList.remove('border-green-500');
                 return false;
             }
-
             nameError.textContent = '';
             nameError.classList.add('hidden');
             nameInput.classList.remove('border-red-500');
@@ -1787,13 +1721,11 @@
             checkFormValidity();
             return true;
         }
-
         function validatePhone() {
             const phoneField = document.getElementById('phone');
             const phoneError = document.getElementById('phoneError');
             
             if (!phoneField || !phoneError) return true;
-
             const phone = phoneField.value.trim();
             
             const internationalPattern = /^[0-9]{6,15}$/;
@@ -1818,22 +1750,18 @@
             checkFormValidity();
             return true;
         }
-
         function validateEmail() {
             const emailInput = document.getElementById('email');
             const emailError = document.getElementById('emailError');
             
             if (!emailInput || !emailError) return true;
-
             const email = emailInput.value.trim();
-
             if (email.length === 0) {
                 emailError.textContent = '';
                 emailError.classList.add('hidden');
                 emailInput.classList.remove('border-green-500', 'border-red-500');
                 return false;
             }
-
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 emailError.textContent = "Format d'email invalide";
@@ -1842,7 +1770,6 @@
                 emailInput.classList.remove('border-green-500');
                 return false;
             }
-
             emailError.textContent = '';
             emailError.classList.add('hidden');
             emailInput.classList.remove('border-red-500');
@@ -1850,7 +1777,6 @@
             checkFormValidity();
             return true;
         }
-
         function validatePassword() {
             const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
             const passwordError = document.getElementById('passwordError');
@@ -1859,11 +1785,8 @@
             const reqLength = document.getElementById('req-length');
             const reqLetter = document.getElementById('req-letter');
             const reqNumber = document.getElementById('req-number');
-
             if (!passwordInput) return true;
-
             const password = passwordInput.value;
-
             if (reqLength && reqLetter && reqNumber) {
                 if (password.length >= 8) {
                     reqLength.classList.add('text-green-400');
@@ -1872,7 +1795,6 @@
                     reqLength.classList.remove('text-green-400');
                     reqLength.querySelector('span:first-child').textContent = '•';
                 }
-
                 if (/[a-zA-Z]/.test(password)) {
                     reqLetter.classList.add('text-green-400');
                     reqLetter.querySelector('span:first-child').textContent = '✓';
@@ -1880,7 +1802,6 @@
                     reqLetter.classList.remove('text-green-400');
                     reqLetter.querySelector('span:first-child').textContent = '•';
                 }
-
                 if (/[0-9]/.test(password)) {
                     reqNumber.classList.add('text-green-400');
                     reqNumber.querySelector('span:first-child').textContent = '✓';
@@ -1889,7 +1810,6 @@
                     reqNumber.querySelector('span:first-child').textContent = '•';
                 }
             }
-
             if (strengthBar && strengthText) {
                 let strength = 0;
                 if (password.length >= 8) strength++;
@@ -1897,7 +1817,6 @@
                 if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
                 if (/[0-9]/.test(password)) strength++;
                 if (/[^a-zA-Z0-9]/.test(password)) strength++;
-
                 let color, text, width;
                 if (password.length === 0) {
                     width = 0; text = ''; color = 'bg-gray-600';
@@ -1910,22 +1829,18 @@
                 } else {
                     width = 100; text = 'Excellent'; color = 'bg-green-500';
                 }
-
                 strengthBar.style.width = width + '%';
                 strengthBar.className = `h-full transition-all duration-300 ${color}`;
                 strengthText.textContent = text;
                 strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
             }
-
             if (!passwordError) return true;
-
             if (password.length === 0) {
                 passwordError.classList.add('hidden');
                 passwordInput.classList.remove('border-green-500', 'border-red-500');
                 checkFormValidity();
                 return false;
             }
-
             if (password.length < 8) {
                 passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
                 passwordError.classList.remove('hidden');
@@ -1934,7 +1849,6 @@
                 checkFormValidity();
                 return false;
             }
-
             if (!/[a-zA-Z]/.test(password)) {
                 passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre';
                 passwordError.classList.remove('hidden');
@@ -1943,7 +1857,6 @@
                 checkFormValidity();
                 return false;
             }
-
             if (!/[0-9]/.test(password)) {
                 passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
                 passwordError.classList.remove('hidden');
@@ -1952,31 +1865,24 @@
                 checkFormValidity();
                 return false;
             }
-
             passwordError.classList.add('hidden');
             passwordInput.classList.remove('border-red-500');
             passwordInput.classList.add('border-green-500');
-
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
             if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
                 validateConfirmPassword();
             }
-
             checkFormValidity();
             return true;
         }
-
         function validateConfirmPassword() {
             const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
             const confirmPasswordError = document.getElementById('confirmPasswordError');
             const confirmPasswordSuccess = document.getElementById('confirmPasswordSuccess');
-
             if (!passwordInput || !confirmPasswordInput || !confirmPasswordError || !confirmPasswordSuccess) return true;
-
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
-
             if (confirmPassword.length === 0) {
                 confirmPasswordError.classList.add('hidden');
                 confirmPasswordSuccess.classList.add('hidden');
@@ -1984,7 +1890,6 @@
                 checkFormValidity();
                 return false;
             }
-
             if (password !== confirmPassword) {
                 confirmPasswordError.textContent = 'Les mots de passe ne correspondent pas';
                 confirmPasswordError.classList.remove('hidden');
@@ -1994,7 +1899,6 @@
                 checkFormValidity();
                 return false;
             }
-
             confirmPasswordError.classList.add('hidden');
             confirmPasswordSuccess.classList.remove('hidden');
             confirmPasswordInput.classList.remove('border-red-500');
@@ -2002,38 +1906,30 @@
             checkFormValidity();
             return true;
         }
-
         function checkFormValidity() {
             const submitButton = document.getElementById('submitButton');
             if (!submitButton) return;
-
             const nameInput = document.getElementById('name');
             const phoneInput = document.getElementById('phone');
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
-
             const nameValid = !nameInput || nameInput.value.trim().length >= 2;
             const emailValid = !emailInput || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
-
             let phoneValid = !phoneInput;
             if (phoneInput) {
                 const phone = phoneInput.value.trim();
                 phoneValid = /^[0-9]{6,15}$/.test(phone);
             }
-
             let passwordValid = false;
             if (passwordInput) {
                 const pwd = passwordInput.value;
                 passwordValid = pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd);
             }
-
             const confirmPasswordValid = !confirmPasswordInput || 
                                         (confirmPasswordInput.value.length > 0 && 
                                          confirmPasswordInput.value === passwordInput?.value);
-
             const allValid = nameValid && phoneValid && emailValid && passwordValid && confirmPasswordValid;
-
             if (allValid) {
                 submitButton.disabled = false;
                 submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -2042,11 +1938,9 @@
                 submitButton.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
-
         function togglePasswordVisibility(fieldId, button) {
             const field = document.getElementById(fieldId);
             if (!field) return;
-
             if (field.type === 'password') {
                 field.type = 'text';
                 button.innerHTML = '<span class="text-xl">🙈</span>';
@@ -2055,20 +1949,17 @@
                 button.innerHTML = '<span class="text-xl">👁️</span>';
             }
         }
-
         async function downloadContractTemplate() {
             try {
                 console.log('📥 Downloading contract template...');
                 const { data, error } = await supabase.storage
                     .from('contracts')
                     .getPublicUrl('contract_template_en.pdf');
-
                 if (error) {
                     console.error('❌ Error getting template URL:', error);
                     alert('Error downloading contract. Please contact support.');
                     return;
                 }
-
                 console.log('✅ Template URL:', data.publicUrl);
                 window.open(data.publicUrl, '_blank');
             } catch (error) {
@@ -2076,7 +1967,6 @@
                 alert('Error downloading: ' + error.message);
             }
         }
-
         window.showLogin = showLogin;
         window.showSignup = showSignup;
         window.showReset = showReset;
@@ -2103,18 +1993,14 @@
         window.showOAuthWarning = showOAuthWarning;
         window.closeOAuthWarning = closeOAuthWarning;
         window.proceedWithOAuth = proceedWithOAuth;
-
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
-
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
-
             if (isSignupInProgress) {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
             }
-
             if (event === 'PASSWORD_RECOVERY') {
                 console.log('🔑 Password recovery detected - blocking auto-login');
                 isPasswordRecoveryMode = true;
@@ -2125,22 +2011,18 @@
                 render();
                 return;
             }
-
             if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
                 console.log('⚠️ Ignoring event during password recovery:', event);
                 return;
             }
-
             currentUser = session?.user || null;
             window.currentUser = currentUser;
-
             if (currentUser && !currentUser.email_confirmed_at) {
                 console.warn('⚠️ Email not confirmed, signing out');
                 await supabase.auth.signOut();
                 currentUser = null;
                 window.currentUser = null;
             }
-
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
                 const profileLoaded = await loadUserProfile(currentUser);
@@ -2154,10 +2036,8 @@
                     window.userProfile = null;
                 }
             }
-
             render();
         });
-
         console.log('🔍 Getting initial session...');
         const { data: { session }, error } = await supabase.auth.getSession();
         
@@ -2168,10 +2048,8 @@
             render();
             return;
         }
-
         currentUser = session?.user || null;
         window.currentUser = currentUser;
-
         if (currentUser && !currentUser.email_confirmed_at) {
             console.warn('⚠️ Email not confirmed on init, cleaning session');
             await supabase.auth.signOut();
@@ -2182,7 +2060,6 @@
             render();
             return;
         }
-
         if (currentUser) {
             console.log('👤 Session found, loading profile...');
             const profileLoaded = await loadUserProfile(currentUser);
@@ -2198,7 +2075,6 @@
                 window.userProfile = null;
             }
         }
-
         render();
     })();
     </script>
