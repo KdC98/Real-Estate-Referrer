@@ -1729,15 +1729,6 @@ contractForm.addEventListener('submit', async (e) => {
     }
 });
                                 
-                                console.error('❌ Upload exception:', error);
-                                errorDiv.textContent = error.message;
-                                errorDiv.classList.remove('hidden');
-                                progressDiv.classList.add('hidden');
-                            } finally {
-                                submitBtn.disabled = false;
-                                submitBtn.textContent = originalText;
-                                globalIsUploading = false;
-                            }
                         });
                     } else {
                         console.log('ℹ️ Contract form not found (contract already uploaded or admin user)');
