@@ -392,7 +392,7 @@
                                     <div class="w-full border-t border-gray-600"></div>
                                 </div>
                                 <div class="relative flex justify-center text-sm">
-                                    <span class="px-4 bg-gray-800 text-gray-400">ou</span>
+                                    <span class="px-4 bg-gray-800 text-gray-400" data-i18n="auth:or">OR</span>
                                 </div>
                             </div>
                         ` : ''}
@@ -445,8 +445,8 @@
                                     <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                         <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
                                         <p class="text-xs text-blue-200" data-i18n="auth:sms_verification_notice">
-                                            <strong>Vérification unique :</strong> Vous recevrez un code SMS pour valider votre numéro à l'inscription.
-                                        </p>
+    One-time verification: You will receive an SMS code to validate your number upon signup.
+</p>
                                     </div>
                                     <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
                                 </div>
@@ -500,15 +500,15 @@
                                             <div class="text-xs text-gray-400 mt-1.5 space-y-0.5">
                                                 <div id="req-length" class="flex items-center gap-1">
                                                     <span class="w-3">•</span>
-                                                    <span>Minimum 8 caractères</span>
+                                                    <span data-i18n="auth:password_req_length">Minimum 8 characters</span>
                                                 </div>
                                                 <div id="req-letter" class="flex items-center gap-1">
                                                     <span class="w-3">•</span>
-                                                    <span>Au moins une lettre</span>
+                                                    <span data-i18n="auth:password_req_letter">At least one letter</span>
                                                 </div>
                                                 <div id="req-number" class="flex items-center gap-1">
                                                     <span class="w-3">•</span>
-                                                    <span>Au moins un chiffre</span>
+                                                    <span data-i18n="auth:password_req_number">At least one number</span>
                                                 </div>
                                             </div>
                                         </div>
