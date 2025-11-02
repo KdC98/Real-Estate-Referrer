@@ -855,14 +855,16 @@
                         
                         tempUserId = data.user.id;
                         
-                        const { error: profileError } = await supabase.from('profiles').insert({
-                            id: data.user.id,
-                            name: name,
-                            phone: fullPhone,
-                            role: 'referrer',
-                            contract_status: 'pending',
-                            phone_verified: false
-                        });
+                        const { error: profileError } = await supabase.from('profiles').upsert({
+    id: data.user.id,
+    name: name,
+    phone: fullPhone,
+    role: 'referrer',
+    contract_status: 'pending',
+    phone_verified: false
+}, {
+    onConflict: 'id'
+});
                         
                         if (profileError) {
                             console.error('❌ Error creating profile:', profileError);
@@ -1478,13 +1480,15 @@
                     
                     if (error.code === 'PGRST116') {
                         console.log('📝 Profile does not exist, creating it...');
-                        const { data: newProfile, error: insertError } = await supabase.from('profiles').insert([{
-                            id: targetUser.id,
-                            name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
-                            phone: targetUser.user_metadata?.phone || '',
-                            role: 'referrer',
-                            contract_status: 'pending'
-                        }]).select().single();
+                       const { data: newProfile, error: insertError } = await supabase.from('profiles').upsert([{
+    id: targetUser.id,
+    name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
+    phone: targetUser.user_metadata?.phone || '',
+    role: 'referrer',
+    contract_status: 'pending'
+}], {
+    onConflict: 'id'
+}).select().single();
                         if (insertError) {
                             console.error('❌ Error creating profile:', insertError);
                             alert('Erreur lors de la création du profil: ' + insertError.message);
