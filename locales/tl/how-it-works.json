@@ -1,4 +1,8 @@
 {
+  "header": {
+    "brand": "Real Estate Referrer",
+    "login": "Mag-login"
+  },
   "hero": {
     "title": "Paano Ito Gumagana?",
     "subtitle": "Maging real estate referrer sa Dubai sa 5 simpleng hakbang"
@@ -123,5 +127,10 @@
     "title": "Handa Nang Magsimula?",
     "subtitle_part1": "Mag-sign up ngayon at magsimulang kumita ng mga komisyon ngayong araw",
     "button_signup": "Tara Na! 🚀"
+  },
+  "footer": {
+    "copyright": "Lahat ng karapatan ay nakalaan.",
+    "navigation_home": "Home",
+    "navigation_how": "Paano Ito Gumagana"
   }
 }
