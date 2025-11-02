@@ -1,5 +1,5 @@
 {
-  "dashboard_title": "Referrer Dashboard",
+  "dashboard_title": "Dashboard ng Referrer",
   "welcome": "Maligayang pagdating",
   "my_stats": "Aking Mga Istatistika",
   "total_earnings": "Kabuuang Kita",
@@ -13,13 +13,13 @@
   "status": "Katayuan",
   "commission": "Komisyon",
   "no_leads": "Walang lead pa",
-  "start_adding": "Magsimulang magdagdag ng leads upang kumita ng komisyon",
+  "start_adding": "Magsimulang magdagdag ng mga lead upang kumita ng komisyon",
   "logout": "Mag-logout",
   "contract_required": "Kailangan ang Kontrata",
-  "contract_warning_message": "Mangyaring i-download at lagdaan ang kasunduan ng referrer bago magdagdag ng leads",
-  "upload_contract_now": "I-upload ang Kontrata Ngayon",
-  "admin_title": "Admin Dashboard",
-  "referrer_title": "Referrer Dashboard",
+  "contract_warning_message": "Mangyaring i-download at lagdaan ang kasunduan ng referrer bago magdagdag ng mga lead",
+  "upload_contract_now": "I-download ang Kontrata Ngayon",
+  "admin_title": "Dashboard ng Admin",
+  "referrer_title": "Dashboard ng Referrer",
   "actions": "Mga Aksyon",
   "add": "Idagdag",
   "cancel": "Kanselahin",
@@ -38,5 +38,7 @@
   "status_new": "Bago",
   "status_visit": "Bisita",
   "status_offer": "Alok",
-  "status_sold": "Nabenta"
+  "status_sold": "Nabenta",
+  "contract_uploaded_title": "Magaling! Makakapagsimula ka na!",
+  "contract_uploaded_message": "Natanggap na namin ang iyong kontrata at ito ay pagpapatunayan ng aming koponan sa loob ng 24-48 oras. Huwag mag-alala, maaari ka nang magsimula ngayon at magdagdag ng iyong mga unang lead."
 }
