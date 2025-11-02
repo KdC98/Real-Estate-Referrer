@@ -1,241 +1,127 @@
 {
-  "meta": {
-    "title": "Comment ça marche - Real Estate Referrer"
-  },
-  "header": {
-    "brand": "Real Estate Referrer",
-    "home": "Accueil",
-    "login": "Login"
-  },
   "hero": {
-    "badge": "👍 C'est super simple !",
-    "title": "Comment ça marche ? 🏙️",
-    "subtitle_bold": "Empoche 20% sur chaque vente",
-    "subtitle_text": "- Ton info vaut de l'or ! 💰",
-    "benefits": "100% Gratuit · Aucune compétence requise · Ça prend 2 minutes !"
+    "title": "Comment ça marche ?",
+    "subtitle": "Devenez apporteur d'affaires immobilier à Dubai en 5 étapes simples"
   },
   "timeline": {
-    "section_title": "🎯 5 Étapes Simples",
-    "section_subtitle": "Suivez le guide, c'est facile comme bonjour ! 😊",
     "step1": {
-      "badge": "2 min ⚡",
-      "title": "Inscription",
-      "description": "📝 Créez votre compte en 2 minutes chrono !",
-      "items": ["Votre nom", "Votre email", "Un mot de passe"],
-      "footer": "👉 Même votre grand-mère pourrait le faire !"
+      "badge": "1",
+      "title": "Inscription (2 min)",
+      "items": [
+        "Créez votre compte gratuitement",
+        "Renseignez vos informations",
+        "Signez le contrat d'apporteur"
+      ]
     },
     "step2": {
-      "badge": "Facile 👍",
+      "badge": "2",
       "title": "Trouvez des clients",
-      "description": "🗣️ Parlez-en autour de vous !",
-      "items": ["Famille et amis", "Collègues", "Sur les réseaux sociaux"],
-      "warning_title": "⚠️ Important : Demandez leur PERMISSION avant de partager leurs coordonnées !",
-      "footer": "💡 Vous connaissez sûrement quelqu'un intéressé !"
+      "items": [
+        "Parlez du programme à votre réseau",
+        "Identifiez des personnes intéressées par l'immobilier à Dubai",
+        "Aucune licence immobilière requise !"
+      ]
     },
     "step3": {
-      "badge": "Simple 🎯",
-      "title": "Ajoutez le lead",
-      "description": "➕ Un simple formulaire à remplir",
-      "items": ["Nom du client", "Email ou téléphone", "Type de bien recherché"],
-      "footer": "⏱️ 30 secondes top chrono !"
+      "badge": "3",
+      "title": "Ajoutez vos leads",
+      "items": [
+        "Connectez-vous à votre dashboard",
+        "Cliquez sur \"Ajouter un lead\"",
+        "Remplissez les informations client"
+      ]
     },
     "step4": {
-      "badge": "Auto 🤖",
-      "title": "Suivez en direct",
-      "description": "📊 On s'occupe de TOUT !",
+      "badge": "4",
+      "title": "Suivi en temps réel",
+      "description": "Suivez l'avancement de vos leads",
       "status_new": "📄 Nouveau",
       "status_visit": "🏠 Visite",
       "status_offer": "🤝 Offre",
       "status_sold": "✅ Vendu",
-      "footer": "🛋️ Vous n'avez qu'à regarder !"
+      "footer": "Transparence totale sur vos commissions"
     },
     "step5": {
-      "badge": "💰 Jackpot !",
-      "title": "Touchez l'argent ! 💸",
-      "description": "🎉 Recevez votre commission",
-      "commission_text": "⭐ 20% de la commission agent",
-      "payment_delay": "Paiement sous 45-60 jours",
-      "footer": "🏆 Vous n'avez RIEN d'autre à faire !"
-    },
-    "conclusion": {
-      "title": "✅ C'est VRAIMENT aussi simple que ça !",
-      "subtitle": "Aucune expérience requise · Aucune compétence technique · Juste votre réseau"
+      "badge": "5",
+      "title": "Recevez vos commissions",
+      "description": "Dès qu'une vente est conclue, votre commission est calculée",
+      "payment_delay": "Paiement dans les 45-60 jours",
+      "commission_text": "⭐ 20% de la commission agent"
     }
   },
   "earnings": {
-    "section_title": "💰 Combien je vais gagner ?",
-    "section_subtitle": "Spoiler : BEAUCOUP ! 😱",
+    "section_title": "💰 Combien puis-je gagner ?",
     "example1": {
-      "property_type": "Appartement",
-      "price": "1,000,000 AED",
-      "total_commission": "Commission totale (2%)",
-      "total_amount": "20,000 AED",
-      "agent_commission": "Commission agent (50%)",
-      "agent_amount": "10,000 AED",
-      "your_commission": "Votre commission (20%)",
-      "your_amount": "2,000 AED"
+      "your_amount": "2,000 AED",
+      "property_type": "Appartement - 1M AED",
+      "total_commission": "Commission totale (2%): 20,000 AED",
+      "agent_commission": "Commission agent (50%): 10,000 AED",
+      "your_commission": "Votre commission (20%): 2,000 AED"
     },
     "example2": {
-      "property_type": "Villa",
-      "price": "5,000,000 AED",
+      "your_amount": "10,000 AED",
+      "property_type": "Villa - 5M AED",
       "total_amount": "100,000 AED",
-      "agent_amount": "50,000 AED",
-      "your_amount": "10,000 AED"
+      "agent_amount": "50,000 AED"
     },
     "example3": {
-      "property_type": "Penthouse",
-      "price": "10,000,000 AED",
+      "your_amount": "20,000 AED",
+      "property_type": "Penthouse - 10M AED",
       "total_amount": "200,000 AED",
-      "agent_amount": "100,000 AED",
-      "your_amount": "20,000 AED"
+      "agent_amount": "100,000 AED"
     },
-    "unlimited": "Aucune limite de gains !",
-    "unlimited_subtitle": "Plus vous apportez de clients, plus vous gagnez"
+    "unlimited": "✨ Pas de limite ! Plus vous apportez de clients, plus vous gagnez."
   },
   "lead_criteria": {
-    "section_title": "🎯 C'est quoi un BON lead ?",
-    "section_subtitle": "Pas de panique, c'est simple à reconnaître ! 😊",
+    "section_title": "📋 Critères d'un bon lead",
     "good_lead": {
-      "title": "Lead TOP ! 🌟",
-      "subtitle": "= Commission assurée 💰",
-      "consent_title": "OBLIGATOIRE : Consentement du client",
-      "consent_text": "Avant de partager les coordonnées d'une personne, vous DEVEZ avoir son autorisation explicite. C'est la loi (RGPD) ! ⚖️",
-      "consent_example": "Exemple : \"Je connais un agent super, je peux lui donner ton numéro ?\" → Il dit OUI → OK ✅",
+      "title": "Lead qualifié",
       "criteria": [
-        "Il veut vraiment acheter ou louer",
-        "Il a un budget clair en tête",
-        "Il cherche maintenant (pas dans 2 ans !)",
-        "Vous pouvez le joindre facilement",
-        "Il sait ce qu'il veut"
-      ],
-      "summary": "💡 En gros : quelqu'un de SÉRIEUX qui cherche VRAIMENT (et qui vous a donné sa permission !) !"
+        "Ils veulent vraiment acheter ou louer",
+        "Ils ont un budget clair en tête",
+        "Ils cherchent maintenant (pas dans 2 ans !)",
+        "Vous pouvez les joindre facilement",
+        "Ils savent ce qu'ils veulent"
+      ]
     },
     "bad_lead": {
-      "title": "Lead pas terrible... 😬",
-      "subtitle": "= Perte de temps 🚫",
+      "title": "Lead non qualifié",
       "criteria": [
         "Juste curieux, pas vraiment intéressé",
-        "Aucune idée de son budget (ou irréaliste)",
-        "Cherche dans très longtemps (1 an+)",
-        "Injoignable ou coordonnées fausses",
-        "Ne sait pas du tout ce qu'il veut"
-      ],
-      "summary": "🚨 En gros : quelqu'un qui \"verra plus tard\" !"
-    },
-    "golden_rule": "🎓 La règle d'or :",
-    "golden_rule_good": "1 lead SÉRIEUX",
-    "golden_rule_vs": "vaut mieux que",
-    "golden_rule_bad": "10 curieux"
-  },
-  "security": {
-    "section_title": "Sécurité & Transparence",
-    "ownership": {
-      "title": "Propriété garantie",
-      "description": "Vos leads vous appartiennent exclusivement"
-    },
-    "transparency": {
-      "title": "Transparence totale",
-      "description": "Dashboard en temps réel 24/7"
-    },
-    "history": {
-      "title": "Historique complet",
-      "description": "Toutes vos transactions archivées"
-    },
-    "calculation": {
-      "title": "Calcul automatique",
-      "description": "Commissions calculées précisément"
+        "Aucune idée de leur budget (ou irréaliste)",
+        "Cherchent très loin dans le futur (1 an+)",
+        "Injoignable ou fausses coordonnées",
+        "Ne savent pas du tout ce qu'ils veulent"
+      ]
     }
   },
   "faq": {
-    "section_title": "Questions fréquentes",
-    "q0": {
-      "question": "Dois-je faire visiter les biens ?",
-      "answer_bold": "⚠️ NON ! SURTOUT PAS !",
-      "answer_items": [
-        "Explication : Seuls les agents avec licence RERA peuvent faire visiter.",
-        "Votre rôle : Juste transmettre l'information (lead) à l'agence.",
-        "Bonne nouvelle : Vous n'avez rien d'autre à faire !"
-      ]
-    },
-    "q_consent": {
-      "question": "Dois-je demander la permission avant de partager les coordonnées ?",
-      "answer_bold": "OUI, ABSOLUMENT ! C'est OBLIGATOIRE. ⚖️",
-      "answer_items": [
-        "La loi (RGPD) : Vous ne pouvez PAS partager les données personnelles d'une personne sans son consentement.",
-        "En pratique : Demandez simplement \"Je peux transmettre tes coordonnées à un agent immobilier ?\"",
-        "Si la personne dit OUI : Parfait, vous pouvez créer le lead ✅",
-        "Si la personne dit NON : Respectez son choix, ne partagez pas ❌"
-      ],
-      "warning": "⚠️ Partager des coordonnées sans autorisation peut entraîner la fermeture de votre compte et des poursuites légales."
-    },
+    "section_title": "❓ Questions fréquentes",
     "q1": {
       "question": "Combien de leads puis-je apporter ?",
-      "answer": "Illimité ! Il n'y a aucune restriction sur le nombre de leads que vous pouvez apporter. Plus vous apportez de clients qualifiés, plus vous augmentez vos chances de gains. Certains apporteurs gèrent 1-2 leads par mois, d'autres en apportent 10+. C'est vous qui décidez de votre niveau d'engagement."
+      "answer": "Illimité ! Plus vous apportez, plus vous gagnez."
     },
     "q2": {
       "question": "Dois-je avoir une licence immobilière ?",
-      "answer": "Non ! Le programme d'apporteur d'affaires est ouvert à tous, sans licence requise. Vous n'avez pas besoin de connaissances particulières en immobilier. Votre rôle est simplement de mettre en relation des personnes intéressées avec notre agence. C'est nous qui nous occupons de toute la partie légale et technique."
+      "answer": "Non ! Le programme est ouvert à tous."
     },
     "q3": {
       "question": "Quand suis-je payé ?",
-      "answer_intro": "45-60 jours après la signature du contrat de vente ou de location. Voici le processus :",
-      "answer_steps": [
-        "Le client signe le contrat",
-        "La transaction est finalisée",
-        "L'agence reçoit sa commission",
-        "Votre commission est calculée automatiquement (20%)",
-        "Paiement effectué sous 45-60 jours"
-      ],
-      "answer_conclusion": "Le délai permet de s'assurer que la transaction est définitive et que tous les paiements sont bien reçus."
+      "answer_intro": "45-60 jours après la signature du contrat."
     },
     "q4": {
       "question": "Puis-je parrainer d'autres apporteurs ?",
-      "answer_part1": "Oui ! Nous avons un programme de parrainage qui vous permet de gagner des commissions supplémentaires en recrutant d'autres apporteurs. Contactez-nous à",
-      "email": "contact@real-estate-referrer.com",
-      "answer_part2": "pour en savoir plus sur les conditions et avantages du programme de parrainage."
+      "answer_part1": "Oui ! Contactez-nous à",
+      "email": "contact@real-estate-referrer.com"
     },
     "q5": {
       "question": "Que se passe-t-il si le client n'achète pas ?",
-      "answer": "Aucun problème ! Vous ne perdez rien. Le lead reste dans votre historique et vous pouvez continuer à apporter d'autres clients. Il n'y a aucun engagement financier de votre part. Vous êtes payé uniquement quand une vente ou location se concrétise. Zéro risque pour vous !"
-    },
-    "q6": {
-      "question": "Combien de temps prend le processus ?",
-      "answer_intro": "Cela dépend du client et du marché, mais voici une moyenne :",
-      "answer_timeline": [
-        "1-2 semaines : Premier contact et visite",
-        "2-4 semaines : Recherche et sélection",
-        "1-2 mois : Négociation et offre",
-        "Total : 2-3 mois en moyenne"
-      ],
-      "answer_conclusion": "Certains clients décident en quelques jours, d'autres prennent plusieurs mois. Vous suivez tout en temps réel sur votre dashboard."
+      "answer": "Aucun problème ! Vous ne perdez rien."
     }
   },
   "cta": {
-    "title": "Alors, on commence ?",
-    "subtitle_part1": "C'est",
-    "subtitle_free": "gratuit",
-    "subtitle_part2": ",",
-    "subtitle_easy": "facile",
-    "subtitle_part3": ", et vous pouvez commencer en",
-    "subtitle_time": "2 minutes",
-    "subtitle_part4": "!",
-    "button_signup": "Je me lance !",
-    "button_login": "J'ai déjà un compte",
-    "benefits": "✅ Aucune carte bancaire · ✅ Aucun engagement · ✅ Résiliable quand vous voulez",
-    "testimonial": "💬 \"J'ai gagné 4,000 AED en 2 mois sans rien faire de compliqué !\" - Sarah, apporteuse depuis 3 mois"
-  },
-  "footer": {
-    "brand": "Real Estate Referrer",
-    "navigation_title": "Navigation",
-    "navigation_home": "Accueil",
-    "navigation_how": "Comment ça marche",
-    "navigation_login": "Connexion",
-    "navigation_signup": "Inscription",
-    "legal_title": "Légal",
-    "legal_terms": "CGU",
-    "legal_privacy": "Confidentialité",
-    "legal_contract": "Template Contrat",
-    "contact_title": "Contact",
-    "copyright": "© 2025 Real Estate Referrer. Tous droits réservés."
+    "title": "Prêt à commencer ?",
+    "subtitle_part1": "Inscrivez-vous maintenant et commencez à gagner des commissions dès aujourd'hui",
+    "button_signup": "Je me lance ! 🚀"
   }
 }
