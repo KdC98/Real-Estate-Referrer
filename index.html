@@ -445,7 +445,7 @@
                                     <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                         <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
                                         <p class="text-xs text-blue-200" data-i18n="auth:sms_verification_notice">
-    One-time verification: You will receive an SMS code to validate your number upon signup.
+${t('auth:sms_verification_notice')}
 </p>
                                     </div>
                                     <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
@@ -500,15 +500,15 @@
                                             <div class="text-xs text-gray-400 mt-1.5 space-y-0.5">
                                                 <div id="req-length" class="flex items-center gap-1">
                                                     <span class="w-3">•</span>
-                                                    <span data-i18n="auth:password_req_length">Minimum 8 characters</span>
+                                                    <span data-i18n="auth:password_req_length">${t('auth:password_req_length')}</span>
                                                 </div>
                                                 <div id="req-letter" class="flex items-center gap-1">
                                                     <span class="w-3">•</span>
-                                                    <span data-i18n="auth:password_req_letter">At least one letter</span>
+                                                    <span data-i18n="auth:password_req_letter">${t('auth:password_req_letter')}</span>
                                                 </div>
                                                 <div id="req-number" class="flex items-center gap-1">
                                                     <span class="w-3">•</span>
-                                                    <span data-i18n="auth:password_req_number">At least one number</span>
+                                                    <span data-i18n="auth:password_req_number">${t('auth:password_req_number')}</span>
                                                 </div>
                                             </div>
                                         </div>
