@@ -1,4 +1,8 @@
 {
+  "header": {
+    "brand": "Real Estate Referrer",
+    "login": "Login"
+  },
   "hero": {
     "title": "How It Works?",
     "subtitle": "Become a real estate referrer in Dubai in 5 simple steps"
@@ -123,5 +127,10 @@
     "title": "Ready to Start?",
     "subtitle_part1": "Sign up now and start earning commissions today",
     "button_signup": "Let's Go! 🚀"
+  },
+  "footer": {
+    "copyright": "All rights reserved.",
+    "navigation_home": "Home",
+    "navigation_how": "How it Works"
   }
 }
