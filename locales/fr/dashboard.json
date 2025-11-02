@@ -38,5 +38,7 @@
   "status_new": "Nouveau",
   "status_visit": "Visite",
   "status_offer": "Offre",
-  "status_sold": "Vendu"
+  "status_sold": "Vendu",
+  "contract_uploaded_title": "Parfait ! Vous pouvez commencer !",
+  "contract_uploaded_message": "Votre contrat a été reçu et sera validé par notre équipe dans les prochaines 24-48h. Pas d'inquiétude, vous pouvez déjà travailler et ajouter vos premiers leads."
 }
