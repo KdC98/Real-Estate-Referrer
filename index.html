@@ -20,6 +20,7 @@
 </head>
 <body class="text-white">
     <div id="app"></div>
+    <div id="oauthWarningModal" class="hidden"></div>
     <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -1034,40 +1035,80 @@
             }
         }
 
-        async function signInWithGoogle() {
+        function showOAuthWarning(provider) {
+            const modal = document.getElementById('oauthWarningModal');
+            const providerName = provider === 'google' ? 'Google' : 'Apple';
+            
+            modal.innerHTML = `
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full border-2 border-yellow-500">
+                        <div class="text-center mb-6">
+                            <div class="text-5xl mb-4">⚠️</div>
+                            <h3 class="text-2xl font-bold mb-4">Information de sécurité</h3>
+                        </div>
+                        
+                        <p class="text-gray-300 mb-6 leading-relaxed">
+                            Vous allez être redirigé vers notre service d'authentification sécurisé 
+                            <strong class="text-yellow-400">(Supabase)</strong> pour vous connecter avec ${providerName}.
+                        </p>
+                        
+                        <p class="text-gray-300 mb-6">
+                            <span class="text-green-400 font-semibold">✓ C'est normal et sécurisé.</span><br>
+                            Vous reviendrez automatiquement sur notre site après connexion.
+                        </p>
+                        
+                        <div class="flex gap-4">
+                            <button 
+                                onclick="proceedWithOAuth('${provider}')" 
+                                class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition"
+                            >
+                                Continuer
+                            </button>
+                            <button 
+                                onclick="closeOAuthWarning()" 
+                                class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition"
+                            >
+                                Annuler
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.classList.remove('hidden');
+        }
+
+        function closeOAuthWarning() {
+            const modal = document.getElementById('oauthWarningModal');
+            modal.classList.add('hidden');
+            modal.innerHTML = '';
+        }
+
+        async function proceedWithOAuth(provider) {
+            closeOAuthWarning();
+            
             try {
-                console.log('🔵 Starting Google Sign In...');
+                console.log(`🔐 Starting ${provider} Sign In...`);
                 const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: 'google',
+                    provider: provider,
                     options: {
                         redirectTo: window.location.origin
                     }
                 });
                 
                 if (error) throw error;
-                console.log('✅ Google redirect initiated');
+                console.log(`✅ ${provider} redirect initiated`);
             } catch (error) {
-                console.error('❌ Google Sign In error:', error);
-                alert('Erreur lors de la connexion avec Google: ' + error.message);
+                console.error(`❌ ${provider} Sign In error:`, error);
+                alert(`Erreur lors de la connexion avec ${provider}: ` + error.message);
             }
         }
 
+        async function signInWithGoogle() {
+            showOAuthWarning('google');
+        }
+
         async function signInWithApple() {
-            try {
-                console.log('🍎 Starting Apple Sign In...');
-                const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: 'apple',
-                    options: {
-                        redirectTo: window.location.origin
-                    }
-                });
-                
-                if (error) throw error;
-                console.log('✅ Apple redirect initiated');
-            } catch (error) {
-                console.error('❌ Apple Sign In error:', error);
-                alert('Erreur lors de la connexion avec Apple: ' + error.message);
-            }
+            showOAuthWarning('apple');
         }
 
         async function handle2FASubmit(event) {
@@ -2059,6 +2100,9 @@
         window.resend2FACode = resend2FACode;
         window.signInWithGoogle = signInWithGoogle;
         window.signInWithApple = signInWithApple;
+        window.showOAuthWarning = showOAuthWarning;
+        window.closeOAuthWarning = closeOAuthWarning;
+        window.proceedWithOAuth = proceedWithOAuth;
 
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
