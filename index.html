@@ -787,6 +787,30 @@
                 console.log('✅ Données de test pré-remplies');
             }
         }
+
+        // Vérifier si un numéro de téléphone existe déjà
+async function checkPhoneExists(phone) {
+    try {
+        // Nettoyer le numéro (enlever espaces, tirets, etc.)
+        const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+        
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('id, name')
+            .eq('phone', cleanPhone)
+            .single();
+        
+        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+            console.error('Error checking phone:', error);
+            return { exists: false, error: error.message };
+        }
+        
+        return { exists: !!data, userName: data?.name };
+    } catch (err) {
+        console.error('Exception checking phone:', err);
+        return { exists: false, error: err.message };
+    }
+}
         function handleAuth(mode) {
             console.log('🔧 handleAuth called for mode:', mode);
             const form = document.getElementById('authForm');
@@ -825,6 +849,29 @@
                         if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
                         
                         const fullPhone = countryCode + phone;
+
+                        // NOUVEAU : Vérifier l'unicité du téléphone
+                console.log('🔍 Checking if phone exists:', fullPhone);
+                const phoneCheck = await checkPhoneExists(fullPhone);
+                
+                if (phoneCheck.exists) {
+                    const message = `Ce numéro de téléphone est déjà utilisé par ${phoneCheck.userName || 'un autre utilisateur'}`;
+                    const errorDiv = document.getElementById('signup-error') || document.getElementById('authError');
+                    if (errorDiv) {
+                        errorDiv.textContent = message;
+                        errorDiv.classList.remove('hidden');
+                    }
+                    return; // Arrêter l'inscription
+                }
+                
+                if (phoneCheck.error) {
+                    const errorDiv = document.getElementById('signup-error') || document.getElementById('authError');
+                    if (errorDiv) {
+                        errorDiv.textContent = 'Erreur de vérification du téléphone. Veuillez réessayer.';
+                        errorDiv.classList.remove('hidden');
+                    }
+                    return; // Arrêter l'inscription
+                }
                         
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = true;
