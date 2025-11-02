@@ -1,127 +1,465 @@
-{
-  "hero": {
-    "title": "如何运作？",
-    "subtitle": "通过5个简单步骤成为迪拜房地产推荐人"
-  },
-  "timeline": {
-    "step1": {
-      "badge": "1",
-      "title": "注册（2分钟）",
-      "items": [
-        "免费创建您的账户",
-        "填写您的信息",
-        "签署推荐人协议"
-      ]
-    },
-    "step2": {
-      "badge": "2",
-      "title": "寻找客户",
-      "items": [
-        "向您的网络介绍该计划",
-        "识别对迪拜房地产感兴趣的人",
-        "无需房地产执照！"
-      ]
-    },
-    "step3": {
-      "badge": "3",
-      "title": "添加您的潜在客户",
-      "items": [
-        "登录您的仪表板",
-        "点击"添加潜在客户"",
-        "填写客户信息"
-      ]
-    },
-    "step4": {
-      "badge": "4",
-      "title": "实时跟踪",
-      "description": "跟踪您的潜在客户进度",
-      "status_new": "📄 新客户",
-      "status_visit": "🏠 看房",
-      "status_offer": "🤝 报价",
-      "status_sold": "✅ 已售",
-      "footer": "您的佣金完全透明"
-    },
-    "step5": {
-      "badge": "5",
-      "title": "获得您的佣金",
-      "description": "一旦完成销售，您的佣金即刻计算",
-      "payment_delay": "45-60天内付款",
-      "commission_text": "⭐ 经纪人佣金的20%"
-    }
-  },
-  "earnings": {
-    "section_title": "💰 我能赚多少？",
-    "example1": {
-      "your_amount": "2,000迪拉姆",
-      "property_type": "公寓 - 100万迪拉姆",
-      "total_commission": "总佣金（2%）：20,000迪拉姆",
-      "agent_commission": "经纪人佣金（50%）：10,000迪拉姆",
-      "your_commission": "您的佣金（20%）：2,000迪拉姆"
-    },
-    "example2": {
-      "your_amount": "10,000迪拉姆",
-      "property_type": "别墅 - 500万迪拉姆",
-      "total_amount": "100,000迪拉姆",
-      "agent_amount": "50,000迪拉姆"
-    },
-    "example3": {
-      "your_amount": "20,000迪拉姆",
-      "property_type": "顶层公寓 - 1000万迪拉姆",
-      "total_amount": "200,000迪拉姆",
-      "agent_amount": "100,000迪拉姆"
-    },
-    "unlimited": "✨ 没有限制！您带来的客户越多，赚得越多。"
-  },
-  "lead_criteria": {
-    "section_title": "📋 优质潜在客户的标准",
-    "good_lead": {
-      "title": "合格的潜在客户",
-      "criteria": [
-        "他们真正想要购买或租赁",
-        "他们心中有明确的预算",
-        "他们现在就在寻找（不是2年后！）",
-        "您可以轻松联系到他们",
-        "他们知道自己想要什么"
-      ]
-    },
-    "bad_lead": {
-      "title": "不合格的潜在客户",
-      "criteria": [
-        "只是好奇，并非真正感兴趣",
-        "对预算没有概念（或不切实际）",
-        "在遥远的未来寻找（1年以上）",
-        "无法联系或虚假联系信息",
-        "完全不知道自己想要什么"
-      ]
-    }
-  },
-  "faq": {
-    "section_title": "❓ 常见问题",
-    "q1": {
-      "question": "我可以带来多少潜在客户？",
-      "answer": "没有限制！您带来的越多，赚得越多。"
-    },
-    "q2": {
-      "question": "我需要房地产执照吗？",
-      "answer": "不需要！该计划对所有人开放。"
-    },
-    "q3": {
-      "question": "我什么时候能拿到钱？",
-      "answer_intro": "签订合同后45-60天。"
-    },
-    "q4": {
-      "question": "我可以推荐其他推荐人吗？",
-      "answer_part1": "可以！请联系我们",
-      "email": "contact@real-estate-referrer.com"
-    },
-    "q5": {
-      "question": "如果客户不购买会怎么样？",
-      "answer": "没问题！您不会损失任何东西。"
-    }
-  },
-  "cta": {
-    "title": "准备开始了吗？",
-    "subtitle_part1": "立即注册，今天就开始赚取佣金",
-    "button_signup": "开始吧！🚀"
-  }
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment ça marche - Real Estate Referrer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
+    
+    <!-- Header avec langue et login -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-white text-xl font-bold" data-i18n="header.brand">Real Estate Referrer</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Sélecteur de langue -->
+                    <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="ar">🇦🇪 العربية</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="hi">🇮🇳 हिंदी</option>
+                        <option value="ur">🇵🇰 اردو</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="tl">🇵🇭 Tagalog</option>
+                    </select>
+                    <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.login">Connexion</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6" data-i18n="hero.title">
+                    Comment ça marche ?
+                </h1>
+                <p class="text-xl text-blue-100 mb-8 max-w-3xl mx-auto" data-i18n="hero.subtitle">
+                    Devenez apporteur d'affaires immobilier à Dubai en 5 étapes simples
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Les 5 étapes -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="space-y-12">
+            <!-- Étape 1 -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-600 text-white text-2xl font-bold">
+                            1
+                        </div>
+                    </div>
+                    <div class="ml-6">
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step1.title">Inscription (2 min)</h3>
+                        <ul class="text-blue-100 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step1.items[0]">Créez votre compte gratuitement</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step1.items[1]">Renseignez vos informations</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step1.items[2]">Signez le contrat d'apporteur</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 2 -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-600 text-white text-2xl font-bold">
+                            2
+                        </div>
+                    </div>
+                    <div class="ml-6">
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step2.title">Trouvez des clients</h3>
+                        <ul class="text-blue-100 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step2.items[0]">Parlez du programme à votre réseau</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step2.items[1]">Identifiez des personnes intéressées par l'immobilier à Dubai</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step2.items[2]">Aucune licence immobilière requise !</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 3 -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-600 text-white text-2xl font-bold">
+                            3
+                        </div>
+                    </div>
+                    <div class="ml-6">
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step3.title">Ajoutez vos leads</h3>
+                        <ul class="text-blue-100 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step3.items[0]">Connectez-vous à votre dashboard</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step3.items[1]">Cliquez sur "Ajouter un lead"</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step3.items[2]">Remplissez les informations client</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 4 -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-600 text-white text-2xl font-bold">
+                            4
+                        </div>
+                    </div>
+                    <div class="ml-6">
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step4.title">Suivi en temps réel</h3>
+                        <ul class="text-blue-100 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step4.description">Suivez l'avancement de vos leads</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span>
+                                    <span data-i18n="timeline.step4.status_new">📄 Nouveau</span> → 
+                                    <span data-i18n="timeline.step4.status_visit">🏠 Visite</span> → 
+                                    <span data-i18n="timeline.step4.status_offer">🤝 Offre</span> → 
+                                    <span data-i18n="timeline.step4.status_sold">✅ Vendu</span>
+                                </span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-400 mr-2">→</span>
+                                <span data-i18n="timeline.step4.footer">Transparence totale sur vos commissions</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Étape 5 -->
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+                <div class="flex items-start">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-16 w-16 rounded-full bg-green-600 text-white text-2xl font-bold">
+                            5
+                        </div>
+                    </div>
+                    <div class="ml-6">
+                        <h3 class="text-2xl font-bold text-white mb-3" data-i18n="timeline.step5.title">Recevez vos commissions</h3>
+                        <ul class="text-blue-100 space-y-2">
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">→</span>
+                                <span data-i18n="timeline.step5.description">Dès qu'une vente est conclue, votre commission est calculée</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">→</span>
+                                <span data-i18n="timeline.step5.payment_delay">Paiement dans les 45-60 jours</span>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-green-400 mr-2">→</span>
+                                <span data-i18n="timeline.step5.commission_text">⭐ 20% de la commission agent</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Combien puis-je gagner ? -->
+    <div class="bg-gradient-to-r from-green-900/40 to-emerald-900/40 border-t border-b border-green-500/30 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="earnings.section_title">
+                💰 Combien puis-je gagner ?
+            </h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Exemple 1 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example1.your_amount">2,000 AED</div>
+                        <div class="text-blue-100 mb-4" data-i18n="earnings.example1.property_type">Appartement - 1M AED</div>
+                        <div class="text-sm text-blue-200">
+                            <div data-i18n="earnings.example1.total_commission">Commission totale (2%): 20,000 AED</div>
+                            <div data-i18n="earnings.example1.agent_commission">Commission agent (50%): 10,000 AED</div>
+                            <div data-i18n="earnings.example1.your_commission">Votre commission (20%): 2,000 AED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemple 2 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example2.your_amount">10,000 AED</div>
+                        <div class="text-blue-100 mb-4" data-i18n="earnings.example2.property_type">Villa - 5M AED</div>
+                        <div class="text-sm text-blue-200">
+                            <div data-i18n="earnings.example2.total_amount">100,000 AED</div>
+                            <div data-i18n="earnings.example2.agent_amount">50,000 AED</div>
+                            <div data-i18n="earnings.example2.your_amount">10,000 AED</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exemple 3 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example3.your_amount">20,000 AED</div>
+                        <div class="text-blue-100 mb-4" data-i18n="earnings.example3.property_type">Penthouse - 10M AED</div>
+                        <div class="text-sm text-blue-200">
+                            <div data-i18n="earnings.example3.total_amount">200,000 AED</div>
+                            <div data-i18n="earnings.example3.agent_amount">100,000 AED</div>
+                            <div data-i18n="earnings.example3.your_amount">20,000 AED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center text-blue-100 mt-8 text-lg" data-i18n="earnings.unlimited">
+                ✨ Pas de limite ! Plus vous apportez de clients, plus vous gagnez.
+            </p>
+        </div>
+    </div>
+
+    <!-- Critères d'un bon lead -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="lead_criteria.section_title">
+            📋 Critères d'un bon lead
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Lead qualifié -->
+            <div class="bg-green-900/30 rounded-xl p-8 border border-green-500/30">
+                <h3 class="text-2xl font-bold text-green-400 mb-6 flex items-center">
+                    <span class="mr-3">✅</span>
+                    <span data-i18n="lead_criteria.good_lead.title">Lead qualifié</span>
+                </h3>
+                <ul class="space-y-3 text-blue-100">
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[0]">Ils veulent vraiment acheter ou louer</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[1]">Ils ont un budget clair en tête</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[2]">Ils cherchent maintenant (pas dans 2 ans !)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[3]">Vous pouvez les joindre facilement</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-green-400 mr-2">✓</span>
+                        <span data-i18n="lead_criteria.good_lead.criteria[4]">Ils savent ce qu'ils veulent</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Lead non qualifié -->
+            <div class="bg-red-900/30 rounded-xl p-8 border border-red-500/30">
+                <h3 class="text-2xl font-bold text-red-400 mb-6 flex items-center">
+                    <span class="mr-3">❌</span>
+                    <span data-i18n="lead_criteria.bad_lead.title">Lead non qualifié</span>
+                </h3>
+                <ul class="space-y-3 text-blue-100">
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">✗</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[0]">Juste curieux, pas vraiment intéressé</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">✗</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[1]">Aucune idée de leur budget (ou irréaliste)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">✗</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[2]">Cherchent très loin dans le futur (1 an+)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">✗</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[3]">Injoignable ou fausses coordonnées</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-400 mr-2">✗</span>
+                        <span data-i18n="lead_criteria.bad_lead.criteria[4]">Ne savent pas du tout ce qu'ils veulent</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="bg-white/5 border-t border-white/10 py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="faq.section_title">
+                ❓ Questions fréquentes
+            </h2>
+
+            <div class="space-y-6">
+                <!-- Q1 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q1.question">
+                        Combien de leads puis-je apporter ?
+                    </h3>
+                    <p class="text-blue-100" data-i18n="faq.q1.answer">
+                        Illimité ! Plus vous apportez, plus vous gagnez.
+                    </p>
+                </div>
+
+                <!-- Q2 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q2.question">
+                        Dois-je avoir une licence immobilière ?
+                    </h3>
+                    <p class="text-blue-100" data-i18n="faq.q2.answer">
+                        Non ! Le programme est ouvert à tous.
+                    </p>
+                </div>
+
+                <!-- Q3 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q3.question">
+                        Quand suis-je payé ?
+                    </h3>
+                    <p class="text-blue-100" data-i18n="faq.q3.answer_intro">
+                        45-60 jours après la signature du contrat.
+                    </p>
+                </div>
+
+                <!-- Q4 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q4.question">
+                        Puis-je parrainer d'autres apporteurs ?
+                    </h3>
+                    <p class="text-blue-100">
+                        <span data-i18n="faq.q4.answer_part1">Oui ! Contactez-nous à</span>
+                        <span data-i18n="faq.q4.email">contact@real-estate-referrer.com</span>
+                    </p>
+                </div>
+
+                <!-- Q5 -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q5.question">
+                        Que se passe-t-il si le client n'achète pas ?
+                    </h3>
+                    <p class="text-blue-100" data-i18n="faq.q5.answer">
+                        Aucun problème ! Vous ne perdez rien.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Final -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6" data-i18n="cta.title">
+                Prêt à commencer ?
+            </h2>
+            <p class="text-xl text-blue-100 mb-8" data-i18n="cta.subtitle_part1">
+                Inscrivez-vous maintenant et commencez à gagner des commissions dès aujourd'hui
+            </p>
+            <a href="index.html?action=signup" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-bold hover:bg-blue-50 transition duration-300 shadow-xl" data-i18n="cta.button_signup">
+                Je me lance ! 🚀
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-white/10 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-blue-200">
+                <p>&copy; 2025 Real Estate Referrer Dubai. <span data-i18n="footer.copyright">Tous droits réservés.</span></p>
+                <div class="mt-4 space-x-4">
+                    <a href="index.html" class="hover:text-white transition" data-i18n="footer.navigation_home">Accueil</a>
+                    <a href="how-it-works.html" class="hover:text-white transition" data-i18n="footer.navigation_how">Comment ça marche</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ✅ CHARGEMENT I18NEXT AVEC BACKEND
+        (async () => {
+            await i18next
+                .use(i18nextHttpBackend)
+                .use(i18nextBrowserLanguageDetector)
+                .init({
+                    fallbackLng: 'fr',
+                    debug: true,
+                    load: 'languageOnly',
+                    ns: ['how-it-works'],
+                    defaultNS: 'how-it-works',
+                    backend: {
+                        loadPath: '/locales/{{lng}}/{{ns}}.json'
+                    },
+                    detection: {
+                        order: ['localStorage', 'navigator'],
+                        caches: ['localStorage']
+                    }
+                });
+            
+            console.log('🌐 Translations loaded!');
+            updateContent();
+        })();
+
+        // Changement de langue
+        document.getElementById('languageSelector').addEventListener('change', async function(e) {
+            await i18next.changeLanguage(e.target.value);
+            localStorage.setItem('i18nextLng', e.target.value);
+            updateContent();
+        });
+
+        // Fonction pour mettre à jour le contenu
+        function updateContent() {
+            document.querySelectorAll('[data-i18n]').forEach(function(element) {
+                const key = element.getAttribute('data-i18n');
+                const translation = i18next.t(key);
+                
+                if (translation && translation !== key) {
+                    if (translation.includes('<br>')) {
+                        element.innerHTML = translation;
+                    } else {
+                        element.textContent = translation;
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
