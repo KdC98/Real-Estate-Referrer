@@ -444,7 +444,7 @@
                                     </div>
                                     <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                         <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
-                                        <p class="text-xs text-blue-200">
+                                        <p class="text-xs text-blue-200" data-i18n="auth:sms_verification_notice">
                                             <strong>Vérification unique :</strong> Vous recevrez un code SMS pour valider votre numéro à l'inscription.
                                         </p>
                                     </div>
@@ -573,13 +573,6 @@
                             </button>
                         </p>
                         
-                        ${mode === 'signup' ? `
-                            <div class="text-center mt-4">
-                                <button type="button" onclick="prefillTestData()" class="text-sm text-gray-400 hover:text-white border border-gray-600 px-3 py-1 rounded">
-                                    Remplir avec les données de test
-                                </button>
-                            </div>
-                        ` : ''}
                     </div>
                 </div>
             `;
