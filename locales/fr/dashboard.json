@@ -36,9 +36,49 @@
   "rental_landlord": "Location - Propriétaire",
   "rental_tenant": "Location - Locataire",
   "status_new": "Nouveau",
+  "status_nouveau": "Nouveau",
   "status_visit": "Visite",
+  "status_visite": "Visite",
   "status_offer": "Offre",
+  "status_offre": "Offre",
   "status_sold": "Vendu",
+  "status_vendu": "Vendu",
   "contract_uploaded_title": "Parfait ! Vous pouvez commencer !",
-  "contract_uploaded_message": "Votre contrat a été reçu et sera validé par notre équipe dans les prochaines 24-48h. Pas d'inquiétude, vous pouvez déjà travailler et ajouter vos premiers leads."
+  "contract_uploaded_message": "Votre contrat a été reçu et sera validé par notre équipe dans les prochaines 24-48h. Pas d'inquiétude, vous pouvez déjà travailler et ajouter vos premiers leads.",
+  "upload_instructions": "Téléchargez, signez et uploadez le contrat",
+  "download_contract_template": "Télécharger le modèle",
+  "submit_contract": "Envoyer le contrat",
+  "contract_required_to_add_lead": "Vous devez uploader votre contrat signé avant d'ajouter des leads",
+  
+  "contract": {
+    "required": "Contrat d'Apporteur d'Affaires Requis",
+    "what_is_it": "Qu'est-ce que ce contrat ?",
+    "explanation": "Ce contrat officialise notre partenariat professionnel et garantit vos droits :",
+    
+    "benefit1_title": "Commission garantie :",
+    "benefit1_desc": "20% sur chaque vente réalisée",
+    
+    "benefit2_title": "Protection de vos leads :",
+    "benefit2_desc": "Aucun lead ne peut être \"volé\"",
+    
+    "benefit3_title": "Paiement rapide :",
+    "benefit3_desc": "Sous 48h après signature de vente",
+    
+    "benefit4_title": "Transparence totale :",
+    "benefit4_desc": "Suivi en temps réel de vos leads",
+    
+    "benefit5_title": "Conformité RERA :",
+    "benefit5_desc": "Respect des régulations Dubai",
+    
+    "step1_title": "Étape 1 : Télécharger",
+    "step1_desc": "Téléchargez, imprimez et signez le contrat",
+    "download_button": "Télécharger le modèle PDF",
+    
+    "step2_title": "Étape 2 : Uploader",
+    "step2_desc": "Uploadez le contrat signé (PDF, max 10MB)",
+    "upload_button": "Uploader le contrat signé",
+    
+    "digital_tip": "Astuce :",
+    "digital_coming": "La signature digitale arrive bientôt !"
+  }
 }
