@@ -930,16 +930,8 @@ async function checkPhoneExists(phone) {
                         
                         tempUserId = data.user.id;
                         
-                        const { error: profileError } = await supabase.from('profiles').upsert({
-    id: data.user.id,
-    name: name,
-    phone: fullPhone,
-    role: 'referrer',
-    contract_status: 'pending',
-    phone_verified: false
-}, {
-    onConflict: 'id'
-});
+                        // ✅ Profile creation will be handled by Supabase trigger
+console.log('✅ Profile creation handled by trigger');
                         
                         if (profileError) {
                             console.error('❌ Error creating profile:', profileError);
