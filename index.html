@@ -933,10 +933,6 @@ async function checkPhoneExists(phone) {
                         // ✅ Profile creation will be handled by Supabase trigger
 console.log('✅ Profile creation handled by trigger');
                         
-                        if (profileError) {
-                            console.error('❌ Error creating profile:', profileError);
-                        }
-                        
                         tempUserProfile = {
                             id: data.user.id,
                             name: name,
@@ -1142,13 +1138,6 @@ console.log('✅ Profile creation handled by trigger');
                     .select('*')
                     .eq('id', signInData.user.id)
                     .single();
-                
-                if (profileError) {
-                    console.error('❌ Error loading profile:', profileError);
-                } else {
-                    userProfile = profileData;
-                    window.userProfile = profileData;
-                }
                 
                 currentUser = signInData.user;
                 window.currentUser = signInData.user;
