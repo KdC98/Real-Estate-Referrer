@@ -932,6 +932,27 @@ async function checkPhoneExists(phone) {
                         
                         // ✅ Profile creation will be handled by Supabase trigger
 console.log('✅ Profile creation handled by trigger');
+                        // ⏳ Wait for trigger to create profile (max 3 seconds)
+let profileExists = false;
+let attempts = 0;
+while (!profileExists && attempts < 6) {
+    await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
+    const { data: checkProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', data.user.id)
+        .single();
+    
+    if (checkProfile) {
+        profileExists = true;
+        console.log('✅ Profile found after', (attempts + 1) * 500, 'ms');
+    }
+    attempts++;
+}
+
+if (!profileExists) {
+    console.error('⚠️ Profile not created by trigger after 3 seconds');
+}
                         
                         tempUserProfile = {
                             id: data.user.id,
