@@ -1540,7 +1540,7 @@ await supabase.auth.signOut();
             }
             try {
                 console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
-                const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).single();
+                const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).maybeSingle();
                 if (error) {
                     console.error('❌ Error loading profile:', error);
                     
