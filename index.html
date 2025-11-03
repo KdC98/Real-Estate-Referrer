@@ -923,37 +923,24 @@ async function checkPhoneExists(phone) {
                         }
                         
                         console.log('✅ Signup successful, user:', data.user);
-                        
-                        console.log('🔓 Signing out IMMEDIATELY to prevent auto-redirect');
-                        await supabase.auth.signOut();
-                        console.log('✅ Signed out, now safe to proceed with 2FA');
+                        // ✅ Upsert du profil AVANT la déconnexion (RLS OK)
+const { error: upsertErr } = await supabase
+  .from('profiles')
+  .upsert({
+    id: data.user.id,
+    name, phone: fullPhone, email,
+    role: 'referrer',
+    contract_status: 'pending',
+    phone_verified: false
+  }, { onConflict: 'id' });
+if (upsertErr && upsertErr.code !== '23505') {
+  isSignupInProgress = false;
+  throw new Error('Erreur création profil: ' + upsertErr.message);
+}
+console.log('✅ Profile created via upsert');
                         
                         tempUserId = data.user.id;
-                        
-                        // ✅ Profile creation will be handled by Supabase trigger
-console.log('✅ Profile creation handled by trigger');
-                        // ⏳ Wait for trigger to create profile (max 3 seconds)
-let profileExists = false;
-let attempts = 0;
-while (!profileExists && attempts < 6) {
-    await new Promise(resolve => setTimeout(resolve, 500)); // Wait 500ms
-    const { data: checkProfile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', data.user.id)
-        .single();
-    
-    if (checkProfile) {
-        profileExists = true;
-        console.log('✅ Profile found after', (attempts + 1) * 500, 'ms');
-    }
-    attempts++;
-}
-
-if (!profileExists) {
-    console.error('⚠️ Profile not created by trigger after 3 seconds');
-}
-                        
+                       
                         tempUserProfile = {
                             id: data.user.id,
                             name: name,
@@ -969,6 +956,8 @@ if (!profileExists) {
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
                         await send2FACode(data.user.id, currentLang);
+                        // ✅ Se déconnecter seulement APRÈS avoir envoyé le SMS
+await supabase.auth.signOut();
                         
                         render();
                     } else if (mode === 'login') {
