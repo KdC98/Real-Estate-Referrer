@@ -1588,29 +1588,17 @@ console.log('✅ Profile creation handled by trigger');
         window.loadUserProfile = loadUserProfile;
         async function logout() {
     console.log('🚪 Logout called');
-    const logoutBtn = document.querySelector('button[onclick="logout()"]');
-    
-    if (logoutBtn) {
-        logoutBtn.disabled = true;
-        logoutBtn.textContent = 'Déconnexion...';
-    }
     
     try {
         console.log('🔓 Signing out from Supabase...');
         
-        // Attendre vraiment que signOut se termine (pas de timeout)
-        const { error } = await supabase.auth.signOut();
+        // ✅ CORRECTION : Ne pas attendre la réponse de signOut
+        supabase.auth.signOut(); // Pas de await !
         
-        if (error) {
-            console.error('❌ Logout error:', error);
-        } else {
-            console.log('✅ Supabase signOut successful');
-        }
-        
-        // ✅ NETTOYAGE COMPLET ET BRUTAL
+        // ✅ NETTOYAGE IMMÉDIAT
         console.log('🧹 Cleaning ALL session data...');
-        localStorage.clear();  // Vider TOUT le localStorage
-        sessionStorage.clear(); // Vider TOUT le sessionStorage
+        localStorage.clear();
+        sessionStorage.clear();
         
         // Réinitialiser les variables globales
         currentUser = null;
@@ -1628,8 +1616,8 @@ console.log('✅ Profile creation handled by trigger');
         
         console.log('✅ Local state cleaned');
         
-        // Forcer le rechargement de la page
-        console.log('🔄 Reloading page...');
+        // ✅ REDIRECTION IMMÉDIATE - Pas de setTimeout !
+        console.log('🔄 Reloading page NOW...');
         window.location.href = window.location.origin;
         
     } catch (error) {
