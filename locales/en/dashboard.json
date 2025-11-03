@@ -17,7 +17,7 @@
   "logout": "Logout",
   "contract_required": "Contract Required",
   "contract_warning_message": "Please download and sign the referrer agreement before adding leads",
-  "upload_contract_now": "Download contract now",
+  "upload_contract_now": "Upload Contract Now",
   "admin_title": "Admin Dashboard",
   "referrer_title": "Referrer Dashboard",
   "actions": "Actions",
@@ -27,7 +27,7 @@
   "total_referrers": "Active Referrers",
   "commissions_paid": "Commissions Paid",
   "referrer": "Referrer",
-  "mark_sold": "Mark Sold",
+  "mark_sold": "Mark as Sold",
   "client_email": "Client Email",
   "client_phone": "Client Phone",
   "select_type": "Select Type",
@@ -36,9 +36,49 @@
   "rental_landlord": "Rental - Landlord",
   "rental_tenant": "Rental - Tenant",
   "status_new": "New",
+  "status_nouveau": "New",
   "status_visit": "Visit",
+  "status_visite": "Visit",
   "status_offer": "Offer",
+  "status_offre": "Offer",
   "status_sold": "Sold",
+  "status_vendu": "Sold",
   "contract_uploaded_title": "Perfect! You can start!",
-  "contract_uploaded_message": "Your contract has been received and will be validated by our team within the next 24-48 hours. Don't worry, you can already start working and add your first leads."
+  "contract_uploaded_message": "Your contract has been received and will be validated by our team within the next 24-48 hours. Don't worry, you can already start working and add your first leads.",
+  "upload_instructions": "Download, sign and upload the contract",
+  "download_contract_template": "Download Template",
+  "submit_contract": "Submit Contract",
+  "contract_required_to_add_lead": "You must upload your signed contract before adding leads",
+  
+  "contract": {
+    "required": "Business Referrer Agreement Required",
+    "what_is_it": "What is this contract?",
+    "explanation": "This contract formalizes our professional partnership and guarantees your rights:",
+    
+    "benefit1_title": "Guaranteed commission:",
+    "benefit1_desc": "20% on each completed sale",
+    
+    "benefit2_title": "Lead protection:",
+    "benefit2_desc": "No lead can be \"stolen\"",
+    
+    "benefit3_title": "Fast payment:",
+    "benefit3_desc": "Within 48h after sale signature",
+    
+    "benefit4_title": "Full transparency:",
+    "benefit4_desc": "Real-time tracking of your leads",
+    
+    "benefit5_title": "RERA compliance:",
+    "benefit5_desc": "Respect of Dubai regulations",
+    
+    "step1_title": "Step 1: Download",
+    "step1_desc": "Download, print and sign the contract",
+    "download_button": "Download PDF Template",
+    
+    "step2_title": "Step 2: Upload",
+    "step2_desc": "Upload the signed contract (PDF, max 10MB)",
+    "upload_button": "Upload Signed Contract",
+    
+    "digital_tip": "Tip:",
+    "digital_coming": "Digital signature coming soon!"
+  }
 }
