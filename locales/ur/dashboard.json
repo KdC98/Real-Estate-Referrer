@@ -1,23 +1,23 @@
 {
   "dashboard_title": "ریفرر ڈیش بورڈ",
   "welcome": "خوش آمدید",
-  "my_stats": "میرے اعدادوشمار",
-  "total_earnings": "کل آمدنی",
+  "my_stats": "میری شماریات",
+  "total_earnings": "کل کمائی",
   "active_leads": "فعال لیڈز",
   "closed_sales": "مکمل فروخت",
   "add_lead": "لیڈ شامل کریں",
-  "my_leads": "میری لیڈز",
+  "my_leads": "میرے لیڈز",
   "client_name": "کلائنٹ کا نام",
   "property_type": "پراپرٹی کی قسم",
   "budget": "بجٹ",
   "status": "حیثیت",
   "commission": "کمیشن",
-  "no_leads": "ابھی تک کوئی لیڈ نہیں",
+  "no_leads": "ابھی تک کوئی لیڈز نہیں",
   "start_adding": "کمیشن کمانے کے لیے لیڈز شامل کرنا شروع کریں",
   "logout": "لاگ آؤٹ",
-  "contract_required": "معاہدہ درکار",
-  "contract_warning_message": "براہ کرم لیڈز شامل کرنے سے پہلے ریفرر معاہدے کو ڈاؤن لوڈ اور دستخط کریں",
-  "upload_contract_now": "ابھی معاہدہ ڈاؤن لوڈ کریں",
+  "contract_required": "معاہدہ ضروری ہے",
+  "contract_warning_message": "براہ کرم لیڈز شامل کرنے سے پہلے ریفرر معاہدہ ڈاؤن لوڈ اور دستخط کریں",
+  "upload_contract_now": "ابھی معاہدہ اپ لوڈ کریں",
   "admin_title": "ایڈمن ڈیش بورڈ",
   "referrer_title": "ریفرر ڈیش بورڈ",
   "actions": "اقدامات",
@@ -32,13 +32,53 @@
   "client_phone": "کلائنٹ کا فون",
   "select_type": "قسم منتخب کریں",
   "sale_buyer": "فروخت - خریدار",
-  "sale_seller": "فروخت - فروخت کنندہ",
+  "sale_seller": "فروخت - بیچنے والا",
   "rental_landlord": "کرایہ - مالک مکان",
   "rental_tenant": "کرایہ - کرایہ دار",
   "status_new": "نیا",
+  "status_nouveau": "نیا",
   "status_visit": "دورہ",
+  "status_visite": "دورہ",
   "status_offer": "پیشکش",
+  "status_offre": "پیشکش",
   "status_sold": "فروخت ہو گیا",
+  "status_vendu": "فروخت ہو گیا",
   "contract_uploaded_title": "بہترین! آپ شروع کر سکتے ہیں!",
-  "contract_uploaded_message": "آپ کا معاہدہ موصول ہو گیا ہے اور اگلے 24-48 گھنٹوں میں ہماری ٹیم اسے تصدیق کرے گی۔ فکر نہ کریں، آپ ابھی سے کام شروع کر سکتے ہیں اور اپنی پہلی لیڈز شامل کر سکتے ہیں۔"
+  "contract_uploaded_message": "آپ کا معاہدہ موصول ہو گیا ہے اور اگلے 24-48 گھنٹوں میں ہماری ٹیم اس کی تصدیق کرے گی۔ فکر نہ کریں، آپ پہلے سے کام شروع کر سکتے ہیں اور اپنے پہلے لیڈز شامل کر سکتے ہیں۔",
+  "upload_instructions": "معاہدہ ڈاؤن لوڈ کریں، دستخط کریں اور اپ لوڈ کریں",
+  "download_contract_template": "ٹیمپلیٹ ڈاؤن لوڈ کریں",
+  "submit_contract": "معاہدہ جمع کروائیں",
+  "contract_required_to_add_lead": "لیڈز شامل کرنے سے پہلے آپ کو اپنا دستخط شدہ معاہدہ اپ لوڈ کرنا ہوگا",
+  
+  "contract": {
+    "required": "کاروباری ریفرر معاہدہ ضروری ہے",
+    "what_is_it": "یہ معاہدہ کیا ہے؟",
+    "explanation": "یہ معاہدہ ہماری پیشہ ورانہ شراکت کو باقاعدہ بناتا ہے اور آپ کے حقوق کی ضمانت دیتا ہے:",
+    
+    "benefit1_title": "مضمون کمیشن:",
+    "benefit1_desc": "ہر مکمل فروخت پر 20%",
+    
+    "benefit2_title": "آپ کے لیڈز کی حفاظت:",
+    "benefit2_desc": "کوئی بھی لیڈ \"چوری\" نہیں ہو سکتا",
+    
+    "benefit3_title": "تیز ادائیگی:",
+    "benefit3_desc": "فروخت کے دستخط کے 48 گھنٹوں کے اندر",
+    
+    "benefit4_title": "مکمل شفافیت:",
+    "benefit4_desc": "اپنے لیڈز کی ریئل ٹائم ٹریکنگ",
+    
+    "benefit5_title": "RERA تعمیل:",
+    "benefit5_desc": "دبئی کے ضوابط کا احترام",
+    
+    "step1_title": "مرحلہ 1: ڈاؤن لوڈ",
+    "step1_desc": "معاہدہ ڈاؤن لوڈ کریں، پرنٹ کریں اور دستخط کریں",
+    "download_button": "PDF ٹیمپلیٹ ڈاؤن لوڈ کریں",
+    
+    "step2_title": "مرحلہ 2: اپ لوڈ",
+    "step2_desc": "دستخط شدہ معاہدہ اپ لوڈ کریں (PDF، زیادہ سے زیادہ 10MB)",
+    "upload_button": "دستخط شدہ معاہدہ اپ لوڈ کریں",
+    
+    "digital_tip": "مشورہ:",
+    "digital_coming": "ڈیجیٹل دستخط جلد آ رہے ہیں!"
+  }
 }
