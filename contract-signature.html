@@ -331,10 +331,12 @@
                 
                 showSuccess(t('contract:success_message'));
 
-                // Simple page reload to refresh profile
+                // ✅ NOUVELLE REDIRECTION AMÉLIORÉE
                 setTimeout(() => {
-                    window.location.href = window.location.origin;
-                }, 2000);
+                    const baseUrl = window.location.origin;
+                    const redirectUrl = baseUrl + '/?signed=' + Date.now();
+                    window.location.replace(redirectUrl);
+                }, 1500);
                 
             } catch (error) {
                 console.error('Signature error:', error);
