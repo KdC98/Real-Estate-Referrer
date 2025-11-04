@@ -129,19 +129,24 @@
         };
         
         let currentUser = null;
-        let userProfile = null;
-        let profileLoadAttempts = 0;
-        const MAX_PROFILE_LOAD_ATTEMPTS = 10;
-        let currentPage = 'landing';
-        let isPasswordRecoveryMode = false;
-        let is2FAMode = false;
-        let isSignupInProgress = false;
-        let tempUserId = null;
-        let tempUserProfile = null;
-        let globalIsUploading = false;
-        window.currentUser = null;
-        window.userProfile = null;
-        window.currentPage = 'landing';
+let userProfile = null;
+let profileLoadAttempts = 0;
+const MAX_PROFILE_LOAD_ATTEMPTS = 10;
+let currentPage = 'landing';
+let isPasswordRecoveryMode = false;
+let is2FAMode = false;
+let isSignupInProgress = false;
+let tempUserId = null;
+let tempUserProfile = null;
+let globalIsUploading = false;
+
+// 🎯 Nouveau flag pour la signature
+let contractJustSigned = false;
+
+window.currentUser = null;
+window.userProfile = null;
+window.currentPage = 'landing';
+window.contractJustSigned = false;
         // ✅ FONCTION POUR LIRE LES PARAMÈTRES D'URL
         function getQueryParams() {
             const params = {};
@@ -154,7 +159,18 @@
             }
             return params;
         }
-        
+        // 🎯 Détection unique du paramètre ?signed=... dès le chargement
+(function detectSignedParamOnLoad() {
+    const params = getQueryParams();
+    if (params.signed) {
+        console.log('🎉 Paramètre ?signed détecté au chargement:', params.signed);
+        contractJustSigned = true;
+        window.contractJustSigned = true;
+
+        // On nettoie l'URL tout de suite (sans recharger la page)
+        window.history.replaceState({}, '', window.location.pathname);
+    }
+})();
         // Vérifier si on arrive avec ?action=signup
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('action') === 'signup') {
