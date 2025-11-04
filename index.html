@@ -646,41 +646,40 @@ ${t('auth:sms_verification_notice')}
 
                 <!-- Étapes -->
                 <div class="grid md:grid-cols-2 gap-4">
-                    <!-- Étape 1 -->
-                    <div class="bg-blue-900/30 border border-blue-500/30 p-4 rounded-lg">
-                        <h4 class="font-bold text-blue-300 mb-3">📥 ${t('dashboard:contract.step1_title')}</h4>
-                        <p class="text-xs text-gray-400 mb-3">
-                            ${t('dashboard:contract.step1_desc')}
-                        </p>
-                        <button onclick="downloadContractTemplate()" 
-                            class="w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition">
-                            ${t('dashboard:contract.download_button')}
-                        </button>
-                    </div>
-                    
-                    <!-- Étape 2 -->
-                    <div class="bg-yellow-900/30 border border-yellow-500/30 p-4 rounded-lg">
-                        <h4 class="font-bold text-yellow-300 mb-3">📤 ${t('dashboard:contract.step2_title')}</h4>
-                        <p class="text-xs text-gray-400 mb-3">
-                            ${t('dashboard:contract.step2_desc')}
-                        </p>
-                        <form id="contractForm" enctype="multipart/form-data">
-                            <input type="file" 
-                                id="contractFile" 
-                                accept=".pdf,application/pdf" 
-                                required 
-                                class="w-full mb-3 text-sm text-white">
-                            <button type="submit" 
-                                id="contractSubmitBtn"
-                                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 rounded-lg transition">
-                                ${t('dashboard:contract.upload_button')}
-                            </button>
-                        </form>
-                        <div id="uploadError" class="hidden mt-2 text-red-400 text-xs"></div>
-                        <div id="uploadProgress" class="hidden mt-2 text-green-400 text-xs"></div>
-                    </div>
-                </div>
-            </div>
+                   <!-- Nouvelle signature électronique -->
+<div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 p-6 rounded-lg">
+    <div class="flex items-center gap-3 mb-4">
+        <span class="text-4xl">✍️</span>
+        <div>
+            <h4 class="font-bold text-green-300 text-lg">Signature Électronique</h4>
+            <p class="text-xs text-gray-400">Nouveau : Signez votre contrat en ligne en 2 minutes</p>
+        </div>
+    </div>
+    
+    <ul class="space-y-2 text-sm text-gray-300 mb-4">
+        <li class="flex items-center gap-2">
+            <span class="text-green-400">✓</span>
+            <span>Signature au doigt ou à la souris</span>
+        </li>
+        <li class="flex items-center gap-2">
+            <span class="text-green-400">✓</span>
+            <span>Validation instantanée</span>
+        </li>
+        <li class="flex items-center gap-2">
+            <span class="text-green-400">✓</span>
+            <span>Légalement valide à Dubai</span>
+        </li>
+        <li class="flex items-center gap-2">
+            <span class="text-green-400">✓</span>
+            <span>Aucun téléchargement nécessaire</span>
+        </li>
+    </ul>
+    
+    <a href="/contract-signature.html" 
+       class="block w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-3 rounded-lg transition text-center">
+        🖊️ Signer mon contrat maintenant
+    </a>
+</div>
             
             <!-- Image illustrative -->
             <div class="lg:w-1/3 flex flex-col justify-center">
