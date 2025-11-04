@@ -1654,7 +1654,10 @@ await supabase.auth.signOut();
             // ✅ DÉTECTION DU PARAMÈTRE ?signed=...
             const params = getQueryParams();
             if (params.signed && currentUser && userProfile) {
-                console.log('🎉 Contract just signed! Showing confirmation message');
+                console.log('🎉 Contract just signed! Reloading profile and showing confirmation');
+                
+                // ⚡ RECHARGER LE PROFIL IMMÉDIATEMENT
+                await loadUserProfile(currentUser);
                 
                 // Afficher un message de confirmation
                 setTimeout(() => {
