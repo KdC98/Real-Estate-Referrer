@@ -92,38 +92,37 @@
                     <div class="max-w-4xl mx-auto">
                         <!-- Header -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
-                            <h1 class="text-3xl font-bold text-yellow-400 mb-2">📝 Signature du Contrat d'Apporteur</h1>
-                            <p class="text-gray-300">Veuillez lire attentivement le contrat avant de signer</p>
+                            <h1 class="text-3xl font-bold text-yellow-400 mb-2">${t('contract:header_title')}</h1>
+                            <p class="text-gray-300">${t('contract:header_subtitle')}</p>
                         </div>
                         
                         <!-- Contract Summary -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
-                            <h2 class="text-xl font-bold text-yellow-400 mb-4">📄 Résumé du Contrat</h2>
+                            <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:summary_title')}</h2>
                             <div class="space-y-3 text-gray-300 text-sm mb-6">
-                                <p><strong>Article 5 - Commissions :</strong></p>
+                                <p><strong>${t('contract:commissions_title')}</strong></p>
                                 <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li><strong>Ventes :</strong> 20% de la commission agent = <strong>0,2% du prix de vente</strong></li>
-                                    <li><strong>Locations :</strong> 20% de la commission agent = <strong>0,5% du loyer annuel</strong></li>
+                                    <li>${t('contract:commission_sales')}</li>
+                                    <li>${t('contract:commission_rentals')}</li>
                                 </ul>
                                 
-                                <p class="mt-4"><strong>Article 6 - Paiements :</strong></p>
+                                <p class="mt-4"><strong>${t('contract:payments_title')}</strong></p>
                                 <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li>Ventes : Sous 45 jours après signature du Title Deed</li>
-                                    <li>Locations : Sous 14 jours après signature du Tenancy Contract</li>
+                                    <li>${t('contract:payment_sales')}</li>
+                                    <li>${t('contract:payment_rentals')}</li>
                                 </ul>
                                 
-                                <p class="mt-4"><strong>Article 3 - Vos obligations :</strong></p>
+                                <p class="mt-4"><strong>${t('contract:obligations_title')}</strong></p>
                                 <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li>Ne JAMAIS vous présenter comme agent immobilier</li>
-                                    <li>Respecter la réglementation RERA</li>
-                                    <li>Fournir uniquement des leads qualifiés</li>
-                                    <li>Garantir l'exclusivité des leads</li>
+                                    <li>${t('contract:obligation_1')}</li>
+                                    <li>${t('contract:obligation_2')}</li>
+                                    <li>${t('contract:obligation_3')}</li>
+                                    <li>${t('contract:obligation_4')}</li>
                                 </ul>
                                 
                                 <div class="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mt-4">
                                     <p class="text-yellow-200 text-xs">
-                                        <strong>⚠️ IMPORTANT :</strong> Sans licence RERA, vous ne pouvez pas effectuer de visites de biens, 
-                                        négocier les prix, ni signer de documents. Votre rôle se limite à l'identification de clients potentiels.
+                                        <strong>⚠️</strong> ${t('contract:important_notice')}
                                     </p>
                                 </div>
                             </div>
@@ -131,7 +130,7 @@
                             <div class="border-t border-gray-600 pt-4">
                                 <a href="/contract-template.html" target="_blank" 
                                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">
-                                    📄 Lire le contrat complet (English)
+                                    ${t('contract:read_full_contract')}
                                 </a>
                             </div>
                         </div>
@@ -146,20 +145,20 @@
                                     class="mt-1 w-5 h-5 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
                                 />
                                 <span class="text-gray-300">
-                                    <strong class="text-white">Je déclare avoir lu et compris l'intégralité du contrat.</strong> 
-                                    Je confirme que :<br>
-                                    ✓ Je ne possède pas de licence RERA<br>
-                                    ✓ Je ne me présenterai jamais comme agent immobilier<br>
-                                    ✓ Je respecterai toutes les obligations énoncées<br>
-                                    ✓ J'accepte les termes de calcul et de paiement des commissions
+                                    <strong class="text-white">${t('contract:accept_terms')}</strong><br>
+                                    ${t('contract:confirm_text')}<br>
+                                    ✓ ${t('contract:confirm_1')}<br>
+                                    ✓ ${t('contract:confirm_2')}<br>
+                                    ✓ ${t('contract:confirm_3')}<br>
+                                    ✓ ${t('contract:confirm_4')}
                                 </span>
                             </label>
                         </div>
                         
                         <!-- Signature Canvas -->
                         <div id="signatureSection" class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6 opacity-50 pointer-events-none">
-                            <h2 class="text-xl font-bold text-yellow-400 mb-4">✍️ Votre Signature</h2>
-                            <p class="text-gray-300 mb-4">Dessinez votre signature dans le cadre ci-dessous :</p>
+                            <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:signature_title')}</h2>
+                            <p class="text-gray-300 mb-4">${t('contract:signature_instruction')}</p>
                             
                             <div class="bg-white rounded-lg p-4 mb-4">
                                 <canvas id="signatureCanvas" width="700" height="200" class="w-full"></canvas>
@@ -170,7 +169,7 @@
                                     onclick="clearSignature()" 
                                     class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition"
                                 >
-                                    🗑️ Effacer
+                                    🗑️ ${t('contract:clear_button')}
                                 </button>
                                 <button 
                                     id="validateBtn"
@@ -178,7 +177,7 @@
                                     disabled
                                     class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    ✅ Valider ma signature
+                                    ✅ ${t('contract:validate_button')}
                                 </button>
                             </div>
                             
@@ -189,8 +188,7 @@
                         <!-- Legal Notice -->
                         <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-6">
                             <p class="text-xs text-blue-200">
-                                <strong>ℹ️ Note légale :</strong> Cette signature électronique a la même valeur légale qu'une signature manuscrite 
-                                selon les lois en vigueur aux Émirats Arabes Unis. En signant, vous acceptez l'intégralité des termes du contrat.
+                                <strong>ℹ️</strong> ${t('contract:legal_notice')}
                             </p>
                         </div>
                     </div>
@@ -289,19 +287,19 @@
         
         window.validateSignature = async function() {
             if (!hasAcceptedTerms) {
-                showError('Veuillez accepter les termes du contrat avant de signer');
+                showError(t('contract:error_accept_terms'));
                 return;
             }
             
             if (!hasSignature) {
-                showError('Veuillez signer avant de valider');
+                showError(t('contract:error_sign_first'));
                 return;
             }
             
             const validateBtn = document.getElementById('validateBtn');
             const originalText = validateBtn.textContent;
             validateBtn.disabled = true;
-            validateBtn.textContent = '⏳ Enregistrement...';
+            validateBtn.textContent = '⏳ ' + t('contract:saving');
             
             try {
                 // Convert canvas to blob
@@ -331,7 +329,7 @@
                 
                 if (updateError) throw updateError;
                 
-                showSuccess('✅ Signature enregistrée avec succès ! Redirection...');
+                showSuccess(t('contract:success_message'));
 
                 // Simple page reload to refresh profile
                 setTimeout(() => {
@@ -340,7 +338,7 @@
                 
             } catch (error) {
                 console.error('Signature error:', error);
-                showError('Erreur lors de l\'enregistrement : ' + error.message);
+                showError('Erreur : ' + error.message);
                 validateBtn.disabled = false;
                 validateBtn.textContent = originalText;
             }
