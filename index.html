@@ -1641,7 +1641,7 @@ await supabase.auth.signOut();
             console.log('- isSignupInProgress:', isSignupInProgress);
             
             const app = document.getElementById('app');
-            if (is2FAMode) {
+            if (is2FAMode && !userProfile) {
                 console.log('📱 2FA mode active - showing 2FA form');
                 app.innerHTML = renderAuthPage('login');
                 return;
