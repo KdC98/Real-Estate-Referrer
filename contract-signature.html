@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Referrer Agreement - Solo Gate Real Estate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        @page {
+            margin: 2cm;
+        }
+        body {
+            font-family: 'Times New Roman', serif;
+        }
+        .contract-content {
+            line-height: 1.6;
+            color: #000;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+        .header-contract {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+        }
+        .party-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-left: 4px solid #2563eb;
+        }
+        .article {
+            margin: 25px 0;
+        }
+        .article-title {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: #1e40af;
+        }
+        .important-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+        }
+        #signature-canvas {
+            border: 2px solid #2563eb;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        .signature-field {
+            background: white;
+            border: 2px dashed #cbd5e1;
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="app" class="min-h-screen">
+        <!-- Loading State -->
+        <div id="loading" class="flex items-center justify-center min-h-screen">
+            <div class="text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                <p class="mt-4 text-gray-600">Loading contract...</p>
+            </div>
+        </div>
+
+        <!-- Not Logged In -->
+        <div id="not-logged-in" class="hidden flex items-center justify-center min-h-screen">
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-md text-center">
+                <h2 class="text-2xl font-bold text-red-600 mb-4">⚠️ Access Denied</h2>
+                <p class="text-gray-600 mb-6">You must be logged in to sign the contract.</p>
+                <a href="/" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    Go to Login
+                </a>
+            </div>
+        </div>
+
+        <!-- Already Signed -->
+        <div id="already-signed" class="hidden flex items-center justify-center min-h-screen">
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-md text-center">
+                <h2 class="text-2xl font-bold text-green-600 mb-4">✅ Contract Already Signed</h2>
+                <p class="text-gray-600 mb-6">You have already signed your referrer agreement.</p>
+                <a href="/" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">
+                    Go to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Contract Signing Form -->
+        <div id="contract-form" class="hidden">
+            <div class="max-w-4xl mx-auto p-6">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 rounded-t-lg">
+                    <h1 class="text-3xl font-bold text-center">Business Referrer Agreement</h1>
+                    <p class="text-center mt-2">Solo Gate Real Estate - Alliance by EMAAR</p>
+                </div>
+
+                <!-- Contract Content -->
+                <div class="contract-content bg-white shadow-lg p-8 rounded-b-lg">
+                    <div class="header-contract">
+                        <h1 class="text-2xl font-bold uppercase">Business Referrer Agreement</h1>
+                        <p class="mt-2"><strong>Real Estate Referral Program</strong></p>
+                        <p>Dubai, United Arab Emirates</p>
+                    </div>
+
+                    <!-- Parties -->
+                    <div class="mb-6">
+                        <div class="party-box">
+                            <strong>BETWEEN:</strong><br>
+                            <strong>Solo Gate Real Estate</strong> (Alliance by EMAAR)<br>
+                            RERA License No.: <strong>[Pending Application]</strong><br>
+                            Address: Business Bay, 801 Oxford tower, Dubai - UAE<br>
+                            Email: karyne@sologate.ae<br>
+                            Phone: +971 58 587 0448 / +971 4 553 7534<br>
+                            Hereinafter referred to as <strong>"THE AGENT"</strong>
+                        </div>
+
+                        <div class="party-box">
+                            <strong>AND:</strong><br>
+                            <div class="signature-field">
+                                <strong>Name:</strong> <span id="referrer-name" class="font-bold text-blue-700"></span><br>
+                                <strong>Phone:</strong> <span id="referrer-phone" class="font-bold text-blue-700"></span><br>
+                                <strong>Email:</strong> <span id="referrer-email" class="font-bold text-blue-700"></span><br>
+                            </div>
+                            Hereinafter referred to as <strong>"THE REFERRER"</strong>
+                        </div>
+                    </div>
+
+                    <!-- Articles -->
+                    <div class="article">
+                        <div class="article-title">Article 1 - Purpose of Agreement</div>
+                        <p>This agreement defines the terms of collaboration between THE AGENT and THE REFERRER within the framework of a client referral program for real estate transactions in Dubai.</p>
+                        <p>THE REFERRER agrees to identify and present to THE AGENT potential clients (hereinafter "Leads") interested in buying, selling, or renting real estate properties.</p>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 2 - Definitions</div>
+                        <ul class="list-disc ml-6">
+                            <li><strong>Qualified Lead</strong>: Contact of a person genuinely interested in a real estate transaction, with complete and accurate contact details, defined budget, and short/medium-term project (0-6 months).</li>
+                            <li><strong>Successful Transaction</strong>: Signing of a sale contract (Title Deed) or rental contract (Tenancy Contract) following a referred Lead.</li>
+                            <li><strong>Commission</strong>: Payment made to THE REFERRER upon a Successful Transaction.</li>
+                        </ul>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 3 - Referrer's Obligations</div>
+                        <p>THE REFERRER agrees to:</p>
+                        <ul class="list-disc ml-6">
+                            <li>Refer only Qualified Leads with accurate information</li>
+                            <li>Never present themselves as a real estate agent or representative of THE AGENT</li>
+                            <li>Comply with RERA (Real Estate Regulatory Agency) regulations</li>
+                            <li>Not engage in real estate brokerage activities without a license</li>
+                            <li>Maintain confidentiality of information received</li>
+                            <li>Guarantee the exclusivity of each Lead referred</li>
+                            <li>Not directly contact property owners or developers</li>
+                        </ul>
+                        
+                        <div class="important-box">
+                            <strong>⚠️ IMPORTANT:</strong> THE REFERRER must NEVER present themselves as a real estate agent, negotiate prices, or sign documents on behalf of THE AGENT. Any violation may result in legal sanctions under RERA law.
+                        </div>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 4 - Agent's Obligations</div>
+                        <p>THE AGENT agrees to:</p>
+                        <ul class="list-disc ml-6">
+                            <li>Provide professional follow-up of all referred Leads</li>
+                            <li>Inform THE REFERRER of case progress via the platform</li>
+                            <li>Calculate and pay Commissions according to defined terms</li>
+                            <li>Maintain transparency regarding transactions</li>
+                            <li>Provide secure access to the management platform</li>
+                        </ul>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 5 - Commission Structure</div>
+                        <p><strong>Total commission on real estate transaction:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li>Agency: 50%</li>
+                            <li>Agent: 50%</li>
+                        </ul>
+                        
+                        <p class="mt-4"><strong>Distribution of Agent's share:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li>Referrer: <strong>20%</strong> of Agent's share</li>
+                            <li>Agent: 80% of Agent's share</li>
+                        </ul>
+
+                        <p class="mt-4"><strong>Commission rates by transaction type:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li><strong>Sales</strong>: 2% of sale price
+                                <ul class="list-circle ml-6">
+                                    <li>Referrer Commission = <strong>0.2%</strong> of sale price</li>
+                                </ul>
+                            </li>
+                            <li><strong>Rentals</strong>: 5% of annual rent
+                                <ul class="list-circle ml-6">
+                                    <li>Referrer Commission = <strong>0.5%</strong> of annual rent</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <p class="mt-4"><strong>Concrete examples:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li>Villa sale at 5,000,000 AED → Referrer Commission: <strong>10,000 AED</strong></li>
+                            <li>Apartment rental at 150,000 AED/year → Referrer Commission: <strong>750 AED</strong></li>
+                        </ul>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 6 - Payment Terms</div>
+                        <p><strong>Payment timeline:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li><strong>Sales</strong>: Within 45 days following Title Deed signing and receipt of funds by THE AGENT</li>
+                            <li><strong>Rentals</strong>: Within 14 days following Tenancy Contract signing and receipt of commission by THE AGENT</li>
+                        </ul>
+
+                        <p class="mt-4"><strong>Payment method:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li>Bank transfer (details provided by THE REFERRER)</li>
+                            <li>Or any other method agreed between parties</li>
+                        </ul>
+
+                        <p class="mt-4"><strong>Payment conditions:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li>Commission is due only if the transaction is finalized</li>
+                            <li>No Commission in case of transaction cancellation</li>
+                            <li>THE REFERRER must provide complete banking details</li>
+                        </ul>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 7 - Management Platform</div>
+                        <p>THE AGENT provides THE REFERRER with a secure web platform allowing to:</p>
+                        <ul class="list-disc ml-6">
+                            <li>Add new Leads</li>
+                            <li>Track progress of each Lead in real-time</li>
+                            <li>View Commission history</li>
+                            <li>Access personal statistics</li>
+                        </ul>
+                        <p>THE REFERRER agrees to maintain confidentiality of their login credentials.</p>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 8 - Duration and Termination</div>
+                        <p><strong>Duration:</strong> This agreement is concluded for an indefinite period from the date of signature.</p>
+                        
+                        <p class="mt-4"><strong>Termination:</strong></p>
+                        <ul class="list-disc ml-6">
+                            <li>Either party may terminate the agreement with 30 days notice by email</li>
+                            <li>Immediate termination in case of serious breach of obligations</li>
+                            <li>Leads referred before termination remain valid for Commission calculation</li>
+                        </ul>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 9 - Confidentiality</div>
+                        <p>THE REFERRER agrees to:</p>
+                        <ul class="list-disc ml-6">
+                            <li>Not disclose confidential information received</li>
+                            <li>Not use information for purposes other than this agreement</li>
+                            <li>Not transfer platform access to third parties</li>
+                        </ul>
+                        <p>This obligation remains valid after the end of the agreement.</p>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 10 - Independence</div>
+                        <p>THE REFERRER exercises their activity in complete independence. There is no subordination relationship between THE AGENT and THE REFERRER. THE REFERRER is not an employee of THE AGENT and acts independently.</p>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 11 - Liability</div>
+                        <p>THE REFERRER is solely responsible for:</p>
+                        <ul class="list-disc ml-6">
+                            <li>The accuracy of information they communicate</li>
+                            <li>Their declarations to tax authorities</li>
+                            <li>Compliance with RERA legislation</li>
+                        </ul>
+                        <p>THE AGENT cannot be held liable for THE REFERRER's actions toward clients or third parties.</p>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 12 - Personal Data</div>
+                        <p>Personal data collected is used solely for management of the referral program. THE REFERRER has the right to access, rectify, and delete their data in accordance with GDPR.</p>
+                    </div>
+
+                    <div class="article">
+                        <div class="article-title">Article 13 - Applicable Law and Jurisdiction</div>
+                        <p>This agreement is governed by the law of the United Arab Emirates. Any dispute shall be submitted to the exclusive jurisdiction of the courts of Dubai.</p>
+                    </div>
+
+                    <!-- Acceptance Section -->
+                    <div class="important-box mt-8">
+                        <strong>⚠️ REFERRER'S DECLARATION:</strong><br>
+                        <div class="mt-2">
+                            <label class="flex items-start space-x-3 cursor-pointer">
+                                <input type="checkbox" id="accept-terms" class="mt-1 h-5 w-5 text-blue-600">
+                                <span class="text-sm">
+                                    I declare that I have read and understood this entire agreement. I confirm that:<br>
+                                    ✓ I do not possess a RERA real estate agent license<br>
+                                    ✓ I will never present myself as a real estate agent<br>
+                                    ✓ I will respect all obligations stated above<br>
+                                    ✓ I accept the commission calculation and payment terms
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Signature Section -->
+                    <div class="mt-8 bg-blue-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-bold mb-4 text-center">Electronic Signature</h3>
+                        <p class="text-sm text-gray-600 text-center mb-4">
+                            Please sign below using your mouse or finger (on touch screens)
+                        </p>
+                        
+                        <div class="bg-white p-4 rounded-lg">
+                            <canvas id="signature-canvas" width="600" height="200" class="mx-auto"></canvas>
+                            <div class="flex justify-center space-x-4 mt-4">
+                                <button id="clear-signature" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
+                                    Clear Signature
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 text-center">
+                            <button id="submit-signature" disabled class="bg-green-600 text-white px-8 py-3 rounded-lg text-lg font-bold hover:bg-green-700 disabled:bg-gray-300 disabled:cursor-not-allowed">
+                                ✍️ Sign & Validate Contract
+                            </button>
+                        </div>
+
+                        <div id="error-message" class="hidden mt-4 p-4 bg-red-100 text-red-700 rounded"></div>
+                        <div id="success-message" class="hidden mt-4 p-4 bg-green-100 text-green-700 rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        const { createClient } = supabase;
+
+        // Supabase config
+        const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MTE3MDcsImV4cCI6MjA0NDQ4NzcwN30.TYROqOLo0SYjVnb91kDRwRm8mPYVL_jVhMVy4pI3iXA';
+        
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Elements
+        const loading = document.getElementById('loading');
+        const notLoggedIn = document.getElementById('not-logged-in');
+        const alreadySigned = document.getElementById('already-signed');
+        const contractForm = document.getElementById('contract-form');
+        const canvas = document.getElementById('signature-canvas');
+        const ctx = canvas.getContext('2d');
+        const clearBtn = document.getElementById('clear-signature');
+        const submitBtn = document.getElementById('submit-signature');
+        const acceptTerms = document.getElementById('accept-terms');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        let currentUser = null;
+        let userProfile = null;
+        let isDrawing = false;
+        let hasSignature = false;
+
+        // Initialize
+        async function init() {
+            try {
+                // Check user session
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                
+                if (!user) {
+                    loading.classList.add('hidden');
+                    notLoggedIn.classList.remove('hidden');
+                    return;
+                }
+
+                currentUser = user;
+
+                // Get user profile
+                const { data: profile, error } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single();
+
+                if (error) throw error;
+
+                userProfile = profile;
+
+                // Check if already signed
+                if (profile.contract_validated) {
+                    loading.classList.add('hidden');
+                    alreadySigned.classList.remove('hidden');
+                    return;
+                }
+
+                // Display contract form
+                document.getElementById('referrer-name').textContent = profile.name;
+                document.getElementById('referrer-phone').textContent = profile.phone;
+                document.getElementById('referrer-email').textContent = profile.email || user.email;
+
+                loading.classList.add('hidden');
+                contractForm.classList.remove('hidden');
+
+                initCanvas();
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showError('Error loading contract. Please try again.');
+            }
+        }
+
+        // Canvas setup
+        function initCanvas() {
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+
+            // Mouse events
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            // Touch events
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            hasSignature = true;
+            updateSubmitButton();
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            
+            if (e.type === 'touchstart') {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                hasSignature = true;
+                updateSubmitButton();
+            } else if (e.type === 'touchmove' && isDrawing) {
+                ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+                ctx.stroke();
+            }
+        }
+
+        clearBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSignature = false;
+            updateSubmitButton();
+        });
+
+        acceptTerms.addEventListener('change', updateSubmitButton);
+
+        function updateSubmitButton() {
+            submitBtn.disabled = !(acceptTerms.checked && hasSignature);
+        }
+
+        submitBtn.addEventListener('click', submitSignature);
+
+        async function submitSignature() {
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Processing...';
+
+                // Convert canvas to blob
+                const signatureDataUrl = canvas.toDataURL('image/png');
+                const signatureBlob = await (await fetch(signatureDataUrl)).blob();
+
+                // Upload signature to Supabase Storage
+                const fileName = `contract_${currentUser.id}_${Date.now()}.png`;
+                const { data: uploadData, error: uploadError } = await supabaseClient
+                    .storage
+                    .from('contracts')
+                    .upload(fileName, signatureBlob, {
+                        contentType: 'image/png',
+                        cacheControl: '3600'
+                    });
+
+                if (uploadError) throw uploadError;
+
+                // Get public URL
+                const { data: urlData } = supabaseClient
+                    .storage
+                    .from('contracts')
+                    .getPublicUrl(fileName);
+
+                // Update profile
+                const { error: updateError } = await supabaseClient
+                    .from('profiles')
+                    .update({
+                        contract_validated: true,
+                        contract_validated_at: new Date().toISOString(),
+                        contract_file_url: urlData.publicUrl,
+                        contract_path: fileName,
+                        contract_status: 'signed'
+                    })
+                    .eq('id', currentUser.id);
+
+                if (updateError) throw updateError;
+
+                // Success!
+                showSuccess('Contract signed successfully! Redirecting to dashboard...');
+                
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
+
+            } catch (error) {
+                console.error('Signature submission error:', error);
+                showError('Error submitting signature. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '✍️ Sign & Validate Contract';
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+            successMessage.classList.add('hidden');
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
