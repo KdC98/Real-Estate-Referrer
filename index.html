@@ -142,6 +142,18 @@
         window.currentUser = null;
         window.userProfile = null;
         window.currentPage = 'landing';
+        // ✅ FONCTION POUR LIRE LES PARAMÈTRES D'URL
+        function getQueryParams() {
+            const params = {};
+            const search = window.location.search.substring(1);
+            if (!search) return params;
+            
+            for (const part of search.split('&')) {
+                const [key, value] = part.split('=');
+                params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+            }
+            return params;
+        }
         
         // Vérifier si on arrive avec ?action=signup
         const urlParams = new URLSearchParams(window.location.search);
@@ -1639,6 +1651,36 @@ await supabase.auth.signOut();
             console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
             console.log('- is2FAMode:', is2FAMode);
             console.log('- isSignupInProgress:', isSignupInProgress);
+            // ✅ DÉTECTION DU PARAMÈTRE ?signed=...
+            const params = getQueryParams();
+            if (params.signed && currentUser && userProfile) {
+                console.log('🎉 Contract just signed! Showing confirmation message');
+                
+                // Afficher un message de confirmation
+                setTimeout(() => {
+                    const confirmationDiv = document.createElement('div');
+                    confirmationDiv.innerHTML = `
+                        <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce">
+                            <div class="flex items-center gap-3">
+                                <span class="text-3xl">✅</span>
+                                <div>
+                                    <div class="font-bold">Contrat signé avec succès !</div>
+                                    <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(confirmationDiv);
+                    
+                    // Supprimer le message après 5 secondes
+                    setTimeout(() => {
+                        confirmationDiv.remove();
+                    }, 5000);
+                }, 500);
+                
+                // Nettoyer l'URL (enlever ?signed=...)
+                window.history.replaceState({}, '', window.location.pathname);
+            }
             
             const app = document.getElementById('app');
             if (is2FAMode && !userProfile) {
