@@ -130,6 +130,8 @@
         
         let currentUser = null;
         let userProfile = null;
+        let profileLoadAttempts = 0;
+        const MAX_PROFILE_LOAD_ATTEMPTS = 10;
         let currentPage = 'landing';
         let isPasswordRecoveryMode = false;
         let is2FAMode = false;
@@ -1779,8 +1781,24 @@ contractForm.addEventListener('submit', async (e) => {
                     console.log('ℹ️ Admin user - no contract form needed');
                 }
             } else if (currentUser && !userProfile) {
-                console.log('⏳ User connected but no profile, waiting...');
-                app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement de votre profil...</div></div></div>';
+        profileLoadAttempts++;
+        
+        if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
+            console.error('❌ Failed to load profile after max attempts');
+            profileLoadAttempts = 0;
+            supabase.auth.signOut();
+            currentPage = 'landing';
+            render();
+            return;
+        }
+        
+        console.log(`⏳ User connected but no profile, waiting... (attempt ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})`);
+        app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-gray-600">Chargement de votre profil... (tentative ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')</div></div></div>';
+        
+        setTimeout(() => {
+            loadUserProfile().then(() => render());
+        }, profileLoadAttempts * 1000);
+        return;
             } else if (currentPage === 'auth-login') {
                 console.log('🔐 Rendering login page');
                 app.innerHTML = renderAuthPage('login');
