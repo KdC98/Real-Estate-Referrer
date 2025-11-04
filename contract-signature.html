@@ -271,11 +271,16 @@
                 
                 if (updateError) throw updateError;
                 
-                showSuccess('✅ Signature enregistrée avec succès !');
-                
-                setTimeout(() => {
-    window.location.href = '/';
-}, 2000);
+                showSuccess('✅ Signature enregistrée avec succès ! Reconnexion...');
+
+// Force logout puis redirect
+await supabase.auth.signOut();
+localStorage.clear();
+sessionStorage.clear();
+
+setTimeout(() => {
+    window.location.href = '/?success=contract_signed';
+}, 1500);
                 
             } catch (error) {
                 console.error('Signature error:', error);
