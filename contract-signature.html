@@ -58,6 +58,7 @@
         let canvas, ctx;
         let isDrawing = false;
         let hasSignature = false;
+        let hasAcceptedTerms = false;
         
         // Check auth
         async function checkAuth() {
@@ -92,23 +93,71 @@
                         <!-- Header -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
                             <h1 class="text-3xl font-bold text-yellow-400 mb-2">📝 Signature du Contrat d'Apporteur</h1>
-                            <p class="text-gray-300">Signez votre contrat avec votre doigt ou votre souris</p>
+                            <p class="text-gray-300">Veuillez lire attentivement le contrat avant de signer</p>
                         </div>
                         
-                        <!-- Contract Preview -->
+                        <!-- Contract Summary -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
                             <h2 class="text-xl font-bold text-yellow-400 mb-4">📄 Résumé du Contrat</h2>
-                            <div class="space-y-3 text-gray-300 text-sm">
-                                <p>✅ <strong>Commission :</strong> 20% sur chaque vente réalisée</p>
-                                <p>✅ <strong>Protection :</strong> Vos leads sont protégés et exclusifs</p>
-                                <p>✅ <strong>Paiement :</strong> Sous 45-60 jours après transaction</p>
-                                <p>✅ <strong>Conformité RERA :</strong> Respect des régulations de Dubai</p>
-                                <p>✅ <strong>Transparence :</strong> Suivi en temps réel de vos leads</p>
+                            <div class="space-y-3 text-gray-300 text-sm mb-6">
+                                <p><strong>Article 5 - Commissions :</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-2">
+                                    <li><strong>Ventes :</strong> 20% de la commission agent = <strong>0,2% du prix de vente</strong></li>
+                                    <li><strong>Locations :</strong> 20% de la commission agent = <strong>0,5% du loyer annuel</strong></li>
+                                </ul>
+                                
+                                <p class="mt-4"><strong>Article 6 - Paiements :</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-2">
+                                    <li>Ventes : Sous 45 jours après signature du Title Deed</li>
+                                    <li>Locations : Sous 14 jours après signature du Tenancy Contract</li>
+                                </ul>
+                                
+                                <p class="mt-4"><strong>Article 3 - Vos obligations :</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-2">
+                                    <li>Ne JAMAIS vous présenter comme agent immobilier</li>
+                                    <li>Respecter la réglementation RERA</li>
+                                    <li>Fournir uniquement des leads qualifiés</li>
+                                    <li>Garantir l'exclusivité des leads</li>
+                                </ul>
+                                
+                                <div class="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mt-4">
+                                    <p class="text-yellow-200 text-xs">
+                                        <strong>⚠️ IMPORTANT :</strong> Sans licence RERA, vous ne pouvez pas effectuer de visites de biens, 
+                                        négocier les prix, ni signer de documents. Votre rôle se limite à l'identification de clients potentiels.
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-600 pt-4">
+                                <a href="/contract-template.html" target="_blank" 
+                                   class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">
+                                    📄 Lire le contrat complet (English)
+                                </a>
                             </div>
                         </div>
                         
-                        <!-- Signature Canvas -->
+                        <!-- Terms Acceptance -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    id="acceptTerms" 
+                                    onchange="toggleAcceptance()"
+                                    class="mt-1 w-5 h-5 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
+                                />
+                                <span class="text-gray-300">
+                                    <strong class="text-white">Je déclare avoir lu et compris l'intégralité du contrat.</strong> 
+                                    Je confirme que :<br>
+                                    ✓ Je ne possède pas de licence RERA<br>
+                                    ✓ Je ne me présenterai jamais comme agent immobilier<br>
+                                    ✓ Je respecterai toutes les obligations énoncées<br>
+                                    ✓ J'accepte les termes de calcul et de paiement des commissions
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <!-- Signature Canvas -->
+                        <div id="signatureSection" class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6 opacity-50 pointer-events-none">
                             <h2 class="text-xl font-bold text-yellow-400 mb-4">✍️ Votre Signature</h2>
                             <p class="text-gray-300 mb-4">Dessinez votre signature dans le cadre ci-dessous :</p>
                             
@@ -140,9 +189,8 @@
                         <!-- Legal Notice -->
                         <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-6">
                             <p class="text-xs text-blue-200">
-                                <strong>ℹ️ Note légale :</strong> En signant ce contrat électroniquement, vous acceptez les termes et conditions 
-                                du programme d'apporteur d'affaires. Cette signature électronique a la même valeur légale qu'une signature manuscrite 
-                                selon les lois en vigueur aux Émirats Arabes Unis.
+                                <strong>ℹ️ Note légale :</strong> Cette signature électronique a la même valeur légale qu'une signature manuscrite 
+                                selon les lois en vigueur aux Émirats Arabes Unis. En signant, vous acceptez l'intégralité des termes du contrat.
                             </p>
                         </div>
                     </div>
@@ -177,6 +225,18 @@
             canvas.addEventListener('touchmove', handleTouchMove);
             canvas.addEventListener('touchend', stopDrawing);
         }
+        
+        window.toggleAcceptance = function() {
+            const checkbox = document.getElementById('acceptTerms');
+            const signatureSection = document.getElementById('signatureSection');
+            hasAcceptedTerms = checkbox.checked;
+            
+            if (hasAcceptedTerms) {
+                signatureSection.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                signatureSection.classList.add('opacity-50', 'pointer-events-none');
+            }
+        };
         
         function startDrawing(e) {
             isDrawing = true;
@@ -228,6 +288,11 @@
         };
         
         window.validateSignature = async function() {
+            if (!hasAcceptedTerms) {
+                showError('Veuillez accepter les termes du contrat avant de signer');
+                return;
+            }
+            
             if (!hasSignature) {
                 showError('Veuillez signer avant de valider');
                 return;
@@ -266,7 +331,7 @@
                 
                 if (updateError) throw updateError;
                 
-                showSuccess('✅ Signature enregistrée avec succès !');
+                showSuccess('✅ Signature enregistrée avec succès ! Redirection...');
 
                 // Simple page reload to refresh profile
                 setTimeout(() => {
