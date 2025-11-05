@@ -1049,49 +1049,79 @@ await supabase.auth.signOut();
         }
        async function send2FACode(userId, language = 'fr') {
     try {
-        console.log('📱 Sending 2FA code for user:', userId, 'language:', language);
+        console.log('📱 Sending 2FA code via WhatsApp for user:', userId, 'language:', language);
         
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
+        // 1. Générer un code à 6 chiffres
+        const code = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log('🔢 Generated code:', code);
+        
+        // 2. Hasher le code pour le stocker en base
+        const encoder = new TextEncoder();
+        const data = encoder.encode(code);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        
+        // 3. Sauvegarder le code hashé dans verification_codes
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
+        
+        const { error: insertError } = await supabase
+            .from('verification_codes')
+            .insert([{
+                user_id: userId,
+                code_hash: codeHash,
+                expires_at: expiresAt,
+                used: false,
+                attempts: 0
+            }]);
+        
+        if (insertError) {
+            console.error('❌ Error saving verification code:', insertError);
+            throw new Error('Erreur de sauvegarde du code');
+        }
+        
+        console.log('✅ Verification code saved to database');
+        
+        // 4. Récupérer le numéro de téléphone du user
+        const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('phone')
+            .eq('id', userId)
+            .single();
+        
+        if (profileError || !profile?.phone) {
+            console.error('❌ Error getting user phone:', profileError);
+            throw new Error('Numéro de téléphone introuvable');
+        }
+        
+        console.log('📞 User phone:', profile.phone);
+        
+        // 5. Envoyer le code via WhatsApp (Twilio)
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-whatsapp-verification`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             },
             body: JSON.stringify({ 
-                userId: userId,
-                language: language
+                phone: profile.phone,
+                code: code
             })
         });
         
         const result = await response.json();
         
         if (!response.ok) {
-            const errorMsg = result.error || 'Erreur envoi SMS';
-            
-            if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
-                console.log('✅ SMS sent despite error 80 (warning only)');
-                return true;
-            }
-            
-            throw new Error(errorMsg);
+            console.error('❌ WhatsApp send error:', result);
+            throw new Error(result.error || 'Erreur envoi WhatsApp');
         }
         
-        console.log('✅ SMS sent successfully');
-        if (result.warning) {
-            console.warn('⚠️ SMS warning:', result.warning);
-        }
-        
+        console.log('✅ WhatsApp code sent successfully via Twilio');
         return true;
+        
     } catch (error) {
-        const errorMsg = error.message || '';
-        
-        if (errorMsg.includes('error: 80') || errorMsg.includes('SMS error: 80')) {
-            console.log('✅ SMS sent despite error 80 (caught in catch)');
-            return true;
-        }
-        
         console.error('❌ Erreur send2FACode:', error);
-        alert(t('auth:errors.sms_failed'));
+        alert('Erreur lors de l\'envoi du code de vérification. Veuillez réessayer.');
         return false;
     }
 }
