@@ -1564,53 +1564,69 @@ await supabase.auth.signOut();
         async function loadUserProfile(user = null) {
             const targetUser = user || currentUser;
             console.log('🔍 loadUserProfile called for user:', targetUser?.id);
+
             if (!targetUser || !targetUser.id) {
                 console.error('❌ No user provided to loadUserProfile');
                 return false;
             }
+
             try {
                 console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
-                const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).maybeSingle();
-                if (error) {
+
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', targetUser.id)
+                    .maybeSingle();
+
+                // 🔴 Cas erreur « classique »
+                if (error && error.code !== 'PGRST116') {
                     console.error('❌ Error loading profile:', error);
-                    
-                    if (error.code === 'PGRST116') {
-                        console.log('📝 Profile does not exist, creating it...');
-                       const { data: newProfile, error: insertError } = await supabase.from('profiles').upsert([{
-    id: targetUser.id,
-    name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
-    phone: targetUser.user_metadata?.phone || '',
-    role: 'referrer',
-    contract_status: 'pending'
-}], {
-    onConflict: 'id'
-}).select().single();
-                        if (insertError) {
-                            console.error('❌ Error creating profile:', insertError);
-                            alert('Erreur lors de la création du profil: ' + insertError.message);
-                            return false;
-                        }
-                        console.log('✅ Profile created:', newProfile);
-                        userProfile = newProfile;
-                        window.userProfile = newProfile;
-                        return true;
-                    }
-                    
                     alert('Erreur lors du chargement du profil: ' + error.message);
                     return false;
                 }
-                console.log('✅ Profile data retrieved:', data);
-                
-                if (data && data.contract_status) {
-                    data.contract_status = data.contract_status.trim().replace(/\*+/g, '');
+
+                // 🟡 Cas « aucune ligne trouvée » (data === null OU code PGRST116)
+                let profile = data;
+                if (!profile) {
+                    console.log('📝 Profile does not exist, creating it...');
+                    const { data: newProfile, error: insertError } = await supabase
+                        .from('profiles')
+                        .upsert([{
+                            id: targetUser.id,
+                            name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
+                            phone: targetUser.user_metadata?.phone || '',
+                            email: targetUser.email,
+                            role: 'referrer',
+                            contract_status: 'pending',
+                            phone_verified: false
+                        }], { onConflict: 'id' })
+                        .select()
+                        .single();
+
+                    if (insertError) {
+                        console.error('❌ Error creating profile:', insertError);
+                        alert('Erreur lors de la création du profil: ' + insertError.message);
+                        return false;
+                    }
+
+                    profile = newProfile;
                 }
-                userProfile = data;
-                window.userProfile = data;
+
+                console.log('✅ Profile data retrieved:', profile);
+
+                if (profile && profile.contract_status) {
+                    profile.contract_status = profile.contract_status.trim().replace(/\*+/g, '');
+                }
+
+                userProfile = profile;
+                window.userProfile = profile;
                 console.log('✅ userProfile set:', userProfile);
                 return true;
-            } catch (error) {
-                console.error('❌ Exception loading profile:', error);
-                alert('Exception lors du chargement du profil: ' + error.message);
+
+            } catch (err) {
+                console.error('❌ Exception loading profile:', err);
+                alert('Exception lors du chargement du profil: ' + err.message);
                 return false;
             }
         }
@@ -2279,6 +2295,56 @@ contractForm.addEventListener('submit', async (e) => {
             }
         }
         render();
+        // ⚡ Gestion finale du retour après signature de contrat
+    (function handleSignedReturnAfterInit() {
+        const params = new URLSearchParams(window.location.search);
+        const signedParam = params.get('signed');
+
+        if (!signedParam) return;
+
+        console.log('🎉 Paramètre ?signed détecté (handleSignedReturnAfterInit):', signedParam);
+
+        // On nettoie l'URL (pour éviter que ça se répète)
+        window.history.replaceState({}, '', window.location.pathname);
+
+        // On attend que la session + le profil soient prêts
+        const start = Date.now();
+        const timer = setInterval(async () => {
+            if (!currentUser || !userProfile) {
+                if (Date.now() - start > 10000) { // 10 secondes max
+                    console.warn('⏱️ Timeout en attendant le profil après signature');
+                    clearInterval(timer);
+                }
+                return;
+            }
+
+            clearInterval(timer);
+
+            // 🔄 On recharge le profil pour récupérer contract_status/contract_path mis à jour
+            try {
+                await loadUserProfile(currentUser);
+            } catch (e) {
+                console.error('Erreur reload profil après signature:', e);
+            }
+
+            // ✅ Petit toast de confirmation
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.innerHTML = `
+                <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl">✅</span>
+                        <div>
+                            <div class="font-bold">Contrat signé avec succès !</div>
+                            <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmationDiv);
+
+            setTimeout(() => confirmationDiv.remove(), 5000);
+        }, 500);
+    })();
     })();
     </script>
 </body>
