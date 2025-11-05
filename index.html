@@ -1667,15 +1667,22 @@ await supabase.auth.signOut();
             console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
             console.log('- is2FAMode:', is2FAMode);
             console.log('- isSignupInProgress:', isSignupInProgress);
-            // ✅ DÉTECTION DU PARAMÈTRE ?signed=...
-            const params = getQueryParams();
-            if (params.signed && currentUser && userProfile) {
-                console.log('🎉 Contract just signed! Reloading profile and showing confirmation');
+            // 🎯 Affichage du message de contrat signé, basé sur le flag global
+            if (contractJustSigned && currentUser && userProfile) {
+                console.log('🎉 Contract just signed! Reloading profile and showing confirmation (via flag global)');
                 
-                // ⚡ RECHARGER LE PROFIL IMMÉDIATEMENT
-                await loadUserProfile(currentUser);
-                
-                // Afficher un message de confirmation
+                // On consomme le flag une seule fois
+                contractJustSigned = false;
+                window.contractJustSigned = false;
+
+                // On recharge le profil pour récupérer le contract_status à jour
+                try {
+                    await loadUserProfile(currentUser);
+                } catch (e) {
+                    console.error('Erreur lors du rechargement du profil après signature:', e);
+                }
+
+                // Afficher le message de confirmation
                 setTimeout(() => {
                     const confirmationDiv = document.createElement('div');
                     confirmationDiv.innerHTML = `
@@ -1690,15 +1697,11 @@ await supabase.auth.signOut();
                         </div>
                     `;
                     document.body.appendChild(confirmationDiv);
-                    
-                    // Supprimer le message après 5 secondes
+
                     setTimeout(() => {
                         confirmationDiv.remove();
                     }, 5000);
                 }, 500);
-                
-                // Nettoyer l'URL (enlever ?signed=...)
-                window.history.replaceState({}, '', window.location.pathname);
             }
             
             const app = document.getElementById('app');
