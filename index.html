@@ -2245,17 +2245,26 @@ contractForm.addEventListener('submit', async (e) => {
             }
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
-                const profileLoaded = await loadUserProfile(currentUser);
                 
-                if (!profileLoaded) {
-                    console.error('❌ Failed to load profile, signing out');
-                    await supabase.auth.signOut();
-                    currentUser = null;
-                    window.currentUser = null;
-                    userProfile = null;
-                    window.userProfile = null;
-                }
+                // ⚡ CHARGEMENT NON BLOQUANT DU PROFIL
+                loadUserProfile(currentUser).then(profileLoaded => {
+                    if (!profileLoaded) {
+                        console.error('❌ Failed to load profile, signing out');
+                        supabase.auth.signOut();
+                        currentUser = null;
+                        window.currentUser = null;
+                        userProfile = null;
+                        window.userProfile = null;
+                    }
+                    // Re-render une fois le profil chargé
+                    render();
+                }).catch(err => {
+                    console.error('❌ Exception loading profile:', err);
+                    render();
+                });
             }
+            
+            // ✅ RENDER() IMMÉDIAT - Ne pas attendre le profil !
             render();
         });
        console.log('🔍 Getting initial session...');
