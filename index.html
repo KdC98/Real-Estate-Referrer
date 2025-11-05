@@ -913,22 +913,23 @@ async function checkPhoneExists(phone) {
                 const phoneCheck = await checkPhoneExists(fullPhone);
                 
                 if (phoneCheck.exists) {
-                   const message = 'Ce numéro de téléphone est déjà associé à un compte existant';
-                    const errorDiv = document.getElementById('signup-error') || document.getElementById('authError');
+                    const message = `Ce numéro de téléphone est déjà utilisé${phoneCheck.userName ? ' par ' + phoneCheck.userName : ''}`;
+                    
+                    // Afficher dans errorDiv
                     if (errorDiv) {
                         errorDiv.textContent = message;
                         errorDiv.classList.remove('hidden');
                     }
-                    return; // Arrêter l'inscription
-                }
-                
-                if (phoneCheck.error) {
-                    const errorDiv = document.getElementById('signup-error') || document.getElementById('authError');
-                    if (errorDiv) {
-                        errorDiv.textContent = 'Erreur de vérification du téléphone. Veuillez réessayer.';
-                        errorDiv.classList.remove('hidden');
+                    
+                    // Réactiver le bouton
+                    const submitButton = document.getElementById('submitButton');
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = t('auth:signup_button');
                     }
-                    return; // Arrêter l'inscription
+                    
+                    console.log('❌ Phone already exists, blocking signup');
+                    return;
                 }
                         
                         const submitButton = document.getElementById('submitButton');
@@ -2257,44 +2258,55 @@ contractForm.addEventListener('submit', async (e) => {
             }
             render();
         });
-        console.log('🔍 Getting initial session...');
-        const { data: { session }, error } = await supabase.auth.getSession();
+       console.log('🔍 Getting initial session...');
         
-        if (error) {
-            console.error('❌ Session error:', error);
-            currentUser = null;
-            window.currentUser = null;
-            render();
-            return;
-        }
-        currentUser = session?.user || null;
-        window.currentUser = currentUser;
-        if (currentUser && !currentUser.email_confirmed_at) {
-            console.warn('⚠️ Email not confirmed on init, cleaning session');
-            await supabase.auth.signOut();
-            localStorage.clear();
-            sessionStorage.clear();
-            currentUser = null;
-            window.currentUser = null;
-            render();
-            return;
-        }
-        if (currentUser) {
-            console.log('👤 Session found, loading profile...');
-            const profileLoaded = await loadUserProfile(currentUser);
-            
-            if (!profileLoaded) {
-                console.error('❌ Failed to load profile on init, signing out');
+        // ⚡ APPEL NON BLOQUANT + RENDER() IMMÉDIAT
+        supabase.auth.getSession().then(async ({ data: { session }, error }) => {
+            if (error) {
+                console.error('❌ Session error:', error);
+                currentUser = null;
+                window.currentUser = null;
+                render();
+                return;
+            }
+
+            currentUser = session?.user || null;
+            window.currentUser = currentUser;
+
+            if (currentUser && !currentUser.email_confirmed_at) {
+                console.warn('⚠️ Email not confirmed on init, cleaning session');
                 await supabase.auth.signOut();
                 localStorage.clear();
                 sessionStorage.clear();
                 currentUser = null;
                 window.currentUser = null;
-                userProfile = null;
-                window.userProfile = null;
+                render();
+                return;
             }
-        }
+
+            if (currentUser) {
+                console.log('👤 Session found, loading profile...');
+                const profileLoaded = await loadUserProfile(currentUser);
+
+                if (!profileLoaded) {
+                    console.error('❌ Failed to load profile on init, signing out');
+                    await supabase.auth.signOut();
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    currentUser = null;
+                    window.currentUser = null;
+                    userProfile = null;
+                    window.userProfile = null;
+                }
+            }
+
+            // 🔄 Re-render une fois la session/profil chargé
+            render();
+        });
+
+        // ✅ RENDER() IMMÉDIAT - Ne plus attendre Supabase !
         render();
+     
         // ⚡ Gestion finale du retour après signature de contrat
     (function handleSignedReturnAfterInit() {
         const params = new URLSearchParams(window.location.search);
