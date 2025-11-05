@@ -986,7 +986,7 @@ console.log('✅ Profile created via upsert');
                         is2FAMode = true;
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
-                        await send2FACode(data.user.id, currentLang);
+                        await send2FACode(data.user.id, currentLang, fullPhone);
                         // ✅ Se déconnecter seulement APRÈS avoir envoyé le SMS
 await supabase.auth.signOut();
                         
@@ -1047,7 +1047,7 @@ await supabase.auth.signOut();
                 }
             };
         }
-       async function send2FACode(userId, language = 'fr') {
+       async function send2FACode(userId, language = 'fr', phone = null) {
     try {
         console.log('📱 Sending 2FA code via WhatsApp for user:', userId, 'language:', language);
         
@@ -1082,19 +1082,13 @@ await supabase.auth.signOut();
         
         console.log('✅ Verification code saved to database');
         
-        // 4. Récupérer le numéro de téléphone du user
-        const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('phone')
-            .eq('id', userId)
-            .single();
-        
-        if (profileError || !profile?.phone) {
-            console.error('❌ Error getting user phone:', profileError);
-            throw new Error('Numéro de téléphone introuvable');
-        }
-        
-        console.log('📞 User phone:', profile.phone);
+        // 4. Vérifier que le numéro de téléphone est fourni
+if (!phone) {
+    console.error('❌ No phone number provided');
+    throw new Error('Numéro de téléphone manquant');
+}
+
+console.log('📞 User phone:', phone);
         
         // 5. Envoyer le code via WhatsApp (Twilio)
         const response = await fetch(`${SUPABASE_URL}/functions/v1/send-whatsapp-verification`, {
@@ -1104,9 +1098,9 @@ await supabase.auth.signOut();
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             },
             body: JSON.stringify({ 
-                phone: profile.phone,
-                code: code
-            })
+    phone: phone,
+    code: code
+})
         });
         
         const result = await response.json();
