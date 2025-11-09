@@ -1049,7 +1049,7 @@ await supabase.auth.signOut();
         }
        async function send2FACode(userId, language = 'fr', phone = null) {
     try {
-        console.log('📱 Sending 2FA code via WhatsApp for user:', userId, 'language:', language);
+        console.log('📱 Sending 2FA code via SMS for user:', userId, 'language:', language);
         
         // 1. Générer un code à 6 chiffres
         const code = Math.floor(100000 + Math.random() * 900000).toString();
@@ -1090,8 +1090,8 @@ if (!phone) {
 
 console.log('📞 User phone:', phone);
         
-        // 5. Envoyer le code via WhatsApp (Twilio)
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-whatsapp-verification`, {
+        // 5. Envoyer le code via SMS (Twilio)
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1106,11 +1106,11 @@ console.log('📞 User phone:', phone);
         const result = await response.json();
         
         if (!response.ok) {
-            console.error('❌ WhatsApp send error:', result);
-            throw new Error(result.error || 'Erreur envoi WhatsApp');
+            console.error('❌ SMS send error:', result);
+            throw new Error(result.error || 'Erreur envoi SMS');
         }
         
-        console.log('✅ WhatsApp code sent successfully via Twilio');
+        console.log('✅ SMS code sent successfully via Twilio');
         return true;
         
     } catch (error) {
