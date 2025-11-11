@@ -1,7 +1,7 @@
 {
   "nav": {
-    "brand": "Real Estate Referrer",
-    "how_it_works": "工作原理",
+    "brand": "房地产推荐人",
+    "how_it_works": "如何运作",
     "login": "登录",
     "signup": "注册"
   },
@@ -17,33 +17,33 @@
     "commission_label": "销售和租赁佣金",
     "support_value": "24/7",
     "support_label": "实时客户跟踪",
-    "timeline_value": "45-60j",
+    "timeline_value": "45-60天",
     "timeline_label": "产权证后付款（销售）"
   },
   
   "gains": {
     "title": "收益示例",
     "sale_title": "💰 房产销售",
-    "sale_example_1_property": "别墅售价 3,000,000 AED",
-    "sale_example_1_commission": "6,000 AED",
-    "sale_example_2_property": "公寓售价 5,000,000 AED",
-    "sale_example_2_commission": "10,000 AED",
-    "sale_example_3_property": "顶层公寓售价 10,000,000 AED",
-    "sale_example_3_commission": "20,000 AED",
+    "sale_example_1_property": "别墅售价 3,000,000迪拉姆",
+    "sale_example_1_commission": "6,000迪拉姆",
+    "sale_example_2_property": "公寓售价 5,000,000迪拉姆",
+    "sale_example_2_commission": "10,000迪拉姆",
+    "sale_example_3_property": "顶层公寓售价 10,000,000迪拉姆",
+    "sale_example_3_commission": "20,000迪拉姆",
     "rental_title": "🏠 房产租赁",
-    "rental_example_1_property": "工作室租金 60,000 AED/年",
-    "rental_example_1_commission": "300 AED",
-    "rental_example_2_property": "公寓租金 120,000 AED/年",
-    "rental_example_2_commission": "600 AED",
-    "rental_example_3_property": "别墅租金 200,000 AED/年",
-    "rental_example_3_commission": "1,000 AED"
+    "rental_example_1_property": "工作室租金 60,000迪拉姆/年",
+    "rental_example_1_commission": "300迪拉姆",
+    "rental_example_2_property": "公寓租金 120,000迪拉姆/年",
+    "rental_example_2_commission": "600迪拉姆",
+    "rental_example_3_property": "别墅租金 200,000迪拉姆/年",
+    "rental_example_3_commission": "1,000迪拉姆"
   },
   
   "footer": {
     "terms": "条款与条件",
     "privacy": "隐私政策",
-    "how_it_works": "工作原理",
+    "how_it_works": "如何运作",
     "contact": "联系我们",
-    "copyright": "© 2025 Karyne de Clercq. 保留所有权利。"
+    "copyright": "© 2025 Karyne de Clercq. 版权所有。"
   }
 }
