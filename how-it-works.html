@@ -454,6 +454,8 @@
 
         // Fonction pour mettre à jour le contenu
         function updateContent() {
+            document.documentElement.lang = i18next.language;
+            
             console.log('🔄 Updating content with language:', i18next.language);
             
             document.querySelectorAll('[data-i18n]').forEach(function(element) {
