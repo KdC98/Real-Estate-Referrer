@@ -2230,7 +2230,7 @@ contractForm.addEventListener('submit', async (e) => {
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
-            if (isSignupInProgress) {
+            if (isSignupInProgress && event !== 'SIGNED_IN') {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
             }
