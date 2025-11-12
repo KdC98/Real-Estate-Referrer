@@ -201,8 +201,7 @@ window.contractJustSigned = false;
             <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
             <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
         </div>
-        
-        <!-- Mobile Menu Button -->
+ <!-- Mobile Menu Button -->
         <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl">
             <span id="menuIcon">☰</span>
         </button>
@@ -217,7 +216,14 @@ window.contractJustSigned = false;
             <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
             <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
             <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
-            <button onclick="changeLa
+            <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
+            <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
+        </div>
+        <a href="how-it-works.html" class="block text-center text-white hover:text-yellow-400 transition font-medium py-2">${t('nav.how_it_works')}</a>
+        <button onclick="showLogin(); toggleMobileMenu();" class="w-full text-center text-white hover:text-yellow-400 transition font-medium py-2">${t('nav.login')}</button>
+        <button onclick="showSignup(); toggleMobileMenu();" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">${t('nav.signup')}</button>
+    </div>
+</header>
                     <main class="container mx-auto px-4 py-20">
                         <div class="text-center mb-12">
                             <h2 class="text-5xl md:text-6xl font-bold mb-6">
