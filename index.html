@@ -2068,28 +2068,31 @@ contractForm.addEventListener('submit', async (e) => {
             if (!passwordInput) return true;
             const password = passwordInput.value;
             if (reqLength && reqLetter && reqNumber) {
-                if (password.length >= 8) {
-                    reqLength.classList.add('text-green-400');
-                    reqLength.querySelector('span:first-child').textContent = '✓';
-                } else {
-                    reqLength.classList.remove('text-green-400');
-                    reqLength.querySelector('span:first-child').textContent = '•';
-                }
-                if (/[a-zA-Z]/.test(password)) {
-                    reqLetter.classList.add('text-green-400');
-                    reqLetter.querySelector('span:first-child').textContent = '✓';
-                } else {
-                    reqLetter.classList.remove('text-green-400');
-                    reqLetter.querySelector('span:first-child').textContent = '•';
-                }
-                if (/[0-9]/.test(password)) {
-                    reqNumber.classList.add('text-green-400');
-                    reqNumber.querySelector('span:first-child').textContent = '✓';
-                } else {
-                    reqNumber.classList.remove('text-green-400');
-                    reqNumber.querySelector('span:first-child').textContent = '•';
-                }
-            }
+    if (password.length >= 8) {
+        reqLength.classList.add('text-green-400');
+        reqLength.querySelector('span:first-child').textContent = '✓';
+    } else {
+        reqLength.classList.remove('text-green-400');
+        reqLength.querySelector('span:first-child').textContent = '•';
+    }
+
+    if (/[a-zA-Z]/.test(password)) {
+        reqLetter.classList.add('text-green-400');
+        reqLetter.querySelector('span:first-child').textContent = '✓';
+    } else {
+        reqLetter.classList.remove('text-green-400');
+        reqLetter.querySelector('span:first-child').textContent = '•';
+    }
+
+    if (/[0-9]/.test(password)) {
+        reqNumber.classList.add('text-green-400');
+        reqNumber.querySelector('span:first-child').textContent = '✓';
+    } else {
+        reqNumber.classList.remove('text-green-400');
+        reqNumber.querySelector('span:first-child').textContent = '•';
+    }
+}
+
             if (strengthBar && strengthText) {
                 let strength = 0;
                 if (password.length >= 8) strength++;
@@ -2115,46 +2118,79 @@ contractForm.addEventListener('submit', async (e) => {
                 strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
             }
             if (!passwordError) return true;
-            if (password.length === 0) {
-                passwordError.classList.add('hidden');
-                passwordInput.classList.remove('border-green-500', 'border-red-500');
-                checkFormValidity();
-                return false;
-            }
-            if (password.length < 8) {
-                passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
-                passwordError.classList.remove('hidden');
-                passwordInput.classList.add('border-red-500');
-                passwordInput.classList.remove('border-green-500');
-                checkFormValidity();
-                return false;
-            }
-            if (!/[a-zA-Z]/.test(password)) {
-                passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre';
-                passwordError.classList.remove('hidden');
-                passwordInput.classList.add('border-red-500');
-                passwordInput.classList.remove('border-green-500');
-                checkFormValidity();
-                return false;
-            }
-            if (!/[0-9]/.test(password)) {
-                passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
-                passwordError.classList.remove('hidden');
-                passwordInput.classList.add('border-red-500');
-                passwordInput.classList.remove('border-green-500');
-                checkFormValidity();
-                return false;
-            }
-            passwordError.classList.add('hidden');
-            passwordInput.classList.remove('border-red-500');
-            passwordInput.classList.add('border-green-500');
-            const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
-            if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
-                validateConfirmPassword();
-            }
-            checkFormValidity();
-            return true;
-        }
+
+if (password.length === 0) {
+    passwordError.classList.add('hidden');
+    passwordInput.classList.remove('border-green-500', 'border-red-500');
+    checkFormValidity();
+    return false;
+}
+
+if (password.length < 8) {
+    passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
+    passwordError.classList.remove('hidden');
+    passwordInput.classList.add('border-red-500');
+    passwordInput.classList.remove('border-green-500');
+    checkFormValidity();
+    return false;
+}
+
+// minuscule
+if (!/[a-z]/.test(password)) {
+    passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre minuscule';
+    passwordError.classList.remove('hidden');
+    passwordInput.classList.add('border-red-500');
+    passwordInput.classList.remove('border-green-500');
+    checkFormValidity();
+    return false;
+}
+
+// majuscule
+if (!/[A-Z]/.test(password)) {
+    passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre majuscule';
+    passwordError.classList.remove('hidden');
+    passwordInput.classList.add('border-red-500');
+    passwordInput.classList.remove('border-green-500');
+    checkFormValidity();
+    return false;
+}
+
+// chiffre
+if (!/[0-9]/.test(password)) {
+    passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
+    passwordError.classList.remove('hidden');
+    passwordInput.classList.add('border-red-500');
+    passwordInput.classList.remove('border-green-500');
+    checkFormValidity();
+    return false;
+}
+
+// caractère spécial
+if (!/[^A-Za-z0-9]/.test(password)) {
+    passwordError.textContent = 'Le mot de passe doit contenir au moins un caractère spécial';
+    passwordError.classList.remove('hidden');
+    passwordInput.classList.add('border-red-500');
+    passwordInput.classList.remove('border-green-500');
+    checkFormValidity();
+    return false;
+}
+
+// tout est bon
+passwordError.classList.add('hidden');
+passwordInput.classList.remove('border-red-500');
+passwordInput.classList.add('border-green-500');
+
+const confirmPasswordInput =
+    document.getElementById('confirmPassword') ||
+    document.getElementById('confirmNewPassword');
+
+if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
+    validateConfirmPassword();
+}
+
+checkFormValidity();
+return true;
+
         function validateConfirmPassword() {
             const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
