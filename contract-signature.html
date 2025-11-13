@@ -243,6 +243,251 @@
             hasSignature = true;
             document.getElementById('validateBtn').disabled = false;
         }
+        <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signature du Contrat - Real Estate Referrer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
+            min-height: 100vh;
+        }
+        #signatureCanvas {
+            touch-action: none;
+            border: 2px solid #fbbf24;
+            cursor: crosshair;
+            max-width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <div id="app"></div>
+    
+    <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    
+    (async () => {
+        await i18next
+            .use(i18nextHttpBackend)
+            .use(i18nextBrowserLanguageDetector)
+            .init({
+                fallbackLng: 'fr',
+                debug: false,
+                load: 'languageOnly',
+                ns: ['translation', 'contract'],
+                defaultNS: 'contract',
+                backend: {
+                    loadPath: '/locales/{{lng}}/{{ns}}.json'
+                },
+                detection: {
+                    order: ['localStorage', 'navigator'],
+                    caches: ['localStorage']
+                }
+            });
+        
+        await i18next.loadNamespaces(['translation', 'contract']);
+        const t = (key) => i18next.t(key);
+        
+        const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let currentUser = null;
+        let canvas, ctx;
+        let isDrawing = false;
+        let hasSignature = false;
+        let hasAcceptedTerms = false;
+        
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                renderAccessDenied();
+                return false;
+            }
+            currentUser = session.user;
+            return true;
+        }
+        
+        function renderAccessDenied() {
+            document.getElementById('app').innerHTML = `
+                <div class="min-h-screen flex items-center justify-center p-4">
+                    <div class="bg-white rounded-xl p-8 max-w-md text-center">
+                        <div class="text-6xl mb-4">⚠️</div>
+                        <h1 class="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
+                        <p class="text-gray-700 mb-6">You must be logged in to sign the contract.</p>
+                        <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg inline-block">
+                            Go to Login
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderSignaturePage() {
+            document.getElementById('app').innerHTML = `
+                <div class="min-h-screen p-4">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
+                            <h1 class="text-3xl font-bold text-yellow-400 mb-2">${t('contract:header_title')}</h1>
+                            <p class="text-gray-300">${t('contract:header_subtitle')}</p>
+                        </div>
+                        
+                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
+                            <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:summary_title')}</h2>
+                            <div class="space-y-3 text-gray-300 text-sm mb-6">
+                                <p><strong>${t('contract:commissions_title')}</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-2">
+                                    <li>${t('contract:commission_sales')}</li>
+                                    <li>${t('contract:commission_rentals')}</li>
+                                </ul>
+                                
+                                <p class="mt-4"><strong>${t('contract:payments_title')}</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-2">
+                                    <li>${t('contract:payment_sales')}</li>
+                                    <li>${t('contract:payment_rentals')}</li>
+                                </ul>
+                                
+                                <p class="mt-4"><strong>${t('contract:obligations_title')}</strong></p>
+                                <ul class="list-disc list-inside ml-4 space-y-2">
+                                    <li>${t('contract:obligation_1')}</li>
+                                    <li>${t('contract:obligation_2')}</li>
+                                    <li>${t('contract:obligation_3')}</li>
+                                    <li>${t('contract:obligation_4')}</li>
+                                </ul>
+                                
+                                <div class="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mt-4">
+                                    <p class="text-yellow-200 text-xs">
+                                        <strong>⚠️</strong> ${t('contract:important_notice')}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-600 pt-4">
+                                <a href="/contract-template.html" target="_blank" 
+                                   class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">
+                                    ${t('contract:read_full_contract')}
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    id="acceptTerms" 
+                                    onchange="toggleAcceptance()"
+                                    class="mt-1 w-5 h-5 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
+                                />
+                                <span class="text-gray-300">
+                                    <strong class="text-white">${t('contract:accept_terms')}</strong><br>
+                                    ${t('contract:confirm_text')}<br>
+                                    ✓ ${t('contract:confirm_1')}<br>
+                                    ✓ ${t('contract:confirm_2')}<br>
+                                    ✓ ${t('contract:confirm_3')}<br>
+                                    ✓ ${t('contract:confirm_4')}
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div id="signatureSection" class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6 opacity-50 pointer-events-none">
+                            <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:signature_title')}</h2>
+                            <p class="text-gray-300 mb-4">${t('contract:signature_instruction')}</p>
+                            
+                            <div class="bg-white rounded-lg p-4 mb-4">
+                                <canvas id="signatureCanvas" class="w-full"></canvas>
+                            </div>
+                            
+                            <div class="flex gap-4">
+                                <button 
+                                    onclick="clearSignature()" 
+                                    class="flex-1 bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition"
+                                >
+                                    🗑️ ${t('contract:clear_button')}
+                                </button>
+                                <button 
+                                    id="validateBtn"
+                                    onclick="validateSignature()" 
+                                    disabled
+                                    class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    ✅ ${t('contract:validate_button')}
+                                </button>
+                            </div>
+                            
+                            <div id="errorMsg" class="hidden mt-4 bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-lg"></div>
+                            <div id="successMsg" class="hidden mt-4 bg-green-900/50 border border-green-500 text-green-200 p-4 rounded-lg"></div>
+                        </div>
+                        
+                        <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-6">
+                            <p class="text-xs text-blue-200">
+                                <strong>ℹ️</strong> ${t('contract:legal_notice')}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            initCanvas();
+        }
+        
+        function initCanvas() {
+            canvas = document.getElementById('signatureCanvas');
+            ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = 180;
+
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            canvas.addEventListener('touchstart', handleTouchStart);
+            canvas.addEventListener('touchmove', handleTouchMove);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+        
+        window.toggleAcceptance = function() {
+            const checkbox = document.getElementById('acceptTerms');
+            const signatureSection = document.getElementById('signatureSection');
+            hasAcceptedTerms = checkbox.checked;
+            
+            if (hasAcceptedTerms) {
+                signatureSection.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                signatureSection.classList.add('opacity-50', 'pointer-events-none');
+            }
+        };
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            hasSignature = true;
+            document.getElementById('validateBtn').disabled = false;
+        }
         
         function draw(e) {
             if (!isDrawing) return;
