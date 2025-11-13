@@ -998,15 +998,27 @@ console.log('✅ Profile created via upsert');
                         is2FAMode = true;
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
-                        await send2FACode(data.user.id, currentLang, fullPhone);
                         
-                        // ✅ AFFICHER LE FORMULAIRE 2FA AVANT DE SE DÉCONNECTER
-                        render();
+                        // On tente l'envoi du SMS 2FA
+                        const ok = await send2FACode(data.user.id, currentLang, fullPhone);
                         
-                        // ✅ Se déconnecter seulement APRÈS
+                        if (!ok) {
+                            console.error('❌ 2FA SMS failed, aborting signup flow');
+                            isSignupInProgress = false;
+                            
+                            // Réactiver le bouton d'inscription
+                            const submitButton = document.getElementById('submitButton');
+                            if (submitButton) {
+                                submitButton.disabled = false;
+                                submitButton.textContent = t('auth:signup_button');
+                            }
+                            
+                            return;
+                        }
+                        
+                        // ✅ Si le SMS est bien parti, on se déconnecte.
+                        // Pas de render() ici : onAuthStateChange va s'en charger.
                         await supabase.auth.signOut();
-                        
-                        render();
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
                         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -2269,7 +2281,7 @@ window.toggleMobileMenu = function() {
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
-            if (isSignupInProgress && event !== 'SIGNED_IN') {
+            if (isSignupInProgress && event !== 'SIGNED_IN' && !is2FAMode) {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
             }
