@@ -17,6 +17,8 @@
             touch-action: none;
             border: 2px solid #fbbf24;
             cursor: crosshair;
+            max-width: 100%;
+            display: block;
         }
     </style>
 </head>
@@ -27,7 +29,6 @@
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     
     (async () => {
-        // Initialize i18next
         await i18next
             .use(i18nextHttpBackend)
             .use(i18nextBrowserLanguageDetector)
@@ -49,7 +50,6 @@
         await i18next.loadNamespaces(['translation', 'contract']);
         const t = (key) => i18next.t(key);
         
-        // Supabase config
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -60,7 +60,6 @@
         let hasSignature = false;
         let hasAcceptedTerms = false;
         
-        // Check auth
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
@@ -90,13 +89,11 @@
             document.getElementById('app').innerHTML = `
                 <div class="min-h-screen p-4">
                     <div class="max-w-4xl mx-auto">
-                        <!-- Header -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
                             <h1 class="text-3xl font-bold text-yellow-400 mb-2">${t('contract:header_title')}</h1>
                             <p class="text-gray-300">${t('contract:header_subtitle')}</p>
                         </div>
                         
-                        <!-- Contract Summary -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
                             <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:summary_title')}</h2>
                             <div class="space-y-3 text-gray-300 text-sm mb-6">
@@ -135,7 +132,6 @@
                             </div>
                         </div>
                         
-                        <!-- Terms Acceptance -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
                             <label class="flex items-start gap-3 cursor-pointer">
                                 <input 
@@ -155,13 +151,12 @@
                             </label>
                         </div>
                         
-                        <!-- Signature Canvas -->
                         <div id="signatureSection" class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6 opacity-50 pointer-events-none">
                             <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:signature_title')}</h2>
                             <p class="text-gray-300 mb-4">${t('contract:signature_instruction')}</p>
                             
                             <div class="bg-white rounded-lg p-4 mb-4">
-                                <canvas id="signatureCanvas" width="700" height="200" class="w-full"></canvas>
+                                <canvas id="signatureCanvas" class="w-full"></canvas>
                             </div>
                             
                             <div class="flex gap-4">
@@ -185,7 +180,6 @@
                             <div id="successMsg" class="hidden mt-4 bg-green-900/50 border border-green-500 text-green-200 p-4 rounded-lg"></div>
                         </div>
                         
-                        <!-- Legal Notice -->
                         <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-6">
                             <p class="text-xs text-blue-200">
                                 <strong>ℹ️</strong> ${t('contract:legal_notice')}
@@ -201,24 +195,29 @@
         function initCanvas() {
             canvas = document.getElementById('signatureCanvas');
             ctx = canvas.getContext('2d');
-            
-            // Set canvas background
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            // Drawing settings
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            // Mouse events
+
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width;
+                canvas.height = 180;
+
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
             canvas.addEventListener('mousedown', startDrawing);
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', stopDrawing);
             canvas.addEventListener('mouseout', stopDrawing);
-            
-            // Touch events
+
             canvas.addEventListener('touchstart', handleTouchStart);
             canvas.addEventListener('touchmove', handleTouchMove);
             canvas.addEventListener('touchend', stopDrawing);
@@ -302,10 +301,8 @@
             validateBtn.textContent = '⏳ ' + t('contract:saving');
             
             try {
-                // Convert canvas to blob
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
                 
-                // Upload to Supabase Storage
                 const fileName = `signature_${currentUser.id}_${Date.now()}.png`;
                 const { data: uploadData, error: uploadError } = await supabase.storage
                     .from('contracts')
@@ -316,7 +313,6 @@
                 
                 if (uploadError) throw uploadError;
                 
-                // Update profile
                 const { error: updateError } = await supabase
                     .from('profiles')
                     .update({
@@ -331,7 +327,6 @@
                 
                 showSuccess(t('contract:success_message'));
 
-                // ✅ NOUVELLE REDIRECTION AMÉLIORÉE
                 setTimeout(() => {
                     const baseUrl = window.location.origin;
                     const redirectUrl = baseUrl + '/?signed=' + Date.now();
@@ -360,7 +355,6 @@
             document.getElementById('errorMsg').classList.add('hidden');
         }
         
-        // Init
         const isAuth = await checkAuth();
         if (isAuth) {
             renderSignaturePage();
