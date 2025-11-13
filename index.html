@@ -2417,8 +2417,7 @@ window.toggleMobileMenu = function() {
                     window.userProfile = null;
                 }
             }
-
-                    // 🔄 Re-render une fois la session/profil chargé
+// 🔄 Re-render une fois la session/profil chargé
         render();
     });
 
@@ -2445,6 +2444,8 @@ window.toggleMobileMenu = function() {
             window.contractJustSigned = false;
         }
     }, 2000);
-</script>
+
+    })(); // ← CETTE LIGNE FERME LA FONCTION ASYNC IIFE DU DÉBUT
+    </script>
 </body>
 </html>
