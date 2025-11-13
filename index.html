@@ -2417,33 +2417,34 @@ window.toggleMobileMenu = function() {
                 }
             }
 
-            // 🔄 Re-render une fois la session/profil chargé
-            render();
-        });
-
-        // ✅ RENDER() IMMÉDIAT - Ne plus attendre Supabase !
+                    // 🔄 Re-render une fois la session/profil chargé
         render();
-     
-       // ⚡ Affichage du message de confirmation après signature
-        setTimeout(() => {
-            if (window.contractJustSigned && currentUser && userProfile) {
-                const confirmationDiv = document.createElement('div');
-                confirmationDiv.innerHTML = `
-                    <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
-                        <div class="flex items-center gap-3">
-                            <span class="text-3xl text-green-500">✓</span>
-                            <div>
-                                <div class="font-bold">Contrat signé avec succès !</div>
-                                <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
-                            </div>
+    });
+
+    // ✅ RENDER() IMMÉDIAT – Ne plus attendre Supabase !
+    render();
+
+    // ⚡ Affichage du message de confirmation après signature
+    setTimeout(() => {
+        if (window.contractJustSigned && currentUser && userProfile) {
+            const confirmationDiv = document.createElement('div');
+            confirmationDiv.innerHTML = `
+                <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl text-green-500">✔️</span>
+                        <div>
+                            <div class="font-bold">Contrat signé avec succès !</div>
+                            <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
                         </div>
                     </div>
-                `;
-                document.body.appendChild(confirmationDiv);
-                setTimeout(() => confirmationDiv.remove(), 5000);
-                window.contractJustSigned = false;
-            }
-        }, 2000);
-    </script>
+                </div>
+            `;
+            document.body.appendChild(confirmationDiv);
+
+            setTimeout(() => confirmationDiv.remove(), 5000);
+            window.contractJustSigned = false;
+        }
+    }, 2000);
+</script>
 </body>
 </html>
