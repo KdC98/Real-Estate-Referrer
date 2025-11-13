@@ -1995,15 +1995,16 @@ contractForm.addEventListener('submit', async (e) => {
                 return false;
             }
             nameError.textContent = '';
-            nameError.classList.add('hidden');
-            nameInput.classList.remove('border-red-500');
-            nameInput.classList.add('border-green-500');
-            checkFormValidity();
-            return true;
-        }
-        function validatePhone() {
-            const phoneField = document.getElementById('phone');
-            const phoneError = document.getElementById('phoneError');
+        nameError.classList.add('hidden');
+        nameInput.classList.remove('border-red-500');
+        nameInput.classList.add('border-green-500');
+        checkFormValidity();
+        return true;
+    }
+
+    function validatePhone() {
+        const phoneField = document.getElementById('phone');
+        const phoneError = document.getElementById('phoneError');
             
             if (!phoneField || !phoneError) return true;
             const phone = phoneField.value.trim();
