@@ -212,7 +212,7 @@ Location annuelle (ex: 100,000 AED/an)
 - **Frontend** : React 18 (ESM modules via CDN)
 - **Styling** : Tailwind CSS (via CDN)
 - **Backend/Auth** : Supabase (PostgreSQL + Auth + Storage)
-- **SMS** : Itooki.fr (à remplacer)
+- **SMS** : Itooki.fr ⭐ (Fiable, excellent support client, recommandé)
 - **Hébergement** : Vercel
 - **Contrôle de version** : GitHub
 - **Déploiement** : Automatique via GitHub → Vercel
@@ -264,11 +264,12 @@ locales/
 ### 🔐 Sécurité
 - ✅ RLS activé et fonctionnel
 - ⚠️ Mot de passe admin à changer avant lancement public
-- ⚠️ SMS provider Itooki.fr à remplacer (coût élevé, fiabilité moyenne)
+- ✅ SMS provider Itooki.fr - Fiable et fonctionnel avec excellent support
+- ⚠️ Validation mot de passe à renforcer (caractère spécial obligatoire)
 
 ### 📄 Légal
-- ⚠️ CGU à créer
-- ⚠️ Politique de confidentialité à finaliser
+- ✅ CGU créées et traduites dans les 8 langues
+- ✅ Politique de confidentialité créée et traduite dans les 8 langues
 - ⚠️ Conformité RERA Dubai à valider
 
 ### 📧 Email
@@ -299,66 +300,38 @@ locales/
 
 ---
 
-### 🟡 PRIORITÉ 2 - SMS Provider (1 semaine)
+### 🟢 PRIORITÉ 2 - Sécurité des mots de passe (IMMÉDIAT)
 
-**Remplacer Itooki.fr** par une alternative plus fiable :
+**Renforcer la validation des mots de passe** :
 
-**Options recommandées** :
+Actuellement :
+- ✅ Minimum 8 caractères
+- ✅ Au moins une lettre
+- ✅ Au moins un chiffre
+- ❌ Force "Moyen" (trop faible)
 
-1. **Twilio WhatsApp Business API** ⭐ RECOMMANDÉ
-   - ✅ Intégration WhatsApp (plus familier pour les utilisateurs)
-   - ✅ Taux de livraison élevé
-   - ✅ Prix raisonnable
-   - ✅ API bien documentée
+**À ajouter** :
+- [ ] **Au moins un caractère spécial obligatoire** (!@#$%^&*()_+-=[]{}|;:,.<>?)
+- [ ] Changer le niveau de difficulté à "Fort"
+- [ ] Ajouter dans les 8 langues la traduction "Au moins un caractère spécial"
 
-2. **Providers locaux UAE** :
-   - SMSala.com
-   - Precise Communications
-   - UAE SMS Gateway
-
-3. **Providers internationaux** :
-   - Telnyx
-   - MessageBird
-   - Plivo
-
-**Action** : Tester et intégrer le nouveau provider
+**Fichiers à modifier** :
+- Toutes les pages d'inscription (index.html, etc.)
+- Tous les fichiers de traduction `locales/*/auth.json`
 
 ---
 
-### 🟢 PRIORITÉ 3 - Documentation juridique (1-2 semaines)
+### 🟢 PRIORITÉ 3 - UX Mobile - Signature (1 jour)
 
-**1. Conditions Générales d'Utilisation (CGU)** ⚠️ **OBLIGATOIRE**
+**Problème remonté** : "Sur téléphone : petit problème pour la signature (mon doigt parcourait tout l'écran)"
 
-Éléments à inclure :
-- Définitions (apporteur, lead qualifié, commission)
-- Conditions d'inscription et d'éligibilité
-- Fonctionnement du programme de référencement
-- Critères de qualification des leads
-- Taux de commissions (20% de la part agent)
-- Conditions et délais de versement (48h après signature)
-- Obligations de l'apporteur (respect RERA, confidentialité)
-- Obligations de l'agent (suivi, transparence, paiement)
-- Propriété intellectuelle
-- Conditions de résiliation
-- Responsabilité et limitations
-- Données personnelles (RGPD/GDPR)
-- Loi applicable (Émirats Arabes Unis, tribunaux de Dubai)
+**Solution** :
+- [ ] Agrandir la zone de signature sur mobile
+- [ ] Ajouter des bordures plus visibles
+- [ ] Améliorer la précision du tracking tactile
+- [ ] Tester sur différents appareils
 
-**2. Politique de confidentialité (RGPD)** ⚠️ **OBLIGATOIRE**
-
-Éléments à inclure :
-- Données collectées (nom, email, téléphone, leads, commissions)
-- Utilisation des données
-- Partage des données (jamais vendues)
-- Sécurité (chiffrement, accès sécurisé)
-- Droits des utilisateurs (accès, rectification, effacement, opposition)
-- Gestion des cookies
-- Contact pour questions RGPD
-
-**3. Page "À propos"**
-- Histoire de l'agence
-- Équipe
-- Vision et valeurs
+**Fichier à modifier** : `contract-signature.html`
 
 ---
 
@@ -545,8 +518,8 @@ WHERE tablename IN ('profiles', 'leads');
 
 **Prochaines étapes immédiates** :
 1. ⚠️ Ajouter vos vraies coordonnées (téléphone, email, info agence)
-2. 🔄 Remplacer SMS provider (Itooki → Twilio/autre)
-3. 📝 Créer les CGU et Politique de confidentialité
+2. 🔐 Renforcer validation mot de passe (caractère spécial obligatoire)
+3. 📱 Améliorer UX signature sur mobile
 4. 🏛️ Conformité RERA Dubai
 5. 🚀 Tests utilisateurs bêta
 6. 🎉 Lancement public
