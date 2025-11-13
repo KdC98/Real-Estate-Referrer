@@ -15,8 +15,21 @@
         }
         #signatureCanvas {
             touch-action: none;
-            border: 2px solid #fbbf24;
+            border: 3px solid #fbbf24;
+            border-radius: 8px;
             cursor: crosshair;
+            background: white;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        @media (max-width: 768px) {
+            #signatureCanvas {
+                border-width: 4px;
+            }
+            .signature-container {
+                padding: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -160,8 +173,8 @@
                             <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:signature_title')}</h2>
                             <p class="text-gray-300 mb-4">${t('contract:signature_instruction')}</p>
                             
-                            <div class="bg-white rounded-lg p-4 mb-4">
-                                <canvas id="signatureCanvas" width="700" height="200" class="w-full"></canvas>
+                            <div class="bg-white rounded-lg p-2 sm:p-4 mb-4 signature-container">
+                                <canvas id="signatureCanvas" class="w-full touch-none"></canvas>
                             </div>
                             
                             <div class="flex gap-4">
@@ -202,26 +215,41 @@
             canvas = document.getElementById('signatureCanvas');
             ctx = canvas.getContext('2d');
             
-            // Set canvas background
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Responsive canvas sizing
+            function resizeCanvas() {
+                const container = canvas.parentElement;
+                const containerWidth = container.clientWidth - 16;
+                
+                canvas.style.width = '100%';
+                
+                const isMobile = window.innerWidth < 768;
+                canvas.width = isMobile ? containerWidth * 2 : 700;
+                canvas.height = isMobile ? 300 : 200;
+                
+                const scale = isMobile ? 2 : 1;
+                ctx.scale(scale, scale);
+                
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = isMobile ? 3 : 2;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
             
-            // Drawing settings
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 2;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
             
-            // Mouse events
             canvas.addEventListener('mousedown', startDrawing);
             canvas.addEventListener('mousemove', draw);
             canvas.addEventListener('mouseup', stopDrawing);
             canvas.addEventListener('mouseout', stopDrawing);
             
-            // Touch events
-            canvas.addEventListener('touchstart', handleTouchStart);
-            canvas.addEventListener('touchmove', handleTouchMove);
+            canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
             canvas.addEventListener('touchend', stopDrawing);
+            canvas.addEventListener('touchcancel', stopDrawing);
         }
         
         window.toggleAcceptance = function() {
@@ -258,21 +286,38 @@
         
         function handleTouchStart(e) {
             e.preventDefault();
+            e.stopPropagation();
+            
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
             isDrawing = true;
             ctx.beginPath();
-            ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+            ctx.moveTo(
+                (touch.clientX - rect.left) * scaleX,
+                (touch.clientY - rect.top) * scaleY
+            );
             hasSignature = true;
             document.getElementById('validateBtn').disabled = false;
         }
         
         function handleTouchMove(e) {
             e.preventDefault();
+            e.stopPropagation();
+            
             if (!isDrawing) return;
+            
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            ctx.lineTo(
+                (touch.clientX - rect.left) * scaleX,
+                (touch.clientY - rect.top) * scaleY
+            );
             ctx.stroke();
         }
         
@@ -302,10 +347,8 @@
             validateBtn.textContent = '⏳ ' + t('contract:saving');
             
             try {
-                // Convert canvas to blob
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
                 
-                // Upload to Supabase Storage
                 const fileName = `signature_${currentUser.id}_${Date.now()}.png`;
                 const { data: uploadData, error: uploadError } = await supabase.storage
                     .from('contracts')
@@ -316,7 +359,6 @@
                 
                 if (uploadError) throw uploadError;
                 
-                // Update profile
                 const { error: updateError } = await supabase
                     .from('profiles')
                     .update({
@@ -331,7 +373,6 @@
                 
                 showSuccess(t('contract:success_message'));
 
-                // ✅ NOUVELLE REDIRECTION AMÉLIORÉE
                 setTimeout(() => {
                     const baseUrl = window.location.origin;
                     const redirectUrl = baseUrl + '/?signed=' + Date.now();
@@ -360,7 +401,6 @@
             document.getElementById('errorMsg').classList.add('hidden');
         }
         
-        // Init
         const isAuth = await checkAuth();
         if (isAuth) {
             renderSignaturePage();
