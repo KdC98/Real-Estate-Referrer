@@ -482,15 +482,19 @@ window.contractJustSigned = false;
                                             <option value="+20">🇪🇬 +20</option>
                                             <option value="+1">🇺🇸 +1</option>
                                         </select>
-                                        <input 
-                                            type="tel" 
-                                            id="phone" 
-                                            required 
-                                            placeholder="${t('auth:phone_placeholder')}"
-                                            class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                            oninput="validatePhone()"
-                                        >
+                                       <input 
+                    type="tel" 
+                    id="phone" 
+                    required 
+                    placeholder="501234567"
+                    class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                    oninput="validatePhone()"
+                >
                                     </div>
+                                    <div class="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                        <span>ℹ️</span>
+                        <span id="phoneFormatHint">Sans le 0 initial (ex: 501234567 pour +971)</span>
+                    </div>
                                     <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                         <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
                                         <p class="text-xs text-blue-200" data-i18n="auth:sms_verification_notice">
