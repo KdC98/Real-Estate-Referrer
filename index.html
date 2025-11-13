@@ -999,8 +999,12 @@ console.log('✅ Profile created via upsert');
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
                         await send2FACode(data.user.id, currentLang, fullPhone);
-                        // ✅ Se déconnecter seulement APRÈS avoir envoyé le SMS
-await supabase.auth.signOut();
+                        
+                        // ✅ AFFICHER LE FORMULAIRE 2FA AVANT DE SE DÉCONNECTER
+                        render();
+                        
+                        // ✅ Se déconnecter seulement APRÈS
+                        await supabase.auth.signOut();
                         
                         render();
                     } else if (mode === 'login') {
