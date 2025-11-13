@@ -1122,7 +1122,7 @@ if (!phone) {
 
 console.log('📞 User phone:', phone);
         
-        // 5. Envoyer le code via SMS (Twilio)
+        // 5. Envoyer le code via SMS (Itooki)
         const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
             method: 'POST',
             headers: {
@@ -1142,7 +1142,7 @@ console.log('📞 User phone:', phone);
             throw new Error(result.error || 'Erreur envoi SMS');
         }
         
-        console.log('✅ SMS code sent successfully via Twilio');
+        console.log('✅ SMS code sent successfully via Itooki');
         return true;
         
     } catch (error) {
@@ -1226,9 +1226,13 @@ console.log('📞 User phone:', phone);
                 console.log('✅ User signed in successfully after 2FA');
                 
                 delete window.tempPassword;
-                
-                isSignupInProgress = false;
-                console.log('🔓 Signup complete - unblocking renders');
+
+// on sort du mode 2FA maintenant que le code est validé
+is2FAMode = false;
+
+isSignupInProgress = false;
+console.log('🔓 Signup complete - unblocking renders');
+
                 
                 const { data: profileData, error: profileError } = await supabase
                     .from('profiles')
@@ -1778,7 +1782,7 @@ console.log('📞 User phone:', phone);
             }
             
             const app = document.getElementById('app');
-            if (is2FAMode && !userProfile) {
+            if (is2FAMode) {
                 console.log('📱 2FA mode active - showing 2FA form');
                 app.innerHTML = renderAuthPage('login');
                 return;
@@ -1789,7 +1793,7 @@ console.log('📞 User phone:', phone);
                 setTimeout(() => handleChangePassword(), 500);
                 return;
             }
-            if (currentUser && userProfile) {
+           if (currentUser && userProfile && !is2FAMode) {
                 console.log('✅ User connected with profile, showing dashboard');
                 currentPage = 'dashboard';
                 window.currentPage = 'dashboard';
