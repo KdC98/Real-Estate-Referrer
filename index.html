@@ -2423,7 +2423,7 @@ window.toggleMobileMenu = function() {
     // ✅ RENDER() IMMÉDIAT - Ne plus attendre Supabase !
     render();
 
-    // ⚡ Affichage du message de confirmation après signature
+   // ⚡ Affichage du message de confirmation après signature
     setTimeout(() => {
         if (window.contractJustSigned && currentUser && userProfile) {
             const confirmationDiv = document.createElement('div');
@@ -2444,7 +2444,7 @@ window.toggleMobileMenu = function() {
         }
     }, 2000);
 
-});
+})();
 </script>
 </body>
 </html>
