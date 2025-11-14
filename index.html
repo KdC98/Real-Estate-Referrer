@@ -2405,7 +2405,7 @@ window.toggleMobileMenu = function() {
                 console.log('👤 Session found, loading profile...');
                 const profileLoaded = await loadUserProfile(currentUser);
 
-                if (!profileLoaded) {
+              if (!profileLoaded) {
                     console.error('❌ Failed to load profile on init, signing out');
                     await supabase.auth.signOut();
                     localStorage.clear();
@@ -2416,9 +2416,9 @@ window.toggleMobileMenu = function() {
                     window.userProfile = null;
                 }
             }
-// 🔄 Re-render une fois la session/profil chargé
-        render();
-    });
+            // 🔄 Re-render une fois la session/profil chargé
+            render();
+        });
 
     // ✅ RENDER() IMMÉDIAT - Ne plus attendre Supabase !
     render();
