@@ -482,19 +482,15 @@ window.contractJustSigned = false;
                                             <option value="+20">🇪🇬 +20</option>
                                             <option value="+1">🇺🇸 +1</option>
                                         </select>
-                                       <input 
-                    type="tel" 
-                    id="phone" 
-                    required 
-                    placeholder="501234567"
-                    class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                    oninput="validatePhone()"
-                >
+                                        <input 
+                                            type="tel" 
+                                            id="phone" 
+                                            required 
+                                            placeholder="${t('auth:phone_placeholder')}"
+                                            class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                            oninput="validatePhone()"
+                                        >
                                     </div>
-                                    <div class="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                        <span>ℹ️</span>
-                        <span id="phoneFormatHint">Sans le 0 initial (ex: 501234567 pour +971)</span>
-                    </div>
                                     <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                         <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
                                         <p class="text-xs text-blue-200" data-i18n="auth:sms_verification_notice">
@@ -1002,27 +998,11 @@ console.log('✅ Profile created via upsert');
                         is2FAMode = true;
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
+                        await send2FACode(data.user.id, currentLang, fullPhone);
+                        // ✅ Se déconnecter seulement APRÈS avoir envoyé le SMS
+await supabase.auth.signOut();
                         
-                        // On tente l'envoi du SMS 2FA
-                        const ok = await send2FACode(data.user.id, currentLang, fullPhone);
-                        
-                        if (!ok) {
-                            console.error('❌ 2FA SMS failed, aborting signup flow');
-                            isSignupInProgress = false;
-                            
-                            // Réactiver le bouton d'inscription
-                            const submitButton = document.getElementById('submitButton');
-                            if (submitButton) {
-                                submitButton.disabled = false;
-                                submitButton.textContent = t('auth:signup_button');
-                            }
-                            
-                            return;
-                        }
-                        
-                        // ✅ Si le SMS est bien parti, on se déconnecte.
-                        // Pas de render() ici : onAuthStateChange va s'en charger.
-                        await supabase.auth.signOut();
+                        render();
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
                         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -1122,7 +1102,7 @@ if (!phone) {
 
 console.log('📞 User phone:', phone);
         
-        // 5. Envoyer le code via SMS (Itooki)
+        // 5. Envoyer le code via SMS (Twilio)
         const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
             method: 'POST',
             headers: {
@@ -1142,7 +1122,7 @@ console.log('📞 User phone:', phone);
             throw new Error(result.error || 'Erreur envoi SMS');
         }
         
-        console.log('✅ SMS code sent successfully via Itooki');
+        console.log('✅ SMS code sent successfully via Twilio');
         return true;
         
     } catch (error) {
@@ -1226,13 +1206,9 @@ console.log('📞 User phone:', phone);
                 console.log('✅ User signed in successfully after 2FA');
                 
                 delete window.tempPassword;
-
-// on sort du mode 2FA maintenant que le code est validé
-is2FAMode = false;
-
-isSignupInProgress = false;
-console.log('🔓 Signup complete - unblocking renders');
-
+                
+                isSignupInProgress = false;
+                console.log('🔓 Signup complete - unblocking renders');
                 
                 const { data: profileData, error: profileError } = await supabase
                     .from('profiles')
@@ -1243,6 +1219,7 @@ console.log('🔓 Signup complete - unblocking renders');
                 currentUser = signInData.user;
                 window.currentUser = signInData.user;
                 currentPage = tempUserProfile.role === 'admin' ? 'admin' : 'referrer';
+                is2FAMode = false;
                 tempUserId = null;
                 tempUserProfile = null;
                 
@@ -1781,7 +1758,7 @@ console.log('🔓 Signup complete - unblocking renders');
             }
             
             const app = document.getElementById('app');
-            if (is2FAMode) {
+            if (is2FAMode && !userProfile) {
                 console.log('📱 2FA mode active - showing 2FA form');
                 app.innerHTML = renderAuthPage('login');
                 return;
@@ -1792,7 +1769,7 @@ console.log('🔓 Signup complete - unblocking renders');
                 setTimeout(() => handleChangePassword(), 500);
                 return;
             }
-           if (currentUser && userProfile && !is2FAMode) {
+            if (currentUser && userProfile) {
                 console.log('✅ User connected with profile, showing dashboard');
                 currentPage = 'dashboard';
                 window.currentPage = 'dashboard';
@@ -1994,16 +1971,15 @@ contractForm.addEventListener('submit', async (e) => {
                 return false;
             }
             nameError.textContent = '';
-        nameError.classList.add('hidden');
-        nameInput.classList.remove('border-red-500');
-        nameInput.classList.add('border-green-500');
-        checkFormValidity();
-        return true;
-    }
-
-    function validatePhone() {
-        const phoneField = document.getElementById('phone');
-        const phoneError = document.getElementById('phoneError');
+            nameError.classList.add('hidden');
+            nameInput.classList.remove('border-red-500');
+            nameInput.classList.add('border-green-500');
+            checkFormValidity();
+            return true;
+        }
+        function validatePhone() {
+            const phoneField = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
             
             if (!phoneField || !phoneError) return true;
             const phone = phoneField.value.trim();
@@ -2057,140 +2033,144 @@ contractForm.addEventListener('submit', async (e) => {
             checkFormValidity();
             return true;
         }
+        
         function validatePassword() {
-            const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
-            const passwordError = document.getElementById('passwordError');
-            const strengthBar = document.getElementById('passwordStrengthBar');
-            const strengthText = document.getElementById('passwordStrengthText');
-            const reqLength = document.getElementById('req-length');
-            const reqLetter = document.getElementById('req-letter');
-            const reqNumber = document.getElementById('req-number');
-            if (!passwordInput) return true;
-            const password = passwordInput.value;
-            if (reqLength && reqLetter && reqNumber) {
-    if (password.length >= 8) {
-        reqLength.classList.add('text-green-400');
-        reqLength.querySelector('span:first-child').textContent = '✓';
-    } else {
-        reqLength.classList.remove('text-green-400');
-        reqLength.querySelector('span:first-child').textContent = '•';
+    const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
+    const passwordError = document.getElementById('passwordError');
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthText = document.getElementById('passwordStrengthText');
+    const reqLength = document.getElementById('req-length');
+    const reqLetter = document.getElementById('req-letter');
+    const reqNumber = document.getElementById('req-number');
+    
+    if (!passwordInput) return true;
+    const password = passwordInput.value;
+    
+    // Mise à jour des indicateurs visuels
+    if (reqLength && reqLetter && reqNumber) {
+        if (password.length >= 8) {
+            reqLength.classList.add('text-green-400');
+            reqLength.querySelector('span:first-child').textContent = '✓';
+        } else {
+            reqLength.classList.remove('text-green-400');
+            reqLength.querySelector('span:first-child').textContent = '•';
+        }
+
+        if (/[a-zA-Z]/.test(password)) {
+            reqLetter.classList.add('text-green-400');
+            reqLetter.querySelector('span:first-child').textContent = '✓';
+        } else {
+            reqLetter.classList.remove('text-green-400');
+            reqLetter.querySelector('span:first-child').textContent = '•';
+        }
+
+        if (/[0-9]/.test(password)) {
+            reqNumber.classList.add('text-green-400');
+            reqNumber.querySelector('span:first-child').textContent = '✓';
+        } else {
+            reqNumber.classList.remove('text-green-400');
+            reqNumber.querySelector('span:first-child').textContent = '•';
+        }
     }
-
-    if (/[a-zA-Z]/.test(password)) {
-        reqLetter.classList.add('text-green-400');
-        reqLetter.querySelector('span:first-child').textContent = '✓';
-    } else {
-        reqLetter.classList.remove('text-green-400');
-        reqLetter.querySelector('span:first-child').textContent = '•';
+    
+    // Barre de force
+    if (strengthBar && strengthText) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.length >= 12) strength++;
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^a-zA-Z0-9]/.test(password)) strength++;
+        
+        let color, text, width;
+        if (password.length === 0) {
+            width = 0; text = ''; color = 'bg-gray-600';
+        } else if (strength <= 2) {
+            width = 33; text = 'Faible'; color = 'bg-red-500';
+        } else if (strength === 3) {
+            width = 66; text = 'Moyen'; color = 'bg-yellow-500';
+        } else {
+            width = 100; text = 'Fort'; color = 'bg-green-500';
+        }
+        
+        strengthBar.style.width = width + '%';
+        strengthBar.className = `h-full transition-all duration-300 ${color}`;
+        strengthText.textContent = text;
+        strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
     }
-
-    if (/[0-9]/.test(password)) {
-        reqNumber.classList.add('text-green-400');
-        reqNumber.querySelector('span:first-child').textContent = '✓';
-    } else {
-        reqNumber.classList.remove('text-green-400');
-        reqNumber.querySelector('span:first-child').textContent = '•';
+    
+    if (!passwordError) return true;
+    
+    // ✅ VALIDATION STRICTE
+    if (password.length === 0) {
+        passwordError.classList.add('hidden');
+        passwordInput.classList.remove('border-green-500', 'border-red-500');
+        checkFormValidity();
+        return false;
     }
-}
-
-            if (strengthBar && strengthText) {
-                let strength = 0;
-                if (password.length >= 8) strength++;
-                if (password.length >= 12) strength++;
-                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-                if (/[0-9]/.test(password)) strength++;
-                if (/[^a-zA-Z0-9]/.test(password)) strength++;
-                let color, text, width;
-                if (password.length === 0) {
-                    width = 0; text = ''; color = 'bg-gray-600';
-                } else if (strength <= 1) {
-                    width = 25; text = 'Faible'; color = 'bg-red-500';
-                } else if (strength === 2) {
-                    width = 50; text = 'Moyen'; color = 'bg-yellow-500';
-                } else if (strength === 3) {
-                    width = 75; text = 'Bon'; color = 'bg-blue-500';
-                } else {
-                    width = 100; text = 'Excellent'; color = 'bg-green-500';
-                }
-                strengthBar.style.width = width + '%';
-                strengthBar.className = `h-full transition-all duration-300 ${color}`;
-                strengthText.textContent = text;
-                strengthText.className = `min-w-[60px] ${color.replace('bg-', 'text-')}`;
-            }
-            if (!passwordError) return true;
-
-if (password.length === 0) {
+    
+    if (password.length < 8) {
+        passwordError.textContent = `Minimum 8 caractères requis (${password.length}/8)`;
+        passwordError.classList.remove('hidden');
+        passwordInput.classList.add('border-red-500');
+        passwordInput.classList.remove('border-green-500');
+        checkFormValidity();
+        return false;
+    }
+    
+    // ✅ NOUVELLE VALIDATION : Au moins 1 minuscule
+    if (!/[a-z]/.test(password)) {
+        passwordError.textContent = 'Au moins une lettre minuscule requise (a-z)';
+        passwordError.classList.remove('hidden');
+        passwordInput.classList.add('border-red-500');
+        passwordInput.classList.remove('border-green-500');
+        checkFormValidity();
+        return false;
+    }
+    
+    // ✅ NOUVELLE VALIDATION : Au moins 1 majuscule
+    if (!/[A-Z]/.test(password)) {
+        passwordError.textContent = 'Au moins une lettre majuscule requise (A-Z)';
+        passwordError.classList.remove('hidden');
+        passwordInput.classList.add('border-red-500');
+        passwordInput.classList.remove('border-green-500');
+        checkFormValidity();
+        return false;
+    }
+    
+    // ✅ VALIDATION : Au moins 1 chiffre
+    if (!/[0-9]/.test(password)) {
+        passwordError.textContent = 'Au moins un chiffre requis (0-9)';
+        passwordError.classList.remove('hidden');
+        passwordInput.classList.add('border-red-500');
+        passwordInput.classList.remove('border-green-500');
+        checkFormValidity();
+        return false;
+    }
+    
+    // ✅ NOUVELLE VALIDATION : Au moins 1 caractère spécial
+    if (!/[^a-zA-Z0-9]/.test(password)) {
+        passwordError.textContent = 'Au moins un caractère spécial requis (!@#$%^&*...)';
+        passwordError.classList.remove('hidden');
+        passwordInput.classList.add('border-red-500');
+        passwordInput.classList.remove('border-green-500');
+        checkFormValidity();
+        return false;
+    }
+    
+    // ✅ Tout est valide
     passwordError.classList.add('hidden');
-    passwordInput.classList.remove('border-green-500', 'border-red-500');
+    passwordInput.classList.remove('border-red-500');
+    passwordInput.classList.add('border-green-500');
+    
+    const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
+    if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
+        validateConfirmPassword();
+    }
+    
     checkFormValidity();
-    return false;
+    return true;
 }
-
-if (password.length < 8) {
-    passwordError.textContent = `Il manque ${8 - password.length} caractère(s)`;
-    passwordError.classList.remove('hidden');
-    passwordInput.classList.add('border-red-500');
-    passwordInput.classList.remove('border-green-500');
-    checkFormValidity();
-    return false;
-}
-
-// minuscule
-if (!/[a-z]/.test(password)) {
-    passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre minuscule';
-    passwordError.classList.remove('hidden');
-    passwordInput.classList.add('border-red-500');
-    passwordInput.classList.remove('border-green-500');
-    checkFormValidity();
-    return false;
-}
-
-// majuscule
-if (!/[A-Z]/.test(password)) {
-    passwordError.textContent = 'Le mot de passe doit contenir au moins une lettre majuscule';
-    passwordError.classList.remove('hidden');
-    passwordInput.classList.add('border-red-500');
-    passwordInput.classList.remove('border-green-500');
-    checkFormValidity();
-    return false;
-}
-
-// chiffre
-if (!/[0-9]/.test(password)) {
-    passwordError.textContent = 'Le mot de passe doit contenir au moins un chiffre';
-    passwordError.classList.remove('hidden');
-    passwordInput.classList.add('border-red-500');
-    passwordInput.classList.remove('border-green-500');
-    checkFormValidity();
-    return false;
-}
-
-// caractère spécial
-if (!/[^A-Za-z0-9]/.test(password)) {
-    passwordError.textContent = 'Le mot de passe doit contenir au moins un caractère spécial';
-    passwordError.classList.remove('hidden');
-    passwordInput.classList.add('border-red-500');
-    passwordInput.classList.remove('border-green-500');
-    checkFormValidity();
-    return false;
-}
-
-// tout est bon
-passwordError.classList.add('hidden');
-passwordInput.classList.remove('border-red-500');
-passwordInput.classList.add('border-green-500');
-
-const confirmPasswordInput =
-    document.getElementById('confirmPassword') ||
-    document.getElementById('confirmNewPassword');
-
-if (confirmPasswordInput && confirmPasswordInput.value.length > 0) {
-    validateConfirmPassword();
-}
-
-checkFormValidity();
-return true;
-
         function validateConfirmPassword() {
             const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
             const confirmPasswordInput = document.getElementById('confirmPassword') || document.getElementById('confirmNewPassword');
@@ -2325,7 +2305,7 @@ window.toggleMobileMenu = function() {
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
-            if (isSignupInProgress && event !== 'SIGNED_IN' && !is2FAMode) {
+            if (isSignupInProgress && event !== 'SIGNED_IN') {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
             }
@@ -2405,7 +2385,7 @@ window.toggleMobileMenu = function() {
                 console.log('👤 Session found, loading profile...');
                 const profileLoaded = await loadUserProfile(currentUser);
 
-              if (!profileLoaded) {
+                if (!profileLoaded) {
                     console.error('❌ Failed to load profile on init, signing out');
                     await supabase.auth.signOut();
                     localStorage.clear();
@@ -2416,35 +2396,35 @@ window.toggleMobileMenu = function() {
                     window.userProfile = null;
                 }
             }
+
             // 🔄 Re-render une fois la session/profil chargé
             render();
         });
 
-    // ✅ RENDER() IMMÉDIAT - Ne plus attendre Supabase !
-    render();
-
-   // ⚡ Affichage du message de confirmation après signature
-    setTimeout(() => {
-        if (window.contractJustSigned && currentUser && userProfile) {
-            const confirmationDiv = document.createElement('div');
-            confirmationDiv.innerHTML = `
-                <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
-                    <div class="flex items-center gap-3">
-                        <span class="text-3xl text-white">✓</span>
-                        <div>
-                            <div class="font-bold">Contrat signé avec succès !</div>
-                            <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
+        // ✅ RENDER() IMMÉDIAT - Ne plus attendre Supabase !
+        render();
+     
+       // ⚡ Affichage du message de confirmation après signature
+        setTimeout(() => {
+            if (window.contractJustSigned && currentUser && userProfile) {
+                const confirmationDiv = document.createElement('div');
+                confirmationDiv.innerHTML = `
+                    <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
+                        <div class="flex items-center gap-3">
+                            <span class="text-3xl">✅</span>
+                            <div>
+                                <div class="font-bold">Contrat signé avec succès !</div>
+                                <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-            document.body.appendChild(confirmationDiv);
-            setTimeout(() => confirmationDiv.remove(), 5000);
-            window.contractJustSigned = false;
-        }
-    }, 2000);
-
-}})();
-</script>
+                `;
+                document.body.appendChild(confirmationDiv);
+                setTimeout(() => confirmationDiv.remove(), 5000);
+                window.contractJustSigned = false;
+            }
+        }, 2000);
+    })();
+    </script>
 </body>
 </html>
