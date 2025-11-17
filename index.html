@@ -2045,6 +2045,14 @@ contractForm.addEventListener('submit', async (e) => {
         }
         
         function validatePassword() {
+    // Tenter d'utiliser le module VALIDATION
+    if (window.VALIDATION?.validatePassword) {
+        return window.VALIDATION.validatePassword();
+    }
+    
+    // Fallback inline si module pas encore chargé
+    console.warn('⚠️ Module VALIDATION pas encore chargé, utilisation du fallback inline');
+    
     const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
     const passwordError = document.getElementById('passwordError');
     const strengthBar = document.getElementById('passwordStrengthBar');
