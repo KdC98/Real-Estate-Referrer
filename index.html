@@ -2007,17 +2007,26 @@ contractForm.addEventListener('submit', async (e) => {
             return true;
         }
         function validateEmail() {
+            // Utilise le module validation.js si disponible
+            if (window.VALIDATION?.validateEmail) {
+                return window.VALIDATION.validateEmail();
+            }
+            
+            // Fallback inline si module pas encore chargé
+            console.warn('⚠️ VALIDATION module pas encore chargé');
             const emailInput = document.getElementById('email');
             const emailError = document.getElementById('emailError');
             
             if (!emailInput || !emailError) return true;
             const email = emailInput.value.trim();
+            
             if (email.length === 0) {
                 emailError.textContent = '';
                 emailError.classList.add('hidden');
                 emailInput.classList.remove('border-green-500', 'border-red-500');
                 return false;
             }
+            
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 emailError.textContent = "Format d'email invalide";
@@ -2026,13 +2035,24 @@ contractForm.addEventListener('submit', async (e) => {
                 emailInput.classList.remove('border-green-500');
                 return false;
             }
+            
             emailError.textContent = '';
             emailError.classList.add('hidden');
             emailInput.classList.remove('border-red-500');
             emailInput.classList.add('border-green-500');
-            checkFormValidity();
+            if (window.checkFormValidity) window.checkFormValidity();
             return true;
         }
+```
+
+---
+
+**Puis :**
+
+1. **Scrollez en bas**
+2. **Message de commit :**
+```
+   Refactor: Use validation module for validateEmail with fallback
         
         function validatePassword() {
     const passwordInput = document.getElementById('password') || document.getElementById('newPassword');
