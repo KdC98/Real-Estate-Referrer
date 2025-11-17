@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Import Modules</title>
+</head>
+<body>
+    <h1>Test des imports de modules</h1>
+    <div id="result"></div>
+    
+    <script type="module">
+        // Test 1 : Import config
+        import { SUPABASE_URL, STATUS_COLORS } from './js/config.js';
+        
+        let results = '<h2>Résultats des tests :</h2>';
+        
+        // Test config
+        if (SUPABASE_URL && SUPABASE_URL.includes('supabase.co')) {
+            results += '<p>✅ config.js : OK</p>';
+        } else {
+            results += '<p>❌ config.js : ERREUR</p>';
+        }
+        
+        // Test STATUS_COLORS
+        if (STATUS_COLORS && STATUS_COLORS.nouveau) {
+            results += '<p>✅ STATUS_COLORS : OK</p>';
+        } else {
+            results += '<p>❌ STATUS_COLORS : ERREUR</p>';
+        }
+        
+        // Test 2 : Import translations
+        import { initTranslations } from './js/translations.js';
+        
+        if (typeof initTranslations === 'function') {
+            results += '<p>✅ translations.js : OK</p>';
+        } else {
+            results += '<p>❌ translations.js : ERREUR</p>';
+        }
+        
+        // Test 3 : Import utils
+        import { getQueryParams, toggleMobileMenu } from './js/utils.js';
+        
+        if (typeof getQueryParams === 'function' && typeof toggleMobileMenu === 'function') {
+            results += '<p>✅ utils.js : OK</p>';
+        } else {
+            results += '<p>❌ utils.js : ERREUR</p>';
+        }
+        
+        // Test 4 : Import validation
+        import { validateEmail, validatePassword } from './js/validation.js';
+        
+        if (typeof validateEmail === 'function' && typeof validatePassword === 'function') {
+            results += '<p>✅ validation.js : OK</p>';
+        } else {
+            results += '<p>❌ validation.js : ERREUR</p>';
+        }
+        
+        // Test 5 : Import auth
+        import { loadUserProfile, logout } from './js/auth.js';
+        
+        if (typeof loadUserProfile === 'function' && typeof logout === 'function') {
+            results += '<p>✅ auth.js : OK</p>';
+        } else {
+            results += '<p>❌ auth.js : ERREUR</p>';
+        }
+        
+        // Test 6 : Import leads
+        import { showAddLeadForm, updateLeadStatus } from './js/leads.js';
+        
+        if (typeof showAddLeadForm === 'function' && typeof updateLeadStatus === 'function') {
+            results += '<p>✅ leads.js : OK</p>';
+        } else {
+            results += '<p>❌ leads.js : ERREUR</p>';
+        }
+        
+        // Test 7 : Import dashboard
+        import { loadDashboardContent } from './js/dashboard.js';
+        
+        if (typeof loadDashboardContent === 'function') {
+            results += '<p>✅ dashboard.js : OK</p>';
+        } else {
+            results += '<p>❌ dashboard.js : ERREUR</p>';
+        }
+        
+        // Afficher les résultats
+        document.getElementById('result').innerHTML = results;
+        
+    </script>
+</body>
+</html>
