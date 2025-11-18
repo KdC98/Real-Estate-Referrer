@@ -1308,17 +1308,65 @@ console.log('📞 User phone:', phone);
             showOAuthWarning('apple');
         }
         async function handle2FASubmit(event) {
-            event.preventDefault();
-            const code = document.getElementById('code2fa').value;
+    event.preventDefault();
+    
+    const code = document.getElementById('code2fa').value;
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const codeInput = document.getElementById('code2fa');
+    
+    // Validation du format
+    if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
+        alert('Le code doit contenir exactement 6 chiffres');
+        return;
+    }
+    
+    // Désactiver le bouton pendant la vérification
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Vérification...';
+    }
+    if (codeInput) {
+        codeInput.disabled = true;
+    }
+    
+    try {
+        console.log('🔍 Verifying 2FA code...');
+        const isValid = await verify2FACode(code);
+        
+        if (isValid) {
+            console.log('✅ 2FA code validated successfully');
+            // Le render sera appelé automatiquement par verify2FACode
+        } else {
+            console.error('❌ 2FA code validation failed');
+            alert('Code invalide ou expiré. Veuillez réessayer.');
             
-            const isValid = await verify2FACode(code);
-            
-            if (isValid) {
-                render();
-            } else {
-                alert(t('auth:errors.invalid_2fa_code'));
+            // Réactiver les champs
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = t('auth:two_factor.verify_button');
+            }
+            if (codeInput) {
+                codeInput.disabled = false;
+                codeInput.value = '';
+                codeInput.focus();
             }
         }
+    } catch (error) {
+        console.error('❌ Error during 2FA verification:', error);
+        alert('Erreur lors de la vérification. Veuillez réessayer.');
+        
+        // Réactiver les champs
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = t('auth:two_factor.verify_button');
+        }
+        if (codeInput) {
+            codeInput.disabled = false;
+            codeInput.value = '';
+            codeInput.focus();
+        }
+    }
+}
         async function resend2FACode() {
             if (tempUserId) {
                 const currentLang = i18next.language || 'fr';
