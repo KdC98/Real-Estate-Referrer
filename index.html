@@ -1758,7 +1758,7 @@ console.log('📞 User phone:', phone);
             }
             
             const app = document.getElementById('app');
-            if (is2FAMode && !userProfile) {
+            if (is2FAMode) {
                 console.log('📱 2FA mode active - showing 2FA form');
                 app.innerHTML = renderAuthPage('login');
                 return;
