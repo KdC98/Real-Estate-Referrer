@@ -299,10 +299,11 @@ export function checkFormValidity() {
         phoneValid = /^[0-9]{6,15}$/.test(phone);
     }
     
+    // ✅ CORRECTION : Validation stricte complète du mot de passe
     let passwordValid = false;
     if (passwordInput) {
         const pwd = passwordInput.value;
-        passwordValid = pwd.length >= 8 && /[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd);
+        passwordValid = pwd.length >= 8 && /[a-z]/.test(pwd) && /[A-Z]/.test(pwd) && /[0-9]/.test(pwd) && /[^a-zA-Z0-9]/.test(pwd);
     }
     
     const confirmPasswordValid = !confirmPasswordInput || 
