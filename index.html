@@ -1138,12 +1138,13 @@ async function checkPhoneExists(phone) {
     }
     }
         async function verify2FACode(code) {
-            try {
-                // 1. Hasher le code saisi
-                const encoder = new TextEncoder();
-                const encodedData = encoder.encode(code);
-                const hashBuffer = await crypto.subtle.digest('SHA-256', encodedData);
-                const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    try {
+        // 1. Hasher le code saisi
+        const encoder = new TextEncoder();
+        const encodedData = encoder.encode(code);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', encodedData);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));  // ← AJOUTER CETTE LIGNE
+        const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
                 
                 // 2. Vérifier le code dans verification_codes
                 const { data: codes, error } = await supabase
