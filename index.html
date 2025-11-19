@@ -952,56 +952,58 @@ async function checkPhoneExists(phone) {
                         isSignupInProgress = true;
                         console.log('🔒 Signup in progress - blocking renders');
                         
-                        // ✅ NOUVEAU : Hasher le mot de passe pour le stocker temporairement
-                        const encoder = new TextEncoder();
-                        const data = encoder.encode(password);
-                        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-                        const hashArray = Array.from(new Uint8Array(hashBuffer));
-                        const passwordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-                        
-                        // ✅ NOUVEAU : Stocker dans pending_signups au lieu de créer le compte
-                        const { data: pendingData, error: pendingError } = await supabase
-                            .from('pending_signups')
-                            .insert([{
-                                email: email,
-                                password_hash: passwordHash,
-                                name: name,
-                                phone: fullPhone,
-                                country_code: countryCode
-                            }])
-                            .select()
-                            .single();
-                        
-                        if (pendingError) {
-                            isSignupInProgress = false;
-                            if (pendingError.code === '23505') {
-                                throw new Error('Cet email ou téléphone est déjà en cours d\'inscription');
-                            }
-                            throw pendingError;
-                        }
-                        
-                        console.log('✅ Signup data stored in pending_signups');
-                        
-                        // Stocker les données temporaires
-                        tempUserId = pendingData.id;
-                        tempUserProfile = {
-                            email: email,
-                            name: name,
-                            phone: fullPhone,
-                            role: 'referrer'
-                        };
-                        window.tempPassword = password;
-                        
-                        is2FAMode = true;
-                        console.log('📱 Sending 2FA code...');
-                        const currentLang = i18next.language || 'fr';
-                        await send2FACode(pendingData.id, currentLang, fullPhone);
-                        
-                        render();
-                        console.log('🔐 Processing login');
-                        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                        if (error) throw error;
-                        console.log('✅ Login successful');
+                                // 🆕 NOUVEAU : Hasher le mot de passe pour le stocker temporairement
+        const encoder = new TextEncoder();
+        const passwordBytes = encoder.encode(password);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', passwordBytes);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const passwordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        // 🆕 NOUVEAU : Stocker dans pending_signups au lieu de créer le compte
+        const { data: pendingData, error: pendingError } = await supabase
+            .from('pending_signups')
+            .insert([{
+                email: email,
+                password_hash: passwordHash,
+                name: name,
+                phone: fullPhone,
+                country_code: countryCode
+            }])
+            .select()
+            .single();
+
+        if (pendingError) {
+            isSignupInProgress = false;
+            if (pendingError.code === '23505') {
+                throw new Error("Cet email ou téléphone est déjà en cours d'inscription");
+            }
+            throw pendingError;
+        }
+
+        console.log('✅ Signup data stored in pending_signups');
+
+        // Stocker les données temporaires
+        tempUserId = pendingData.id;
+        tempUserProfile = {
+            email: email,
+            name: name,
+            phone: fullPhone,
+            role: 'referrer'
+        };
+        window.tempPassword = password;
+
+        is2FAMode = true;
+        console.log('📨 Sending 2FA code...');
+        const currentLang = i18next.language || 'fr';
+        await send2FACode(pendingData.id, currentLang, fullPhone);
+
+        render();
+        console.log('🔐 Processing login');
+
+        const { data: loginData, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+
+        console.log('✅ Login successful');
                     }
                 } catch (error) {
                     console.error('❌ Auth error:', error);
