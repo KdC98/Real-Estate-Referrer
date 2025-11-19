@@ -486,7 +486,7 @@ window.contractJustSigned = false;
                                             type="tel" 
                                             id="phone" 
                                             required 
-                                            placeholder="Ex: 501234567"
+                                            placeholder="Ex: 123456789"
                                             class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
                                             oninput="validatePhone()"
                                         >
@@ -2519,6 +2519,43 @@ contractForm.addEventListener('submit', async (e) => {
     
     console.log('📦 Modules importés (mode test)');
     })();
+        // ============================================
+// PLACEHOLDER DYNAMIQUE POUR LE TÉLÉPHONE
+// ============================================
+
+// Changer le placeholder du téléphone selon le pays sélectionné
+const countryCodeSelect = document.getElementById('countryCode');
+const phoneInput = document.getElementById('phone');
+
+if (countryCodeSelect && phoneInput) {
+    // Exemples de formats par pays
+    const phoneExamples = {
+        '+971': '501234567',    // UAE
+        '+33': '612345678',     // France
+        '+44': '7123456789',    // UK
+        '+966': '501234567',    // Saudi Arabia
+        '+91': '9876543210',    // India
+        '+92': '3001234567',    // Pakistan
+        '+86': '13912345678',   // China
+        '+63': '9171234567',    // Philippines
+        '+7': '9123456789',     // Russia
+        '+20': '1012345678',    // Egypt
+        '+1': '2025551234'      // USA/Canada
+    };
+    
+    // Fonction pour mettre à jour le placeholder
+    function updatePhonePlaceholder() {
+        const selectedCountry = countryCodeSelect.value;
+        const example = phoneExamples[selectedCountry] || '123456789';
+        phoneInput.placeholder = `Ex: ${example}`;
+    }
+    
+    // Mettre à jour au chargement de la page
+    updatePhonePlaceholder();
+    
+    // Mettre à jour quand l'utilisateur change de pays
+    countryCodeSelect.addEventListener('change', updatePhonePlaceholder);
+}
     </script>
 </body>
 </html>
