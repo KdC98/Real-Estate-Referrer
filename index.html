@@ -906,104 +906,107 @@ async function checkPhoneExists(phone) {
                 const password = document.getElementById('password')?.value;
                 try {
                     if (mode === 'signup') {
-                        console.log('📝 Processing signup');
-                        const name = document.getElementById('name').value.trim();
-                        const phone = document.getElementById('phone').value.trim();
-                        const countryCode = document.getElementById('countryCode').value;
-                        
-                        const confirmPassword = document.getElementById('confirmPassword').value;
-                        
-                        if (!validateName()) throw new Error('Nom invalide');
-                        if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
-                        if (!validateEmail()) throw new Error('Email invalide');
-                        if (!validatePassword()) throw new Error('Mot de passe invalide');
-                        if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
-                        
-                        const fullPhone = countryCode + phone;
+    console.log('📝 Processing signup');
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const countryCode = document.getElementById('countryCode').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
 
-                        // Vérifier l'unicité du téléphone
-                        console.log('🔍 Checking if phone exists:', fullPhone);
-                        const phoneCheck = await checkPhoneExists(fullPhone);
-                        
-                        if (phoneCheck.exists) {
-                            const message = `Ce numéro de téléphone est déjà utilisé${phoneCheck.userName ? ' par ' + phoneCheck.userName : ''}`;
-                            
-                            if (errorDiv) {
-                                errorDiv.textContent = message;
-                                errorDiv.classList.remove('hidden');
-                            }
-                            
-                            const submitButton = document.getElementById('submitButton');
-                            if (submitButton) {
-                                submitButton.disabled = false;
-                                submitButton.textContent = t('auth:signup_button');
-                            }
-                            
-                            console.log('❌ Phone already exists, blocking signup');
-                            return;
-                        }
-                        
-                        const submitButton = document.getElementById('submitButton');
-                        submitButton.disabled = true;
-                        submitButton.textContent = 'Inscription en cours...';
-                        
-                        console.log('📤 Signup data:', { email, name, phone: fullPhone });
-                        
-                        isSignupInProgress = true;
-                        console.log('🔒 Signup in progress - blocking renders');
-                        
-                                // 🆕 NOUVEAU : Hasher le mot de passe pour le stocker temporairement
-        const encoder = new TextEncoder();
-        const passwordBytes = encoder.encode(password);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', passwordBytes);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const passwordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    if (!validateName()) throw new Error('Nom invalide');
+    if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
+    if (!validateEmail()) throw new Error('Email invalide');
+    if (!validatePassword()) throw new Error('Mot de passe invalide');
+    if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
 
-        // 🆕 NOUVEAU : Stocker dans pending_signups au lieu de créer le compte
-        const { data: pendingData, error: pendingError } = await supabase
-            .from('pending_signups')
-            .insert([{
-                email: email,
-                password_hash: passwordHash,
-                name: name,
-                phone: fullPhone,
-                country_code: countryCode
-            }])
-            .select()
-            .single();
+    const fullPhone = countryCode + phone;
 
-        if (pendingError) {
-            isSignupInProgress = false;
-            if (pendingError.code === '23505') {
-                throw new Error("Cet email ou téléphone est déjà en cours d'inscription");
-            }
-            throw pendingError;
+    console.log('🔍 Checking if phone exists:', fullPhone);
+    const phoneCheck = await checkPhoneExists(fullPhone);
+    if (phoneCheck.exists) {
+        const message = `Ce numéro de téléphone est déjà utilisé${phoneCheck.userName ? ' par ' + phoneCheck.userName : ''}`;
+        if (errorDiv) {
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
         }
+        const submitButton = document.getElementById('submitButton');
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = t('auth:signup_button');
+        }
+        console.log('❌ Phone already exists, blocking signup');
+        return;
+    }
 
-        console.log('✅ Signup data stored in pending_signups');
+    const submitButton = document.getElementById('submitButton');
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Inscription en cours...';
+    }
 
-        // Stocker les données temporaires
-        tempUserId = pendingData.id;
-        tempUserProfile = {
+    console.log('📤 Signup data:', { email, name, phone: fullPhone });
+
+    isSignupInProgress = true;
+    console.log('🔒 Signup in progress - blocking renders');
+
+    // hash du mot de passe
+    const encoder = new TextEncoder();
+    const passwordBytes = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', passwordBytes);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const passwordHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    // insertion dans pending_signups
+    const { data: pendingData, error: pendingError } = await supabase
+        .from('pending_signups')
+        .insert([{
             email: email,
+            password_hash: passwordHash,
             name: name,
             phone: fullPhone,
-            role: 'referrer'
-        };
-        window.tempPassword = password;
+            country_code: countryCode
+        }])
+        .select()
+        .single();
 
-        is2FAMode = true;
-        console.log('📨 Sending 2FA code...');
-        const currentLang = i18next.language || 'fr';
-        await send2FACode(pendingData.id, currentLang, fullPhone);
+    if (pendingError) {
+        isSignupInProgress = false;
+        if (pendingError.code === '23505') {
+            throw new Error("Cet email ou téléphone est déjà en cours d'inscription");
+        }
+        throw pendingError;
+    }
 
-        render();
-        console.log('🔐 Processing login');
+    console.log('✅ Signup data stored in pending_signups');
 
-        const { data: loginData, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
+    tempUserId = pendingData.id;
+    tempUserProfile = {
+        email: email,
+        name: name,
+        phone: fullPhone,
+        role: 'referrer'
+    };
+    window.tempPassword = password;
 
-        console.log('✅ Login successful');
+    is2FAMode = true;
+    console.log('📨 Sending 2FA code...');
+    const currentLang = i18next.language || 'fr';
+    const ok = await send2FACode(pendingData.id, currentLang, fullPhone);
+
+    if (!ok) {
+        // échec envoi SMS → on remet le bouton
+        isSignupInProgress = false;
+        is2FAMode = false;
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = t('auth:signup_button');
+        }
+        return;
+    }
+
+    // succès → on affiche l'écran 2FA
+    render();
+    return;
+}
                     }
                 } catch (error) {
                     console.error('❌ Auth error:', error);
@@ -1059,46 +1062,44 @@ async function checkPhoneExists(phone) {
     try {
         console.log('📱 Sending 2FA code via SMS for user:', userId, 'language:', language);
         
+        if (!phone) {
+            console.error('❌ No phone number provided');
+            throw new Error('Numéro de téléphone manquant');
+        }
+
         // 1. Générer un code à 6 chiffres
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         console.log('🔢 Generated code:', code);
         
-        // 2. Hasher le code pour le stocker en base
+        // 2. Hasher le code
         const encoder = new TextEncoder();
         const data = encoder.encode(code);
         const hashBuffer = await crypto.subtle.digest('SHA-256', data);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         
-        // 3. Sauvegarder le code hashé dans verification_codes
+        // 3. Sauvegarder / mettre à jour dans verification_codes
         const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
-        
+
+        // upsert pour éviter le 409 si un code existe déjà pour ce user_id
         const { error: insertError } = await supabase
             .from('verification_codes')
-            .insert([{
+            .upsert({
                 user_id: userId,
                 code_hash: codeHash,
                 expires_at: expiresAt,
                 used: false,
                 attempts: 0
-            }]);
-        
+            }, { onConflict: 'user_id' });
+
         if (insertError) {
             console.error('❌ Error saving verification code:', insertError);
             throw new Error('Erreur de sauvegarde du code');
         }
-        
-        console.log('✅ Verification code saved to database');
-        
-        // 4. Vérifier que le numéro de téléphone est fourni
-if (!phone) {
-    console.error('❌ No phone number provided');
-    throw new Error('Numéro de téléphone manquant');
-}
 
-console.log('📞 User phone:', phone);
-        
-        // 5. Envoyer le code via SMS (Twilio)
+        console.log('✅ Verification code saved to database');
+
+        // 4. Envoi SMS via Edge Function
         const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
             method: 'POST',
             headers: {
@@ -1106,9 +1107,10 @@ console.log('📞 User phone:', phone);
                 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
             },
             body: JSON.stringify({ 
-    phone: phone,
-    code: code
-})
+                phone: phone,
+                code: code,
+                language: language
+            })
         });
         
         const result = await response.json();
@@ -1126,7 +1128,7 @@ console.log('📞 User phone:', phone);
         alert('Erreur lors de l\'envoi du code de vérification. Veuillez réessayer.');
         return false;
     }
-}
+    }
         async function verify2FACode(code) {
             try {
                 // 1. Hasher le code saisi
@@ -1396,15 +1398,18 @@ console.log('📞 User phone:', phone);
         }
     }
 }
-        async function resend2FACode() {
-            if (tempUserId) {
-                const currentLang = i18next.language || 'fr';
-                const success = await send2FACode(tempUserId, currentLang);
-                if (success) {
-                    alert(t('auth:two_factor.code_sent'));
-                }
-            }
+       async function resend2FACode() {
+    if (tempUserId && tempUserProfile?.phone) {
+        const currentLang = i18next.language || 'fr';
+        const success = await send2FACode(tempUserId, currentLang, tempUserProfile.phone);
+        if (success) {
+            alert(t('auth:two_factor.code_sent'));
         }
+    } else {
+        alert('Numéro de téléphone introuvable, veuillez recommencer l\'inscription.');
+    }
+}
+}
         async function handleChangePassword() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
