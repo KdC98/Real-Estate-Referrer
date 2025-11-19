@@ -1340,12 +1340,6 @@ async function checkPhoneExists(phone) {
                 alert(`Erreur lors de la connexion avec ${provider}: ` + error.message);
             }
         }
-        async function signInWithGoogle() {
-            showOAuthWarning('google');
-        }
-        async function signInWithApple() {
-            showOAuthWarning('apple');
-        }
         async function handle2FASubmit(event) {
     event.preventDefault();
     
@@ -1382,7 +1376,7 @@ async function checkPhoneExists(phone) {
             // Réactiver les champs
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.textContent = t('auth:two_factor.verify_button');
+                submitBtn.textContent = 'Vérifier le code';
             }
             if (codeInput) {
                 codeInput.disabled = false;
@@ -1397,7 +1391,7 @@ async function checkPhoneExists(phone) {
         // Réactiver les champs
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = t('auth:two_factor.verify_button');
+            submitBtn.textContent = 'Vérifier le code';
         }
         if (codeInput) {
             codeInput.disabled = false;
