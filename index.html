@@ -197,6 +197,18 @@ async function handle2FASubmit(event) {
     }
 }
 window.handle2FASubmit = handle2FASubmit;
+        async function resend2FACode() {
+    if (tempUserId && tempUserProfile?.phone) {
+        const currentLang = i18next.language || 'fr';
+        const success = await send2FACode(tempUserId, currentLang, tempUserProfile.phone);
+        if (success) {
+            alert(t('auth:two_factor.code_sent'));
+        }
+    } else {
+        alert('Numéro de téléphone introuvable, veuillez recommencer l\'inscription.');
+    }
+}
+window.resend2FACode = resend2FACode;
 window.contractJustSigned = false;
         // ✅ FONCTION POUR LIRE LES PARAMÈTRES D'URL
         function getQueryParams() {
