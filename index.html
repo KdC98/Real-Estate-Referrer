@@ -356,7 +356,7 @@ window.contractJustSigned = false;
                             <h2 class="text-3xl font-bold mb-6 text-center">${t('auth:two_factor.title')}</h2>
                             <p class="text-center mb-6 text-gray-300">${t('auth:two_factor.description')}</p>
                             
-                            <form onsubmit="return window.handle2FASubmit(event)" class="space-y-4">
+                            <form onsubmit="return handle2FASubmit(event)" class="space-y-4">
                                 <div>
                                     <label class="block text-sm font-medium mb-2">${t('auth:two_factor.code_label')}</label>
                                     <input 
@@ -1401,6 +1401,7 @@ async function checkPhoneExists(phone) {
         }
     }
 }
+            window.handle2FASubmit = handle2FASubmit;
        async function resend2FACode() {
     if (tempUserId && tempUserProfile?.phone) {
         const currentLang = i18next.language || 'fr';
