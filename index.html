@@ -147,6 +147,56 @@ let contractJustSigned = false;
 window.currentUser = null;
 window.userProfile = null;
 window.currentPage = 'landing';
+        // ✅ Déclaration anticipée de handle2FASubmit
+async function handle2FASubmit(event) {
+    event.preventDefault();
+    const code = document.getElementById('code2fa').value;
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const codeInput = document.getElementById('code2fa');
+    if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
+        alert('Le code doit contenir exactement 6 chiffres');
+        return;
+    }
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Vérification...';
+    }
+    if (codeInput) {
+        codeInput.disabled = true;
+    }
+    try {
+        console.log('🔍 Verifying 2FA code...');
+        const isValid = await verify2FACode(code);
+        if (isValid) {
+            console.log('✅ 2FA code validated successfully');
+        } else {
+            console.error('❌ 2FA code validation failed');
+            alert('Code invalide ou expiré. Veuillez réessayer.');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Vérifier le code';
+            }
+            if (codeInput) {
+                codeInput.disabled = false;
+                codeInput.value = '';
+                codeInput.focus();
+            }
+        }
+    } catch (error) {
+        console.error('❌ Error during 2FA verification:', error);
+        alert('Erreur lors de la vérification. Veuillez réessayer.');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Vérifier le code';
+        }
+        if (codeInput) {
+            codeInput.disabled = false;
+            codeInput.value = '';
+            codeInput.focus();
+        }
+    }
+}
+window.handle2FASubmit = handle2FASubmit;
 window.contractJustSigned = false;
         // ✅ FONCTION POUR LIRE LES PARAMÈTRES D'URL
         function getQueryParams() {
