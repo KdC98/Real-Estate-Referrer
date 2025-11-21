@@ -1,8 +1,15 @@
 // ============================================
 // VALIDATION DES FORMULAIRES
+// Real Estate Referrer - Dubai
 // ============================================
 
-import { t } from './translations.js';
+// ✅ Fonction utilitaire pour les traductions (fallback si i18next pas disponible)
+function getTranslation(key, fallback) {
+    if (typeof i18next !== 'undefined' && i18next.t) {
+        return i18next.t(key);
+    }
+    return fallback;
+}
 
 // Valider le nom
 export function validateName() {
@@ -20,7 +27,7 @@ export function validateName() {
     }
     
     if (name.length < 2) {
-        nameError.textContent = 'Le nom doit contenir au moins 2 caractères';
+        nameError.textContent = getTranslation('auth:errors.name_too_short', 'Le nom doit contenir au moins 2 caractères');
         nameError.classList.remove('hidden');
         nameInput.classList.add('border-red-500');
         nameInput.classList.remove('border-green-500');
@@ -29,7 +36,7 @@ export function validateName() {
     
     const nameRegex = /^[a-zA-ZÀ-ÿ\s\-']+$/;
     if (!nameRegex.test(name)) {
-        nameError.textContent = 'Le nom ne peut contenir que des lettres, espaces, tirets et apostrophes';
+        nameError.textContent = getTranslation('auth:errors.name_invalid', 'Le nom ne peut contenir que des lettres, espaces, tirets et apostrophes');
         nameError.classList.remove('hidden');
         nameInput.classList.add('border-red-500');
         nameInput.classList.remove('border-green-500');
@@ -55,14 +62,14 @@ export function validatePhone() {
     const internationalPattern = /^[0-9]{6,15}$/;
     
     if (!phone) {
-        phoneError.textContent = t('auth:errors.phone_required') || 'Le numéro de téléphone est requis';
+        phoneError.textContent = getTranslation('auth:errors.phone_required', 'Le numéro de téléphone est requis');
         phoneError.classList.remove('hidden');
         phoneField.classList.add('border-red-500');
         return false;
     }
     
     if (!internationalPattern.test(phone)) {
-        phoneError.textContent = t('auth:errors.phone_invalid') || 'Le numéro doit contenir entre 6 et 15 chiffres';
+        phoneError.textContent = getTranslation('auth:errors.phone_invalid', 'Le numéro doit contenir entre 6 et 15 chiffres');
         phoneError.classList.remove('hidden');
         phoneField.classList.add('border-red-500');
         return false;
@@ -92,7 +99,7 @@ export function validateEmail() {
     
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-        emailError.textContent = "Format d'email invalide";
+        emailError.textContent = getTranslation('auth:errors.email_invalid', "Format d'email invalide");
         emailError.classList.remove('hidden');
         emailInput.classList.add('border-red-500');
         emailInput.classList.remove('border-green-500');
@@ -129,7 +136,6 @@ export function validatePassword() {
             reqLength.classList.remove('text-green-400');
             reqLength.querySelector('span:first-child').textContent = '•';
         }
-
         if (/[a-zA-Z]/.test(password)) {
             reqLetter.classList.add('text-green-400');
             reqLetter.querySelector('span:first-child').textContent = '✓';
@@ -137,7 +143,6 @@ export function validatePassword() {
             reqLetter.classList.remove('text-green-400');
             reqLetter.querySelector('span:first-child').textContent = '•';
         }
-
         if (/[0-9]/.test(password)) {
             reqNumber.classList.add('text-green-400');
             reqNumber.querySelector('span:first-child').textContent = '✓';
@@ -228,6 +233,7 @@ export function validatePassword() {
         return false;
     }
     
+    // ✅ Tout est valide
     passwordError.classList.add('hidden');
     passwordInput.classList.remove('border-red-500');
     passwordInput.classList.add('border-green-500');
@@ -262,7 +268,7 @@ export function validateConfirmPassword() {
     }
     
     if (password !== confirmPassword) {
-        confirmPasswordError.textContent = 'Les mots de passe ne correspondent pas';
+        confirmPasswordError.textContent = getTranslation('auth:errors.password_mismatch', 'Les mots de passe ne correspondent pas');
         confirmPasswordError.classList.remove('hidden');
         confirmPasswordSuccess.classList.add('hidden');
         confirmPasswordInput.classList.add('border-red-500');
@@ -299,11 +305,15 @@ export function checkFormValidity() {
         phoneValid = /^[0-9]{6,15}$/.test(phone);
     }
     
-    // ✅ CORRECTION : Validation stricte complète du mot de passe
+    // ✅ Validation stricte complète du mot de passe
     let passwordValid = false;
     if (passwordInput) {
         const pwd = passwordInput.value;
-        passwordValid = pwd.length >= 8 && /[a-z]/.test(pwd) && /[A-Z]/.test(pwd) && /[0-9]/.test(pwd) && /[^a-zA-Z0-9]/.test(pwd);
+        passwordValid = pwd.length >= 8 && 
+                       /[a-z]/.test(pwd) && 
+                       /[A-Z]/.test(pwd) && 
+                       /[0-9]/.test(pwd) && 
+                       /[^a-zA-Z0-9]/.test(pwd);
     }
     
     const confirmPasswordValid = !confirmPasswordInput || 
@@ -318,5 +328,19 @@ export function checkFormValidity() {
     } else {
         submitButton.disabled = true;
         submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+}
+
+// Toggle visibilité du mot de passe
+export function togglePasswordVisibility(fieldId, button) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        button.innerHTML = '<span class="text-xl">🙈</span>';
+    } else {
+        field.type = 'password';
+        button.innerHTML = '<span class="text-xl">👁️</span>';
     }
 }
