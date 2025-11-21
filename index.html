@@ -1783,7 +1783,7 @@ console.log('📞 User phone:', phone);
                         confirmationDiv.remove();
                     }, 5000);
                 }, 500);
-            }
+            }, 2000);
             
             const app = document.getElementById('app');
             /* 2FA DESACTIVE
@@ -2463,9 +2463,11 @@ if (userProfile.role !== 'admin') {
                 setTimeout(() => confirmationDiv.remove(), 5000);
                 window.contractJustSigned = false;
             }
-     }, 2000);
- // ============================================
+    }, 2000);
+
+// ============================================
 // 🎯 IMPORTS DES MODULES (test progressif)
+// ============================================
     
     console.log('📦 Chargement des modules...');
     
@@ -2486,6 +2488,6 @@ if (userProfile.role !== 'admin') {
     
     console.log('📦 Modules importés (mode test)');
     })();
-    </script>
+</script>
 </body>
 </html>
