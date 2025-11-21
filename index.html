@@ -351,18 +351,18 @@ window.contractJustSigned = false;
         }
         function renderAuthPage(mode) {
             let title, buttonText, linkText, linkAction;
-            353     let title, buttonText, linkText, linkAction;
-354     /* 2FA DESACTIVE
-355     if (is2FAMode) {
-356         return `
+            let title, buttonText, linkText, linkAction;
+         /* 2FA DESACTIVE
+         if (is2FAMode) {
+         return `
 ...
 (tout le bloc du formulaire 2FA)
 ...
-385         `;
-386     }
-387     */
-388     
-389     if (mode === 'login') {
+             `;
+         }
+         */
+         
+         if (mode === 'login') {
             
             if (mode === 'login') {
                 title = t('auth:login_title');
