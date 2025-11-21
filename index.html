@@ -1806,127 +1806,112 @@ console.log('📞 User phone:', phone);
                 app.innerHTML = renderDashboard();
                 await loadDashboardContent();
                 
-                // ✅ GESTION AMÉLIORÉE DE L'UPLOAD DE CONTRAT
-                if (userProfile.role !== 'admin') {
-                    const contractForm = document.getElementById('contractForm');
-                    if (contractForm) {
-                        console.log('✅ Contract form found, attaching submit handler');
-                        console.log('🔍 DEBUG before attaching upload', { 
-                    currentUser, 
-                    userProfile,
-                    hasCurrentUser: !!currentUser,
-                    hasUserProfile: !!userProfile
-                });
-                 }       
-contractForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    if (globalIsUploading) {
-        console.log('⚠️ Upload already in progress, ignoring duplicate submit');
+                // GESTION AMÉLIORÉE DE L'UPLOAD DE CONTRAT
+if (userProfile.role !== 'admin') {
+    const contractForm = document.getElementById('contractForm');
+
+    if (contractForm) {
+        console.log('📄 Contract form found, attaching submit handler');
+        console.log('🔍 DEBUG before attaching upload', {
+            currentUser,
+            userProfile,
+            hasCurrentUser: !!currentUser,
+            hasUserProfile: !!userProfile
+        });
+
+        contractForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (globalIsUploading) {
+                console.log('⚠️ Upload already in progress, ignoring duplicate submit');
+                return;
+            }
+
+            globalIsUploading = true;
+
+            const submitBtn = document.getElementById('contractSubmitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Uploading…';
+
+            try {
+                const formData = new FormData(contractForm);
+                const file = formData.get('contractFile');
+
+                if (!file) {
+                    alert('Please upload a contract file.');
+                    return;
+                }
+
+                const fileExt = file.name.split('.').pop();
+                const filePath = `contracts/${currentUser.id}.${fileExt}`;
+
+                const { data, error } = await supabase.storage
+                    .from('contracts')
+                    .upload(filePath, file, { upsert: true });
+
+                if (error) {
+                    console.error('❌ Error uploading file:', error);
+                    alert('Upload failed, please try again.');
+                    return;
+                }
+
+                console.log('✅ Contract uploaded successfully:', data);
+
+                await supabase
+                    .from('profiles')
+                    .update({ contract_uploaded: true })
+                    .eq('id', currentUser.id);
+
+                alert('Contract uploaded successfully!');
+                renderDashboard();
+
+            } catch (err) {
+                console.error('❌ Unexpected error during upload:', err);
+                alert('Unexpected error, try again.');
+
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+                globalIsUploading = false;
+            }
+        });
+
+    } else {
+        console.log('📄 Contract form not found (contract already uploaded or admin user)');
+    }
+
+} else {
+    console.log('📄 Admin user – no contract form needed');
+}
+
+// ---- FIN GESTION UPLOAD CONTRAT ----
+
+} else if (currentUser && !userProfile) {
+    profileLoadAttempts++;
+
+    if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
+        console.error(`❌ Failed to load profile after max attempts`);
+        profileLoadAttempts = 0;
+        supabase.auth.signOut();
+        currentPage = 'landing';
+        render();
         return;
     }
-    
-    globalIsUploading = true;
-    console.log('📄 Starting contract upload...');
-    
-    const submitBtn = document.getElementById('contractSubmitBtn');
-    const errorDiv = document.getElementById('uploadError');
-    const progressDiv = document.getElementById('uploadProgress');
-    const originalText = submitBtn.textContent;
-    
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Upload en cours...';
-    errorDiv.classList.add('hidden');
-    progressDiv.classList.remove('hidden');
-    progressDiv.textContent = '⏳ Préparation du fichier...';
-    
-    try {
-        const fileInput = document.getElementById('contractFile');
-        const file = fileInput.files[0];
-        if (!file) {
-            throw new Error('Veuillez sélectionner un fichier');
-        }
-        if (file.type !== 'application/pdf') {
-            throw new Error('Seuls les fichiers PDF sont acceptés');
-        }
-        const maxSize = 10 * 1024 * 1024; // 10MB
-        if (file.size > maxSize) {
-            throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
-        }
-        console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-        
-        progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
-        
-        const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-        console.log('📄 Uploading to Storage with name:', fileName);
-        
-        // ✅ UTILISER L'API REST DIRECTEMENT AU LIEU DU CLIENT JS
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            throw new Error('Session expirée, veuillez vous reconnecter');
-        }
-        
-        const uploadUrl = `${SUPABASE_URL}/storage/v1/object/contracts/${fileName}`;
-        
-        console.log('🚀 Uploading via REST API to:', uploadUrl);
-        
-        const uploadResponse = await fetch(uploadUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${session.access_token}`,
-                'Content-Type': file.type,
-                'x-upsert': 'false'
-            },
-            body: file
-        });
-        
-        if (!uploadResponse.ok) {
-            const errorText = await uploadResponse.text();
-            console.error('❌ Upload failed:', uploadResponse.status, errorText);
-            throw new Error(`Erreur d'upload: ${uploadResponse.status} - ${errorText}`);
-        }
-        
-        const uploadData = await uploadResponse.json();
-        console.log('✅ File uploaded successfully to Storage');
-        console.log('📝 Upload response:', uploadData);
-        
-        progressDiv.textContent = '⏳ Mise à jour de votre profil...';
-        
-        // ✅ MISE À JOUR DU contract_path DANS LE PROFIL
-        const { error: updateError } = await supabase.from('profiles').update({
-            contract_path: fileName,
-            contract_status: 'signed',
-            contract_file_url: fileName
-        }).eq('id', currentUser.id);
-        
-        if (updateError) {
-            console.error('❌ Error updating profile:', updateError);
-            throw new Error(`Erreur de mise à jour : ${updateError.message}`);
-        }
-        console.log('✅ Profile updated successfully with contract_path:', fileName);
-        
-        alert('✅ Contrat uploadé avec succès !');
-        await loadUserProfile();
-        globalIsUploading = false;
+
+    console.log(`⏳ User connected but no profile, waiting... (attempt ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})`);
+    app.innerHTML = `
+        <div class="min-h-screen flex items-center justify-center">
+            <div class="text-center">
+                <div class="loader mb-3"></div>
+                <p>Loading your profile…</p>
+            </div>
+        </div>
+    `;
+
+    setTimeout(() => {
         render();
-    } catch (error) {
-        console.error('❌ Upload exception:', error);
-        errorDiv.textContent = error.message;
-        errorDiv.classList.remove('hidden');
-        progressDiv.classList.add('hidden');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-        globalIsUploading = false;
-    }
-});
-                                
-                    } else {
-                        console.log('ℹ️ Contract form not found (contract already uploaded or admin user)');
-                    }
-                } else {
-                    console.log('ℹ️ Admin user - no contract form needed');
-                }
+    }, 800);
             } else if (currentUser && !userProfile) {
         profileLoadAttempts++;
         
