@@ -1,5 +1,6 @@
 // ============================================
 // FONCTIONS UTILITAIRES
+// Real Estate Referrer - Dubai
 // ============================================
 
 // Lire les paramètres d'URL
@@ -25,20 +26,6 @@ export function toggleMobileMenu() {
     } else {
         menu.classList.add('hidden');
         icon.textContent = '☰';
-    }
-}
-
-// Toggle visibilité mot de passe
-export function togglePasswordVisibility(fieldId, button) {
-    const field = document.getElementById(fieldId);
-    if (!field) return;
-    
-    if (field.type === 'password') {
-        field.type = 'text';
-        button.innerHTML = '<span class="text-xl">🙈</span>';
-    } else {
-        field.type = 'password';
-        button.innerHTML = '<span class="text-xl">👁️</span>';
     }
 }
 
