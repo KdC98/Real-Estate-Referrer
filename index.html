@@ -2039,6 +2039,11 @@ contractForm.addEventListener('submit', async (e) => {
         window.proceedWithOAuth = proceedWithOAuth;
         // Mobile menu toggle - utilise le module utils.js
         window.toggleMobileMenu = UTILS.toggleMobileMenu;
+        window.showLogin = UTILS.showLogin;
+        window.showSignup = UTILS.showSignup;
+        window.showReset = UTILS.showReset;
+        window.backToHome = UTILS.backToHome;
+        window.detectSignedParamOnLoad = UTILS.detectSignedParamOnLoad;
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         supabase.auth.onAuthStateChange(async (event, session) => {
