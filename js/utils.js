@@ -29,21 +29,31 @@ export function toggleMobileMenu() {
     }
 }
 
-// Pré-remplir données de test (pour développement)
+// Pré-remplir données de test
 export function prefillTestData() {
     if (document.getElementById('name')) {
         document.getElementById('name').value = 'Test User';
         document.getElementById('countryCode').value = '+33';
         document.getElementById('phone').value = '612345678';
-        document.getElementById('email').value = 'karyne@itooki.fr';
-        document.getElementById('password').value = 'Test1234';
-        document.getElementById('confirmPassword').value = 'Test1234';
+        document.getElementById('email').value = 'test@example.com';
+        document.getElementById('password').value = 'Test1234!';
+        document.getElementById('confirmPassword').value = 'Test1234!';
+        
+        // Déclencher les validations
+        if (window.validateName) window.validateName();
+        if (window.validatePhone) window.validatePhone();
+        if (window.validateEmail) window.validateEmail();
+        if (window.validatePassword) window.validatePassword();
+        if (window.validateConfirmPassword) window.validateConfirmPassword();
+        
         console.log('✅ Données de test pré-remplies');
     }
 }
 
 // Télécharger le template de contrat
-export async function downloadContractTemplate(supabase) {
+export async function downloadContractTemplate() {
+    const supabase = window.supabase; // ✅ Récupérer depuis window
+    
     try {
         console.log('📥 Downloading contract template...');
         const { data, error } = await supabase.storage
@@ -65,9 +75,10 @@ export async function downloadContractTemplate(supabase) {
 }
 
 // Vérifier si un numéro de téléphone existe déjà
-export async function checkPhoneExists(supabase, phone) {
+export async function checkPhoneExists(phone) {
+    const supabase = window.supabase; // ✅ Récupérer depuis window
+    
     try {
-        // Nettoyer le numéro (enlever espaces, tirets, etc.)
         const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
         
         const { data, error } = await supabase
@@ -76,7 +87,7 @@ export async function checkPhoneExists(supabase, phone) {
             .eq('phone', cleanPhone)
             .single();
         
-        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+        if (error && error.code !== 'PGRST116') {
             console.error('Error checking phone:', error);
             return { exists: false, error: error.message };
         }
