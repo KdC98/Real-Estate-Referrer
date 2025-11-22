@@ -1,6 +1,8 @@
 // ============================================
 // AUTHENTIFICATION 2FA (SMS)
 // Real Estate Referrer - Dubai
+// Version 3.0 - Flux standard WhatsApp/Telegram
+// Date: 22 novembre 2025
 // ============================================
 
 // Vérifier si un numéro de téléphone existe déjà
@@ -29,64 +31,51 @@ export async function checkPhoneExists(phone) {
     }
 }
 
-// Envoyer un code 2FA par SMS
-export async function send2FACode(userId, language = 'fr', phone = null) {
-    const supabase = window.supabase;
+// ✅ NOUVELLE FONCTION : Envoyer un code 2FA SANS créer de compte (signup)
+export async function send2FACode(phone, language = 'fr', pendingSignupData = null) {
     const SUPABASE_URL = window.SUPABASE_URL || 'https://cgizcgwhwxswvoodqver.supabase.co';
-    const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY;
     
     try {
-        console.log('📱 Sending 2FA code via SMS for user:', userId, 'language:', language);
+        console.log('📱 Sending 2FA code via SMS to:', phone, 'language:', language);
         
-        // 1. Générer un code à 6 chiffres
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
-        console.log('🔢 Generated code:', code);
-        
-        // 2. Hasher le code pour le stocker en base
-        const encoder = new TextEncoder();
-        const data = encoder.encode(code);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-        
-        // 3. Sauvegarder le code hashé dans verification_codes
-        const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
-        
-        const { error: insertError } = await supabase
-            .from('verification_codes')
-            .insert([{
-                user_id: userId,
-                code_hash: codeHash,
-                expires_at: expiresAt,
-                used: false,
-                attempts: 0
-            }]);
-        
-        if (insertError) {
-            console.error('❌ Error saving verification code:', insertError);
-            throw new Error('Erreur de sauvegarde du code');
+        // ✅ Si c'est pour une inscription, sauvegarder les données temporaires
+        if (pendingSignupData) {
+            const supabase = window.supabase;
+            const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString(); // 30 minutes
+            
+            console.log('💾 Saving pending signup data...');
+            const { data, error } = await supabase
+                .from('pending_signups')
+                .insert([{
+                    email: pendingSignupData.email,
+                    password: pendingSignupData.password, // Hash côté client
+                    name: pendingSignupData.name,
+                    phone: phone,
+                    expires_at: expiresAt
+                }])
+                .select()
+                .single();
+            
+            if (error) {
+                console.error('❌ Error saving pending signup:', error);
+                throw new Error('Erreur de sauvegarde des données d\'inscription');
+            }
+            
+            console.log('✅ Pending signup saved with ID:', data.id);
+            window.pendingSignupId = data.id;
         }
         
-        console.log('✅ Verification code saved to database');
-        
-        // 4. Vérifier que le numéro de téléphone est fourni
-        if (!phone) {
-            console.error('❌ No phone number provided');
-            throw new Error('Numéro de téléphone manquant');
-        }
-
-        console.log('📞 User phone:', phone);
-        
-        // 5. Envoyer le code via SMS (Twilio)
+        // ✅ Appel de la fonction Edge (publique, pas de JWT requis)
+        console.log('📞 Calling Edge Function send-2fa-code...');
         const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                'Content-Type': 'application/json'
+                // ✅ PAS de Authorization Bearer - fonction publique
             },
             body: JSON.stringify({ 
                 phone: phone,
-                code: code
+                language: language
             })
         });
         
@@ -94,121 +83,162 @@ export async function send2FACode(userId, language = 'fr', phone = null) {
         
         if (!response.ok) {
             console.error('❌ SMS send error:', result);
+            
+            // Gestion des erreurs de rate limiting
+            if (result.error && result.error.includes('wait')) {
+                throw new Error(result.error);
+            }
+            if (result.error && result.error.includes('maximum')) {
+                throw new Error(result.error);
+            }
+            
             throw new Error(result.error || 'Erreur envoi SMS');
         }
         
-        console.log('✅ SMS code sent successfully via Twilio');
-        return true;
+        console.log('✅ SMS code sent successfully');
+        console.log('⏰ Code expires at:', result.expiresAt);
+        return { success: true, expiresAt: result.expiresAt };
         
     } catch (error) {
         console.error('❌ Erreur send2FACode:', error);
-        alert('Erreur lors de l\'envoi du code de vérification. Veuillez réessayer.');
-        return false;
+        throw error; // Propager l'erreur pour gestion dans index.html
     }
 }
 
-// Vérifier un code 2FA
-export async function verify2FACode(code, tempUserId, tempUserProfile) {
+// ✅ NOUVELLE FONCTION : Vérifier code ET créer le compte
+export async function verify2FACode(code, phone) {
     const supabase = window.supabase;
     
     try {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(code);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const codeHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        console.log('🔍 Verifying 2FA code for phone:', phone);
         
-        const { data: codes, error } = await supabase
+        // 1. Récupérer le pending_signup et vérifier le code
+        const { data: verificationData, error: verifyError } = await supabase
             .from('verification_codes')
-            .select('*')
-            .eq('user_id', tempUserId)
-            .eq('code_hash', codeHash)
+            .select('*, pending_signups!inner(*)')
+            .eq('phone', phone)
+            .eq('code', code)
             .eq('used', false)
+            .eq('verified', false)
             .gt('expires_at', new Date().toISOString())
             .order('created_at', { ascending: false })
-            .limit(1);
+            .limit(1)
+            .single();
         
-        if (error) throw error;
-        
-        if (!codes || codes.length === 0) {
+        if (verifyError || !verificationData) {
             console.log('❌ Code not found or invalid');
             
+            // Incrémenter le compteur de tentatives
             const { data: currentCodes } = await supabase
                 .from('verification_codes')
                 .select('id, attempts')
-                .eq('user_id', tempUserId)
+                .eq('phone', phone)
                 .eq('used', false)
                 .order('created_at', { ascending: false })
-                .limit(1);
+                .limit(1)
+                .single();
             
-            if (currentCodes && currentCodes.length > 0) {
+            if (currentCodes) {
                 await supabase
                     .from('verification_codes')
-                    .update({ attempts: currentCodes[0].attempts + 1 })
-                    .eq('id', currentCodes[0].id);
+                    .update({ attempts: (currentCodes.attempts || 0) + 1 })
+                    .eq('id', currentCodes.id);
             }
             
-            return false;
+            return { success: false, error: 'Code invalide ou expiré' };
         }
         
-        const { error: markError } = await supabase
-            .from('verification_codes')
-            .update({ used: true })
-            .eq('id', codes[0].id);
+        console.log('✅ Code validated, pending signup found');
+        const pendingSignup = verificationData.pending_signups;
         
-        if (markError) throw markError;
+        // 2. Créer le compte Supabase
+        console.log('📝 Creating Supabase account...');
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email: pendingSignup.email,
+            password: pendingSignup.password,
+            options: {
+                data: { 
+                    name: pendingSignup.name, 
+                    phone: phone 
+                }
+            }
+        });
         
-        const { error: updateError } = await supabase
+        if (signUpError) {
+            console.error('❌ Error creating account:', signUpError);
+            throw signUpError;
+        }
+        
+        console.log('✅ Account created successfully');
+        const userId = signUpData.user.id;
+        
+        // 3. Créer le profil
+        console.log('📝 Creating user profile...');
+        const { error: profileError } = await supabase
             .from('profiles')
-            .update({ phone_verified: true })
-            .eq('id', tempUserId);
-            
-        if (updateError) {
-            console.error('❌ Error updating phone_verified:', updateError);
+            .upsert({
+                id: userId,
+                name: pendingSignup.name,
+                phone: phone,
+                email: pendingSignup.email,
+                role: 'referrer',
+                contract_status: 'pending',
+                phone_verified: true // ✅ Téléphone déjà vérifié
+            }, { onConflict: 'id' });
+        
+        if (profileError && profileError.code !== '23505') {
+            console.error('❌ Error creating profile:', profileError);
+            throw profileError;
         }
         
-        console.log('✅ Phone marked as verified');
-        console.log('✅ 2FA code validated, reconnecting user...');
+        console.log('✅ Profile created');
         
-        if (!tempUserProfile || !tempUserProfile.email || !window.tempPassword) {
-            throw new Error('Données de connexion manquantes');
-        }
+        // 4. Marquer le code comme utilisé
+        await supabase
+            .from('verification_codes')
+            .update({ 
+                used: true,
+                verified: true,
+                user_id: userId
+            })
+            .eq('id', verificationData.id);
         
+        console.log('✅ Verification code marked as used');
+        
+        // 5. Supprimer le pending_signup
+        await supabase
+            .from('pending_signups')
+            .delete()
+            .eq('id', pendingSignup.id);
+        
+        console.log('✅ Pending signup cleaned up');
+        
+        // 6. Connexion automatique
+        console.log('🔐 Auto-login after verification...');
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email: tempUserProfile.email,
-            password: window.tempPassword
+            email: pendingSignup.email,
+            password: pendingSignup.password
         });
         
         if (signInError) {
-            console.error('❌ Error signing in after 2FA:', signInError);
+            console.error('❌ Error during auto-login:', signInError);
             throw signInError;
         }
         
         console.log('✅ User signed in successfully after 2FA');
         
-        delete window.tempPassword;
+        return { 
+            success: true, 
+            user: signInData.user,
+            session: signInData.session
+        };
         
-        const { data: profileData, error: profileError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', signInData.user.id)
-            .single();
-        
-        // Mettre à jour les variables globales
-        if (window.setCurrentUser) window.setCurrentUser(signInData.user);
-        if (window.setUserProfile) window.setUserProfile(profileData);
-        if (window.setIs2FAMode) window.setIs2FAMode(false);
-        if (window.setTempUserId) window.setTempUserId(null);
-        if (window.setTempUserProfile) window.setTempUserProfile(null);
-        if (window.setIsSignupInProgress) window.setIsSignupInProgress(false);
-        
-        console.log('✅ Session restored');
-        
-        return true;
     } catch (error) {
-        console.error('Erreur verify2FACode:', error);
-        if (window.setIsSignupInProgress) window.setIsSignupInProgress(false);
-        return false;
+        console.error('❌ Error verify2FACode:', error);
+        return { 
+            success: false, 
+            error: error.message || 'Erreur lors de la vérification'
+        };
     }
 }
 
@@ -219,17 +249,18 @@ export async function handle2FASubmit(event) {
     const code = document.getElementById('code2fa').value;
     const submitBtn = event.target.querySelector('button[type="submit"]');
     const codeInput = document.getElementById('code2fa');
+    const i18next = window.i18next;
     
     // Validation du format
     if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
-        alert('Le code doit contenir exactement 6 chiffres');
+        alert(i18next?.t('auth:two_factor.invalid_code') || 'Le code doit contenir exactement 6 chiffres');
         return;
     }
     
     // Désactiver le bouton pendant la vérification
     if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Vérification...';
+        submitBtn.textContent = i18next?.t('auth:two_factor.verifying') || 'Vérification...';
     }
     if (codeInput) {
         codeInput.disabled = true;
@@ -238,23 +269,33 @@ export async function handle2FASubmit(event) {
     try {
         console.log('🔍 Verifying 2FA code...');
         
-        const tempUserId = window.tempUserId;
-        const tempUserProfile = window.tempUserProfile;
+        const tempPhone = window.tempPhone;
         
-        const isValid = await verify2FACode(code, tempUserId, tempUserProfile);
+        if (!tempPhone) {
+            throw new Error('Numéro de téléphone manquant');
+        }
         
-        if (isValid) {
-            console.log('✅ 2FA code validated successfully');
-            // Le render sera appelé automatiquement par verify2FACode
-            if (window.render) window.render();
+        const result = await verify2FACode(code, tempPhone);
+        
+        if (result.success) {
+            console.log('✅ 2FA code validated successfully, account created');
+            
+            // Nettoyer les variables temporaires
+            delete window.tempPhone;
+            delete window.pendingSignupId;
+            if (window.setIs2FAMode) window.setIs2FAMode(false);
+            
+            // Le onAuthStateChange va gérer la suite automatiquement
+            alert(i18next?.t('auth:two_factor.success') || '✅ Compte créé avec succès !');
+            
         } else {
-            console.error('❌ 2FA code validation failed');
-            alert('Code invalide ou expiré. Veuillez réessayer.');
+            console.error('❌ 2FA code validation failed:', result.error);
+            alert(result.error || (i18next?.t('auth:two_factor.invalid_or_expired') || 'Code invalide ou expiré. Veuillez réessayer.'));
             
             // Réactiver les champs
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.textContent = window.i18next?.t('auth:two_factor.verify_button') || 'Vérifier';
+                submitBtn.textContent = i18next?.t('auth:two_factor.verify_button') || 'Vérifier';
             }
             if (codeInput) {
                 codeInput.disabled = false;
@@ -264,12 +305,12 @@ export async function handle2FASubmit(event) {
         }
     } catch (error) {
         console.error('❌ Error during 2FA verification:', error);
-        alert('Erreur lors de la vérification. Veuillez réessayer.');
+        alert(i18next?.t('auth:two_factor.error') || 'Erreur lors de la vérification. Veuillez réessayer.');
         
         // Réactiver les champs
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = window.i18next?.t('auth:two_factor.verify_button') || 'Vérifier';
+            submitBtn.textContent = i18next?.t('auth:two_factor.verify_button') || 'Vérifier';
         }
         if (codeInput) {
             codeInput.disabled = false;
@@ -281,18 +322,32 @@ export async function handle2FASubmit(event) {
 
 // Renvoyer le code 2FA
 export async function resend2FACode() {
-    const tempUserId = window.tempUserId;
-    const tempUserProfile = window.tempUserProfile;
+    const tempPhone = window.tempPhone;
     const i18next = window.i18next;
     
-    if (tempUserId && tempUserProfile?.phone) {
+    if (!tempPhone) {
+        console.error('❌ No phone available for resend');
+        alert(i18next?.t('auth:two_factor.no_phone') || 'Impossible de renvoyer le code. Veuillez recommencer l\'inscription.');
+        return;
+    }
+    
+    try {
         const currentLang = i18next?.language || 'fr';
-        const success = await send2FACode(tempUserId, currentLang, tempUserProfile.phone);
-        if (success) {
-            alert(i18next?.t('auth:two_factor.code_sent') || 'Code envoyé !');
+        const result = await send2FACode(tempPhone, currentLang);
+        
+        if (result.success) {
+            alert(i18next?.t('auth:two_factor.code_sent') || '✅ Code envoyé !');
         }
-    } else {
-        console.error('❌ No tempUserId or phone available for resend');
-        alert('Impossible de renvoyer le code. Veuillez recommencer l\'inscription.');
+    } catch (error) {
+        console.error('❌ Error resending code:', error);
+        
+        // Messages d'erreur spécifiques pour le rate limiting
+        if (error.message.includes('wait')) {
+            alert(error.message);
+        } else if (error.message.includes('maximum')) {
+            alert(error.message);
+        } else {
+            alert(i18next?.t('auth:two_factor.resend_error') || 'Erreur lors du renvoi du code. Veuillez réessayer.');
+        }
     }
 }
