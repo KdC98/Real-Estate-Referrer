@@ -1998,35 +1998,6 @@ contractForm.addEventListener('submit', async (e) => {
             }
         }
         
-        function togglePasswordVisibility(fieldId, button) {
-            const field = document.getElementById(fieldId);
-            if (!field) return;
-            if (field.type === 'password') {
-                field.type = 'text';
-                button.innerHTML = '<span class="text-xl">🙈</span>';
-            } else {
-                field.type = 'password';
-                button.innerHTML = '<span class="text-xl">👁️</span>';
-            }
-        }
-        async function downloadContractTemplate() {
-            try {
-                console.log('📥 Downloading contract template...');
-                const { data, error } = await supabase.storage
-                    .from('contracts')
-                    .getPublicUrl('contract_template_en.pdf');
-                if (error) {
-                    console.error('❌ Error getting template URL:', error);
-                    alert('Error downloading contract. Please contact support.');
-                    return;
-                }
-                console.log('✅ Template URL:', data.publicUrl);
-                window.open(data.publicUrl, '_blank');
-            } catch (error) {
-                console.error('❌ Exception downloading template:', error);
-                alert('Error downloading: ' + error.message);
-            }
-        }
         window.showLogin = showLogin;
         window.showSignup = showSignup;
         window.showReset = showReset;
