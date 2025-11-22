@@ -139,6 +139,13 @@ let userProfile = null;
 let profileLoadAttempts = 0;
 const MAX_PROFILE_LOAD_ATTEMPTS = 10;
 let currentPage = 'landing';
+
+// ✅ Exposer une fonction pour changer currentPage depuis les modules
+window.setCurrentPage = function(newPage) {
+    console.log('📍 setCurrentPage called:', newPage);
+    currentPage = newPage;
+    window.currentPage = newPage;
+};
 let isPasswordRecoveryMode = false;
 let is2FAMode = false;
 let isSignupInProgress = false;
