@@ -822,31 +822,7 @@ ${t('auth:sms_verification_notice')}
                 </div>
             `;
         }
-        function showLogin() {
-            console.log('🔐 showLogin called');
-            currentPage = 'auth-login';
-            window.currentPage = 'auth-login';
-            render();
-        }
-        function showSignup() {
-            console.log('📝 showSignup called');
-            currentPage = 'auth-signup';
-            window.currentPage = 'auth-signup';
-            render();
-        }
-        function showReset() {
-            console.log('🔑 showReset called');
-            currentPage = 'auth-reset';
-            window.currentPage = 'auth-reset';
-            render();
-        }
-        function backToHome() {
-            console.log('🏠 backToHome called');
-            currentPage = 'landing';
-            window.currentPage = 'landing';
-            isPasswordRecoveryMode = false;
-            render();
-        }
+        
         function prefillTestData() {
             if (document.getElementById('name')) {
                 document.getElementById('name').value = 'Test User';
