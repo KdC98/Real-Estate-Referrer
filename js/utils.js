@@ -99,26 +99,62 @@ export async function checkPhoneExists(phone) {
     }
 }
 
-// Navigation helpers
+// ✅ CORRECTION: Navigation helpers with proper page state management
 export function showLogin() {
-    window.currentPage = 'login';
-    if (window.render) window.render();
+    console.log('🔐 showLogin called');
+    // Change BOTH local and window currentPage
+    if (window.setCurrentPage) {
+        window.setCurrentPage('auth-login');
+    } else {
+        // Fallback si setCurrentPage n'existe pas encore
+        window.currentPage = 'auth-login';
+    }
+    if (window.render) {
+        window.render();
+    }
 }
 
 export function showSignup() {
-    window.currentPage = 'signup';
-    if (window.render) window.render();
+    console.log('📝 showSignup called');
+    // Change BOTH local and window currentPage
+    if (window.setCurrentPage) {
+        window.setCurrentPage('auth-signup');
+    } else {
+        // Fallback si setCurrentPage n'existe pas encore
+        window.currentPage = 'auth-signup';
+    }
+    if (window.render) {
+        window.render();
+    }
 }
 
 export function showReset() {
-    window.currentPage = 'reset';
-    if (window.render) window.render();
+    console.log('🔑 showReset called');
+    // Change BOTH local and window currentPage
+    if (window.setCurrentPage) {
+        window.setCurrentPage('auth-reset');
+    } else {
+        // Fallback si setCurrentPage n'existe pas encore
+        window.currentPage = 'auth-reset';
+    }
+    if (window.render) {
+        window.render();
+    }
 }
 
 export function backToHome() {
-    window.currentPage = 'landing';
+    console.log('🏠 backToHome called');
+    // Change BOTH local and window currentPage
+    if (window.setCurrentPage) {
+        window.setCurrentPage('landing');
+    } else {
+        // Fallback si setCurrentPage n'existe pas encore
+        window.currentPage = 'landing';
+    }
     window.location.hash = '';
-    if (window.render) window.render();
+    if (window.render) {
+        window.render();
+    }
 }
 
 // Détecter le paramètre ?signed=true au chargement
