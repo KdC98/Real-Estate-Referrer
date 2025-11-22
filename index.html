@@ -143,7 +143,6 @@
         const MAX_PROFILE_LOAD_ATTEMPTS = 10;
         let currentPage = 'landing';
 
-        // ✅ Exposer une fonction pour changer currentPage depuis les modules
         window.setCurrentPage = function(newPage) {
             console.log('📍 setCurrentPage called:', newPage);
             currentPage = newPage;
@@ -156,8 +155,6 @@
         let tempUserId = null;
         let tempUserProfile = null;
         let globalIsUploading = false;
-
-        // 🎯 Nouveau flag pour la signature
         let contractJustSigned = false;
 
         window.currentUser = null;
@@ -165,7 +162,6 @@
         window.currentPage = 'landing';
         window.contractJustSigned = false;
         
-        // ✅ FONCTION POUR LIRE LES PARAMÈTRES D'URL
         function getQueryParams() {
             const params = {};
             const search = window.location.search.substring(1);
@@ -178,7 +174,6 @@
             return params;
         }
 
-        // Vérifier si on arrive avec ?action=signup
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('action') === 'signup') {
             currentPage = 'auth-signup';
@@ -241,7 +236,6 @@
                         
                         const fullPhone = countryCode + phone;
 
-                        // Vérifier l'unicité du téléphone
                         console.log('🔍 Checking if phone exists:', fullPhone);
                         const phoneCheck = await TFA.checkPhoneExists(fullPhone);
                         
@@ -318,15 +312,23 @@
                         };
                         window.tempPassword = password;
                         
+                        // ✅ CORRECTION DU FLUX 2FA
                         is2FAMode = true;
+                        window.is2FAMode = true;
+                        console.log('✅ 2FA mode activated');
+                        
+                        // ✅ Débloquer le render MAINTENANT pour afficher le clavier
+                        isSignupInProgress = false;
+                        render();
+                        
+                        // ✅ PUIS envoyer le SMS en arrière-plan
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
                         await TFA.send2FACode(data.user.id, currentLang, fullPhone);
                         
-                        // Se déconnecter après l'envoi du SMS
+                        // ✅ Se déconnecter APRÈS l'envoi du SMS
                         await supabase.auth.signOut();
                         
-                        render();
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
                         const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -385,7 +387,6 @@
             };
         }
         
-        // ✅ POPUP OAUTH AVEC TRADUCTIONS COMPLÈTES
         function showOAuthWarning(provider) {
             const modal = document.getElementById('oauthWarningModal');
             const providerName = provider === 'google' ? 'Google' : 'Apple';
@@ -846,9 +847,6 @@
             }
         }
         
-        // ============================================
-        // 🌐 EXPORTS WINDOW
-        // ============================================
         window.showAddLeadForm = LEADS.showAddLeadForm;
         window.closeAddLeadModal = LEADS.closeAddLeadModal;
         window.addLead = LEADS.addLead;
@@ -885,9 +883,6 @@
         window.renderDashboard = RENDERING.renderDashboard;
         window.logout = logout;
         
-        // ============================================
-        // 🚀 INITIALISATION
-        // ============================================
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         
