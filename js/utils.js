@@ -52,7 +52,7 @@ export function prefillTestData() {
 
 // Télécharger le template de contrat
 export async function downloadContractTemplate() {
-    const supabase = window.supabase; // ✅ Récupérer depuis window
+    const supabase = window.supabase;
     
     try {
         console.log('📥 Downloading contract template...');
@@ -76,7 +76,7 @@ export async function downloadContractTemplate() {
 
 // Vérifier si un numéro de téléphone existe déjà
 export async function checkPhoneExists(phone) {
-    const supabase = window.supabase; // ✅ Récupérer depuis window
+    const supabase = window.supabase;
     
     try {
         const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
@@ -96,5 +96,42 @@ export async function checkPhoneExists(phone) {
     } catch (err) {
         console.error('Exception checking phone:', err);
         return { exists: false, error: err.message };
+    }
+}
+
+// Navigation helpers
+export function showLogin() {
+    window.currentPage = 'login';
+    if (window.render) window.render();
+}
+
+export function showSignup() {
+    window.currentPage = 'signup';
+    if (window.render) window.render();
+}
+
+export function showReset() {
+    window.currentPage = 'reset';
+    if (window.render) window.render();
+}
+
+export function backToHome() {
+    window.currentPage = 'landing';
+    window.location.hash = '';
+    if (window.render) window.render();
+}
+
+// Détecter le paramètre ?signed=true au chargement
+export function detectSignedParamOnLoad() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const signed = urlParams.get('signed');
+    
+    if (signed === 'true') {
+        window.contractJustSigned = true;
+        console.log('✅ Contract signed parameter detected');
+        
+        // Nettoyer l'URL
+        const cleanUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
     }
 }
