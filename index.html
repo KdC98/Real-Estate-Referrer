@@ -166,17 +166,7 @@ window.contractJustSigned = false;
             return params;
         }
         // 🎯 Détection unique du paramètre ?signed=... dès le chargement
-(function detectSignedParamOnLoad() {
-    const params = getQueryParams();
-    if (params.signed) {
-        console.log('🎉 Paramètre ?signed détecté au chargement:', params.signed);
-        contractJustSigned = true;
-        window.contractJustSigned = true;
 
-        // On nettoie l'URL tout de suite (sans recharger la page)
-        window.history.replaceState({}, '', window.location.pathname);
-    }
-})();
         // Vérifier si on arrive avec ?action=signup
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('action') === 'signup') {
