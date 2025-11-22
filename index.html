@@ -2347,10 +2347,10 @@ contractForm.addEventListener('submit', async (e) => {
         window.validatePassword = VALIDATION.validatePassword;
         window.validateConfirmPassword = VALIDATION.validateConfirmPassword;
         window.checkFormValidity = VALIDATION.checkFormValidity;
-        window.prefillTestData = prefillTestData;
+        window.prefillTestData = UTILS.prefillTestData;
         window.render = render;
         window.handleChangePassword = handleChangePassword;
-        window.downloadContractTemplate = downloadContractTemplate;
+        window.downloadContractTemplate = UTILS.downloadContractTemplate;
         window.handle2FASubmit = handle2FASubmit;
         window.resend2FACode = resend2FACode;
         window.signInWithGoogle = signInWithGoogle;
@@ -2359,22 +2359,7 @@ contractForm.addEventListener('submit', async (e) => {
         window.closeOAuthWarning = closeOAuthWarning;
         window.proceedWithOAuth = proceedWithOAuth;
         // Mobile menu toggle - utilise le module utils.js
-        window.toggleMobileMenu = () => {
-            if (window.UTILS?.toggleMobileMenu) {
-                window.UTILS.toggleMobileMenu();
-            } else {
-                console.warn('⚠️ UTILS pas encore chargé, fonction inline temporaire');
-                const menu = document.getElementById('mobileMenu');
-                const icon = document.getElementById('menuIcon');
-                if (menu.classList.contains('hidden')) {
-                    menu.classList.remove('hidden');
-                    icon.textContent = '✕';
-                } else {
-                    menu.classList.add('hidden');
-                    icon.textContent = '☰';
-                }
-            }
-        };
+        window.toggleMobileMenu = UTILS.toggleMobileMenu;
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
         supabase.auth.onAuthStateChange(async (event, session) => {
