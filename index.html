@@ -30,6 +30,7 @@
     import * as DASHBOARD from '/js/dashboard.js';
     import * as LEADS from '/js/leads.js';
     import * as TFA from './js/2fa.js';
+    import * as RENDERING from './js/rendering.js';
     
     (async () => {
         await i18next
@@ -53,6 +54,7 @@
         await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
         console.log('✅ All translations loaded!');
         const t = (key) => i18next.t(key);
+        
         async function changeLanguage(langCode) {
             try {
                 await i18next.changeLanguage(langCode);
@@ -136,31 +138,33 @@
         };
         
         let currentUser = null;
-let userProfile = null;
-let profileLoadAttempts = 0;
-const MAX_PROFILE_LOAD_ATTEMPTS = 10;
-let currentPage = 'landing';
+        let userProfile = null;
+        let profileLoadAttempts = 0;
+        const MAX_PROFILE_LOAD_ATTEMPTS = 10;
+        let currentPage = 'landing';
 
-// ✅ Exposer une fonction pour changer currentPage depuis les modules
-window.setCurrentPage = function(newPage) {
-    console.log('📍 setCurrentPage called:', newPage);
-    currentPage = newPage;
-    window.currentPage = newPage;
-};
-let isPasswordRecoveryMode = false;
-let is2FAMode = false;
-let isSignupInProgress = false;
-let tempUserId = null;
-let tempUserProfile = null;
-let globalIsUploading = false;
+        // ✅ Exposer une fonction pour changer currentPage depuis les modules
+        window.setCurrentPage = function(newPage) {
+            console.log('📍 setCurrentPage called:', newPage);
+            currentPage = newPage;
+            window.currentPage = newPage;
+        };
+        
+        let isPasswordRecoveryMode = false;
+        let is2FAMode = false;
+        let isSignupInProgress = false;
+        let tempUserId = null;
+        let tempUserProfile = null;
+        let globalIsUploading = false;
 
-// 🎯 Nouveau flag pour la signature
-let contractJustSigned = false;
+        // 🎯 Nouveau flag pour la signature
+        let contractJustSigned = false;
 
-window.currentUser = null;
-window.userProfile = null;
-window.currentPage = 'landing';
-window.contractJustSigned = false;
+        window.currentUser = null;
+        window.userProfile = null;
+        window.currentPage = 'landing';
+        window.contractJustSigned = false;
+        
         // ✅ FONCTION POUR LIRE LES PARAMÈTRES D'URL
         function getQueryParams() {
             const params = {};
@@ -173,652 +177,12 @@ window.contractJustSigned = false;
             }
             return params;
         }
-        // 🎯 Détection unique du paramètre ?signed=... dès le chargement
 
         // Vérifier si on arrive avec ?action=signup
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('action') === 'signup') {
             currentPage = 'auth-signup';
             window.currentPage = 'auth-signup';
-        }
-        
-        function renderLandingPage() {
-            return `
-                <div class="min-h-screen">
-                    <header class="container mx-auto px-4 py-6">
-    <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
-        
-        <!-- Desktop Navigation -->
-        <div class="hidden lg:flex items-center gap-3">
-            <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
-                <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
-                <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
-                <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
-                <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
-                <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
-                <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
-                <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
-            </div>
-            <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
-            <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
-            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
-        </div>
- <!-- Mobile Menu Button -->
-        <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl">
-            <span id="menuIcon">☰</span>
-        </button>
-    </div>
-    
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden lg:hidden mt-4 bg-gray-800/95 backdrop-blur-md rounded-xl p-4 space-y-3">
-        <div class="flex flex-wrap gap-2 justify-center pb-3 border-b border-gray-700">
-            <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
-            <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
-            <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
-            <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
-            <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
-            <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
-            <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
-            <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
-        </div>
-        <a href="how-it-works.html" class="block text-center text-white hover:text-yellow-400 transition font-medium py-2">${t('nav.how_it_works')}</a>
-        <button onclick="showLogin(); toggleMobileMenu();" class="w-full text-center text-white hover:text-yellow-400 transition font-medium py-2">${t('nav.login')}</button>
-        <button onclick="showSignup(); toggleMobileMenu();" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">${t('nav.signup')}</button>
-    </div>
-</header>
-                    <main class="container mx-auto px-4 py-20">
-                        <div class="text-center mb-12">
-                            <h2 class="text-5xl md:text-6xl font-bold mb-6">
-                                ${t('hero.title')}
-                            </h2>
-                            <p class="text-xl text-gray-300 mb-8">
-                                ${t('hero.subtitle')}
-                            </p>
-                            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
-                                ${t('hero.cta_button')}
-                            </button>
-                        </div>
-                        <div class="grid md:grid-cols-3 gap-6 my-16">
-                            <div class="rounded-xl overflow-hidden shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
-                            </div>
-                            <div class="rounded-xl overflow-hidden shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" alt="Dubai Marina" class="w-full h-64 object-cover">
-                            </div>
-                            <div class="rounded-xl overflow-hidden shadow-2xl">
-                                <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
-                            </div>
-                        </div>
-                        <div class="grid md:grid-cols-3 gap-8 mt-20">
-                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
-                                <div class="text-gray-300">${t('stats.commission_label')}</div>
-                            </div>
-                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.support_value')}</div>
-                                <div class="text-gray-300">${t('stats.support_label')}</div>
-                            </div>
-                            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                                <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.timeline_value')}</div>
-                                <div class="text-gray-300">${t('stats.timeline_label')}</div>
-                            </div>
-                        </div>
-                        <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
-                            <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
-                            <div class="grid md:grid-cols-2 gap-8">
-                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
-                                    <div class="space-y-3 text-gray-300">
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.sale_example_1_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_1_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.sale_example_2_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_2_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.sale_example_3_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.sale_example_3_commission')}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                                    <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
-                                    <div class="space-y-3 text-gray-300">
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.rental_example_1_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_1_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.rental_example_2_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_2_commission')}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>${t('gains.rental_example_3_property')}</span>
-                                            <span class="font-bold text-yellow-500">${t('gains.rental_example_3_commission')}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                    
-                    <footer class="bg-gray-900 bg-opacity-80 backdrop-blur-md mt-20">
-                        <div class="container mx-auto px-4 py-12">
-                            <div class="grid md:grid-cols-3 gap-8 mb-8">
-                                <div>
-                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.navigation_title')}</h3>
-                                    <ul class="space-y-2">
-                                        <li><button onclick="backToHome()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.home')}</button></li>
-                                        <li><a href="how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.how_it_works')}</a></li>
-                                        <li><button onclick="showLogin()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.login')}</button></li>
-                                        <li><button onclick="showSignup()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.signup')}</button></li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.legal_title')}</h3>
-                                    <ul class="space-y-2">
-                                        <li><a href="terms.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.terms')}</a></li>
-                                        <li><a href="privacy.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.privacy')}</a></li>
-                                        <li><button onclick="downloadContractTemplate()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.contract_template')}</button></li>
-                                    </ul>
-                                </div>
-                                
-                                <div>
-                                    <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.contact_title')}</h3>
-                                    <ul class="space-y-3 text-gray-300">
-                                        <li class="flex items-center gap-2">
-                                            <span>📧</span>
-                                            <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a>
-                                        </li>
-                                        <li class="flex items-center gap-2">
-                                            <span>📍</span>
-                                            <span>${t('common:footer.location')}</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
-                                ${t('common:footer.copyright')}
-                            </div>
-                        </div>
-                    </footer>
-                </div>
-            `;
-        }
-        function renderAuthPage(mode) {
-            let title, buttonText, linkText, linkAction;
-            if (is2FAMode) {
-                return `
-                    <div class="min-h-screen flex items-center justify-center p-4">
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
-                            <h2 class="text-3xl font-bold mb-6 text-center">${t('auth:two_factor.title')}</h2>
-                            <p class="text-center mb-6 text-gray-300">${t('auth:two_factor.description')}</p>
-                            
-                            <form onsubmit="handle2FASubmit(event)" class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-medium mb-2">${t('auth:two_factor.code_label')}</label>
-                                    <input 
-                                        type="text" 
-                                        id="code2fa"
-                                        maxlength="6"
-                                        pattern="[0-9]{6}"
-                                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-yellow-400 text-white text-center text-2xl tracking-widest"
-                                        placeholder="000000"
-                                        required
-                                    />
-                                </div>
-                                
-                                <button type="submit" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition">
-                                    ${t('auth:two_factor.verify_button')}
-                                </button>
-                                
-                                <button type="button" onclick="resend2FACode()" class="w-full text-yellow-400 hover:text-yellow-300 transition py-2">
-                                    ${t('auth:two_factor.resend_button')}
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            if (mode === 'login') {
-                title = t('auth:login_title');
-                buttonText = t('auth:login_button');
-                linkText = t('auth:no_account');
-                linkAction = 'showSignup()';
-            } else if (mode === 'signup') {
-                title = t('auth:signup_title');
-                buttonText = t('auth:signup_button');
-                linkText = t('auth:have_account');
-                linkAction = 'showLogin()';
-            } else if (mode === 'reset') {
-                title = t('auth:reset_title');
-                buttonText = t('auth:reset_button');
-                linkText = t('auth:back_to_login');
-                linkAction = 'showLogin()';
-            } else if (mode === 'change-password') {
-                title = 'Nouveau mot de passe';
-                buttonText = 'Changer le mot de passe';
-                linkText = 'Retour à la connexion';
-                linkAction = 'showLogin()';
-            }
-            return `
-                <div class="min-h-screen flex items-center justify-center px-4">
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
-                        <button onclick="backToHome()" class="text-gray-400 hover:text-white mb-6 flex items-center">
-                            ← ${t('auth:back_home')}
-                        </button>
-                        
-                        <h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>
-                        ${mode === 'login' || mode === 'signup' ? `
-                            <!-- OAuth Buttons Vercel Style -->
-                            <div class="space-y-3 mb-6">
-                                <button onclick="signInWithGoogle()" type="button"
-                                        class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white hover:bg-gray-50 text-gray-900 rounded-lg border-2 border-gray-300 hover:border-gray-400 transition-all">
-                                    <svg class="w-5 h-5" viewBox="0 0 24 24">
-                                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                                    </svg>
-                                    <span class="font-semibold">${t('auth:continue_with_google')}</span>
-                                </button>
-                                
-                                <button onclick="signInWithApple()" type="button"
-                                        class="w-full flex items-center justify-center gap-3 px-4 py-3 bg-black hover:bg-gray-900 text-white rounded-lg border-2 border-gray-800 hover:border-gray-700 transition-all">
-                                    <svg class="w-5 h-5" viewBox="0 0 24 24">
-                                        <path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-                                    </svg>
-                                    <span class="font-semibold">${t('auth:continue_with_apple')}</span>
-                                </button>
-                            </div>
-                            
-                            <!-- Separator -->
-                            <div class="relative my-6">
-                                <div class="absolute inset-0 flex items-center">
-                                    <div class="w-full border-t border-gray-600"></div>
-                                </div>
-                                <div class="relative flex justify-center text-sm">
-                                    <span class="px-4 bg-gray-800 text-gray-400" data-i18n="auth:or">OR</span>
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        <form id="authForm" class="space-y-4">
-                            ${mode === 'signup' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${t('auth:name_label')}</label>
-                                    <input 
-                                        type="text" 
-                                        id="name" 
-                                        required 
-                                        minlength="2"
-                                        maxlength="100"
-                                        placeholder="${t('auth:full_name_placeholder')}"
-                                        class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                        oninput="validateName()"
-                                    >
-                                    <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                </div>
-                                
-                                <div>
-                                    <label class="block mb-2 font-medium">${t('auth:phone_label')}</label>
-                                    <div class="flex gap-2">
-                                        <select 
-                                            id="countryCode" 
-                                            class="w-32 px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                        >
-                                            <option value="+971">🇦🇪 +971</option>
-                                            <option value="+33">🇫🇷 +33</option>
-                                            <option value="+44">🇬🇧 +44</option>
-                                            <option value="+966">🇸🇦 +966</option>
-                                            <option value="+91">🇮🇳 +91</option>
-                                            <option value="+92">🇵🇰 +92</option>
-                                            <option value="+86">🇨🇳 +86</option>
-                                            <option value="+63">🇵🇭 +63</option>
-                                            <option value="+7">🇷🇺 +7</option>
-                                            <option value="+20">🇪🇬 +20</option>
-                                            <option value="+1">🇺🇸 +1</option>
-                                        </select>
-                                        <input 
-                                            type="tel" 
-                                            id="phone" 
-                                            required 
-                                            placeholder="${t('auth:phone_placeholder')}"
-                                            class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                            oninput="validatePhone()"
-                                        >
-                                    </div>
-                                    <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
-                                        <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
-                                        <p class="text-xs text-blue-200" data-i18n="auth:sms_verification_notice">
-${t('auth:sms_verification_notice')}
-</p>
-                                    </div>
-                                    <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                </div>
-                            ` : ''}
-                            
-                            ${mode !== 'change-password' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
-                                    <input 
-                                        type="email" 
-                                        id="email" 
-                                        required 
-                                        placeholder="${t('auth:email_placeholder')}"
-                                        class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
-                                        ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
-                                    >
-                                    ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
-                                </div>
-                            ` : ''}
-                            
-                            ${mode !== 'reset' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Nouveau mot de passe' : t('auth:password_label')}</label>
-                                    <div class="relative">
-                                        <input 
-                                            type="password" 
-                                            id="${mode === 'change-password' ? 'newPassword' : 'password'}" 
-                                            required 
-                                            minlength="8" 
-                                            placeholder="••••••••"
-                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
-                                            ${mode === 'signup' || mode === 'change-password' ? 'oninput="validatePassword()"' : ''}
-                                        >
-                                        <button 
-                                            type="button" 
-                                            onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" 
-                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                                            aria-label="Afficher/masquer le mot de passe"
-                                        >
-                                            <span class="text-xl">👁️</span>
-                                        </button>
-                                    </div>
-                                    ${mode === 'signup' || mode === 'change-password' ? `
-                                        <div class="mt-2">
-                                            <div class="flex items-center gap-2 text-xs text-gray-400">
-                                                <div id="passwordStrength" class="flex-1 h-1.5 bg-gray-600 rounded-full overflow-hidden">
-                                                    <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300"></div>
-                                                </div>
-                                                <span id="passwordStrengthText" class="min-w-[60px]"></span>
-                                            </div>
-                                            <div class="text-xs text-gray-400 mt-1.5 space-y-0.5">
-                                                <div id="req-length" class="flex items-center gap-1">
-                                                    <span class="w-3">•</span>
-                                                    <span data-i18n="auth:password_req_length">${t('auth:password_req_length')}</span>
-                                                </div>
-                                                <div id="req-letter" class="flex items-center gap-1">
-                                                    <span class="w-3">•</span>
-                                                    <span data-i18n="auth:password_req_letter">${t('auth:password_req_letter')}</span>
-                                                </div>
-                                                <div id="req-number" class="flex items-center gap-1">
-                                                    <span class="w-3">•</span>
-                                                    <span data-i18n="auth:password_req_number">${t('auth:password_req_number')}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ` : `<div class="text-sm text-gray-400 mt-1">${t('auth:password_hint')}</div>`}
-                                    <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                </div>
-                            ` : ''}
-                            
-                            ${mode === 'signup' || mode === 'change-password' ? `
-                                <div>
-                                    <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Confirmer le nouveau mot de passe' : t('auth:confirm_password_label')}</label>
-                                    <div class="relative">
-                                        <input 
-                                            type="password" 
-                                            id="${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}" 
-                                            required 
-                                            minlength="8" 
-                                            placeholder="••••••••"
-                                            class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
-                                            oninput="validateConfirmPassword()"
-                                        >
-                                        <button 
-                                            type="button" 
-                                            onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" 
-                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                                            aria-label="Afficher/masquer la confirmation"
-                                        >
-                                            <span class="text-xl">👁️</span>
-                                        </button>
-                                    </div>
-                                    <div id="confirmPasswordError" class="text-red-400 text-sm mt-1 hidden"></div>
-                                    <div id="confirmPasswordSuccess" class="text-green-400 text-sm mt-1 hidden flex items-center gap-1">
-                                        <span>✓</span>
-                                        <span>Les mots de passe correspondent</span>
-                                    </div>
-                                </div>
-                            ` : ''}
-                            
-                            ${mode === 'login' ? `
-                                <div class="text-right">
-                                    <button type="button" onclick="showReset()" class="text-yellow-400 hover:text-yellow-300 text-sm transition-colors">
-                                        ${t('auth:forgot_password')}
-                                    </button>
-                                </div>
-                            ` : ''}
-                            
-                            <div id="authError" class="text-red-400 text-sm hidden bg-red-900/20 border border-red-500/50 rounded-lg p-3"></div>
-                            
-                            <button 
-                                type="submit" 
-                                id="submitButton"
-                                class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                                ${mode === 'signup' || mode === 'change-password' ? 'disabled' : ''}
-                            >
-                                ${buttonText}
-                            </button>
-                        </form>
-                        
-                        <p class="text-center mt-6 text-gray-400">
-                            <button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">
-                                ${linkText}
-                            </button>
-                        </p>
-                        
-                    </div>
-                </div>
-            `;
-        }
-        function renderDashboard() {
-            console.log('🧭 DEBUG renderDashboard called', {
-        userProfile,
-        role: userProfile?.role,
-        contract_path: userProfile?.contract_path,
-        contract_file_url: userProfile?.contract_file_url,
-        contract_status: userProfile?.contract_status,
-    });
-            if (!userProfile) {
-                return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
-            }
-            const isAdmin = userProfile.role === 'admin';
-            
-            // ✅ VÉRIFICATION AMÉLIORÉE DU CONTRAT
-            const hasValidContract = userProfile.contract_path || 
-                                    userProfile.contract_file_url || 
-                                    userProfile.contract_status === 'signed' || 
-                                    userProfile.contract_status === 'approved';
-            
-            console.log('📄 Contract check:', {
-                contract_path: userProfile.contract_path,
-                contract_file_url: userProfile.contract_file_url,
-                contract_status: userProfile.contract_status,
-                hasValidContract: hasValidContract
-            });
-            
-            const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
-            return `
-                <div class="min-h-screen">
-                    <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md">
-                        <div class="container mx-auto px-4 py-4">
-                            <div class="flex justify-between items-center">
-                                <h1 class="text-2xl font-bold text-yellow-400">${dashboardTitle}</h1>
-                                <div class="flex items-center gap-4">
-                                    <span class="text-gray-300">${userProfile.name}</span>
-                                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
-                                        ${t('dashboard:logout')}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-                    <main class="container mx-auto px-4 py-8">
-                        ${!hasValidContract && !isAdmin ? `
-    <div id="contractRequirement" class="mb-6 bg-gradient-to-r from-blue-900/50 to-yellow-900/50 border-2 border-yellow-500 p-8 rounded-xl shadow-2xl">
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Contenu explicatif -->
-            <div class="flex-1">
-                <h3 class="text-2xl font-bold text-yellow-400 mb-4">
-                    📝 ${t('dashboard:contract.required')}
-                </h3>
-                
-                <!-- Explication détaillée -->
-                <div class="bg-white/10 rounded-lg p-4 mb-6">
-                    <h4 class="font-bold text-white mb-3">
-                        ❓ ${t('dashboard:contract.what_is_it')}
-                    </h4>
-                    <p class="text-gray-300 text-sm mb-3">
-                        ${t('dashboard:contract.explanation')}
-                    </p>
-                    <ul class="space-y-2 text-sm text-gray-300 ml-4">
-                        <li>✅ <strong>${t('dashboard:contract.benefit1_title')}</strong> ${t('dashboard:contract.benefit1_desc')}</li>
-                        <li>✅ <strong>${t('dashboard:contract.benefit2_title')}</strong> ${t('dashboard:contract.benefit2_desc')}</li>
-                        <li>✅ <strong>${t('dashboard:contract.benefit3_title')}</strong> ${t('dashboard:contract.benefit3_desc')}</li>
-                        <li>✅ <strong>${t('dashboard:contract.benefit4_title')}</strong> ${t('dashboard:contract.benefit4_desc')}</li>
-                        <li>✅ <strong>${t('dashboard:contract.benefit5_title')}</strong> ${t('dashboard:contract.benefit5_desc')}</li>
-                    </ul>
-                </div>
-
-                <!-- Étapes -->
-                <div class="grid md:grid-cols-2 gap-8">
-                   <!-- Nouvelle signature électronique -->
-<div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 p-6 rounded-lg">
-    <div class="flex items-center gap-3 mb-4">
-        <span class="text-4xl">✍️</span>
-        <div>
-            <h4 class="font-bold text-green-300 text-lg">Signature Électronique</h4>
-            <p class="text-xs text-gray-400">Nouveau : Signez votre contrat en ligne en 2 minutes</p>
-        </div>
-    </div>
-    
-    <ul class="space-y-2 text-sm text-gray-300 mb-4">
-        <li class="flex items-center gap-2">
-            <span class="text-green-400">✓</span>
-            <span>Signature au doigt ou à la souris</span>
-        </li>
-        <li class="flex items-center gap-2">
-            <span class="text-green-400">✓</span>
-            <span>Validation instantanée</span>
-        </li>
-        <li class="flex items-center gap-2">
-            <span class="text-green-400">✓</span>
-            <span>Légalement valide à Dubai</span>
-        </li>
-        <li class="flex items-center gap-2">
-            <span class="text-green-400">✓</span>
-            <span>Aucun téléchargement nécessaire</span>
-        </li>
-    </ul>
-    
-    <a href="/contract-signature.html" 
-       class="block w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-3 rounded-lg transition text-center">
-        🖊️ Signer mon contrat maintenant
-    </a>
-</div>
-            
-            </div>
-        </div>
-    </div>
-` : ''}
-                        
-                        ${hasValidContract && !isAdmin ? `
-                            <div id="contractUploaded" class="mb-6 bg-green-900 bg-opacity-50 border-l-4 border-green-500 p-6 rounded-lg shadow-lg">
-                                <div class="flex items-center gap-4">
-                                    <div class="text-3xl flex-shrink-0">✅</div>
-                                    <div>
-                                        <h3 class="text-xl font-bold text-green-300">Contrat signé et validé</h3>
-                                        <p class="text-gray-300">Vous pouvez maintenant ajouter des leads</p>
-                                    </div>
-                                </div>
-                            </div>
-                        ` : ''}
-                        
-                        <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
-                        
-                        ${!isAdmin ? `
-                            <div class="mb-6">
-                                <button 
-                                    id="addLeadBtn"
-                                    onclick="showAddLeadForm()" 
-                                    ${!hasValidContract ? 'disabled' : ''}
-                                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition ${!hasValidContract ? 'opacity-50 cursor-not-allowed' : ''}"
-                                >
-                                    ${t('dashboard:add_lead')}
-                                </button>
-                            </div>
-                        ` : ''}
-                        
-                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-8">
-                            <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
-                            <div id="leadsTable" class="overflow-x-auto"></div>
-                        </div>
-                    </main>
-                    
-                    <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                        <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full">
-                            <h3 class="text-2xl font-bold mb-6">${t('dashboard:add_lead')}</h3>
-                            <form id="addLeadForm" class="space-y-4">
-                                <div class="grid md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:client_name')}</label>
-                                        <input type="text" id="clientName" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:client_email')}</label>
-                                        <input type="email" id="clientEmail" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:client_phone')}</label>
-                                        <input type="tel" id="clientPhone" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:property_type')}</label>
-                                        <select id="propertyType" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                            <option value="">${t('dashboard:select_type')}</option>
-                                            <option value="sale_buyer">${t('dashboard:sale_buyer')}</option>
-                                            <option value="sale_seller">${t('dashboard:sale_seller')}</option>
-                                            <option value="rental_landlord">${t('dashboard:rental_landlord')}</option>
-                                            <option value="rental_tenant">${t('dashboard:rental_tenant')}</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block mb-2">${t('dashboard:budget')}</label>
-                                        <input type="number" id="budget" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    </div>
-                                </div>
-                                <div class="flex gap-4">
-                                    <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
-                                        ${t('dashboard:add')}
-                                    </button>
-                                    <button type="button" onclick="document.getElementById('addLeadModal').classList.add('hidden')" class="flex-1 bg-gray-600 hover:bg-gray-700 py-3 rounded-lg transition">
-                                        ${t('dashboard:cancel')}
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            `;
         }
         
         function prefillTestData() {
@@ -829,11 +193,11 @@ ${t('auth:sms_verification_notice')}
                 document.getElementById('email').value = 'karyne@itooki.fr';
                 document.getElementById('password').value = 'Test1234';
                 document.getElementById('confirmPassword').value = 'Test1234';
-                validateName();
-                validatePhone();
-                validateEmail();
-                validatePassword();
-                validateConfirmPassword();
+                VALIDATION.validateName();
+                VALIDATION.validatePhone();
+                VALIDATION.validateEmail();
+                VALIDATION.validatePassword();
+                VALIDATION.validateConfirmPassword();
                 console.log('✅ Données de test pré-remplies');
             }
         }
@@ -860,46 +224,44 @@ ${t('auth:sms_verification_notice')}
                 
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password')?.value;
+                
                 try {
                     if (mode === 'signup') {
                         console.log('📝 Processing signup');
                         const name = document.getElementById('name').value.trim();
                         const phone = document.getElementById('phone').value.trim();
                         const countryCode = document.getElementById('countryCode').value;
-                        
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         
-                        if (!validateName()) throw new Error('Nom invalide');
-                        if (!validatePhone()) throw new Error('Numéro de téléphone invalide');
-                        if (!validateEmail()) throw new Error('Email invalide');
-                        if (!validatePassword()) throw new Error('Mot de passe invalide');
+                        if (!VALIDATION.validateName()) throw new Error('Nom invalide');
+                        if (!VALIDATION.validatePhone()) throw new Error('Numéro de téléphone invalide');
+                        if (!VALIDATION.validateEmail()) throw new Error('Email invalide');
+                        if (!VALIDATION.validatePassword()) throw new Error('Mot de passe invalide');
                         if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
                         
                         const fullPhone = countryCode + phone;
 
-                        // NOUVEAU : Vérifier l'unicité du téléphone
-                console.log('🔍 Checking if phone exists:', fullPhone);
-                const phoneCheck = await checkPhoneExists(fullPhone);
-                
-                if (phoneCheck.exists) {
-                    const message = `Ce numéro de téléphone est déjà utilisé${phoneCheck.userName ? ' par ' + phoneCheck.userName : ''}`;
-                    
-                    // Afficher dans errorDiv
-                    if (errorDiv) {
-                        errorDiv.textContent = message;
-                        errorDiv.classList.remove('hidden');
-                    }
-                    
-                    // Réactiver le bouton
-                    const submitButton = document.getElementById('submitButton');
-                    if (submitButton) {
-                        submitButton.disabled = false;
-                        submitButton.textContent = t('auth:signup_button');
-                    }
-                    
-                    console.log('❌ Phone already exists, blocking signup');
-                    return;
-                }
+                        // Vérifier l'unicité du téléphone
+                        console.log('🔍 Checking if phone exists:', fullPhone);
+                        const phoneCheck = await TFA.checkPhoneExists(fullPhone);
+                        
+                        if (phoneCheck.exists) {
+                            const message = `Ce numéro de téléphone est déjà utilisé${phoneCheck.userName ? ' par ' + phoneCheck.userName : ''}`;
+                            
+                            if (errorDiv) {
+                                errorDiv.textContent = message;
+                                errorDiv.classList.remove('hidden');
+                            }
+                            
+                            const submitButton = document.getElementById('submitButton');
+                            if (submitButton) {
+                                submitButton.disabled = false;
+                                submitButton.textContent = t('auth:signup_button');
+                            }
+                            
+                            console.log('❌ Phone already exists, blocking signup');
+                            return;
+                        }
                         
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = true;
@@ -917,30 +279,34 @@ ${t('auth:sms_verification_notice')}
                                 data: { name, phone: fullPhone }
                             }
                         });
+                        
                         if (error) {
                             isSignupInProgress = false;
                             throw error;
                         }
                         
                         console.log('✅ Signup successful, user:', data.user);
-                        // ✅ Upsert du profil AVANT la déconnexion (RLS OK)
-const { error: upsertErr } = await supabase
-  .from('profiles')
-  .upsert({
-    id: data.user.id,
-    name, phone: fullPhone, email,
-    role: 'referrer',
-    contract_status: 'pending',
-    phone_verified: false
-  }, { onConflict: 'id' });
-if (upsertErr && upsertErr.code !== '23505') {
-  isSignupInProgress = false;
-  throw new Error('Erreur création profil: ' + upsertErr.message);
-}
-console.log('✅ Profile created via upsert');
+                        
+                        // Upsert du profil AVANT la déconnexion
+                        const { error: upsertErr } = await supabase
+                            .from('profiles')
+                            .upsert({
+                                id: data.user.id,
+                                name, 
+                                phone: fullPhone, 
+                                email,
+                                role: 'referrer',
+                                contract_status: 'pending',
+                                phone_verified: false
+                            }, { onConflict: 'id' });
+                        
+                        if (upsertErr && upsertErr.code !== '23505') {
+                            isSignupInProgress = false;
+                            throw new Error('Erreur création profil: ' + upsertErr.message);
+                        }
+                        console.log('✅ Profile created via upsert');
                         
                         tempUserId = data.user.id;
-                       
                         tempUserProfile = {
                             id: data.user.id,
                             name: name,
@@ -955,9 +321,10 @@ console.log('✅ Profile created via upsert');
                         is2FAMode = true;
                         console.log('📱 Sending 2FA code...');
                         const currentLang = i18next.language || 'fr';
-                        await send2FACode(data.user.id, currentLang, fullPhone);
-                        // ✅ Se déconnecter seulement APRÈS avoir envoyé le SMS
-await supabase.auth.signOut();
+                        await TFA.send2FACode(data.user.id, currentLang, fullPhone);
+                        
+                        // Se déconnecter après l'envoi du SMS
+                        await supabase.auth.signOut();
                         
                         render();
                     } else if (mode === 'login') {
@@ -991,6 +358,7 @@ await supabase.auth.signOut();
                 }
             };
         }
+        
         async function handleReset() {
             const form = document.getElementById('authForm');
             const errorDiv = document.getElementById('authError');
@@ -1008,7 +376,7 @@ await supabase.auth.signOut();
                     if (error) throw error;
                     
                     alert(t('auth:reset_email_sent'));
-                    showLogin();
+                    UTILS.showLogin();
                 } catch (error) {
                     console.error('Reset error:', error);
                     errorDiv.textContent = error.message;
@@ -1066,6 +434,7 @@ await supabase.auth.signOut();
             modal.classList.add('hidden');
             modal.innerHTML = '';
         }
+        
         async function proceedWithOAuth(provider) {
             closeOAuthWarning();
             
@@ -1085,9 +454,11 @@ await supabase.auth.signOut();
                 alert(`Erreur lors de la connexion avec ${provider}: ` + error.message);
             }
         }
+        
         async function signInWithGoogle() {
             showOAuthWarning('google');
         }
+        
         async function signInWithApple() {
             showOAuthWarning('apple');
         }
@@ -1102,6 +473,7 @@ await supabase.auth.signOut();
                 
                 const newPassword = document.getElementById('newPassword').value;
                 const confirmPassword = document.getElementById('confirmNewPassword').value;
+                
                 if (newPassword !== confirmPassword) {
                     errorDiv.textContent = 'Les mots de passe ne correspondent pas';
                     errorDiv.classList.remove('hidden');
@@ -1122,6 +494,7 @@ await supabase.auth.signOut();
                     errorDiv.classList.remove('hidden');
                     return;
                 }
+                
                 try {
                     console.log('🔑 Updating password...');
                     const { error } = await supabase.auth.updateUser({ 
@@ -1134,7 +507,7 @@ await supabase.auth.signOut();
                     isPasswordRecoveryMode = false;
                     alert('✅ Mot de passe changé avec succès !');
                     await supabase.auth.signOut();
-                    showLogin();
+                    UTILS.showLogin();
                 } catch (error) {
                     console.error('❌ Change password error:', error);
                     errorDiv.textContent = error.message;
@@ -1143,225 +516,6 @@ await supabase.auth.signOut();
             };
         }
         
-        // ✅ FONCTION loadDashboardContent() AMÉLIORÉE
-        async function loadDashboardContent() {
-            if (!userProfile) return;
-            const isAdmin = userProfile.role === 'admin';
-            let leads;
-            let profiles = {};
-            if (isAdmin) {
-                console.log('📊 Loading leads for admin...');
-                const { data: leadsData, error: leadsError } = await supabase
-                    .from('leads')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                if (leadsError) {
-                    console.error('❌ Error loading leads:', leadsError);
-                    document.getElementById('leadsTable').innerHTML = `
-                        <div class="text-red-400 p-4">
-                            Erreur lors du chargement des leads: ${leadsError.message}
-                        </div>
-                    `;
-                    return;
-                }
-                console.log('✅ Leads loaded:', leadsData?.length);
-                console.log('👥 Loading all profiles...');
-                const { data: profilesData, error: profilesError } = await supabase
-                    .from('profiles')
-                    .select('*');
-                if (profilesError) {
-                    console.error('❌ Error loading profiles:', profilesError);
-                } else {
-                    console.log('✅ Profiles loaded:', profilesData?.length);
-                    profilesData.forEach(profile => {
-                        profiles[profile.id] = profile;
-                    });
-                }
-                leads = leadsData.map(lead => ({
-                    ...lead,
-                    referrer_name: profiles[lead.referrer_id]?.name || 'N/A'
-                }));
-            } else {
-                console.log('📊 Loading leads for referrer...');
-                const { data, error } = await supabase
-                    .from('leads')
-                    .select('*')
-                    .eq('referrer_id', currentUser.id)
-                    .order('created_at', { ascending: false });
-                if (error) {
-                    console.error('❌ Error loading leads:', error);
-                    document.getElementById('leadsTable').innerHTML = `
-                        <div class="text-red-400 p-4">
-                            Erreur lors du chargement des leads: ${error.message}
-                        </div>
-                    `;
-                    return;
-                }
-                console.log('✅ Leads loaded:', data?.length);
-                leads = data;
-            }
-            const totalEarnings = leads.filter(l => l.status === 'vendu').reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
-            const activeLeads = leads.filter(l => l.status !== 'vendu').length;
-            const closedSales = leads.filter(l => l.status === 'vendu').length;
-            document.getElementById('stats').innerHTML = `
-                ${isAdmin ? `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${leads.length}</div>
-                        <div class="text-gray-300">${t('dashboard:total_referrers')}</div>
-                    </div>
-                ` : `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard:total_earnings')}</div>
-                    </div>
-                `}
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                    <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
-                    <div class="text-gray-300">${t('dashboard:active_leads')}</div>
-                </div>
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                    <div class="text-3xl font-bold text-yellow-500">${closedSales}</div>
-                    <div class="text-gray-300">${t('dashboard:closed_sales')}</div>
-                </div>
-                ${isAdmin ? `
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
-                        <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                        <div class="text-gray-300">${t('dashboard:commissions_paid')}</div>
-                    </div>
-                ` : ''}
-            `;
-            const statusColors = {
-                'nouveau': 'bg-blue-500',
-                'visite': 'bg-yellow-500',
-                'offre': 'bg-orange-500',
-                'vendu': 'bg-green-500'
-            };
-            document.getElementById('leadsTable').innerHTML = `
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-gray-700">
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:referrer')}</th>` : ''}
-                            <th class="text-left py-3 px-4">${t('dashboard:client_name')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:property_type')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:budget')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:status')}</th>
-                            <th class="text-left py-3 px-4">${t('dashboard:commission')}</th>
-                            ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:actions')}</th>` : ''}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${leads.length === 0 ? `
-                            <tr>
-                                <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
-                                    ${t('dashboard:no_leads')}
-                                </td>
-                            </tr>
-                        ` : leads.map(lead => `
-                            <tr class="border-b border-gray-700">
-                                ${isAdmin ? `<td class="py-3 px-4">${lead.referrer_name}</td>` : ''}
-                                <td class="py-3 px-4">${lead.client_name}</td>
-                                <td class="py-3 px-4">${t('dashboard:' + lead.property_type)}</td>
-                                <td class="py-3 px-4">${lead.budget?.toLocaleString()} AED</td>
-                                <td class="py-3 px-4">
-                                    ${isAdmin ? `
-                                        <select onchange="updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard:status_new')}</option>
-                                            <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard:status_visit')}</option>
-                                            <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard:status_offer')}</option>
-                                            <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard:status_sold')}</option>
-                                        </select>
-                                    ` : `
-                                        <span class="px-3 py-1 rounded-full ${statusColors[lead.status]} text-gray-900 font-bold text-sm">
-                                            ${t('dashboard:status_' + lead.status.replace('é', 'e'))}
-                                        </span>
-                                    `}
-                                </td>
-                                <td class="py-3 px-4 font-bold text-yellow-500">
-                                    ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
-                                </td>
-                                ${isAdmin ? `
-                                    <td class="py-3 px-4">
-                                        ${lead.status !== 'vendu' ? `
-                                            <button onclick="markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
-                                                ${t('dashboard:mark_sold')}
-                                            </button>
-                                        ` : '-'}
-                                    </td>
-                                ` : ''}
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-        }
-        
-        function showAddLeadForm() {
-            const hasValidContract = userProfile?.contract_path || 
-                                    userProfile?.contract_file_url || 
-                                    userProfile?.contract_status === 'signed' || 
-                                    userProfile?.contract_status === 'approved';
-            
-            if (!hasValidContract) {
-                alert(t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
-                return;
-            }
-            document.getElementById('addLeadModal').classList.remove('hidden');
-            
-            const form = document.getElementById('addLeadForm');
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                
-                const leadData = {
-                    referrer_id: currentUser.id,
-                    client_name: document.getElementById('clientName').value,
-                    client_email: document.getElementById('clientEmail').value,
-                    client_phone: document.getElementById('clientPhone').value,
-                    property_type: document.getElementById('propertyType').value,
-                    budget: parseFloat(document.getElementById('budget').value),
-                    status: 'nouveau'
-                };
-                const { error } = await supabase.from('leads').insert([leadData]);
-                
-                if (error) {
-                    console.error('Error adding lead:', error);
-                    alert('Erreur lors de l\'ajout du lead');
-                    return;
-                }
-                document.getElementById('addLeadModal').classList.add('hidden');
-                form.reset();
-                await loadDashboardContent();
-            };
-        }
-        async function updateLeadStatus(leadId, newStatus) {
-            const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
-            
-            if (error) {
-                console.error('Error updating status:', error);
-                alert('Erreur lors de la mise à jour du statut');
-                return;
-            }
-            await loadDashboardContent();
-        }
-        async function markAsSold(leadId) {
-            const salePrice = prompt('Prix de vente (AED):');
-            if (!salePrice) return;
-            const price = parseFloat(salePrice);
-            const agentCommission = price * 0.01;
-            const referrerCommission = agentCommission * 0.20;
-            const { error } = await supabase.from('leads').update({
-                status: 'vendu',
-                sale_price: price,
-                agent_commission: agentCommission,
-                referrer_commission: referrerCommission,
-                closed_at: new Date().toISOString()
-            }).eq('id', leadId);
-            if (error) {
-                console.error('Error marking as sold:', error);
-                alert('Erreur lors de la vente');
-                return;
-            }
-            await loadDashboardContent();
-        }
         async function loadUserProfile(user = null) {
             const targetUser = user || currentUser;
             console.log('🔍 loadUserProfile called for user:', targetUser?.id);
@@ -1380,14 +534,12 @@ await supabase.auth.signOut();
                     .eq('id', targetUser.id)
                     .maybeSingle();
 
-                // 🔴 Cas erreur « classique »
                 if (error && error.code !== 'PGRST116') {
                     console.error('❌ Error loading profile:', error);
                     alert('Erreur lors du chargement du profil: ' + error.message);
                     return false;
                 }
 
-                // 🟡 Cas « aucune ligne trouvée » (data === null OU code PGRST116)
                 let profile = data;
                 if (!profile) {
                     console.log('📝 Profile does not exist, creating it...');
@@ -1432,50 +584,44 @@ await supabase.auth.signOut();
             }
         }
         window.loadUserProfile = loadUserProfile;
+        
         async function logout() {
-    console.log('🚪 Logout called');
-    
-    try {
-        console.log('🔓 Signing out from Supabase...');
+            console.log('🚪 Logout called');
+            
+            try {
+                console.log('🔓 Signing out from Supabase...');
+                supabase.auth.signOut();
+                
+                console.log('🧹 Cleaning ALL session data...');
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                currentUser = null;
+                userProfile = null;
+                currentPage = 'landing';
+                isPasswordRecoveryMode = false;
+                is2FAMode = false;
+                tempUserId = null;
+                tempUserProfile = null;
+                globalIsUploading = false;
+                
+                window.currentUser = null;
+                window.userProfile = null;
+                window.currentPage = 'landing';
+                
+                console.log('✅ Local state cleaned');
+                console.log('🔄 Reloading page NOW...');
+                window.location.href = window.location.origin;
+                
+            } catch (error) {
+                console.error('❌ Logout exception:', error);
+                console.log('🚨 Forcing logout despite error...');
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.href = window.location.origin;
+            }
+        }
         
-        // ✅ CORRECTION : Ne pas attendre la réponse de signOut
-        supabase.auth.signOut(); // Pas de await !
-        
-        // ✅ NETTOYAGE IMMÉDIAT
-        console.log('🧹 Cleaning ALL session data...');
-        localStorage.clear();
-        sessionStorage.clear();
-        
-        // Réinitialiser les variables globales
-        currentUser = null;
-        userProfile = null;
-        currentPage = 'landing';
-        isPasswordRecoveryMode = false;
-        is2FAMode = false;
-        tempUserId = null;
-        tempUserProfile = null;
-        globalIsUploading = false;
-        
-        window.currentUser = null;
-        window.userProfile = null;
-        window.currentPage = 'landing';
-        
-        console.log('✅ Local state cleaned');
-        
-        // ✅ REDIRECTION IMMÉDIATE - Pas de setTimeout !
-        console.log('🔄 Reloading page NOW...');
-        window.location.href = window.location.origin;
-        
-    } catch (error) {
-        console.error('❌ Logout exception:', error);
-        
-        // Même en cas d'erreur, forcer la déconnexion
-        console.log('🚨 Forcing logout despite error...');
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = window.location.origin;
-    }
-}
         async function render() {
             console.log('🎨 RENDER called');
             console.log('- currentUser:', !!currentUser);
@@ -1484,22 +630,19 @@ await supabase.auth.signOut();
             console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
             console.log('- is2FAMode:', is2FAMode);
             console.log('- isSignupInProgress:', isSignupInProgress);
-            // 🎯 Affichage du message de contrat signé, basé sur le flag global
+            
             if (contractJustSigned && currentUser && userProfile) {
-                console.log('🎉 Contract just signed! Reloading profile and showing confirmation (via flag global)');
+                console.log('🎉 Contract just signed! Reloading profile and showing confirmation');
                 
-                // On consomme le flag une seule fois
                 contractJustSigned = false;
                 window.contractJustSigned = false;
 
-                // On recharge le profil pour récupérer le contract_status à jour
                 try {
                     await loadUserProfile(currentUser);
                 } catch (e) {
                     console.error('Erreur lors du rechargement du profil après signature:', e);
                 }
 
-                // Afficher le message de confirmation
                 setTimeout(() => {
                     const confirmationDiv = document.createElement('div');
                     confirmationDiv.innerHTML = `
@@ -1522,139 +665,134 @@ await supabase.auth.signOut();
             }
             
             const app = document.getElementById('app');
+            
             if (is2FAMode) {
                 console.log('📱 2FA mode active - showing 2FA form');
-                app.innerHTML = renderAuthPage('login');
+                app.innerHTML = RENDERING.renderAuthPage('login');
                 return;
             }
+            
             if (isPasswordRecoveryMode && currentPage === 'change-password') {
                 console.log('🔑 Password recovery mode - showing change password form');
-                app.innerHTML = renderAuthPage('change-password');
+                app.innerHTML = RENDERING.renderAuthPage('change-password');
                 setTimeout(() => handleChangePassword(), 500);
                 return;
             }
+            
             if (currentUser && userProfile) {
                 console.log('✅ User connected with profile, showing dashboard');
                 currentPage = 'dashboard';
                 window.currentPage = 'dashboard';
-                app.innerHTML = renderDashboard();
-                await loadDashboardContent();
+                app.innerHTML = RENDERING.renderDashboard();
+                await DASHBOARD.loadDashboardContent();
                 
-                // ✅ GESTION AMÉLIORÉE DE L'UPLOAD DE CONTRAT
                 if (userProfile.role !== 'admin') {
                     const contractForm = document.getElementById('contractForm');
                     if (contractForm) {
                         console.log('✅ Contract form found, attaching submit handler');
-                        console.log('🔍 DEBUG before attaching upload', { 
-                    currentUser, 
-                    userProfile,
-                    hasCurrentUser: !!currentUser,
-                    hasUserProfile: !!userProfile
-                });
                         
-contractForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    if (globalIsUploading) {
-        console.log('⚠️ Upload already in progress, ignoring duplicate submit');
-        return;
-    }
-    
-    globalIsUploading = true;
-    console.log('📄 Starting contract upload...');
-    
-    const submitBtn = document.getElementById('contractSubmitBtn');
-    const errorDiv = document.getElementById('uploadError');
-    const progressDiv = document.getElementById('uploadProgress');
-    const originalText = submitBtn.textContent;
-    
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Upload en cours...';
-    errorDiv.classList.add('hidden');
-    progressDiv.classList.remove('hidden');
-    progressDiv.textContent = '⏳ Préparation du fichier...';
-    
-    try {
-        const fileInput = document.getElementById('contractFile');
-        const file = fileInput.files[0];
-        if (!file) {
-            throw new Error('Veuillez sélectionner un fichier');
-        }
-        if (file.type !== 'application/pdf') {
-            throw new Error('Seuls les fichiers PDF sont acceptés');
-        }
-        const maxSize = 10 * 1024 * 1024; // 10MB
-        if (file.size > maxSize) {
-            throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
-        }
-        console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-        
-        progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
-        
-        const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-        console.log('📄 Uploading to Storage with name:', fileName);
-        
-        // ✅ UTILISER L'API REST DIRECTEMENT AU LIEU DU CLIENT JS
-        const { data: { session } } = await supabase.auth.getSession();
-        if (!session) {
-            throw new Error('Session expirée, veuillez vous reconnecter');
-        }
-        
-        const uploadUrl = `${SUPABASE_URL}/storage/v1/object/contracts/${fileName}`;
-        
-        console.log('🚀 Uploading via REST API to:', uploadUrl);
-        
-        const uploadResponse = await fetch(uploadUrl, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${session.access_token}`,
-                'Content-Type': file.type,
-                'x-upsert': 'false'
-            },
-            body: file
-        });
-        
-        if (!uploadResponse.ok) {
-            const errorText = await uploadResponse.text();
-            console.error('❌ Upload failed:', uploadResponse.status, errorText);
-            throw new Error(`Erreur d'upload: ${uploadResponse.status} - ${errorText}`);
-        }
-        
-        const uploadData = await uploadResponse.json();
-        console.log('✅ File uploaded successfully to Storage');
-        console.log('📝 Upload response:', uploadData);
-        
-        progressDiv.textContent = '⏳ Mise à jour de votre profil...';
-        
-        // ✅ MISE À JOUR DU contract_path DANS LE PROFIL
-        const { error: updateError } = await supabase.from('profiles').update({
-            contract_path: fileName,
-            contract_status: 'signed',
-            contract_file_url: fileName
-        }).eq('id', currentUser.id);
-        
-        if (updateError) {
-            console.error('❌ Error updating profile:', updateError);
-            throw new Error(`Erreur de mise à jour : ${updateError.message}`);
-        }
-        console.log('✅ Profile updated successfully with contract_path:', fileName);
-        
-        alert('✅ Contrat uploadé avec succès !');
-        await loadUserProfile();
-        globalIsUploading = false;
-        render();
-    } catch (error) {
-        console.error('❌ Upload exception:', error);
-        errorDiv.textContent = error.message;
-        errorDiv.classList.remove('hidden');
-        progressDiv.classList.add('hidden');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-        globalIsUploading = false;
-    }
-});
+                        contractForm.addEventListener('submit', async (e) => {
+                            e.preventDefault();
+                            
+                            if (globalIsUploading) {
+                                console.log('⚠️ Upload already in progress, ignoring duplicate submit');
+                                return;
+                            }
+                            
+                            globalIsUploading = true;
+                            console.log('📄 Starting contract upload...');
+                            
+                            const submitBtn = document.getElementById('contractSubmitBtn');
+                            const errorDiv = document.getElementById('uploadError');
+                            const progressDiv = document.getElementById('uploadProgress');
+                            const originalText = submitBtn.textContent;
+                            
+                            submitBtn.disabled = true;
+                            submitBtn.textContent = 'Upload en cours...';
+                            errorDiv.classList.add('hidden');
+                            progressDiv.classList.remove('hidden');
+                            progressDiv.textContent = '⏳ Préparation du fichier...';
+                            
+                            try {
+                                const fileInput = document.getElementById('contractFile');
+                                const file = fileInput.files[0];
                                 
+                                if (!file) {
+                                    throw new Error('Veuillez sélectionner un fichier');
+                                }
+                                if (file.type !== 'application/pdf') {
+                                    throw new Error('Seuls les fichiers PDF sont acceptés');
+                                }
+                                const maxSize = 10 * 1024 * 1024;
+                                if (file.size > maxSize) {
+                                    throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
+                                }
+                                
+                                console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+                                
+                                progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
+                                
+                                const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
+                                console.log('📄 Uploading to Storage with name:', fileName);
+                                
+                                const { data: { session } } = await supabase.auth.getSession();
+                                if (!session) {
+                                    throw new Error('Session expirée, veuillez vous reconnecter');
+                                }
+                                
+                                const uploadUrl = `${SUPABASE_URL}/storage/v1/object/contracts/${fileName}`;
+                                console.log('🚀 Uploading via REST API to:', uploadUrl);
+                                
+                                const uploadResponse = await fetch(uploadUrl, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Authorization': `Bearer ${session.access_token}`,
+                                        'Content-Type': file.type,
+                                        'x-upsert': 'false'
+                                    },
+                                    body: file
+                                });
+                                
+                                if (!uploadResponse.ok) {
+                                    const errorText = await uploadResponse.text();
+                                    console.error('❌ Upload failed:', uploadResponse.status, errorText);
+                                    throw new Error(`Erreur d'upload: ${uploadResponse.status} - ${errorText}`);
+                                }
+                                
+                                const uploadData = await uploadResponse.json();
+                                console.log('✅ File uploaded successfully to Storage');
+                                console.log('📝 Upload response:', uploadData);
+                                
+                                progressDiv.textContent = '⏳ Mise à jour de votre profil...';
+                                
+                                const { error: updateError } = await supabase.from('profiles').update({
+                                    contract_path: fileName,
+                                    contract_status: 'signed',
+                                    contract_file_url: fileName
+                                }).eq('id', currentUser.id);
+                                
+                                if (updateError) {
+                                    console.error('❌ Error updating profile:', updateError);
+                                    throw new Error(`Erreur de mise à jour : ${updateError.message}`);
+                                }
+                                
+                                console.log('✅ Profile updated successfully with contract_path:', fileName);
+                                
+                                alert('✅ Contrat uploadé avec succès !');
+                                await loadUserProfile();
+                                globalIsUploading = false;
+                                render();
+                            } catch (error) {
+                                console.error('❌ Upload exception:', error);
+                                errorDiv.textContent = error.message;
+                                errorDiv.classList.remove('hidden');
+                                progressDiv.classList.add('hidden');
+                            } finally {
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = originalText;
+                                globalIsUploading = false;
+                            }
+                        });
                     } else {
                         console.log('ℹ️ Contract form not found (contract already uploaded or admin user)');
                     }
@@ -1662,52 +800,55 @@ contractForm.addEventListener('submit', async (e) => {
                     console.log('ℹ️ Admin user - no contract form needed');
                 }
             } else if (currentUser && !userProfile) {
-        profileLoadAttempts++;
-        
-        if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
-            console.error('❌ Failed to load profile after max attempts');
-            profileLoadAttempts = 0;
-            supabase.auth.signOut();
-            currentPage = 'landing';
-            render();
-            return;
-        }
-        
-        console.log(`⏳ User connected but no profile, waiting... (attempt ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})`);
-        app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-gray-600">Chargement de votre profil... (tentative ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')</div></div></div>';
-        
-        setTimeout(() => {
-            loadUserProfile().then(() => render());
-        }, profileLoadAttempts * 1000);
-        return;
+                profileLoadAttempts++;
+                
+                if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
+                    console.error('❌ Failed to load profile after max attempts');
+                    profileLoadAttempts = 0;
+                    supabase.auth.signOut();
+                    currentPage = 'landing';
+                    render();
+                    return;
+                }
+                
+                console.log(`⏳ User connected but no profile, waiting... (attempt ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})`);
+                app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-gray-600">Chargement de votre profil... (tentative ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')</div></div></div>';
+                
+                setTimeout(() => {
+                    loadUserProfile().then(() => render());
+                }, profileLoadAttempts * 1000);
+                return;
             } else if (currentPage === 'auth-login') {
                 console.log('🔐 Rendering login page');
-                app.innerHTML = renderAuthPage('login');
+                app.innerHTML = RENDERING.renderAuthPage('login');
                 setTimeout(() => {
                     console.log('⏱️ Attempting to attach login handler');
                     handleAuth('login');
                 }, 500);
             } else if (currentPage === 'auth-signup') {
                 console.log('📝 Rendering signup page');
-                app.innerHTML = renderAuthPage('signup');
+                app.innerHTML = RENDERING.renderAuthPage('signup');
                 setTimeout(() => {
                     console.log('⏱️ Attempting to attach signup handler');
                     handleAuth('signup');
                 }, 500);
             } else if (currentPage === 'auth-reset') {
                 console.log('🔑 Rendering reset page');
-                app.innerHTML = renderAuthPage('reset');
+                app.innerHTML = RENDERING.renderAuthPage('reset');
                 setTimeout(() => handleReset(), 500);
             } else if (currentPage === 'change-password') {
                 console.log('🔑 Rendering change password page');
-                app.innerHTML = renderAuthPage('change-password');
+                app.innerHTML = RENDERING.renderAuthPage('change-password');
                 setTimeout(() => handleChangePassword(), 500);
             } else {
                 console.log('🏠 Rendering landing page');
-                app.innerHTML = renderLandingPage();
+                app.innerHTML = RENDERING.renderLandingPage();
             }
         }
         
+        // ============================================
+        // 🌐 EXPORTS WINDOW
+        // ============================================
         window.showAddLeadForm = LEADS.showAddLeadForm;
         window.closeAddLeadModal = LEADS.closeAddLeadModal;
         window.addLead = LEADS.addLead;
@@ -1734,20 +875,30 @@ contractForm.addEventListener('submit', async (e) => {
         window.showOAuthWarning = showOAuthWarning;
         window.closeOAuthWarning = closeOAuthWarning;
         window.proceedWithOAuth = proceedWithOAuth;
-        // Mobile menu toggle - utilise le module utils.js
         window.toggleMobileMenu = UTILS.toggleMobileMenu;
         window.showLogin = UTILS.showLogin;
         window.showSignup = UTILS.showSignup;
         window.showReset = UTILS.showReset;
         window.backToHome = UTILS.backToHome;
+        window.renderLandingPage = RENDERING.renderLandingPage;
+        window.renderAuthPage = RENDERING.renderAuthPage;
+        window.renderDashboard = RENDERING.renderDashboard;
+        window.logout = logout;
+        
+        // ============================================
+        // 🚀 INITIALISATION
+        // ============================================
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl">Chargement...</div></div></div>';
+        
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
+            
             if (isSignupInProgress && event !== 'SIGNED_IN') {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
             }
+            
             if (event === 'PASSWORD_RECOVERY') {
                 console.log('🔑 Password recovery detected - blocking auto-login');
                 isPasswordRecoveryMode = true;
@@ -1758,22 +909,25 @@ contractForm.addEventListener('submit', async (e) => {
                 render();
                 return;
             }
+            
             if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
                 console.log('⚠️ Ignoring event during password recovery:', event);
                 return;
             }
+            
             currentUser = session?.user || null;
             window.currentUser = currentUser;
+            
             if (currentUser && !currentUser.email_confirmed_at) {
                 console.warn('⚠️ Email not confirmed, signing out');
                 await supabase.auth.signOut();
                 currentUser = null;
                 window.currentUser = null;
             }
+            
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
                 
-                // ⚡ CHARGEMENT NON BLOQUANT DU PROFIL
                 loadUserProfile(currentUser).then(profileLoaded => {
                     if (!profileLoaded) {
                         console.error('❌ Failed to load profile, signing out');
@@ -1783,7 +937,6 @@ contractForm.addEventListener('submit', async (e) => {
                         userProfile = null;
                         window.userProfile = null;
                     }
-                    // Re-render une fois le profil chargé
                     render();
                 }).catch(err => {
                     console.error('❌ Exception loading profile:', err);
@@ -1791,12 +944,11 @@ contractForm.addEventListener('submit', async (e) => {
                 });
             }
             
-            // ✅ RENDER() IMMÉDIAT - Ne pas attendre le profil !
             render();
         });
-       console.log('🔍 Getting initial session...');
         
-        // ⚡ APPEL NON BLOQUANT + RENDER() IMMÉDIAT
+        console.log('🔍 Getting initial session...');
+        
         supabase.auth.getSession().then(async ({ data: { session }, error }) => {
             if (error) {
                 console.error('❌ Session error:', error);
@@ -1836,14 +988,11 @@ contractForm.addEventListener('submit', async (e) => {
                 }
             }
 
-            // 🔄 Re-render une fois la session/profil chargé
             render();
         });
 
-        // ✅ RENDER() IMMÉDIAT - Ne plus attendre Supabase !
         render();
-     
-       // ⚡ Affichage du message de confirmation après signature
+        
         setTimeout(() => {
             if (window.contractJustSigned && currentUser && userProfile) {
                 const confirmationDiv = document.createElement('div');
@@ -1863,28 +1012,6 @@ contractForm.addEventListener('submit', async (e) => {
                 window.contractJustSigned = false;
             }
         }, 2000);
-        // ============================================
-    // 🎯 IMPORTS DES MODULES (test progressif)
-    // ============================================
-    
-    console.log('📦 Chargement des modules...');
-    
-    import('./js/config.js').then(config => {
-        console.log('✅ config.js chargé', config.SUPABASE_URL);
-        window.CONFIG = config;
-    }).catch(err => console.error('❌ Erreur config.js:', err));
-    
-    import('./js/utils.js').then(utils => {
-        console.log('✅ utils.js chargé');
-        window.UTILS = utils;
-    }).catch(err => console.error('❌ Erreur utils.js:', err));
-    
-    import('./js/validation.js').then(validation => {
-        console.log('✅ validation.js chargé');
-        window.VALIDATION = validation;
-    }).catch(err => console.error('❌ Erreur validation.js:', err));
-    
-    console.log('📦 Modules importés (mode test)');
     })();
     </script>
 </body>
