@@ -28,6 +28,7 @@
     import * as UTILS from '/js/utils.js';
     import * as AUTH from '/js/auth.js';
     import * as DASHBOARD from '/js/dashboard.js';
+    import * as LEADS from '/js/leads.js';
     
     (async () => {
         await i18next
@@ -2348,9 +2349,12 @@ contractForm.addEventListener('submit', async (e) => {
         window.closeOAuthWarning = AUTH.closeOAuthWarning;
         window.proceedWithOAuth = AUTH.proceedWithOAuth;
         window.backToHome = backToHome;
-        window.showAddLeadForm = showAddLeadForm;
-        window.updateLeadStatus = updateLeadStatus;
-        window.markAsSold = markAsSold;
+        window.showAddLeadForm = LEADS.showAddLeadForm;
+        window.closeAddLeadModal = LEADS.closeAddLeadModal;
+        window.addLead = LEADS.addLead;
+        window.updateLeadStatus = LEADS.updateLeadStatus;
+        window.markAsSold = LEADS.markAsSold;
+        window.renderAddLeadModal = LEADS.renderAddLeadModal;
         window.togglePasswordVisibility = VALIDATION.togglePasswordVisibility;
         window.validateName = VALIDATION.validateName;
         window.validatePhone = VALIDATION.validatePhone;
