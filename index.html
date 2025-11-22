@@ -312,22 +312,24 @@
                         };
                         window.tempPassword = password;
                         
-                        // ✅ CORRECTION DU FLUX 2FA
+                        // ✅ FLUX 2FA CORRIGÉ - ENVOYER SMS AVANT DE SE DÉCONNECTER
+                        console.log('📱 Sending 2FA code BEFORE logout...');
+                        const currentLang = i18next.language || 'fr';
+                        
+                        // ✅ Envoyer le SMS pendant que l'utilisateur est ENCORE connecté (JWT valide)
+                        await TFA.send2FACode(data.user.id, currentLang, fullPhone);
+                        console.log('✅ SMS sent successfully');
+                        
+                        // ✅ MAINTENANT on peut se déconnecter
+                        await supabase.auth.signOut();
+                        console.log('✅ User signed out after SMS');
+                        
+                        // ✅ Activer le mode 2FA et afficher le clavier
                         is2FAMode = true;
                         window.is2FAMode = true;
-                        console.log('✅ 2FA mode activated');
-                        
-                        // ✅ Débloquer le render MAINTENANT pour afficher le clavier
                         isSignupInProgress = false;
+                        console.log('✅ 2FA mode activated, showing keyboard');
                         render();
-                        
-                        // ✅ PUIS envoyer le SMS en arrière-plan
-                        console.log('📱 Sending 2FA code...');
-                        const currentLang = i18next.language || 'fr';
-                        await TFA.send2FACode(data.user.id, currentLang, fullPhone);
-                        
-                        // ✅ Se déconnecter APRÈS l'envoi du SMS
-                        await supabase.auth.signOut();
                         
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
