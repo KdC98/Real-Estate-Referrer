@@ -24,6 +24,7 @@
     <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     import { SUPABASE_URL, SUPABASE_ANON_KEY } from '/js/config.js';
+        import * as VALIDATION from '/js/validation.js';
     
     (async () => {
         await i18next
@@ -2338,13 +2339,13 @@ contractForm.addEventListener('submit', async (e) => {
         window.showAddLeadForm = showAddLeadForm;
         window.updateLeadStatus = updateLeadStatus;
         window.markAsSold = markAsSold;
-        window.togglePasswordVisibility = togglePasswordVisibility;
-        window.validateName = validateName;
-        window.validatePhone = validatePhone;
-        window.validateEmail = validateEmail;
-        window.validatePassword = validatePassword;
-        window.validateConfirmPassword = validateConfirmPassword;
-        window.checkFormValidity = checkFormValidity;
+        window.togglePasswordVisibility = VALIDATION.togglePasswordVisibility;
+        window.validateName = VALIDATION.validateName;
+        window.validatePhone = VALIDATION.validatePhone;
+        window.validateEmail = VALIDATION.validateEmail;
+        window.validatePassword = VALIDATION.validatePassword;
+        window.validateConfirmPassword = VALIDATION.validateConfirmPassword;
+        window.checkFormValidity = VALIDATION.checkFormValidity;
         window.prefillTestData = prefillTestData;
         window.render = render;
         window.handleChangePassword = handleChangePassword;
