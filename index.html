@@ -68,6 +68,8 @@
         
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         window.supabase = supabase;
+        window.SUPABASE_URL = SUPABASE_URL;
+        window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
         
         // ✅ TRADUCTIONS OAUTH (8 LANGUES)
         const oauthTranslations = {
@@ -152,8 +154,8 @@
         let isPasswordRecoveryMode = false;
         let is2FAMode = false;
         let isSignupInProgress = false;
-        let tempUserId = null;
-        let tempUserProfile = null;
+        let tempPhone = null;  // ✅ NOUVEAU: stocker le téléphone temporairement
+        let pendingSignupId = null;  // ✅ NOUVEAU: ID du pending_signup
         let globalIsUploading = false;
         let contractJustSigned = false;
 
@@ -161,6 +163,24 @@
         window.userProfile = null;
         window.currentPage = 'landing';
         window.contractJustSigned = false;
+        window.tempPhone = null;
+        window.pendingSignupId = null;
+        
+        // ✅ NOUVEAU: Fonctions setters
+        window.setIs2FAMode = function(value) {
+            is2FAMode = value;
+            window.is2FAMode = value;
+        };
+        
+        window.setTempPhone = function(phone) {
+            tempPhone = phone;
+            window.tempPhone = phone;
+        };
+        
+        window.setPendingSignupId = function(id) {
+            pendingSignupId = id;
+            window.pendingSignupId = id;
+        };
         
         function getQueryParams() {
             const params = {};
@@ -222,12 +242,13 @@
                 
                 try {
                     if (mode === 'signup') {
-                        console.log('📝 Processing signup');
+                        console.log('📝 Processing signup with 2FA');
                         const name = document.getElementById('name').value.trim();
                         const phone = document.getElementById('phone').value.trim();
                         const countryCode = document.getElementById('countryCode').value;
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         
+                        // Validations
                         if (!VALIDATION.validateName()) throw new Error('Nom invalide');
                         if (!VALIDATION.validatePhone()) throw new Error('Numéro de téléphone invalide');
                         if (!VALIDATION.validateEmail()) throw new Error('Email invalide');
@@ -236,6 +257,7 @@
                         
                         const fullPhone = countryCode + phone;
 
+                        // ✅ ÉTAPE 1: Vérifier que le téléphone n'existe pas déjà
                         console.log('🔍 Checking if phone exists:', fullPhone);
                         const phoneCheck = await TFA.checkPhoneExists(fullPhone);
                         
@@ -257,79 +279,70 @@
                             return;
                         }
                         
+                        // ✅ ÉTAPE 2: Désactiver le bouton
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = true;
-                        submitButton.textContent = 'Inscription en cours...';
-                        
-                        console.log('📤 Signup data:', { email, name, phone: fullPhone });
+                        submitButton.textContent = 'Envoi du code SMS...';
                         
                         isSignupInProgress = true;
-                        console.log('🔒 Signup in progress - blocking renders');
+                        console.log('🔒 Signup in progress - sending SMS first');
                         
-                        const { data, error } = await supabase.auth.signUp({
-                            email,
-                            password,
-                            options: {
-                                data: { name, phone: fullPhone }
+                        try {
+                            // ✅ ÉTAPE 3: Envoyer le SMS SANS créer de compte
+                            console.log('📱 Sending SMS code BEFORE creating account...');
+                            const currentLang = i18next.language || 'fr';
+                            
+                            const pendingSignupData = {
+                                email: email,
+                                password: password,  // Sera hashé par Supabase lors de signUp
+                                name: name,
+                                phone: fullPhone
+                            };
+                            
+                            const smsResult = await TFA.send2FACode(fullPhone, currentLang, pendingSignupData);
+                            
+                            if (!smsResult.success) {
+                                throw new Error('Erreur lors de l\'envoi du SMS');
                             }
-                        });
-                        
-                        if (error) {
+                            
+                            console.log('✅ SMS sent successfully');
+                            
+                            // ✅ ÉTAPE 4: Stocker le téléphone temporairement
+                            tempPhone = fullPhone;
+                            window.tempPhone = fullPhone;
+                            
+                            // ✅ ÉTAPE 5: Activer le mode 2FA
+                            is2FAMode = true;
+                            window.is2FAMode = true;
                             isSignupInProgress = false;
+                            
+                            console.log('✅ 2FA mode activated, showing keyboard');
+                            render();
+                            
+                        } catch (error) {
+                            console.error('❌ Error sending SMS:', error);
+                            isSignupInProgress = false;
+                            
+                            // Réactiver le bouton
+                            submitButton.disabled = false;
+                            submitButton.textContent = t('auth:signup_button');
+                            
+                            // Afficher l'erreur
+                            let errorMessage = error.message;
+                            
+                            if (error.message.includes('wait')) {
+                                errorMessage = error.message; // Message rate limiting déjà traduit
+                            } else if (error.message.includes('maximum')) {
+                                errorMessage = error.message;
+                            }
+                            
+                            if (errorDiv) {
+                                errorDiv.textContent = errorMessage;
+                                errorDiv.classList.remove('hidden');
+                            }
+                            
                             throw error;
                         }
-                        
-                        console.log('✅ Signup successful, user:', data.user);
-                        
-                        // Upsert du profil AVANT la déconnexion
-                        const { error: upsertErr } = await supabase
-                            .from('profiles')
-                            .upsert({
-                                id: data.user.id,
-                                name, 
-                                phone: fullPhone, 
-                                email,
-                                role: 'referrer',
-                                contract_status: 'pending',
-                                phone_verified: false
-                            }, { onConflict: 'id' });
-                        
-                        if (upsertErr && upsertErr.code !== '23505') {
-                            isSignupInProgress = false;
-                            throw new Error('Erreur création profil: ' + upsertErr.message);
-                        }
-                        console.log('✅ Profile created via upsert');
-                        
-                        tempUserId = data.user.id;
-                        tempUserProfile = {
-                            id: data.user.id,
-                            name: name,
-                            phone: fullPhone,
-                            email: email,
-                            role: 'referrer',
-                            contract_status: 'pending',
-                            phone_verified: false
-                        };
-                        window.tempPassword = password;
-                        
-                        // ✅ FLUX 2FA CORRIGÉ - ENVOYER SMS AVANT DE SE DÉCONNECTER
-                        console.log('📱 Sending 2FA code BEFORE logout...');
-                        const currentLang = i18next.language || 'fr';
-                        
-                        // ✅ Envoyer le SMS pendant que l'utilisateur est ENCORE connecté (JWT valide)
-                        await TFA.send2FACode(data.user.id, currentLang, fullPhone);
-                        console.log('✅ SMS sent successfully');
-                        
-                        // ✅ MAINTENANT on peut se déconnecter
-                        await supabase.auth.signOut();
-                        console.log('✅ User signed out after SMS');
-                        
-                        // ✅ Activer le mode 2FA et afficher le clavier
-                        is2FAMode = true;
-                        window.is2FAMode = true;
-                        isSignupInProgress = false;
-                        console.log('✅ 2FA mode activated, showing keyboard');
-                        render();
                         
                     } else if (mode === 'login') {
                         console.log('🔐 Processing login');
@@ -604,13 +617,15 @@
                 currentPage = 'landing';
                 isPasswordRecoveryMode = false;
                 is2FAMode = false;
-                tempUserId = null;
-                tempUserProfile = null;
+                tempPhone = null;
+                pendingSignupId = null;
                 globalIsUploading = false;
                 
                 window.currentUser = null;
                 window.userProfile = null;
                 window.currentPage = 'landing';
+                window.tempPhone = null;
+                window.pendingSignupId = null;
                 
                 console.log('✅ Local state cleaned');
                 console.log('🔄 Reloading page NOW...');
@@ -671,7 +686,18 @@
             
             if (is2FAMode) {
                 console.log('📱 2FA mode active - showing 2FA form');
-                app.innerHTML = RENDERING.renderAuthPage('login');
+                app.innerHTML = RENDERING.renderAuthPage('2fa');  // ✅ Changé de 'login' à '2fa'
+                
+                // ✅ Attacher le handler du formulaire 2FA
+                setTimeout(() => {
+                    const form2FA = document.getElementById('form2FA');
+                    if (form2FA) {
+                        form2FA.addEventListener('submit', TFA.handle2FASubmit);
+                        console.log('✅ 2FA form handler attached');
+                    }
+                    // Auto-focus sur le champ code
+                    document.getElementById('code2fa')?.focus();
+                }, 100);
                 return;
             }
             
