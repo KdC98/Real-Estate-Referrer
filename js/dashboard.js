@@ -1,68 +1,108 @@
 // ============================================
 // GESTION DU DASHBOARD
+// Real Estate Referrer - Dubai
 // ============================================
 
 import { currentUser, userProfile } from './auth.js';
 import { STATUS_COLORS } from './config.js';
-import { t } from './translations.js';
-import { loadLeads } from './leads.js';
 
 // Charger le contenu du dashboard
-export async function loadDashboardContent(supabase) {
-    if (!userProfile) return;
+export async function loadDashboardContent() {
+    const supabase = window.supabase;
+    const i18next = window.i18next;
     
-    const isAdmin = userProfile.role === 'admin';
-    
-    // Charger les leads
-    const { leads, error } = await loadLeads(supabase, isAdmin);
-    
-    if (error) {
-        document.getElementById('leadsTable').innerHTML = `
-            <div class="text-red-400 p-4">
-                Erreur lors du chargement des leads: ${error.message}
-            </div>
-        `;
+    if (!userProfile) {
+        console.log('⚠️ No userProfile, skipping dashboard content load');
         return;
     }
     
-    // Calculer les statistiques
-    const totalEarnings = leads.filter(l => l.status === 'vendu').reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
-    const activeLeads = leads.filter(l => l.status !== 'vendu').length;
-    const closedSales = leads.filter(l => l.status === 'vendu').length;
+    console.log('📊 Loading dashboard content for:', userProfile.role);
     
-    // Afficher les stats
-    renderStats(isAdmin, leads.length, totalEarnings, activeLeads, closedSales);
+    const isAdmin = userProfile.role === 'admin';
     
-    // Afficher le tableau des leads
-    renderLeadsTable(isAdmin, leads);
+    try {
+        // Charger les leads
+        let query = supabase
+            .from('leads')
+            .select(`
+                *,
+                referrer:profiles!leads_referrer_id_fkey(name)
+            `)
+            .order('created_at', { ascending: false });
+        
+        if (!isAdmin) {
+            query = query.eq('referrer_id', currentUser.id);
+        }
+        
+        const { data: leads, error } = await query;
+        
+        if (error) {
+            console.error('❌ Error loading leads:', error);
+            document.getElementById('leadsTable').innerHTML = `
+                <div class="text-red-400 p-4">
+                    ${i18next.t('dashboard:error_loading_leads')}: ${error.message}
+                </div>
+            `;
+            return;
+        }
+        
+        console.log('✅ Leads loaded:', leads?.length || 0);
+        
+        // Transformer les données pour avoir referrer_name
+        const leadsWithNames = (leads || []).map(lead => ({
+            ...lead,
+            referrer_name: lead.referrer?.name || 'Unknown'
+        }));
+        
+        // Calculer les statistiques
+        const totalEarnings = leadsWithNames
+            .filter(l => l.status === 'vendu')
+            .reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
+        const activeLeads = leadsWithNames.filter(l => l.status !== 'vendu').length;
+        const closedSales = leadsWithNames.filter(l => l.status === 'vendu').length;
+        
+        // Afficher les stats
+        renderStats(isAdmin, leadsWithNames.length, totalEarnings, activeLeads, closedSales);
+        
+        // Afficher le tableau des leads
+        renderLeadsTable(isAdmin, leadsWithNames);
+        
+    } catch (err) {
+        console.error('❌ Exception loading dashboard:', err);
+    }
 }
 
 // Afficher les statistiques
 function renderStats(isAdmin, totalLeads, totalEarnings, activeLeads, closedSales) {
-    document.getElementById('stats').innerHTML = `
+    const i18next = window.i18next;
+    const statsDiv = document.getElementById('stats');
+    
+    if (!statsDiv) return;
+    
+    statsDiv.innerHTML = `
         ${isAdmin ? `
             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                 <div class="text-3xl font-bold text-yellow-500">${totalLeads}</div>
-                <div class="text-gray-300">${t('dashboard:total_referrers')}</div>
+                <div class="text-gray-300">${i18next.t('dashboard:total_leads')}</div>
             </div>
         ` : `
             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                 <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                <div class="text-gray-300">${t('dashboard:total_earnings')}</div>
+                <div class="text-gray-300">${i18next.t('dashboard:total_earnings')}</div>
             </div>
         `}
         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
             <div class="text-3xl font-bold text-yellow-500">${activeLeads}</div>
-            <div class="text-gray-300">${t('dashboard:active_leads')}</div>
+            <div class="text-gray-300">${i18next.t('dashboard:active_leads')}</div>
         </div>
         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
             <div class="text-3xl font-bold text-yellow-500">${closedSales}</div>
-            <div class="text-gray-300">${t('dashboard:closed_sales')}</div>
+            <div class="text-gray-300">${i18next.t('dashboard:closed_sales')}</div>
         </div>
         ${isAdmin ? `
             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
                 <div class="text-3xl font-bold text-yellow-500">${totalEarnings.toLocaleString()} AED</div>
-                <div class="text-gray-300">${t('dashboard:commissions_paid')}</div>
+                <div class="text-gray-300">${i18next.t('dashboard:commissions_paid')}</div>
             </div>
         ` : ''}
     `;
@@ -70,43 +110,48 @@ function renderStats(isAdmin, totalLeads, totalEarnings, activeLeads, closedSale
 
 // Afficher le tableau des leads
 function renderLeadsTable(isAdmin, leads) {
-    document.getElementById('leadsTable').innerHTML = `
+    const i18next = window.i18next;
+    const tableDiv = document.getElementById('leadsTable');
+    
+    if (!tableDiv) return;
+    
+    tableDiv.innerHTML = `
         <table class="w-full">
             <thead>
                 <tr class="border-b border-gray-700">
-                    ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:referrer')}</th>` : ''}
-                    <th class="text-left py-3 px-4">${t('dashboard:client_name')}</th>
-                    <th class="text-left py-3 px-4">${t('dashboard:property_type')}</th>
-                    <th class="text-left py-3 px-4">${t('dashboard:budget')}</th>
-                    <th class="text-left py-3 px-4">${t('dashboard:status')}</th>
-                    <th class="text-left py-3 px-4">${t('dashboard:commission')}</th>
-                    ${isAdmin ? `<th class="text-left py-3 px-4">${t('dashboard:actions')}</th>` : ''}
+                    ${isAdmin ? `<th class="text-left py-3 px-4">${i18next.t('dashboard:referrer')}</th>` : ''}
+                    <th class="text-left py-3 px-4">${i18next.t('dashboard:client_name')}</th>
+                    <th class="text-left py-3 px-4">${i18next.t('dashboard:property_type')}</th>
+                    <th class="text-left py-3 px-4">${i18next.t('dashboard:budget')}</th>
+                    <th class="text-left py-3 px-4">${i18next.t('dashboard:status')}</th>
+                    <th class="text-left py-3 px-4">${i18next.t('dashboard:commission')}</th>
+                    ${isAdmin ? `<th class="text-left py-3 px-4">${i18next.t('dashboard:actions')}</th>` : ''}
                 </tr>
             </thead>
             <tbody>
                 ${leads.length === 0 ? `
                     <tr>
                         <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
-                            ${t('dashboard:no_leads')}
+                            ${i18next.t('dashboard:no_leads')}
                         </td>
                     </tr>
                 ` : leads.map(lead => `
                     <tr class="border-b border-gray-700">
                         ${isAdmin ? `<td class="py-3 px-4">${lead.referrer_name}</td>` : ''}
                         <td class="py-3 px-4">${lead.client_name}</td>
-                        <td class="py-3 px-4">${t('dashboard:' + lead.property_type)}</td>
+                        <td class="py-3 px-4">${lead.property_type}</td>
                         <td class="py-3 px-4">${lead.budget?.toLocaleString()} AED</td>
                         <td class="py-3 px-4">
                             ${isAdmin ? `
                                 <select onchange="window.updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${STATUS_COLORS[lead.status]} text-gray-900 font-bold text-sm">
-                                    <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${t('dashboard:status_new')}</option>
-                                    <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${t('dashboard:status_visit')}</option>
-                                    <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${t('dashboard:status_offer')}</option>
-                                    <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${t('dashboard:status_sold')}</option>
+                                    <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${i18next.t('dashboard:status_new')}</option>
+                                    <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${i18next.t('dashboard:status_visit')}</option>
+                                    <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${i18next.t('dashboard:status_offer')}</option>
+                                    <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${i18next.t('dashboard:status_sold')}</option>
                                 </select>
                             ` : `
                                 <span class="px-3 py-1 rounded-full ${STATUS_COLORS[lead.status]} text-gray-900 font-bold text-sm">
-                                    ${t('dashboard:status_' + lead.status.replace('é', 'e'))}
+                                    ${i18next.t('dashboard:status_' + lead.status)}
                                 </span>
                             `}
                         </td>
@@ -117,7 +162,7 @@ function renderLeadsTable(isAdmin, leads) {
                             <td class="py-3 px-4">
                                 ${lead.status !== 'vendu' ? `
                                     <button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
-                                        ${t('dashboard:mark_sold')}
+                                        ${i18next.t('dashboard:mark_sold')}
                                     </button>
                                 ` : '-'}
                             </td>
@@ -129,122 +174,101 @@ function renderLeadsTable(isAdmin, leads) {
     `;
 }
 
-// Gérer l'upload de contrat
-export function handleContractUpload(supabase, SUPABASE_URL, reloadCallback) {
-    const contractForm = document.getElementById('contractForm');
-    if (!contractForm) return;
+// Afficher le dashboard (appelé par render)
+export function renderDashboard() {
+    const i18next = window.i18next;
+    const app = document.getElementById('app');
     
-    let globalIsUploading = false;
+    if (!userProfile) {
+        console.error('❌ Cannot render dashboard: no userProfile');
+        return;
+    }
     
-    console.log('✅ Contract form found, attaching submit handler');
+    const isAdmin = userProfile.role === 'admin';
+    const contractStatus = userProfile.contract_status?.trim().replace(/\*+/g, '') || 'pending';
+    const contractJustSigned = window.contractJustSigned || false;
     
-    contractForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        if (globalIsUploading) {
-            console.log('⚠️ Upload already in progress, ignoring duplicate submit');
-            return;
-        }
-        
-        globalIsUploading = true;
-        console.log('📄 Starting contract upload...');
-        
-        const submitBtn = document.getElementById('contractSubmitBtn');
-        const errorDiv = document.getElementById('uploadError');
-        const progressDiv = document.getElementById('uploadProgress');
-        const originalText = submitBtn.textContent;
-        
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Upload en cours...';
-        errorDiv.classList.add('hidden');
-        progressDiv.classList.remove('hidden');
-        progressDiv.textContent = '⏳ Préparation du fichier...';
-        
-        try {
-            const fileInput = document.getElementById('contractFile');
-            const file = fileInput.files[0];
+    console.log('🎨 Rendering dashboard for:', userProfile.role, 'Contract status:', contractStatus);
+    
+    // Message de contrat si nécessaire
+    let contractMessage = '';
+    
+    if (contractJustSigned) {
+        contractMessage = `
+            <div class="bg-green-500 bg-opacity-20 border-2 border-green-500 rounded-xl p-6 mb-6">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl">✅</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-green-400 mb-2">${i18next.t('dashboard:contract_signed_title')}</h3>
+                        <p class="text-gray-300">${i18next.t('dashboard:contract_signed_message')}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        window.contractJustSigned = false;
+    } else if (!isAdmin && contractStatus === 'pending') {
+        contractMessage = `
+            <div class="bg-yellow-500 bg-opacity-20 border-2 border-yellow-500 rounded-xl p-6 mb-6">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl">⚠️</div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-yellow-400 mb-2">${i18next.t('dashboard:contract_required_title')}</h3>
+                        <p class="text-gray-300 mb-4">${i18next.t('dashboard:contract_required_message')}</p>
+                        <a href="/contract-signature.html" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition">
+                            ${i18next.t('dashboard:sign_contract_now')}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    app.innerHTML = `
+        <div class="min-h-screen flex flex-col">
+            <!-- Header -->
+            <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md border-b border-gray-700">
+                <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">
+                        ${i18next.t('common:app_name')}
+                    </h1>
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-300">${userProfile.name}</span>
+                        <button onclick="window.logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
+                            ${i18next.t('common:logout')}
+                        </button>
+                    </div>
+                </div>
+            </header>
             
-            if (!file) {
-                throw new Error('Veuillez sélectionner un fichier');
-            }
-            if (file.type !== 'application/pdf') {
-                throw new Error('Seuls les fichiers PDF sont acceptés');
-            }
-            
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            if (file.size > maxSize) {
-                throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
-            }
-            
-            console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-            
-            progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
-            
-            const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-            console.log('📄 Uploading to Storage with name:', fileName);
-            
-            // Utiliser l'API REST directement
-            const { data: { session } } = await supabase.auth.getSession();
-            if (!session) {
-                throw new Error('Session expirée, veuillez vous reconnecter');
-            }
-            
-            const uploadUrl = `${SUPABASE_URL}/storage/v1/object/contracts/${fileName}`;
-            
-            console.log('🚀 Uploading via REST API to:', uploadUrl);
-            
-            const uploadResponse = await fetch(uploadUrl, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${session.access_token}`,
-                    'Content-Type': file.type,
-                    'x-upsert': 'false'
-                },
-                body: file
-            });
-            
-            if (!uploadResponse.ok) {
-                const errorText = await uploadResponse.text();
-                console.error('❌ Upload failed:', uploadResponse.status, errorText);
-                throw new Error(`Erreur d'upload: ${uploadResponse.status} - ${errorText}`);
-            }
-            
-            const uploadData = await uploadResponse.json();
-            console.log('✅ File uploaded successfully to Storage');
-            console.log('📝 Upload response:', uploadData);
-            
-            progressDiv.textContent = '⏳ Mise à jour de votre profil...';
-            
-            // Mise à jour du profil
-            const { error: updateError } = await supabase
-                .from('profiles')
-                .update({
-                    contract_path: fileName,
-                    contract_status: 'signed',
-                    contract_file_url: fileName
-                })
-                .eq('id', currentUser.id);
-            
-            if (updateError) {
-                console.error('❌ Error updating profile:', updateError);
-                throw new Error(`Erreur de mise à jour : ${updateError.message}`);
-            }
-            
-            console.log('✅ Profile updated successfully with contract_path:', fileName);
-            
-            alert('✅ Contrat uploadé avec succès !');
-            globalIsUploading = false;
-            reloadCallback();
-            
-        } catch (error) {
-            console.error('❌ Upload exception:', error);
-            errorDiv.textContent = error.message;
-            errorDiv.classList.remove('hidden');
-            progressDiv.classList.add('hidden');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = originalText;
-            globalIsUploading = false;
-        }
-    });
+            <!-- Main Content -->
+            <main class="flex-1 container mx-auto px-4 py-8">
+                <h2 class="text-3xl font-bold mb-8">
+                    ${i18next.t(isAdmin ? 'dashboard:admin_dashboard' : 'dashboard:referrer_dashboard')}
+                </h2>
+                
+                ${contractMessage}
+                
+                <!-- Stats -->
+                <div id="stats" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"></div>
+                
+                <!-- Add Lead Button (Referrers only) -->
+                ${!isAdmin && contractStatus === 'signed' ? `
+                    <div class="mb-6">
+                        <button onclick="window.showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition">
+                            ${i18next.t('dashboard:add_lead')}
+                        </button>
+                    </div>
+                ` : ''}
+                
+                <!-- Leads Table -->
+                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-4">${i18next.t('dashboard:my_leads')}</h3>
+                    <div id="leadsTable"></div>
+                </div>
+            </main>
+        </div>
+    `;
+    
+    // Charger le contenu
+    loadDashboardContent();
 }
