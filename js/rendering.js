@@ -6,6 +6,9 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
+// Version: 2.1 - Correction affichage téléphone 2FA
+// Date: 24 novembre 2025
+// ============================================
 
 /**
  * Génère le HTML de la landing page
@@ -221,13 +224,14 @@ export function renderAuthPage(mode) {
         const maskedPhone = tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4);
         
         title = t('auth:two_factor.title') || 'Vérification SMS';
+        // ✅ CORRECTION : Utiliser la concaténation au lieu de template literal
         subtitle = t('auth:two_factor.subtitle', { phone: maskedPhone }) || 'Code envoyé au ' + maskedPhone;
         
         formContent = `
             <form id="form2FA" class="space-y-6">
                 <div>
                     <label class="block text-sm font-medium mb-2">
-                        ${t('auth:two_factor.code_label') || 'Code de vérification'}
+                        ${t('auth:two_factor.code_label') || 'Code de vérification (6 chiffres)'}
                     </label>
                     <input 
                         type="text" 
