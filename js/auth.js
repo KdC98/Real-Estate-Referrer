@@ -3,7 +3,6 @@
   "signup_title": "Inscription",
   "reset_title": "Mot de passe oublié",
   "back_home": "Retour à l'accueil",
-  
   "name_label": "Nom complet",
   "full_name_placeholder": "Votre nom complet",
   "phone_label": "Téléphone",
@@ -13,43 +12,36 @@
   "password_label": "Mot de passe",
   "password_hint": "Minimum 8 caractères",
   "confirm_password_label": "Confirmer le mot de passe",
-  
   "password_req_length": "Au moins 8 caractères",
   "password_req_letter": "Au moins une lettre",
   "password_req_number": "Au moins un chiffre",
-  
-  "sms_verification_notice": "Vérification unique : Vous recevrez un code SMS pour valider votre numéro à l'inscription.",
-  
+  "sms_verification_notice": "Vérification unique : Vous recevrez un code SMS pour valider votre numéro à l'inscription",
   "login_button": "Se connecter",
   "signup_button": "Créer mon compte",
   "reset_button": "Réinitialiser",
-  
-  "forgot_password": "Mot de passe oublié ?",
+  "forgot_password": "Mot de passe oublié",
   "no_account": "Pas encore de compte ? Inscrivez-vous",
   "have_account": "Déjà un compte ? Connectez-vous",
   "back_to_login": "Retour à la connexion",
-  
   "continue_with_google": "Continuer avec Google",
   "continue_with_apple": "Continuer avec Apple",
-  
   "password_mismatch": "Les mots de passe ne correspondent pas",
-  "reset_email_sent": "Email de réinitialisation envoyé ! Vérifiez votre boîte mail.",
-  
+  "reset_email_sent": "Email de réinitialisation envoyé ! Vérifiez votre boîte mail",
   "two_factor": {
     "title": "Vérification SMS",
     "subtitle": "Code envoyé au {{phone}}",
     "code_label": "Code de vérification (6 chiffres)",
     "code_help": "Entrez le code à 6 chiffres reçu par SMS",
     "verify_button": "Vérifier",
-    "verifying": "Vérification en cours...",
+    "verifying": "Vérification en cours",
     "resend_code": "Renvoyer le code",
-    "back_to_signup": "← Retour à l'inscription",
-    "code_sent": "✅ Code envoyé !",
+    "back_to_signup": "Retour à l'inscription",
+    "code_sent": "Code envoyé !",
     "invalid_code": "Le code doit contenir exactement 6 chiffres",
-    "invalid_or_expired": "Code invalide ou expiré. Veuillez réessayer.",
-    "success": "✅ Compte créé avec succès !",
-    "error": "Erreur lors de la vérification. Veuillez réessayer.",
-    "no_phone": "Impossible de renvoyer le code. Veuillez recommencer l'inscription.",
-    "resend_error": "Erreur lors du renvoi du code. Veuillez réessayer."
+    "invalid_or_expired": "Code invalide ou expiré",
+    "success": "Compte créé avec succès !",
+    "error": "Erreur lors de la vérification",
+    "no_phone": "Impossible de renvoyer le code",
+    "resend_error": "Erreur lors du renvoi du code"
   }
 }
