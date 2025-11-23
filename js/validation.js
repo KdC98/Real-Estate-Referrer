@@ -100,29 +100,6 @@ export function validateName(name) {
     return name && name.trim().length >= 2;
 }
 
-// Attacher les événements de validation
-export function attachPasswordValidation() {
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    
-    if (passwordInput) {
-        passwordInput.addEventListener('input', (e) => {
-            updatePasswordStrengthIndicator(e.target.value);
-            
-            // Vérifier la correspondance avec la confirmation
-            if (confirmPasswordInput && confirmPasswordInput.value) {
-                checkPasswordMatch();
-            }
-        });
-    }
-    
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener('input', () => {
-            checkPasswordMatch();
-        });
-    }
-}
-
 // Vérifier la correspondance des mots de passe
 function checkPasswordMatch() {
     const password = document.getElementById('password')?.value;
@@ -148,6 +125,61 @@ function checkPasswordMatch() {
         `;
         matchIndicator.classList.remove('hidden');
     }
+}
+
+// Vérifier la validité du formulaire et activer/désactiver le bouton
+export function checkFormValidity() {
+    const name = document.getElementById('name')?.value.trim();
+    const email = document.getElementById('email')?.value.trim();
+    const phone = document.getElementById('phone')?.value.trim();
+    const countryCode = document.getElementById('countryCode')?.value;
+    const password = document.getElementById('password')?.value;
+    const confirmPassword = document.getElementById('confirmPassword')?.value;
+    const submitButton = document.getElementById('submitButton');
+    
+    if (!submitButton) return;
+    
+    // Vérifier tous les champs
+    const nameValid = validateName(name);
+    const emailValid = validateEmail(email);
+    const phoneValid = phone && phone.length >= 6;
+    const passwordResult = validatePassword(password);
+    const passwordsMatch = password === confirmPassword && password.length > 0;
+    
+    const allValid = nameValid && emailValid && phoneValid && passwordResult.isValid && passwordsMatch;
+    
+    submitButton.disabled = !allValid;
+}
+
+// Attacher les événements de validation
+export function attachPasswordValidation() {
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    
+    if (passwordInput) {
+        passwordInput.addEventListener('input', (e) => {
+            updatePasswordStrengthIndicator(e.target.value);
+            if (confirmPasswordInput && confirmPasswordInput.value) {
+                checkPasswordMatch();
+            }
+            checkFormValidity();
+        });
+    }
+    
+    if (confirmPasswordInput) {
+        confirmPasswordInput.addEventListener('input', () => {
+            checkPasswordMatch();
+            checkFormValidity();
+        });
+    }
+    
+    // Attacher aussi aux autres champs
+    if (nameInput) nameInput.addEventListener('input', checkFormValidity);
+    if (emailInput) emailInput.addEventListener('input', checkFormValidity);
+    if (phoneInput) phoneInput.addEventListener('input', checkFormValidity);
 }
 
 // Valider le formulaire d'inscription complet
@@ -212,4 +244,5 @@ export function togglePasswordVisibility(fieldId, button) {
 // Fonction simple pour valider confirmation (appelée par oninput)
 export function validateConfirmPassword() {
     checkPasswordMatch();
+    checkFormValidity();
 }
