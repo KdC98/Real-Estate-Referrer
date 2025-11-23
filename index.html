@@ -859,9 +859,15 @@
                 console.log('📝 Rendering signup page');
                 app.innerHTML = RENDERING.renderAuthPage('signup');
                 setTimeout(() => {
-                    console.log('⏱️ Attempting to attach signup handler');
-                    handleAuth('signup');
-                }, 500);
+    console.log('⏱️ Attempting to attach signup handler');
+    handleAuth('signup');
+    
+    // ✅ Attacher la validation du mot de passe
+    if (window.VALIDATION && window.VALIDATION.attachPasswordValidation) {
+        window.VALIDATION.attachPasswordValidation();
+        console.log('✅ Password validation attached in signup render');
+    }
+}, 500);
             } else if (currentPage === 'auth-reset') {
                 console.log('🔑 Rendering reset page');
                 app.innerHTML = RENDERING.renderAuthPage('reset');
