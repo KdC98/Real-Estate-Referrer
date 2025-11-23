@@ -192,10 +192,6 @@ export function validateSignupForm() {
         errors: errors
     };
 }
-        isValid: errors.length === 0,
-        errors: errors
-    };
-}
 
 // Toggle Password Visibility
 export function togglePasswordVisibility(fieldId, button) {
