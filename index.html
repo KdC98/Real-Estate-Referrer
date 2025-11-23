@@ -255,15 +255,6 @@
                         if (!VALIDATION.validatePassword(password)) throw new Error('Mot de passe invalide');
                         if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
                         
-                        // Validations
-                        if (!VALIDATION.validateName(name)) {
-                        throw new Error('Nom invalide');
-                        }
-                        if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Numéro de téléphone invalide');
-                        if (!VALIDATION.validateEmail()) throw new Error('Email invalide');
-                        if (!VALIDATION.validatePassword()) throw new Error('Mot de passe invalide');
-                        if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
-                        
                         const fullPhone = countryCode + phone;
 
                         // ✅ ÉTAPE 1: Vérifier que le téléphone n'existe pas déjà
