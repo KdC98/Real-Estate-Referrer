@@ -221,7 +221,7 @@ export function renderAuthPage(mode) {
         const maskedPhone = tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4);
         
         title = t('auth:two_factor.title') || 'Vérification SMS';
-        subtitle = t('auth:two_factor.subtitle', { phone: maskedPhone }) || `Code envoyé au ${maskedPhone}`;
+        subtitle = t('auth:two_factor.subtitle', { phone: maskedPhone }) || 'Code envoyé au ' + maskedPhone;
         
         formContent = `
             <form id="form2FA" class="space-y-6">
