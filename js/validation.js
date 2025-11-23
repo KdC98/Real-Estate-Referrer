@@ -192,3 +192,22 @@ export function validateSignupForm() {
         errors: errors
     };
 }
+return {
+        isValid: errors.length === 0,
+        errors: errors
+    };
+}
+
+// Toggle Password Visibility
+export function togglePasswordVisibility(fieldId, button) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        button.innerHTML = '<span class="text-xl">🙈</span>';
+    } else {
+        field.type = 'password';
+        button.innerHTML = '<span class="text-xl">👁️</span>';
+    }
+}
