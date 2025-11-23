@@ -2,7 +2,7 @@
 // AUTHENTIFICATION 2FA (SMS)
 // Real Estate Referrer - Dubai
 // Version 3.0 - Flux standard WhatsApp/Telegram
-// Date: 22 novembre 2025
+// Date: 23 novembre 2025 - CORRECTIF
 // ============================================
 
 // Vérifier si un numéro de téléphone existe déjà
@@ -48,7 +48,7 @@ export async function send2FACode(phone, language = 'fr', pendingSignupData = nu
                 .from('pending_signups')
                 .insert([{
                     email: pendingSignupData.email,
-                    password: pendingSignupData.password, // Hash côté client
+                    password: pendingSignupData.password, // Sera hashé par Supabase lors de signUp
                     name: pendingSignupData.name,
                     phone: phone,
                     expires_at: expiresAt
@@ -105,17 +105,17 @@ export async function send2FACode(phone, language = 'fr', pendingSignupData = nu
     }
 }
 
-// ✅ NOUVELLE FONCTION : Vérifier code ET créer le compte
+// ✅ FONCTION CORRIGÉE : Vérifier code ET créer le compte (requête en 2 étapes)
 export async function verify2FACode(code, phone) {
     const supabase = window.supabase;
     
     try {
         console.log('🔍 Verifying 2FA code for phone:', phone);
         
-        // 1. Récupérer le pending_signup et vérifier le code
-        const { data: verificationData, error: verifyError } = await supabase
+        // 1. D'abord vérifier le code (SANS pending_signups)
+        const { data: codeData, error: codeError } = await supabase
             .from('verification_codes')
-            .select('*, pending_signups!inner(*)')
+            .select('*')
             .eq('phone', phone)
             .eq('code', code)
             .eq('used', false)
@@ -125,7 +125,7 @@ export async function verify2FACode(code, phone) {
             .limit(1)
             .single();
         
-        if (verifyError || !verificationData) {
+        if (codeError || !codeData) {
             console.log('❌ Code not found or invalid');
             
             // Incrémenter le compteur de tentatives
@@ -148,10 +148,25 @@ export async function verify2FACode(code, phone) {
             return { success: false, error: 'Code invalide ou expiré' };
         }
         
-        console.log('✅ Code validated, pending signup found');
-        const pendingSignup = verificationData.pending_signups;
+        console.log('✅ Code validated');
         
-        // 2. Créer le compte Supabase
+        // 2. Récupérer le pending_signup séparément
+        const { data: pendingSignup, error: pendingError } = await supabase
+            .from('pending_signups')
+            .select('*')
+            .eq('phone', phone)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+        
+        if (pendingError || !pendingSignup) {
+            console.log('❌ No pending signup found for this phone');
+            return { success: false, error: 'Aucune inscription en attente trouvée' };
+        }
+        
+        console.log('✅ Pending signup found:', pendingSignup);
+        
+        // 3. Créer le compte Supabase
         console.log('📝 Creating Supabase account...');
         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
             email: pendingSignup.email,
@@ -172,7 +187,7 @@ export async function verify2FACode(code, phone) {
         console.log('✅ Account created successfully');
         const userId = signUpData.user.id;
         
-        // 3. Créer le profil
+        // 4. Créer le profil
         console.log('📝 Creating user profile...');
         const { error: profileError } = await supabase
             .from('profiles')
@@ -193,7 +208,7 @@ export async function verify2FACode(code, phone) {
         
         console.log('✅ Profile created');
         
-        // 4. Marquer le code comme utilisé
+        // 5. Marquer le code comme utilisé
         await supabase
             .from('verification_codes')
             .update({ 
@@ -201,11 +216,11 @@ export async function verify2FACode(code, phone) {
                 verified: true,
                 user_id: userId
             })
-            .eq('id', verificationData.id);
+            .eq('id', codeData.id);
         
         console.log('✅ Verification code marked as used');
         
-        // 5. Supprimer le pending_signup
+        // 6. Supprimer le pending_signup
         await supabase
             .from('pending_signups')
             .delete()
@@ -213,7 +228,7 @@ export async function verify2FACode(code, phone) {
         
         console.log('✅ Pending signup cleaned up');
         
-        // 6. Connexion automatique
+        // 7. Connexion automatique
         console.log('🔐 Auto-login after verification...');
         const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
             email: pendingSignup.email,
