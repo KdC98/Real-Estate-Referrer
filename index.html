@@ -248,6 +248,7 @@
                         const phone = document.getElementById('phone').value.trim();
                         const countryCode = document.getElementById('countryCode').value;
                         const confirmPassword = document.getElementById('confirmPassword').value;
+                        const fullPhone = countryCode + phone;
                         // Validations
                         if (!VALIDATION.validateName(name)) throw new Error('Nom invalide');
                         if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Numéro de téléphone invalide');
