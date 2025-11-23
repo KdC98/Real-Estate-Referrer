@@ -88,9 +88,11 @@ export function validateEmail(email) {
 
 // Validation du téléphone (format international)
 export function validatePhone(phone) {
+    if (!phone || typeof phone !== 'string') return false;
     // Accepte +XXX suivi de 6 à 15 chiffres
+    const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
     const phoneRegex = /^\+\d{1,3}\d{6,15}$/;
-    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''));
+    return phoneRegex.test(cleanPhone);
 }
 
 // Validation du nom (pas vide, au moins 2 caractères)
