@@ -455,6 +455,8 @@ export function renderAuthPage(mode) {
                                 </div>
                             ` : `<div class="text-sm text-gray-400 mt-1">${t('auth:password_hint')}</div>`}
                             <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
+                            <!-- ✅ Indicateur de force du mot de passe EN TEMPS RÉEL -->
+                            <div id="passwordStrength" class="hidden mt-2"></div>
                         </div>
                     ` : ''}
                     
@@ -484,6 +486,8 @@ export function renderAuthPage(mode) {
                                 <span>✓</span>
                                 <span>Les mots de passe correspondent</span>
                             </div>
+                            <!-- ✅ Indicateur de correspondance des mots de passe -->
+                            <div id="passwordMatchIndicator" class="hidden mt-2"></div>
                         </div>
                     ` : ''}
                     
