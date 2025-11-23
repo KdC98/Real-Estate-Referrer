@@ -190,50 +190,15 @@ export function renderLandingPage() {
 
 /**
  * Génère le HTML des pages d'authentification
- * @param {string} mode - Mode: 'login', 'signup', 'reset', 'change-password'
+ * @param {string} mode - Mode: 'login', 'signup', 'reset', 'change-password', '2fa'
  * @returns {string} HTML de la page d'authentification
  */
 export function renderAuthPage(mode) {
     const t = (key) => window.i18next.t(key);
-    const is2FAMode = window.is2FAMode || false;
     
-    // Mode 2FA
-    if (is2FAMode) {
-        return `
-            <div class="min-h-screen flex items-center justify-center p-4">
-                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
-                    <h2 class="text-3xl font-bold mb-6 text-center">${t('auth:two_factor.title')}</h2>
-                    <p class="text-center mb-6 text-gray-300">${t('auth:two_factor.description')}</p>
-                    
-                    <form onsubmit="handle2FASubmit(event)" class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium mb-2">${t('auth:two_factor.code_label')}</label>
-                            <input 
-                                type="text" 
-                                id="code2fa"
-                                maxlength="6"
-                                pattern="[0-9]{6}"
-                                class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-yellow-400 text-white text-center text-2xl tracking-widest"
-                                placeholder="000000"
-                                required
-                            />
-                        </div>
-                        
-                        <button type="submit" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 font-bold py-3 rounded-lg hover:from-yellow-500 hover:to-yellow-700 transition">
-                            ${t('auth:two_factor.verify_button')}
-                        </button>
-                        
-                        <button type="button" onclick="resend2FACode()" class="w-full text-yellow-400 hover:text-yellow-300 transition py-2">
-                            ${t('auth:two_factor.resend_button')}
-                        </button>
-                    </form>
-                </div>
-            </div>
-        `;
-    }
+    let title, subtitle, formContent, buttonText, linkText, linkAction;
     
     // Configuration selon le mode
-    let title, buttonText, linkText, linkAction;
     if (mode === 'login') {
         title = t('auth:login_title');
         buttonText = t('auth:login_button');
@@ -249,7 +214,84 @@ export function renderAuthPage(mode) {
         buttonText = t('auth:reset_button');
         linkText = t('auth:back_to_login');
         linkAction = 'showLogin()';
-    } else if (mode === 'change-password') {
+    } 
+    // ✅ MODE 2FA - Vérification du code SMS
+    else if (mode === '2fa') {
+        const tempPhone = window.tempPhone || '';
+        const maskedPhone = tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4);
+        
+        title = t('auth:two_factor.title') || 'Vérification SMS';
+        subtitle = t('auth:two_factor.subtitle', { phone: maskedPhone }) || `Code envoyé au ${maskedPhone}`;
+        
+        formContent = `
+            <form id="form2FA" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium mb-2">
+                        ${t('auth:two_factor.code_label') || 'Code de vérification'}
+                    </label>
+                    <input 
+                        type="text" 
+                        id="code2fa" 
+                        inputmode="numeric"
+                        pattern="[0-9]{6}"
+                        maxlength="6"
+                        placeholder="000000"
+                        class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-yellow-500 text-center text-2xl tracking-widest font-mono"
+                        required
+                        autocomplete="one-time-code"
+                    />
+                    <p class="mt-2 text-sm text-gray-400">
+                        ${t('auth:two_factor.code_help') || 'Entrez le code à 6 chiffres reçu par SMS'}
+                    </p>
+                </div>
+
+                <div id="authError" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg"></div>
+
+                <button 
+                    type="submit" 
+                    class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-3 rounded-lg transition transform hover:scale-105"
+                >
+                    ${t('auth:two_factor.verify_button') || 'Vérifier'}
+                </button>
+
+                <div class="text-center">
+                    <button 
+                        type="button"
+                        onclick="window.resend2FACode()"
+                        class="text-yellow-500 hover:text-yellow-400 text-sm font-medium"
+                    >
+                        ${t('auth:two_factor.resend_code') || 'Renvoyer le code'}
+                    </button>
+                </div>
+
+                <div class="text-center">
+                    <button 
+                        type="button"
+                        onclick="window.showSignup()"
+                        class="text-gray-400 hover:text-white text-sm"
+                    >
+                        ${t('auth:two_factor.back_to_signup') || '← Retour à l\'inscription'}
+                    </button>
+                </div>
+            </form>
+        `;
+        
+        return `
+            <div class="min-h-screen flex items-center justify-center px-4">
+                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
+                    <button onclick="window.showSignup()" class="text-gray-400 hover:text-white mb-6 flex items-center">
+                        ← Retour
+                    </button>
+                    
+                    <h2 class="text-3xl font-bold mb-2 text-center">${title}</h2>
+                    ${subtitle ? `<p class="text-center text-gray-400 mb-6">${subtitle}</p>` : ''}
+                    
+                    ${formContent}
+                </div>
+            </div>
+        `;
+    }
+    else if (mode === 'change-password') {
         title = 'Nouveau mot de passe';
         buttonText = 'Changer le mot de passe';
         linkText = 'Retour à la connexion';
