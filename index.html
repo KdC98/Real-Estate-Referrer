@@ -250,7 +250,10 @@
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         
                         // Validations
-                        if (!VALIDATION.validateName()) throw new Error('Nom invalide');
+                        const name = document.getElementById('name').value.trim();
+                        if (!VALIDATION.validateName(name)) {
+                        throw new Error('Nom invalide');
+                        }
                         if (!VALIDATION.validatePhone()) throw new Error('Numéro de téléphone invalide');
                         if (!VALIDATION.validateEmail()) throw new Error('Email invalide');
                         if (!VALIDATION.validatePassword()) throw new Error('Mot de passe invalide');
