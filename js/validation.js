@@ -192,7 +192,6 @@ export function validateSignupForm() {
         errors: errors
     };
 }
-return {
         isValid: errors.length === 0,
         errors: errors
     };
