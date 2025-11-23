@@ -25,6 +25,7 @@
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
     import { SUPABASE_URL, SUPABASE_ANON_KEY } from '/js/config.js';
     import * as VALIDATION from '/js/validation.js';
+    window.VALIDATION = VALIDATION;
     import * as UTILS from '/js/utils.js';
     import * as AUTH from '/js/auth.js';
     import * as DASHBOARD from '/js/dashboard.js';
