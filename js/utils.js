@@ -126,6 +126,14 @@ export function showSignup() {
     if (window.render) {
         window.render();
     }
+    
+    // ✅ Attacher la validation du mot de passe après le rendu
+    setTimeout(() => {
+        if (window.VALIDATION && window.VALIDATION.attachPasswordValidation) {
+            window.VALIDATION.attachPasswordValidation();
+            console.log('✅ Password validation attached');
+        }
+    }, 100);
 }
 
 export function showReset() {
