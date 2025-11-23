@@ -206,3 +206,8 @@ export function togglePasswordVisibility(fieldId, button) {
         button.innerHTML = '<span class="text-xl">👁️</span>';
     }
 }
+
+// Fonction simple pour valider confirmation (appelée par oninput)
+export function validateConfirmPassword() {
+    checkPasswordMatch();
+}
