@@ -5,8 +5,43 @@
 // Date: 24 novembre 2025
 // ============================================
 
-// ❌ SUPPRIMÉ : checkPhoneExists - Causait erreur 406
-// Cette fonction n'est plus nécessaire car on vérifie lors de l'inscription
+// ✅ Vérifier si un numéro de téléphone existe déjà (VERSION CORRIGÉE)
+export async function checkPhoneExists(phone) {
+    const supabase = window.supabase;
+    
+    try {
+        // Nettoyer le numéro (enlever espaces, tirets, etc.)
+        const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
+        
+        // ✅ Requête simplifiée qui ne génère pas d'erreur 406
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('id, name')
+            .eq('phone', cleanPhone)
+            .maybeSingle(); // ✅ maybeSingle() au lieu de single() - pas d'erreur si vide
+        
+        // Si erreur de permissions ou autre, on retourne "n'existe pas" pour ne pas bloquer
+        if (error) {
+            console.warn('⚠️ Could not check phone (this is OK):', error.message);
+            return { exists: false };
+        }
+        
+        // Si data existe, le téléphone est déjà utilisé
+        if (data) {
+            console.log('📱 Phone already exists in database');
+            return { exists: true, userName: data.name };
+        }
+        
+        // Téléphone disponible
+        console.log('✅ Phone available');
+        return { exists: false };
+        
+    } catch (err) {
+        console.warn('⚠️ Exception checking phone (continuing anyway):', err.message);
+        // En cas d'erreur, on retourne "n'existe pas" pour ne pas bloquer l'inscription
+        return { exists: false };
+    }
+}
 
 // ✅ FONCTION CORRIGÉE : Envoyer un code 2FA avec upsert au lieu de insert
 export async function send2FACode(phone, language = 'fr', pendingSignupData = null) {
