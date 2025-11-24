@@ -455,6 +455,10 @@ export function renderAuthPage(mode) {
                                             <span class="w-3">•</span>
                                             <span>${t('auth:password_req_number')}</span>
                                         </div>
+                                        <div id="req-special" class="flex items-center gap-1">
+                                            <span class="w-3">•</span>
+                                            <span>${t('auth:password_req_special')}</span>
+                                        </div>
                                     </div>
                                 </div>
                             ` : `<div class="text-sm text-gray-400 mt-1">${t('auth:password_hint')}</div>`}
