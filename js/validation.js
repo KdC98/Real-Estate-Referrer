@@ -144,7 +144,7 @@ export function checkFormValidity() {
     const emailValid = validateEmail(email);
     const phoneValid = phone && phone.length >= 6;
     const passwordResult = validatePassword(password);
-    const passwordsMatch = password === confirmPassword && password.length > 0;
+    const passwordsMatch = password && confirmPassword && password === confirmPassword;
     
     const allValid = nameValid && emailValid && phoneValid && passwordResult.isValid && passwordsMatch;
     
