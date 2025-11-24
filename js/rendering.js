@@ -492,7 +492,7 @@ export function renderAuthPage(mode) {
                             <div id="confirmPasswordError" class="text-red-400 text-sm mt-1 hidden"></div>
                             <div id="confirmPasswordSuccess" class="text-green-400 text-sm mt-1 hidden flex items-center gap-1">
                                 <span>✓</span>
-                                <span>Les mots de passe correspondent</span>
+                                <span>${t('auth:password_validation.passwords_match')}</span>
                             </div>
                             <!-- ✅ Indicateur de correspondance des mots de passe -->
                             <div id="passwordMatchIndicator" class="hidden mt-2"></div>
