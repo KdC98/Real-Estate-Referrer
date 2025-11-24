@@ -49,35 +49,47 @@ export function validatePassword(password) {
 // Mettre à jour l'affichage des critères en temps réel
 export function updatePasswordStrengthIndicator(password, elementId = 'passwordStrength') {
     const result = validatePassword(password);
-    const indicator = document.getElementById(elementId);
     
-    if (!indicator) return;
+    // Mettre à jour les éléments req-* individuellement
+    const updateRequirement = (id, isValid) => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.classList.remove('text-green-400', 'text-gray-400', 'text-red-400');
+            el.classList.add(isValid ? 'text-green-400' : 'text-gray-400');
+            const bullet = el.querySelector('span:first-child');
+            if (bullet) bullet.textContent = isValid ? '✓' : '•';
+        }
+    };
     
-    const i18next = window.i18next;
+    updateRequirement('req-length', result.checks.minLength);
+    updateRequirement('req-letter', result.checks.hasUpperCase && result.checks.hasLowerCase);
+    updateRequirement('req-number', result.checks.hasNumber);
+    updateRequirement('req-special', result.checks.hasSpecialChar);
     
-    // Créer l'HTML des critères
-    const criteriaHTML = `
-        <div class="space-y-2 text-sm">
-            <div class="flex items-center gap-2 ${result.checks.minLength ? 'text-green-400' : 'text-gray-400'}">
-                ${result.checks.minLength ? '✓' : '○'} ${i18next?.t('auth:password_validation.min_8_chars') || 'Minimum 8 caractères'}
-            </div>
-            <div class="flex items-center gap-2 ${result.checks.hasUpperCase ? 'text-green-400' : 'text-gray-400'}">
-                ${result.checks.hasUpperCase ? '✓' : '○'} ${i18next?.t('auth:password_validation.uppercase') || 'Une majuscule (A-Z)'}
-            </div>
-            <div class="flex items-center gap-2 ${result.checks.hasLowerCase ? 'text-green-400' : 'text-gray-400'}">
-                ${result.checks.hasLowerCase ? '✓' : '○'} ${i18next?.t('auth:password_validation.lowercase') || 'Une minuscule (a-z)'}
-            </div>
-            <div class="flex items-center gap-2 ${result.checks.hasNumber ? 'text-green-400' : 'text-gray-400'}">
-                ${result.checks.hasNumber ? '✓' : '○'} ${i18next?.t('auth:password_validation.number') || 'Un chiffre (0-9)'}
-            </div>
-            <div class="flex items-center gap-2 ${result.checks.hasSpecialChar ? 'text-green-400' : 'text-gray-400'}">
-                ${result.checks.hasSpecialChar ? '✓' : '○'} ${i18next?.t('auth:password_validation.special_char') || 'Un caractère spécial (!@#$%...)'}
-            </div>
-        </div>
-    `;
+    // Mettre à jour la barre de force
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthText = document.getElementById('passwordStrengthText');
     
-    indicator.innerHTML = criteriaHTML;
-    indicator.classList.remove('hidden');
+    if (strengthBar && strengthText) {
+        const validCount = Object.values(result.checks).filter(Boolean).length;
+        const percentage = (validCount / 5) * 100;
+        
+        let color, text;
+        if (validCount <= 2) {
+            color = '#EF4444'; text = 'Faible';
+        } else if (validCount <= 3) {
+            color = '#F59E0B'; text = 'Moyen';
+        } else if (validCount <= 4) {
+            color = '#10B981'; text = 'Fort';
+        } else {
+            color = '#059669'; text = 'Excellent';
+        }
+        
+        strengthBar.style.width = percentage + '%';
+        strengthBar.style.backgroundColor = color;
+        strengthText.textContent = text;
+        strengthText.style.color = color;
+    }
 }
 
 // Validation de l'email
