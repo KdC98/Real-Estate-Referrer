@@ -76,10 +76,10 @@
                 <div class="min-h-screen flex items-center justify-center p-4">
                     <div class="bg-white rounded-xl p-8 max-w-md text-center">
                         <div class="text-6xl mb-4">⚠️</div>
-                        <h1 class="text-2xl font-bold text-red-600 mb-4">Access Denied</h1>
-                        <p class="text-gray-700 mb-6">You must be logged in to sign the contract.</p>
+                        <h1 class="text-2xl font-bold text-red-600 mb-4">${t('contract:access_denied')}</h1>
+                        <p class="text-gray-700 mb-6">${t('contract:must_login')}</p>
                         <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg inline-block">
-                            Go to Login
+                            ${t('contract:go_to_login')}
                         </a>
                     </div>
                 </div>
@@ -98,39 +98,56 @@
                         
                         <!-- Contract Summary -->
                         <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
-                            <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:summary_title')}</h2>
-                            <div class="space-y-3 text-gray-300 text-sm mb-6">
-                                <p><strong>${t('contract:commissions_title')}</strong></p>
-                                <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li>${t('contract:commission_sales')}</li>
-                                    <li>${t('contract:commission_rentals')}</li>
-                                </ul>
-                                
-                                <p class="mt-4"><strong>${t('contract:payments_title')}</strong></p>
-                                <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li>${t('contract:payment_sales')}</li>
-                                    <li>${t('contract:payment_rentals')}</li>
-                                </ul>
-                                
-                                <p class="mt-4"><strong>${t('contract:obligations_title')}</strong></p>
-                                <ul class="list-disc list-inside ml-4 space-y-2">
-                                    <li>${t('contract:obligation_1')}</li>
-                                    <li>${t('contract:obligation_2')}</li>
-                                    <li>${t('contract:obligation_3')}</li>
-                                    <li>${t('contract:obligation_4')}</li>
-                                </ul>
-                                
-                                <div class="bg-yellow-900/30 border border-yellow-500/50 rounded-lg p-4 mt-4">
-                                    <p class="text-yellow-200 text-xs">
-                                        <strong>⚠️</strong> ${t('contract:important_notice')}
-                                    </p>
+                            <div class="flex items-start justify-between mb-4">
+                                <div>
+                                    <h2 class="text-xl font-bold text-yellow-400 mb-2">${t('contract:what_is_contract')}</h2>
+                                    <p class="text-gray-300 text-sm">${t('contract:contract_intro')}</p>
                                 </div>
                             </div>
                             
-                            <div class="border-t border-gray-600 pt-4">
+                            <div class="space-y-3 text-gray-300 text-sm">
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-400 text-xl">✓</span>
+                                    <div>
+                                        <strong class="text-white">${t('contract:guarantee_commission')}</strong> ${t('contract:guarantee_commission_text')}
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-400 text-xl">✓</span>
+                                    <div>
+                                        <strong class="text-white">${t('contract:lead_protection')}</strong> ${t('contract:lead_protection_text')}
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-400 text-xl">✓</span>
+                                    <div>
+                                        <strong class="text-white">${t('contract:fast_payment')}</strong> ${t('contract:fast_payment_text')}
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-400 text-xl">✓</span>
+                                    <div>
+                                        <strong class="text-white">${t('contract:transparency')}</strong> ${t('contract:transparency_text')}
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="text-green-400 text-xl">✓</span>
+                                    <div>
+                                        <strong class="text-white">${t('contract:rera_compliance')}</strong> ${t('contract:rera_compliance_text')}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mt-6">
+                                <p class="text-blue-200 text-sm">
+                                    <strong>ℹ️</strong> ${t('contract:full_contract_notice')}
+                                </p>
+                            </div>
+                            
+                            <div class="border-t border-gray-600 pt-4 mt-4">
                                 <a href="/contract-template.html" target="_blank" 
                                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">
-                                    ${t('contract:read_full_contract')}
+                                    📄 ${t('contract:read_full_contract')}
                                 </a>
                             </div>
                         </div>
@@ -146,18 +163,42 @@
                                 />
                                 <span class="text-gray-300">
                                     <strong class="text-white">${t('contract:accept_terms')}</strong><br>
-                                    ${t('contract:confirm_text')}<br>
-                                    ✓ ${t('contract:confirm_1')}<br>
-                                    ✓ ${t('contract:confirm_2')}<br>
-                                    ✓ ${t('contract:confirm_3')}<br>
-                                    ✓ ${t('contract:confirm_4')}
+                                    <span class="text-sm">${t('contract:accept_terms_text')}</span>
                                 </span>
                             </label>
                         </div>
                         
                         <!-- Signature Canvas -->
                         <div id="signatureSection" class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6 opacity-50 pointer-events-none">
-                            <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:signature_title')}</h2>
+                            <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/30 rounded-xl p-6 mb-6">
+                                <div class="flex items-start gap-3">
+                                    <span class="text-4xl">✍️</span>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-green-400 mb-2">${t('contract:electronic_signature')}</h3>
+                                        <p class="text-gray-300 text-sm mb-3">${t('contract:electronic_signature_intro')}</p>
+                                        <div class="space-y-1 text-sm text-gray-300">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-green-400">✓</span>
+                                                <span>${t('contract:signature_feature_1')}</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-green-400">✓</span>
+                                                <span>${t('contract:signature_feature_2')}</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-green-400">✓</span>
+                                                <span>${t('contract:signature_feature_3')}</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-green-400">✓</span>
+                                                <span>${t('contract:signature_feature_4')}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:sign_now')}</h2>
                             <p class="text-gray-300 mb-4">${t('contract:signature_instruction')}</p>
                             
                             <div class="bg-white rounded-lg p-4 mb-4">
@@ -331,7 +372,6 @@
                 
                 showSuccess(t('contract:success_message'));
 
-                // ✅ NOUVELLE REDIRECTION AMÉLIORÉE
                 setTimeout(() => {
                     const baseUrl = window.location.origin;
                     const redirectUrl = baseUrl + '/?signed=' + Date.now();
@@ -340,7 +380,7 @@
                 
             } catch (error) {
                 console.error('Signature error:', error);
-                showError('Erreur : ' + error.message);
+                showError(t('contract:error') + ': ' + error.message);
                 validateBtn.disabled = false;
                 validateBtn.textContent = originalText;
             }
