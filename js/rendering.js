@@ -6,8 +6,8 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 2.1 - Correction affichage téléphone 2FA
-// Date: 24 novembre 2025
+// Version: 2.2 - Correction traductions section signature
+// Date: 25 novembre 2025
 // ============================================
 
 /**
@@ -551,11 +551,10 @@ export function renderDashboard() {
     
     const isAdmin = userProfile.role === 'admin';
     
-    // Vérification contrat
+    // Vérification contrat - accepte signed, validated, approved
     const hasValidContract = userProfile.contract_path || 
                             userProfile.contract_file_url || 
-                            userProfile.contract_status === 'signed' || 
-                            userProfile.contract_status === 'approved';
+                            ['signed', 'validated', 'approved'].includes(userProfile.contract_status);
     
     console.log('📄 Contract check:', {
         contract_path: userProfile.contract_path,
@@ -612,33 +611,33 @@ export function renderDashboard() {
                                         <div class="flex items-center gap-3 mb-4">
                                             <span class="text-4xl">✍️</span>
                                             <div>
-                                                <h4 class="font-bold text-green-300 text-lg">Signature Électronique</h4>
-                                                <p class="text-xs text-gray-400">Nouveau : Signez votre contrat en ligne en 2 minutes</p>
+                                                <h4 class="font-bold text-green-300 text-lg">${t('dashboard:contract.electronic_signature')}</h4>
+                                                <p class="text-xs text-gray-400">${t('dashboard:contract.electronic_signature_intro')}</p>
                                             </div>
                                         </div>
                                         
                                         <ul class="space-y-2 text-sm text-gray-300 mb-4">
                                             <li class="flex items-center gap-2">
                                                 <span class="text-green-400">✓</span>
-                                                <span>Signature au doigt ou à la souris</span>
+                                                <span>${t('dashboard:contract.signature_feature_1')}</span>
                                             </li>
                                             <li class="flex items-center gap-2">
                                                 <span class="text-green-400">✓</span>
-                                                <span>Validation instantanée</span>
+                                                <span>${t('dashboard:contract.signature_feature_2')}</span>
                                             </li>
                                             <li class="flex items-center gap-2">
                                                 <span class="text-green-400">✓</span>
-                                                <span>Légalement valide à Dubai</span>
+                                                <span>${t('dashboard:contract.signature_feature_3')}</span>
                                             </li>
                                             <li class="flex items-center gap-2">
                                                 <span class="text-green-400">✓</span>
-                                                <span>Aucun téléchargement nécessaire</span>
+                                                <span>${t('dashboard:contract.signature_feature_4')}</span>
                                             </li>
                                         </ul>
                                         
                                         <a href="/contract-signature.html" 
                                            class="block w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-3 rounded-lg transition text-center">
-                                            🖊️ Signer mon contrat maintenant
+                                            🖊️ ${t('dashboard:contract.sign_now_button')}
                                         </a>
                                     </div>
                                 </div>
@@ -652,8 +651,8 @@ export function renderDashboard() {
                         <div class="flex items-center gap-4">
                             <div class="text-3xl flex-shrink-0">✅</div>
                             <div>
-                                <h3 class="text-xl font-bold text-green-300">Contrat signé et validé</h3>
-                                <p class="text-gray-300">Vous pouvez maintenant ajouter des leads</p>
+                                <h3 class="text-xl font-bold text-green-300">${t('dashboard:contract.signed_validated')}</h3>
+                                <p class="text-gray-300">${t('dashboard:contract.can_add_leads')}</p>
                             </div>
                         </div>
                     </div>
@@ -661,13 +660,12 @@ export function renderDashboard() {
                 
                 <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
                 
-                ${!isAdmin ? `
+                ${!isAdmin && hasValidContract ? `
                     <div class="mb-6">
                         <button 
                             id="addLeadBtn"
                             onclick="showAddLeadForm()" 
-                            ${!hasValidContract ? 'disabled' : ''}
-                            class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition ${!hasValidContract ? 'opacity-50 cursor-not-allowed' : ''}"
+                            class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition"
                         >
                             ${t('dashboard:add_lead')}
                         </button>
