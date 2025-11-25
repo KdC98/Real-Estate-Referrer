@@ -79,6 +79,16 @@
     "upload_button": "Upload Signed Contract",
     
     "digital_tip": "Tip:",
-    "digital_coming": "Digital signature coming soon!"
+    "digital_coming": "Digital signature coming soon!",
+    
+    "electronic_signature": "Electronic Signature",
+    "electronic_signature_intro": "New: Sign your contract online in 2 minutes",
+    "signature_feature_1": "Sign with finger or mouse",
+    "signature_feature_2": "Instant validation",
+    "signature_feature_3": "Legally valid in Dubai",
+    "signature_feature_4": "No download required",
+    "sign_now_button": "Sign my contract now",
+    "signed_validated": "Contract signed and validated",
+    "can_add_leads": "You can now add leads"
   }
 }
