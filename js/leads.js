@@ -3,18 +3,25 @@
 // Real Estate Referrer - Dubai
 // ============================================
 
-import { currentUser, userProfile } from './auth.js';
+import { currentUser } from './auth.js';
 
 // Afficher le formulaire d'ajout de lead
 export function showAddLeadForm() {
     const i18next = window.i18next;
+    const userProfile = window.userProfile; // ✅ Utiliser window.userProfile
     
     const hasValidContract = userProfile?.contract_path || 
                             userProfile?.contract_file_url || 
                             ['signed', 'validated', 'approved'].includes(userProfile?.contract_status);
     
+    console.log('🔍 showAddLeadForm check:', {
+        contract_path: userProfile?.contract_path,
+        contract_status: userProfile?.contract_status,
+        hasValidContract
+    });
+    
     if (!hasValidContract) {
-        alert(i18next.t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
+        alert(i18next.t('dashboard:contract_required_to_add_lead') || 'You must upload your signed contract before adding leads.');
         return;
     }
     
