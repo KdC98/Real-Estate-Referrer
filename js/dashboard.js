@@ -252,7 +252,7 @@ export function renderDashboard() {
                 <div id="stats" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"></div>
                 
                 <!-- Add Lead Button (Referrers only) -->
-                ${!isAdmin && contractStatus === 'signed' ? `
+                ${!isAdmin && ['signed', 'validated', 'approved'].includes(contractStatus) ? `
                     <div class="mb-6">
                         <button onclick="window.showAddLeadForm()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition">
                             ${i18next.t('dashboard:add_lead')}
