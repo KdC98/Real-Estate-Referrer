@@ -11,8 +11,7 @@ export function showAddLeadForm() {
     
     const hasValidContract = userProfile?.contract_path || 
                             userProfile?.contract_file_url || 
-                            userProfile?.contract_status === 'signed' || 
-                            userProfile?.contract_status === 'approved';
+                            ['signed', 'validated', 'approved'].includes(userProfile?.contract_status);
     
     if (!hasValidContract) {
         alert(i18next.t('dashboard:contract_required_to_add_lead') || 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.');
