@@ -6,8 +6,8 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 2.2 - Correction traductions section signature
-// Date: 25 novembre 2025
+// Version: 3.3.0 - Nouveau formulaire leads avec commissions 25%/20%
+// Date: 26 novembre 2025
 // ============================================
 
 /**
@@ -224,7 +224,6 @@ export function renderAuthPage(mode) {
         const maskedPhone = tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4);
         
         title = t('auth:two_factor.title') || 'Vérification SMS';
-        // ✅ CORRECTION : Utiliser la concaténation au lieu de template literal
         subtitle = t('auth:two_factor.subtitle', { phone: maskedPhone }) || 'Code envoyé au ' + maskedPhone;
         
         formContent = `
@@ -288,7 +287,7 @@ export function renderAuthPage(mode) {
                     </button>
                     
                     <h2 class="text-3xl font-bold mb-2 text-center">${title}</h2>
-                    ${subtitle ? `<p class="text-center text-gray-400 mb-6">${subtitle}</p>` : ''}
+                    ${subtitle ? '<p class="text-center text-gray-400 mb-6">' + subtitle + '</p>' : ''}
                     
                     ${formContent}
                 </div>
@@ -461,9 +460,8 @@ export function renderAuthPage(mode) {
                                         </div>
                                     </div>
                                 </div>
-                            ` : `<div class="text-sm text-gray-400 mt-1">${t('auth:password_hint')}</div>`}
+                            ` : '<div class="text-sm text-gray-400 mt-1">' + t('auth:password_hint') + '</div>'}
                             <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
-                            <!-- ✅ Indicateur de force du mot de passe EN TEMPS RÉEL -->
                             <div id="passwordStrength" class="hidden mt-2"></div>
                         </div>
                     ` : ''}
@@ -494,7 +492,6 @@ export function renderAuthPage(mode) {
                                 <span>✓</span>
                                 <span>${t('auth:password_validation.passwords_match')}</span>
                             </div>
-                            <!-- ✅ Indicateur de correspondance des mots de passe -->
                             <div id="passwordMatchIndicator" class="hidden mt-2"></div>
                         </div>
                     ` : ''}
@@ -678,43 +675,114 @@ export function renderDashboard() {
                 </div>
             </main>
             
-            <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full">
+            <!-- ✅ NOUVEAU MODAL AJOUT LEAD avec commissions 25%/20% -->
+            <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                     <h3 class="text-2xl font-bold mb-6">${t('dashboard:add_lead')}</h3>
-                    <form id="addLeadForm" class="space-y-4">
+                    
+                    <form id="addLeadForm" onsubmit="event.preventDefault(); window.addLead(event);">
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block mb-2">${t('dashboard:client_name')}</label>
-                                <input type="text" id="clientName" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                <label class="block text-gray-300 mb-2">${t('dashboard:client_name')} *</label>
+                                <input type="text" id="clientName" required 
+                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
                             </div>
+                            
                             <div>
-                                <label class="block mb-2">${t('dashboard:client_email')}</label>
-                                <input type="email" id="clientEmail" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                <label class="block text-gray-300 mb-2">${t('dashboard:client_email')} *</label>
+                                <input type="email" id="clientEmail" required 
+                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
                             </div>
+                            
                             <div>
-                                <label class="block mb-2">${t('dashboard:client_phone')}</label>
-                                <input type="tel" id="clientPhone" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                <label class="block text-gray-300 mb-2">${t('dashboard:client_phone')} *</label>
+                                <input type="tel" id="clientPhone" required 
+                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
                             </div>
+                            
                             <div>
-                                <label class="block mb-2">${t('dashboard:property_type')}</label>
-                                <select id="propertyType" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
-                                    <option value="">${t('dashboard:select_type')}</option>
-                                    <option value="sale_buyer">${t('dashboard:sale_buyer')}</option>
-                                    <option value="sale_seller">${t('dashboard:sale_seller')}</option>
-                                    <option value="rental_landlord">${t('dashboard:rental_landlord')}</option>
-                                    <option value="rental_tenant">${t('dashboard:rental_tenant')}</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block mb-2">${t('dashboard:budget')}</label>
-                                <input type="number" id="budget" required class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                <label class="block text-gray-300 mb-2">${t('dashboard:budget')} (AED) *</label>
+                                <input type="text" id="budget" required inputmode="numeric" placeholder="1,500,000"
+                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
                             </div>
                         </div>
-                        <div class="flex gap-4">
-                            <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                        
+                        <!-- Type de lead avec commissions -->
+                        <div class="mt-6">
+                            <label class="block text-gray-300 mb-3">${t('dashboard:lead_type')} *</label>
+                            
+                            <div class="space-y-3">
+                                <!-- 🏆 ACHETEUR - MIS EN AVANT -->
+                                <label class="flex items-center p-4 bg-gradient-to-r from-yellow-900/50 to-yellow-700/30 border-2 border-yellow-500 rounded-xl cursor-pointer hover:bg-yellow-900/70 transition">
+                                    <input type="radio" name="leadTypeRadio" value="sale_buyer" 
+                                           onchange="document.getElementById('leadType').value='sale_buyer'"
+                                           class="w-5 h-5 text-yellow-500 mr-4">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-2xl">🏆</span>
+                                            <span class="font-bold text-yellow-400 text-lg">${t('dashboard:sale_buyer')}</span>
+                                            <span class="bg-yellow-500 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">${t('dashboard:recommended')}</span>
+                                        </div>
+                                        <p class="text-yellow-300 text-sm mt-1">${t('dashboard:commission')}: <strong>25%</strong> ${t('dashboard:of_agent_commission')}</p>
+                                    </div>
+                                </label>
+                                
+                                <!-- Autres types - Standard -->
+                                <label class="flex items-center p-3 bg-gray-700/50 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 transition">
+                                    <input type="radio" name="leadTypeRadio" value="sale_seller" 
+                                           onchange="document.getElementById('leadType').value='sale_seller'"
+                                           class="w-4 h-4 text-yellow-500 mr-3">
+                                    <div class="flex-1">
+                                        <span class="text-white">${t('dashboard:sale_seller')}</span>
+                                        <span class="text-gray-400 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center p-3 bg-gray-700/50 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 transition">
+                                    <input type="radio" name="leadTypeRadio" value="rental_landlord" 
+                                           onchange="document.getElementById('leadType').value='rental_landlord'"
+                                           class="w-4 h-4 text-yellow-500 mr-3">
+                                    <div class="flex-1">
+                                        <span class="text-white">${t('dashboard:rental_landlord')}</span>
+                                        <span class="text-gray-400 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
+                                    </div>
+                                </label>
+                                
+                                <label class="flex items-center p-3 bg-gray-700/50 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 transition">
+                                    <input type="radio" name="leadTypeRadio" value="rental_tenant" 
+                                           onchange="document.getElementById('leadType').value='rental_tenant'"
+                                           class="w-4 h-4 text-yellow-500 mr-3">
+                                    <div class="flex-1">
+                                        <span class="text-white">${t('dashboard:rental_tenant')}</span>
+                                        <span class="text-gray-400 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- Champ caché pour stocker la valeur -->
+                            <input type="hidden" id="leadType" name="leadType" required>
+                        </div>
+                        
+                        <!-- ✅ CHECKBOX CONSENTEMENT OBLIGATOIRE -->
+                        <div class="mt-6 p-4 bg-blue-900/30 border border-blue-500/50 rounded-xl">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" id="clientConsent" required
+                                       class="w-5 h-5 mt-0.5 text-blue-500 rounded border-gray-500 focus:ring-blue-500">
+                                <div>
+                                    <span class="text-white font-medium">${t('dashboard:consent_checkbox_label')} *</span>
+                                    <p class="text-gray-400 text-sm mt-1">${t('dashboard:consent_checkbox_description')}</p>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <!-- Boutons -->
+                        <div class="flex gap-4 mt-8">
+                            <button type="submit" 
+                                    class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
                                 ${t('dashboard:add')}
                             </button>
-                            <button type="button" onclick="document.getElementById('addLeadModal').classList.add('hidden')" class="flex-1 bg-gray-600 hover:bg-gray-700 py-3 rounded-lg transition">
+                            <button type="button" onclick="window.closeAddLeadModal()" 
+                                    class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition">
                                 ${t('dashboard:cancel')}
                             </button>
                         </div>
