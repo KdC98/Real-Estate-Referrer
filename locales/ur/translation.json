@@ -8,42 +8,42 @@
   
   "hero": {
     "title": "آپ کا نیٹ ورک سونے کے برابر ہے: ہر لیڈ اہم ہے",
-    "subtitle": "بزنس ریفرر بنیں اور ہر لین دین پر 20% کمیشن حاصل کریں",
+    "subtitle": "ریفرل پارٹنر بنیں اور ہر لین دین پر 25% تک کمیشن کمائیں",
     "cta_button": "پروگرام میں شامل ہوں"
   },
   
   "stats": {
-    "commission_value": "20%",
-    "commission_label": "فروخت اور کرایہ پر کمیشن",
+    "commission_value": "25% تک",
+    "commission_label": "آپ کی لیڈز پر کمیشن",
     "support_value": "24/7",
     "support_label": "ریئل ٹائم لیڈ ٹریکنگ",
-    "timeline_value": "45-60j",
-    "timeline_label": "ٹائٹل ڈیڈ کے بعد ادائیگی (فروخت)"
+    "timeline_value": "45-60 دن",
+    "timeline_label": "Title Deed کے بعد ادائیگی (فروخت)"
   },
   
   "gains": {
     "title": "کمائی کی مثالیں",
-    "sale_title": "💰 جائیداد کی فروخت",
-    "sale_example_1_property": "3,000,000 AED میں ولا",
-    "sale_example_1_commission": "6,000 AED",
-    "sale_example_2_property": "5,000,000 AED میں اپارٹمنٹ",
-    "sale_example_2_commission": "10,000 AED",
-    "sale_example_3_property": "10,000,000 AED میں پینٹ ہاؤس",
-    "sale_example_3_commission": "20,000 AED",
-    "rental_title": "🏠 جائیداد کرایہ پر",
-    "rental_example_1_property": "60,000 AED/سال میں اسٹوڈیو",
-    "rental_example_1_commission": "300 AED",
-    "rental_example_2_property": "120,000 AED/سال میں اپارٹمنٹ",
-    "rental_example_2_commission": "600 AED",
-    "rental_example_3_property": "200,000 AED/سال میں ولا",
-    "rental_example_3_commission": "1,000 AED"
+    "sale_title": "💰 فروخت - خریدار (25%)",
+    "sale_example_1_property": "ویلا 3,000,000 AED میں",
+    "sale_example_1_commission": "7,500 AED",
+    "sale_example_2_property": "اپارٹمنٹ 5,000,000 AED میں",
+    "sale_example_2_commission": "12,500 AED",
+    "sale_example_3_property": "پینٹ ہاؤس 10,000,000 AED میں",
+    "sale_example_3_commission": "25,000 AED",
+    "rental_title": "🏠 کرایہ (20%)",
+    "rental_example_1_property": "اسٹوڈیو 60,000 AED/سال",
+    "rental_example_1_commission": "600 AED",
+    "rental_example_2_property": "اپارٹمنٹ 120,000 AED/سال",
+    "rental_example_2_commission": "1,200 AED",
+    "rental_example_3_property": "ویلا 200,000 AED/سال",
+    "rental_example_3_commission": "2,000 AED"
   },
   
   "footer": {
-    "terms": "شرائط و ضوابط",
-    "privacy": "رازداری کی پالیسی",
+    "terms": "شرائط",
+    "privacy": "رازداری",
     "how_it_works": "یہ کیسے کام کرتا ہے",
-    "contact": "رابطہ کریں",
-    "copyright": "© 2025 Karyne de Clercq. تمام حقوق محفوظ ہیں۔"
+    "contact": "رابطہ",
+    "copyright": "© 2025 Karyne de Clercq. جملہ حقوق محفوظ ہیں۔"
   }
 }
