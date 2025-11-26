@@ -8,16 +8,16 @@
   "add_lead": "Add Lead",
   "my_leads": "My Leads",
   "client_name": "Client Name",
+  "client_email": "Client Email",
+  "client_phone": "Client Phone",
   "property_type": "Property Type",
+  "lead_type": "Lead Type",
   "budget": "Budget",
   "status": "Status",
   "commission": "Commission",
   "no_leads": "No leads yet",
   "start_adding": "Start adding leads to earn commissions",
   "logout": "Logout",
-  "contract_required": "Contract Required",
-  "contract_warning_message": "Please download and sign the referrer agreement before adding leads",
-  "upload_contract_now": "Upload Contract Now",
   "admin_title": "Admin Dashboard",
   "referrer_title": "Referrer Dashboard",
   "actions": "Actions",
@@ -28,13 +28,16 @@
   "commissions_paid": "Commissions Paid",
   "referrer": "Referrer",
   "mark_sold": "Mark as Sold",
-  "client_email": "Client Email",
-  "client_phone": "Client Phone",
   "select_type": "Select Type",
-  "sale_buyer": "Sale - Buyer",
-  "sale_seller": "Sale - Seller",
-  "rental_landlord": "Rental - Landlord",
-  "rental_tenant": "Rental - Tenant",
+  
+  "sale_buyer": "Buyer (Sale)",
+  "sale_seller": "Seller (Sale)",
+  "rental_landlord": "Landlord (Rental)",
+  "rental_tenant": "Tenant (Rental)",
+  
+  "recommended": "RECOMMENDED",
+  "of_agent_commission": "of agent commission",
+  
   "status_new": "New",
   "status_nouveau": "New",
   "status_visit": "Visit",
@@ -43,12 +46,29 @@
   "status_offre": "Offer",
   "status_sold": "Sold",
   "status_vendu": "Sold",
+  
+  "contract_required": "Contract Required",
+  "contract_warning_message": "Please download and sign the referrer agreement before adding leads",
+  "upload_contract_now": "Upload Contract Now",
   "contract_uploaded_title": "Perfect! You can start!",
-  "contract_uploaded_message": "Your contract has been received and will be validated by our team within the next 24-48 hours. Don't worry, you can already start working and add your first leads.",
+  "contract_uploaded_message": "Your contract has been received and will be validated by our team within the next 24-48 hours.",
   "upload_instructions": "Download, sign and upload the contract",
   "download_contract_template": "Download Template",
   "submit_contract": "Submit Contract",
   "contract_required_to_add_lead": "You must upload your signed contract before adding leads",
+  
+  "fill_all_fields": "Please fill in all required fields",
+  "lead_added_success": "Lead added successfully!",
+  "error_adding_lead": "Error adding lead",
+  "enter_sale_price": "Sale price (AED):",
+  "invalid_price": "Invalid price",
+  "lead_sold_success": "Lead sold!",
+  "error_marking_sold": "Error processing sale",
+  "error_updating_status": "Error updating status",
+  
+  "consent_required": "You must confirm that the client has agreed to be contacted by the real estate agent.",
+  "consent_checkbox_label": "I confirm that this person has agreed to be contacted",
+  "consent_checkbox_description": "The client has given their explicit consent to be contacted by the real estate agent regarding their property search. This consent is required by GDPR regulations.",
   
   "contract": {
     "required": "Business Referrer Agreement Required",
@@ -56,7 +76,7 @@
     "explanation": "This contract formalizes our professional partnership and guarantees your rights:",
     
     "benefit1_title": "Guaranteed commission:",
-    "benefit1_desc": "20% on each completed sale",
+    "benefit1_desc": "25% for buyers, 20% for other leads",
     
     "benefit2_title": "Lead protection:",
     "benefit2_desc": "No lead can be \"stolen\"",
@@ -89,6 +109,7 @@
     "signature_feature_4": "No download required",
     "sign_now_button": "Sign my contract now",
     "signed_validated": "Contract signed and validated",
-    "can_add_leads": "You can now add leads"
+    "can_add_leads": "You can now add leads",
+    "read_before_sign": "You will read the full contract before signing"
   }
 }
