@@ -8,16 +8,16 @@
   "add_lead": "Ajouter un Lead",
   "my_leads": "Mes Leads",
   "client_name": "Nom du Client",
+  "client_email": "Email du Client",
+  "client_phone": "Téléphone du Client",
   "property_type": "Type de Propriété",
+  "lead_type": "Type de Lead",
   "budget": "Budget",
   "status": "Statut",
   "commission": "Commission",
   "no_leads": "Aucun lead pour le moment",
   "start_adding": "Commencez à ajouter des leads pour gagner des commissions",
   "logout": "Déconnexion",
-  "contract_required": "Contrat Requis",
-  "contract_warning_message": "Veuillez télécharger et signer le contrat d'apporteur avant d'ajouter des leads",
-  "upload_contract_now": "Uploader le Contrat",
   "admin_title": "Tableau de bord Admin",
   "referrer_title": "Tableau de bord Apporteur",
   "actions": "Actions",
@@ -28,13 +28,16 @@
   "commissions_paid": "Commissions Versées",
   "referrer": "Apporteur",
   "mark_sold": "Marquer Vendu",
-  "client_email": "Email du Client",
-  "client_phone": "Téléphone du Client",
   "select_type": "Sélectionner le Type",
+  
   "sale_buyer": "Vente - Acheteur",
   "sale_seller": "Vente - Vendeur",
   "rental_landlord": "Location - Propriétaire",
   "rental_tenant": "Location - Locataire",
+  
+  "recommended": "RECOMMANDÉ",
+  "of_agent_commission": "de la commission agent",
+  
   "status_new": "Nouveau",
   "status_nouveau": "Nouveau",
   "status_visit": "Visite",
@@ -43,12 +46,29 @@
   "status_offre": "Offre",
   "status_sold": "Vendu",
   "status_vendu": "Vendu",
+  
+  "contract_required": "Contrat Requis",
+  "contract_warning_message": "Veuillez télécharger et signer le contrat d'apporteur avant d'ajouter des leads",
+  "upload_contract_now": "Uploader le Contrat",
   "contract_uploaded_title": "Parfait ! Vous pouvez commencer !",
-  "contract_uploaded_message": "Votre contrat a été reçu et sera validé par notre équipe dans les 24-48 heures. Ne vous inquiétez pas, vous pouvez déjà commencer à travailler et ajouter vos premiers leads.",
+  "contract_uploaded_message": "Votre contrat a été reçu et sera validé par notre équipe dans les 24-48 heures.",
   "upload_instructions": "Téléchargez, signez et uploadez le contrat",
   "download_contract_template": "Télécharger le Modèle",
   "submit_contract": "Soumettre le Contrat",
   "contract_required_to_add_lead": "Vous devez uploader votre contrat signé avant d'ajouter des leads",
+  
+  "fill_all_fields": "Veuillez remplir tous les champs obligatoires",
+  "lead_added_success": "Lead ajouté avec succès !",
+  "error_adding_lead": "Erreur lors de l'ajout du lead",
+  "enter_sale_price": "Prix de vente (AED) :",
+  "invalid_price": "Prix invalide",
+  "lead_sold_success": "Lead vendu !",
+  "error_marking_sold": "Erreur lors du traitement de la vente",
+  "error_updating_status": "Erreur lors de la mise à jour du statut",
+  
+  "consent_required": "Vous devez confirmer que le client a accepté d'être contacté par l'agent immobilier.",
+  "consent_checkbox_label": "Je confirme que cette personne a accepté d'être contactée",
+  "consent_checkbox_description": "Le client a donné son accord explicite pour être contacté par l'agent immobilier concernant sa recherche immobilière. Ce consentement est requis par la réglementation RGPD.",
   
   "contract": {
     "required": "Contrat d'Apporteur d'Affaires Requis",
@@ -56,7 +76,7 @@
     "explanation": "Ce contrat formalise notre partenariat professionnel et garantit vos droits :",
     
     "benefit1_title": "Commission garantie :",
-    "benefit1_desc": "20% sur chaque vente conclue",
+    "benefit1_desc": "25% pour acheteurs, 20% pour autres leads",
     
     "benefit2_title": "Protection des leads :",
     "benefit2_desc": "Aucun lead ne peut être \"volé\"",
@@ -89,6 +109,7 @@
     "signature_feature_4": "Aucun téléchargement nécessaire",
     "sign_now_button": "Signer mon contrat maintenant",
     "signed_validated": "Contrat signé et validé",
-    "can_add_leads": "Vous pouvez maintenant ajouter des leads"
+    "can_add_leads": "Vous pouvez maintenant ajouter des leads",
+    "read_before_sign": "Vous lirez le contrat complet avant de signer"
   }
 }
