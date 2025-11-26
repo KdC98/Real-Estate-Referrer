@@ -1,7 +1,7 @@
 // ============================================
 // GESTION DU DASHBOARD
 // Real Estate Referrer - Dubai
-// Version: 3.3.0 - Fix userProfile loading
+// Version: 3.3.0 - Fix leads loading
 // ============================================
 
 import { STATUS_COLORS } from './config.js';
@@ -23,13 +23,10 @@ export async function loadDashboardContent() {
     const isAdmin = userProfile.role === 'admin';
     
     try {
-        // Charger les leads
+        // Charger les leads (requête simple sans jointure)
         let query = supabase
             .from('leads')
-            .select(`
-                *,
-                referrer:profiles!leads_referrer_id_fkey(name)
-            `)
+            .select('*')
             .order('created_at', { ascending: false });
         
         if (!isAdmin) {
@@ -50,24 +47,18 @@ export async function loadDashboardContent() {
         
         console.log('✅ Leads loaded:', leads?.length || 0);
         
-        // Transformer les données pour avoir referrer_name
-        const leadsWithNames = (leads || []).map(lead => ({
-            ...lead,
-            referrer_name: lead.referrer?.name || 'Unknown'
-        }));
-        
         // Calculer les statistiques
-        const totalEarnings = leadsWithNames
+        const totalEarnings = (leads || [])
             .filter(l => l.status === 'vendu')
             .reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
-        const activeLeads = leadsWithNames.filter(l => l.status !== 'vendu').length;
-        const closedSales = leadsWithNames.filter(l => l.status === 'vendu').length;
+        const activeLeads = (leads || []).filter(l => l.status !== 'vendu').length;
+        const closedSales = (leads || []).filter(l => l.status === 'vendu').length;
         
         // Afficher les stats
-        renderStats(isAdmin, leadsWithNames.length, totalEarnings, activeLeads, closedSales);
+        renderStats(isAdmin, (leads || []).length, totalEarnings, activeLeads, closedSales);
         
         // Afficher le tableau des leads
-        renderLeadsTable(isAdmin, leadsWithNames);
+        renderLeadsTable(isAdmin, leads || []);
         
     } catch (err) {
         console.error('❌ Exception loading dashboard:', err);
@@ -117,11 +108,17 @@ function renderLeadsTable(isAdmin, leads) {
     
     if (!tableDiv) return;
     
+    const STATUS_COLORS = {
+        'nouveau': 'bg-blue-500',
+        'visite': 'bg-purple-500',
+        'offre': 'bg-orange-500',
+        'vendu': 'bg-green-500'
+    };
+    
     tableDiv.innerHTML = `
         <table class="w-full">
             <thead>
                 <tr class="border-b border-gray-700">
-                    ${isAdmin ? `<th class="text-left py-3 px-4">${i18next.t('dashboard:referrer')}</th>` : ''}
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:client_name')}</th>
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:lead_type')}</th>
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:budget')}</th>
@@ -133,19 +130,23 @@ function renderLeadsTable(isAdmin, leads) {
             <tbody>
                 ${leads.length === 0 ? `
                     <tr>
-                        <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
-                            ${i18next.t('dashboard:no_leads')}
+                        <td colspan="${isAdmin ? '6' : '5'}" class="py-8 text-center text-gray-400">
+                            ${i18next.t('dashboard:no_leads')}<br>
+                            <span class="text-sm">${i18next.t('dashboard:start_adding')}</span>
                         </td>
                     </tr>
                 ` : leads.map(lead => {
                     const leadTypeKey = lead.lead_type || 'sale_buyer';
                     const leadTypeLabel = i18next.t('dashboard:' + leadTypeKey) || leadTypeKey;
                     const commissionRate = lead.commission_rate ? (lead.commission_rate * 100) + '%' : '20%';
+                    const statusColor = STATUS_COLORS[lead.status] || 'bg-gray-500';
                     
                     return `
                     <tr class="border-b border-gray-700 hover:bg-gray-700/30">
-                        ${isAdmin ? `<td class="py-3 px-4">${lead.referrer_name}</td>` : ''}
-                        <td class="py-3 px-4 font-medium">${lead.client_name}</td>
+                        <td class="py-3 px-4">
+                            <div class="font-medium">${lead.client_name}</div>
+                            <div class="text-xs text-gray-400">${lead.client_email}</div>
+                        </td>
                         <td class="py-3 px-4">
                             <span class="${leadTypeKey === 'sale_buyer' ? 'text-yellow-400 font-bold' : 'text-gray-300'}">
                                 ${leadTypeKey === 'sale_buyer' ? '🏆 ' : ''}${leadTypeLabel}
@@ -155,14 +156,14 @@ function renderLeadsTable(isAdmin, leads) {
                         <td class="py-3 px-4">${lead.budget?.toLocaleString() || '-'} AED</td>
                         <td class="py-3 px-4">
                             ${isAdmin ? `
-                                <select onchange="window.updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${STATUS_COLORS[lead.status] || 'bg-gray-500'} text-gray-900 font-bold text-sm">
+                                <select onchange="window.updateLeadStatus(${lead.id}, this.value)" class="px-3 py-1 rounded-full ${statusColor} text-gray-900 font-bold text-sm cursor-pointer">
                                     <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${i18next.t('dashboard:status_new')}</option>
                                     <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${i18next.t('dashboard:status_visit')}</option>
                                     <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${i18next.t('dashboard:status_offer')}</option>
                                     <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${i18next.t('dashboard:status_sold')}</option>
                                 </select>
                             ` : `
-                                <span class="px-3 py-1 rounded-full ${STATUS_COLORS[lead.status] || 'bg-gray-500'} text-gray-900 font-bold text-sm">
+                                <span class="px-3 py-1 rounded-full ${statusColor} text-gray-900 font-bold text-sm">
                                     ${i18next.t('dashboard:status_' + lead.status) || lead.status}
                                 </span>
                             `}
@@ -173,7 +174,7 @@ function renderLeadsTable(isAdmin, leads) {
                         ${isAdmin ? `
                             <td class="py-3 px-4">
                                 ${lead.status !== 'vendu' ? `
-                                    <button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm">
+                                    <button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">
                                         ${i18next.t('dashboard:mark_sold')}
                                     </button>
                                 ` : '✅'}
