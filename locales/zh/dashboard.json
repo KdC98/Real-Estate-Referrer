@@ -8,16 +8,16 @@
   "add_lead": "添加线索",
   "my_leads": "我的线索",
   "client_name": "客户姓名",
+  "client_email": "客户邮箱",
+  "client_phone": "客户电话",
   "property_type": "房产类型",
+  "lead_type": "线索类型",
   "budget": "预算",
   "status": "状态",
   "commission": "佣金",
   "no_leads": "暂无线索",
   "start_adding": "开始添加线索以赚取佣金",
   "logout": "退出登录",
-  "contract_required": "需要合同",
-  "contract_warning_message": "请在添加线索之前下载并签署推荐人协议",
-  "upload_contract_now": "立即上传合同",
   "admin_title": "管理员仪表板",
   "referrer_title": "推荐人仪表板",
   "actions": "操作",
@@ -28,13 +28,16 @@
   "commissions_paid": "已支付佣金",
   "referrer": "推荐人",
   "mark_sold": "标记为已售",
-  "client_email": "客户邮箱",
-  "client_phone": "客户电话",
   "select_type": "选择类型",
-  "sale_buyer": "销售 - 买家",
-  "sale_seller": "销售 - 卖家",
-  "rental_landlord": "租赁 - 房东",
-  "rental_tenant": "租赁 - 租客",
+  
+  "sale_buyer": "买家（销售）",
+  "sale_seller": "卖家（销售）",
+  "rental_landlord": "房东（租赁）",
+  "rental_tenant": "租客（租赁）",
+  
+  "recommended": "推荐",
+  "of_agent_commission": "的经纪人佣金",
+  
   "status_new": "新",
   "status_nouveau": "新",
   "status_visit": "看房",
@@ -43,23 +46,40 @@
   "status_offre": "报价",
   "status_sold": "已售",
   "status_vendu": "已售",
-  "contract_uploaded_title": "太棒了！您可以开始了！",
-  "contract_uploaded_message": "您的合同已收到，我们的团队将在24-48小时内进行验证。别担心，您已经可以开始工作并添加您的第一批线索了。",
+  
+  "contract_required": "需要合同",
+  "contract_warning_message": "请在添加线索之前下载并签署推荐人协议",
+  "upload_contract_now": "上传合同",
+  "contract_uploaded_title": "太好了！您可以开始了！",
+  "contract_uploaded_message": "您的合同已收到，我们的团队将在24-48小时内进行验证。",
   "upload_instructions": "下载、签署并上传合同",
   "download_contract_template": "下载模板",
   "submit_contract": "提交合同",
-  "contract_required_to_add_lead": "您必须在添加线索之前上传已签署的合同",
+  "contract_required_to_add_lead": "您必须上传已签署的合同才能添加线索",
+  
+  "fill_all_fields": "请填写所有必填字段",
+  "lead_added_success": "线索添加成功！",
+  "error_adding_lead": "添加线索时出错",
+  "enter_sale_price": "销售价格（AED）：",
+  "invalid_price": "价格无效",
+  "lead_sold_success": "线索已售出！",
+  "error_marking_sold": "处理销售时出错",
+  "error_updating_status": "更新状态时出错",
+  
+  "consent_required": "您必须确认客户已同意房地产经纪人与其联系。",
+  "consent_checkbox_label": "我确认此人已同意被联系",
+  "consent_checkbox_description": "客户已明确同意房地产经纪人就其房产搜索事宜与其联系。根据GDPR法规，此同意是必需的。",
   
   "contract": {
-    "required": "需要业务推荐人协议",
+    "required": "需要商业推荐人协议",
     "what_is_it": "这份合同是什么？",
-    "explanation": "这份合同正式确立我们的专业合作关系并保障您的权益：",
+    "explanation": "这份合同正式确立我们的专业合作关系并保障您的权利：",
     
     "benefit1_title": "保证佣金：",
-    "benefit1_desc": "每笔完成的销售可获得20%",
+    "benefit1_desc": "买家25%，其他线索20%",
     
     "benefit2_title": "线索保护：",
-    "benefit2_desc": "任何线索都不会被\"窃取\"",
+    "benefit2_desc": "任何线索都不会被\"偷走\"",
     
     "benefit3_title": "快速付款：",
     "benefit3_desc": "交易后45-60天内",
@@ -67,7 +87,7 @@
     "benefit4_title": "完全透明：",
     "benefit4_desc": "实时跟踪您的线索",
     
-    "benefit5_title": "RERA合规：",
+    "benefit5_title": "符合RERA规定：",
     "benefit5_desc": "遵守迪拜法规",
     
     "step1_title": "步骤1：下载",
@@ -89,6 +109,7 @@
     "signature_feature_4": "无需下载",
     "sign_now_button": "立即签署我的合同",
     "signed_validated": "合同已签署并验证",
-    "can_add_leads": "您现在可以添加线索了"
+    "can_add_leads": "您现在可以添加线索了",
+    "read_before_sign": "签署前您将阅读完整合同"
   }
 }
