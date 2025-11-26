@@ -374,7 +374,7 @@ export async function handle2FASubmit(event) {
             if (window.setIs2FAMode) window.setIs2FAMode(false);
             
             // Message de succès
-            alert(result.message || (i18next?.t('auth:two_factor.success') || '✅ Compte créé avec succès !'));
+            alert(i18next?.t('auth:two_factor.success') || '✅ Compte créé avec succès !');
             
             // Le onAuthStateChange va gérer la redirection automatiquement
             
