@@ -191,7 +191,7 @@
                             </li>
                             <li class="flex items-start">
                                 <span class="text-green-400 mr-2">→</span>
-                                <span data-i18n="timeline.step5.commission_text">⭐ 20% de la commission agent</span>
+                                <span data-i18n="timeline.step5.commission_text">⭐ Jusqu'à 25% de la commission agent (25% acheteurs, 20% autres)</span>
                             </li>
                         </ul>
                     </div>
@@ -203,20 +203,23 @@
     <!-- Combien puis-je gagner ? -->
     <div class="bg-gradient-to-r from-green-900/40 to-emerald-900/40 border-t border-b border-green-500/30 py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-12" data-i18n="earnings.section_title">
+            <h2 class="text-3xl md:text-4xl font-bold text-white text-center mb-4" data-i18n="earnings.section_title">
                 💰 Combien puis-je gagner ?
             </h2>
+            <p class="text-center text-yellow-300 mb-12 text-lg">
+                🏆 Exemples pour des leads Acheteurs (25% de commission)
+            </p>
             
             <div class="grid md:grid-cols-3 gap-8">
                 <!-- Exemple 1 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
                     <div class="text-center">
-                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example1.your_amount">2,000 AED</div>
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example1.your_amount">2,500 AED</div>
                         <div class="text-blue-100 mb-4" data-i18n="earnings.example1.property_type">Appartement - 1M AED</div>
                         <div class="text-sm text-blue-200">
                             <div data-i18n="earnings.example1.total_commission">Commission totale (2%): 20,000 AED</div>
                             <div data-i18n="earnings.example1.agent_commission">Commission agent (50%): 10,000 AED</div>
-                            <div data-i18n="earnings.example1.your_commission">Votre commission (20%): 2,000 AED</div>
+                            <div data-i18n="earnings.example1.your_commission">Votre commission (25%): 2,500 AED</div>
                         </div>
                     </div>
                 </div>
@@ -224,12 +227,12 @@
                 <!-- Exemple 2 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
                     <div class="text-center">
-                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example2.your_amount">10,000 AED</div>
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example2.your_amount">12,500 AED</div>
                         <div class="text-blue-100 mb-4" data-i18n="earnings.example2.property_type">Villa - 5M AED</div>
                         <div class="text-sm text-blue-200">
-                            <div data-i18n="earnings.example2.total_amount">100,000 AED</div>
-                            <div data-i18n="earnings.example2.agent_amount">50,000 AED</div>
-                            <div data-i18n="earnings.example2.your_amount">10,000 AED</div>
+                            <div data-i18n="earnings.example2.total_commission">Commission totale (2%): 100,000 AED</div>
+                            <div data-i18n="earnings.example2.agent_commission">Commission agent (50%): 50,000 AED</div>
+                            <div data-i18n="earnings.example2.your_commission">Votre commission (25%): 12,500 AED</div>
                         </div>
                     </div>
                 </div>
@@ -237,15 +240,21 @@
                 <!-- Exemple 3 -->
                 <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-green-500/30">
                     <div class="text-center">
-                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example3.your_amount">20,000 AED</div>
+                        <div class="text-4xl font-bold text-green-400 mb-2" data-i18n="earnings.example3.your_amount">25,000 AED</div>
                         <div class="text-blue-100 mb-4" data-i18n="earnings.example3.property_type">Penthouse - 10M AED</div>
                         <div class="text-sm text-blue-200">
-                            <div data-i18n="earnings.example3.total_amount">200,000 AED</div>
-                            <div data-i18n="earnings.example3.agent_amount">100,000 AED</div>
-                            <div data-i18n="earnings.example3.your_amount">20,000 AED</div>
+                            <div data-i18n="earnings.example3.total_commission">Commission totale (2%): 200,000 AED</div>
+                            <div data-i18n="earnings.example3.agent_commission">Commission agent (50%): 100,000 AED</div>
+                            <div data-i18n="earnings.example3.your_commission">Votre commission (25%): 25,000 AED</div>
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="mt-8 bg-blue-900/30 rounded-xl p-4 border border-blue-500/30">
+                <p class="text-center text-blue-100">
+                    ℹ️ <strong>Note :</strong> Vendeurs, Propriétaires et Locataires = 20% de commission
+                </p>
             </div>
 
             <p class="text-center text-blue-100 mt-8 text-lg" data-i18n="earnings.unlimited">
@@ -379,6 +388,16 @@
                     </h3>
                     <p class="text-blue-100" data-i18n="faq.q5.answer">
                         Aucun problème ! Vous ne perdez rien.
+                    </p>
+                </div>
+
+                <!-- Q6 - NOUVELLE QUESTION -->
+                <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-yellow-500/30">
+                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="faq.q6.question">
+                        Pourquoi les acheteurs rapportent plus ?
+                    </h3>
+                    <p class="text-blue-100" data-i18n="faq.q6.answer">
+                        Les acheteurs sont les leads les plus précieux car ils génèrent des transactions plus importantes. C'est pourquoi nous offrons 25% au lieu de 20% pour encourager ce type de lead.
                     </p>
                 </div>
             </div>
