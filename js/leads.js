@@ -1,12 +1,12 @@
 // ============================================
 // GESTION DES LEADS
 // Real Estate Referrer - Dubai
-// Version: 3.3.0 - Nouveau système commissions
+// Version: 3.4.0 - Calculs VENTE + LOCATION corrigés
 // ============================================
 
 import { currentUser } from './auth.js';
 
-// Taux de commission selon le type de lead
+// Taux de commission APPORTEUR selon le type de lead
 const COMMISSION_RATES = {
     'sale_buyer': 0.25,      // 🏆 Acheteur : 25% (PREMIUM)
     'sale_seller': 0.20,     // Vendeur : 20%
@@ -171,7 +171,7 @@ export async function updateLeadStatus(leadId, newStatus) {
     }
 }
 
-// Marquer un lead comme vendu
+// Marquer un lead comme vendu - NOUVEAU CALCUL VENTE + LOCATION
 export async function markAsSold(leadId) {
     const supabase = window.supabase;
     const i18next = window.i18next;
@@ -179,7 +179,7 @@ export async function markAsSold(leadId) {
     // Récupérer le lead pour connaître son type
     const { data: lead, error: fetchError } = await supabase
         .from('leads')
-        .select('lead_type, commission_rate')
+        .select('lead_type, commission_rate, budget')
         .eq('id', leadId)
         .single();
     
@@ -189,26 +189,76 @@ export async function markAsSold(leadId) {
         return;
     }
     
-    const salePrice = prompt(i18next.t('dashboard:enter_sale_price') || 'Sale price (AED):');
-    if (!salePrice) return;
+    const isRental = lead.lead_type === 'rental_landlord' || lead.lead_type === 'rental_tenant';
+    const isSale = lead.lead_type === 'sale_buyer' || lead.lead_type === 'sale_seller';
     
-    const price = parseFloat(salePrice.replace(/[^0-9]/g, ''));
+    let price, totalCommissionRate, agentCommission, referrerCommission;
     
-    if (isNaN(price) || price <= 0) {
-        alert(i18next.t('dashboard:invalid_price') || 'Invalid price');
-        return;
+    if (isRental) {
+        // ========== LOCATION ==========
+        // Loyer annuel, commission fixe 5%, agent 50%
+        const annualRent = prompt(
+            (i18next.t('dashboard:enter_annual_rent') || 'Annual rent (AED):'),
+            lead.budget || ''
+        );
+        if (!annualRent) return;
+        
+        price = parseFloat(annualRent.replace(/[^0-9]/g, ''));
+        
+        if (isNaN(price) || price <= 0) {
+            alert(i18next.t('dashboard:invalid_price') || 'Invalid amount');
+            return;
+        }
+        
+        // Location : 5% total, 50% pour agent = 2.5%
+        totalCommissionRate = 0.05; // 5% fixe pour location
+        const totalCommission = price * totalCommissionRate; // 5% du loyer annuel
+        agentCommission = totalCommission * 0.5; // 50% pour l'agent
+        
+    } else {
+        // ========== VENTE ==========
+        // Prix de vente + taux commission modifiable
+        const salePrice = prompt(
+            (i18next.t('dashboard:enter_sale_price') || 'Sale price (AED):'),
+            lead.budget || ''
+        );
+        if (!salePrice) return;
+        
+        price = parseFloat(salePrice.replace(/[^0-9]/g, ''));
+        
+        if (isNaN(price) || price <= 0) {
+            alert(i18next.t('dashboard:invalid_price') || 'Invalid price');
+            return;
+        }
+        
+        // Demander le taux de commission (2% par défaut, modifiable pour off-plan)
+        const commissionInput = prompt(
+            (i18next.t('dashboard:enter_commission_rate') || 'Total commission rate % (default 2%, up to 5% for off-plan):'),
+            '2'
+        );
+        if (!commissionInput) return;
+        
+        totalCommissionRate = parseFloat(commissionInput.replace(/[^0-9.]/g, '')) / 100;
+        
+        if (isNaN(totalCommissionRate) || totalCommissionRate <= 0 || totalCommissionRate > 0.10) {
+            alert(i18next.t('dashboard:invalid_commission_rate') || 'Invalid commission rate (must be between 1% and 10%)');
+            return;
+        }
+        
+        const totalCommission = price * totalCommissionRate;
+        agentCommission = totalCommission * 0.5; // 50% pour l'agent
     }
     
-    // Calcul avec taux variable
-    const commissionRate = lead.commission_rate || COMMISSION_RATES[lead.lead_type] || 0.20;
-    const agentCommission = price * 0.01;
-    const referrerCommission = agentCommission * commissionRate;
+    // Calcul commission apporteur (20% ou 25% de la part agent)
+    const referrerRate = lead.commission_rate || COMMISSION_RATES[lead.lead_type] || 0.20;
+    referrerCommission = agentCommission * referrerRate;
     
     console.log('💰 Marking lead ' + leadId + ' as sold:', {
+        type: isRental ? 'RENTAL' : 'SALE',
         price,
-        leadType: lead.lead_type,
-        commissionRate: (commissionRate * 100) + '%',
+        totalCommissionRate: (totalCommissionRate * 100) + '%',
         agentCommission,
+        referrerRate: (referrerRate * 100) + '%',
         referrerCommission
     });
     
@@ -228,10 +278,13 @@ export async function markAsSold(leadId) {
         
         console.log('✅ Lead marked as sold');
         
-        const ratePercent = commissionRate * 100;
+        const ratePercent = referrerRate * 100;
+        const typeLabel = isRental ? 'Rental' : 'Sale';
         alert(
-            (i18next.t('dashboard:lead_sold_success') || 'Lead sold!') + 
-            '\n\nCommission (' + ratePercent + '%): ' + referrerCommission.toLocaleString() + ' AED'
+            (i18next.t('dashboard:lead_sold_success') || 'Lead completed!') + 
+            '\n\n' + typeLabel + ': ' + price.toLocaleString() + ' AED' +
+            '\nAgent commission: ' + agentCommission.toLocaleString() + ' AED' +
+            '\nReferrer commission (' + ratePercent + '%): ' + referrerCommission.toLocaleString() + ' AED'
         );
         
         if (window.loadDashboardContent) {
@@ -240,7 +293,7 @@ export async function markAsSold(leadId) {
         
     } catch (error) {
         console.error('❌ Error marking as sold:', error);
-        alert(i18next.t('dashboard:error_marking_sold') || 'Error processing sale');
+        alert(i18next.t('dashboard:error_marking_sold') || 'Error processing transaction');
     }
 }
 
