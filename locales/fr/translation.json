@@ -13,8 +13,8 @@
   },
   
   "stats": {
-    "commission_value": "25%",
-    "commission_label": "Commission max. pour acheteurs",
+    "commission_value": "Jusqu'à 25%",
+    "commission_label": "Commission sur vos leads",
     "support_value": "24/7",
     "support_label": "Suivi des leads en temps réel",
     "timeline_value": "45-60j",
@@ -23,14 +23,14 @@
   
   "gains": {
     "title": "Exemples de Gains",
-    "sale_title": "💰 Vente Immobilière (Acheteur = 25%)",
+    "sale_title": "💰 Vente - Acheteur (25%)",
     "sale_example_1_property": "Villa à 3,000,000 AED",
     "sale_example_1_commission": "7,500 AED",
     "sale_example_2_property": "Appartement à 5,000,000 AED",
     "sale_example_2_commission": "12,500 AED",
     "sale_example_3_property": "Penthouse à 10,000,000 AED",
     "sale_example_3_commission": "25,000 AED",
-    "rental_title": "🏠 Location Immobilière (20%)",
+    "rental_title": "🏠 Location (20%)",
     "rental_example_1_property": "Studio à 60,000 AED/an",
     "rental_example_1_commission": "600 AED",
     "rental_example_2_property": "Appartement à 120,000 AED/an",
