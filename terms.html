@@ -1,34 +1,360 @@
-"section4": {
-    "title": "4. 佣金",
-    "rate": {
-      "title": "4.1 佣金比例",
-      "text": "推荐人获得",
-      "percentage": "高达25%",
-      "text2": "每笔完成交易的代理佣金。比例因潜在客户类型而异：买家25%，其他20%（卖家、房东、租客）。",
-      "exampleTitle": "计算示例：",
-      "exampleItems": [
-        "🏆 买家 (25%) - 销售 2,000,000 AED：总佣金 40,000 AED → 代理份额 20,000 AED → 推荐人：5,000 AED",
-        "🏆 买家 (25%) - 销售 5,000,000 AED：总佣金 100,000 AED → 代理份额 50,000 AED → 推荐人：12,500 AED",
-        "卖家 (20%) - 销售 5,000,000 AED：总佣金 100,000 AED → 代理份额 50,000 AED → 推荐人：10,000 AED",
-        "租赁 (20%) - 年租金 120,000 AED：总佣金 6,000 AED → 代理份额 3,000 AED → 推荐人：600 AED"
-      ]
-    },
-    "payment": {
-      "title": "4.2 付款条件",
-      "text": "佣金在签署销售合同（产权证）后45-60天内支付，或在签署租赁合同并由代理收到款项后14天内支付。"
-    },
-    "method": {
-      "title": "4.3 付款方式",
-      "text": "佣金通过银行转账支付到推荐人在注册时提供的账户。"
-    },
-    "nonPayment": {
-      "title": "4.4 不付款情况",
-      "intro": "在以下情况下不支付佣金：",
-      "items": [
-        "提供的潜在客户在您推荐之前已被代理知晓",
-        "客户取消交易或未继续进行",
-        "提供的信息虚假或不完整",
-        "客户未同意被联系"
-      ]
-    }
-  },
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Real Estate Referrer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+        }
+        .prose h2 {
+            color: #fbbf24;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .prose h3 {
+            color: #f59e0b;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .prose p, .prose li {
+            color: #d1d5db;
+            line-height: 1.75;
+        }
+        .prose ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .prose strong {
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Header -->
+    <header class="bg-gray-900 bg-opacity-80 backdrop-blur-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold text-yellow-400">Real Estate Referrer</a>
+                <nav class="flex items-center gap-4">
+                    <a href="/" class="text-gray-300 hover:text-yellow-400 transition">Home</a>
+                    <a href="/how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition">How it works</a>
+                    <a href="/privacy.html" class="text-gray-300 hover:text-yellow-400 transition">Privacy</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="max-w-4xl mx-auto">
+            <!-- Title -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="text-yellow-400">Terms of Service</span>
+                </h1>
+                <p class="text-gray-400">Last updated: November 25, 2025</p>
+            </div>
+
+            <!-- Content -->
+            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-2xl p-8 md:p-12 prose max-w-none">
+                
+                <!-- Introduction -->
+                <section>
+                    <h2>1. Introduction</h2>
+                    <p>Welcome to Real Estate Referrer ("Platform", "we", "us", or "our"). These Terms of Service ("Terms") govern your use of our referral program platform for real estate transactions in Dubai, United Arab Emirates.</p>
+                    <p>By creating an account or using our services, you agree to be bound by these Terms. If you do not agree, please do not use our Platform.</p>
+                </section>
+
+                <!-- Definitions -->
+                <section>
+                    <h2>2. Definitions</h2>
+                    <ul>
+                        <li><strong>Referrer / Business Introducer:</strong> An individual who registers on the Platform to refer potential clients (leads) to the real estate agent.</li>
+                        <li><strong>Lead:</strong> A potential client referred by a Referrer who is interested in buying, selling, renting, or leasing real estate in Dubai.</li>
+                        <li><strong>Qualified Lead:</strong> A lead with genuine interest, defined budget, complete contact information, and active timeline (0-6 months).</li>
+                        <li><strong>Agent:</strong> The licensed real estate professional operating under Solo Gate Real Estate (Alliance by EMAAR).</li>
+                        <li><strong>Commission:</strong> The payment due to the Referrer upon successful completion of a real estate transaction.</li>
+                        <li><strong>Transaction:</strong> A completed sale or rental agreement facilitated through a referred lead.</li>
+                    </ul>
+                </section>
+
+                <!-- Eligibility -->
+                <section>
+                    <h2>3. Eligibility & Registration</h2>
+                    <h3>3.1 Eligibility Requirements</h3>
+                    <p>To become a Referrer, you must:</p>
+                    <ul>
+                        <li>Be at least 18 years of age</li>
+                        <li>Provide accurate and complete registration information</li>
+                        <li>Have a valid phone number for SMS verification</li>
+                        <li>Sign the Business Introducer Agreement (electronically or physically)</li>
+                        <li>Not hold a real estate license in the UAE (unless disclosed)</li>
+                    </ul>
+                    
+                    <h3>3.2 Account Security</h3>
+                    <p>You are responsible for maintaining the confidentiality of your account credentials. You must immediately notify us of any unauthorized use of your account.</p>
+                    
+                    <h3>3.3 SMS Verification</h3>
+                    <p>We use SMS verification (2FA) to secure your account. Standard messaging rates may apply. By registering, you consent to receive SMS messages for verification purposes.</p>
+                </section>
+
+                <!-- Commission Structure -->
+                <section>
+                    <h2>4. Commission Structure</h2>
+                    <h3>4.1 Commission Rates</h3>
+                    <p>Referrers earn a commission based on the type of lead referred:</p>
+                    <ul>
+                        <li><strong>🏆 Buyer (Sale):</strong> <strong>25%</strong> of the agent's commission</li>
+                        <li><strong>Seller (Sale):</strong> 20% of the agent's commission</li>
+                        <li><strong>Landlord (Rental):</strong> 20% of the agent's commission</li>
+                        <li><strong>Tenant (Rental):</strong> 20% of the agent's commission</li>
+                    </ul>
+                    
+                    <h3>4.2 Commission Calculation Example</h3>
+                    <p><strong>For a property sale of 2,000,000 AED:</strong></p>
+                    <ul>
+                        <li>Total commission: 40,000 AED (2% of sale price)</li>
+                        <li>Agent's share: 20,000 AED (50%)</li>
+                        <li>Referrer commission (Buyer lead at 25%): <strong>5,000 AED</strong></li>
+                        <li>Referrer commission (Seller lead at 20%): <strong>4,000 AED</strong></li>
+                    </ul>
+                    
+                    <h3>4.3 Payment Terms</h3>
+                    <ul>
+                        <li>Commissions are paid within <strong>45-60 days</strong> after the transaction is completed and the agent receives payment</li>
+                        <li>Payment methods: Bank transfer (UAE or international)</li>
+                        <li>Minimum payout threshold: 500 AED</li>
+                        <li>The Referrer is responsible for any applicable taxes</li>
+                    </ul>
+                    
+                    <h3>4.4 Commission Eligibility</h3>
+                    <p>A commission is only due when:</p>
+                    <ul>
+                        <li>The lead was submitted through the Platform</li>
+                        <li>The lead was not previously registered by another Referrer</li>
+                        <li>The transaction is completed within 12 months of lead submission</li>
+                        <li>The agent receives their commission from the transaction</li>
+                    </ul>
+                </section>
+
+                <!-- Lead Submission -->
+                <section>
+                    <h2>5. Lead Submission & Protection</h2>
+                    <h3>5.1 Lead Requirements</h3>
+                    <p>Each lead must include:</p>
+                    <ul>
+                        <li>Client's full name</li>
+                        <li>Valid email address</li>
+                        <li>Valid phone number</li>
+                        <li>Type of lead (Buyer, Seller, Landlord, or Tenant)</li>
+                        <li>Approximate budget</li>
+                        <li><strong>Client's explicit consent to be contacted</strong></li>
+                    </ul>
+                    
+                    <h3>5.2 Client Consent (MANDATORY)</h3>
+                    <p><strong>IMPORTANT:</strong> You must obtain the client's explicit consent before submitting their information. By submitting a lead, you confirm that:</p>
+                    <ul>
+                        <li>The client knows they will be contacted by a real estate agent</li>
+                        <li>The client has agreed to share their contact information</li>
+                        <li>You have not misrepresented the purpose of collecting their information</li>
+                    </ul>
+                    <p>Submitting leads without proper consent is a violation of these Terms and GDPR regulations, and may result in immediate account termination.</p>
+                    
+                    <h3>5.3 Lead Protection</h3>
+                    <ul>
+                        <li>Leads are timestamped and attributed to the first Referrer who submits them</li>
+                        <li>Duplicate leads are automatically rejected</li>
+                        <li>Lead ownership is valid for 12 months from submission date</li>
+                        <li>You can track your lead status in real-time through your dashboard</li>
+                    </ul>
+                    
+                    <h3>5.4 Prohibited Practices</h3>
+                    <p>The following are strictly prohibited:</p>
+                    <ul>
+                        <li>Submitting fake or fabricated leads</li>
+                        <li>Submitting leads without the client's consent</li>
+                        <li>Direct solicitation or cold calling on behalf of the agent</li>
+                        <li>Misrepresenting yourself as a licensed real estate agent</li>
+                        <li>Submitting your own contact information as a lead</li>
+                        <li>Any activity that violates RERA regulations</li>
+                    </ul>
+                </section>
+
+                <!-- Referrer Obligations -->
+                <section>
+                    <h2>6. Referrer Obligations</h2>
+                    <p>As a Referrer, you agree to:</p>
+                    <ul>
+                        <li>Provide accurate information about yourself and your leads</li>
+                        <li>Obtain proper consent from clients before submission</li>
+                        <li>Not engage in any illegal or unethical marketing practices</li>
+                        <li>Respect the confidentiality of client information</li>
+                        <li>Not negotiate directly with clients on real estate matters</li>
+                        <li>Comply with all applicable UAE laws and RERA regulations</li>
+                        <li>Maintain the signed Business Introducer Agreement</li>
+                    </ul>
+                </section>
+
+                <!-- Agent Obligations -->
+                <section>
+                    <h2>7. Agent Obligations</h2>
+                    <p>The Agent commits to:</p>
+                    <ul>
+                        <li>Follow up on all qualified leads within 48 hours</li>
+                        <li>Provide transparent status updates through the Platform</li>
+                        <li>Pay commissions within the agreed timeframe</li>
+                        <li>Treat all referred clients professionally</li>
+                        <li>Not circumvent the Referrer's commission rights</li>
+                        <li>Maintain all required RERA licenses and permits</li>
+                    </ul>
+                </section>
+
+                <!-- Intellectual Property -->
+                <section>
+                    <h2>8. Intellectual Property</h2>
+                    <p>The Platform, including its design, features, and content, is owned by us and protected by intellectual property laws. You may not:</p>
+                    <ul>
+                        <li>Copy, modify, or distribute any part of the Platform</li>
+                        <li>Use our branding without written permission</li>
+                        <li>Reverse engineer or attempt to extract source code</li>
+                        <li>Use the Platform for any purpose other than its intended use</li>
+                    </ul>
+                </section>
+
+                <!-- Privacy & Data -->
+                <section>
+                    <h2>9. Privacy & Data Protection</h2>
+                    <p>Your use of the Platform is also governed by our <a href="/privacy.html" class="text-yellow-400 hover:text-yellow-300">Privacy Policy</a>. Key points include:</p>
+                    <ul>
+                        <li>We collect and process personal data in accordance with GDPR</li>
+                        <li>Client data is used solely for real estate transactions</li>
+                        <li>We do not sell personal data to third parties</li>
+                        <li>You have the right to access, correct, or delete your data</li>
+                        <li>Data is stored securely with encryption</li>
+                    </ul>
+                </section>
+
+                <!-- Termination -->
+                <section>
+                    <h2>10. Termination</h2>
+                    <h3>10.1 Termination by Referrer</h3>
+                    <p>You may terminate your account at any time by contacting us. Pending commissions for completed transactions will still be paid.</p>
+                    
+                    <h3>10.2 Termination by Us</h3>
+                    <p>We may suspend or terminate your account if you:</p>
+                    <ul>
+                        <li>Violate these Terms</li>
+                        <li>Submit fraudulent leads</li>
+                        <li>Engage in prohibited practices</li>
+                        <li>Fail to maintain the Business Introducer Agreement</li>
+                    </ul>
+                    
+                    <h3>10.3 Effect of Termination</h3>
+                    <p>Upon termination:</p>
+                    <ul>
+                        <li>Your access to the Platform will be revoked</li>
+                        <li>Pending qualified leads may still earn commission if converted within 90 days</li>
+                        <li>Unpaid commissions over 500 AED will be paid within 30 days</li>
+                    </ul>
+                </section>
+
+                <!-- Liability -->
+                <section>
+                    <h2>11. Limitation of Liability</h2>
+                    <p>To the maximum extent permitted by law:</p>
+                    <ul>
+                        <li>We are not liable for any indirect, incidental, or consequential damages</li>
+                        <li>Our total liability is limited to the commissions earned in the past 12 months</li>
+                        <li>We do not guarantee any specific income or number of conversions</li>
+                        <li>We are not responsible for client behavior or transaction outcomes</li>
+                    </ul>
+                </section>
+
+                <!-- RERA Compliance -->
+                <section>
+                    <h2>12. RERA Compliance</h2>
+                    <p>This Platform operates in compliance with the Real Estate Regulatory Agency (RERA) of Dubai. Important notes:</p>
+                    <ul>
+                        <li>Referrers act as business introducers, not licensed real estate agents</li>
+                        <li>All real estate activities are conducted by licensed professionals</li>
+                        <li>The Agent maintains all required RERA permits and licenses</li>
+                        <li>Referrers must not engage in activities requiring a real estate license</li>
+                    </ul>
+                </section>
+
+                <!-- Disputes -->
+                <section>
+                    <h2>13. Dispute Resolution</h2>
+                    <h3>13.1 Informal Resolution</h3>
+                    <p>We encourage you to contact us first to resolve any disputes amicably.</p>
+                    
+                    <h3>13.2 Governing Law</h3>
+                    <p>These Terms are governed by the laws of the United Arab Emirates, specifically the Emirate of Dubai.</p>
+                    
+                    <h3>13.3 Jurisdiction</h3>
+                    <p>Any disputes shall be subject to the exclusive jurisdiction of the courts of Dubai, UAE.</p>
+                </section>
+
+                <!-- Changes -->
+                <section>
+                    <h2>14. Changes to Terms</h2>
+                    <p>We may update these Terms from time to time. We will notify you of significant changes via:</p>
+                    <ul>
+                        <li>Email notification</li>
+                        <li>Platform notification</li>
+                        <li>Updated "Last modified" date</li>
+                    </ul>
+                    <p>Continued use of the Platform after changes constitutes acceptance of the new Terms.</p>
+                </section>
+
+                <!-- Contact -->
+                <section>
+                    <h2>15. Contact Information</h2>
+                    <p>For questions about these Terms, please contact us:</p>
+                    <ul>
+                        <li><strong>Email:</strong> contact@real-estate-referrer.com</li>
+                        <li><strong>Location:</strong> Dubai, United Arab Emirates</li>
+                        <li><strong>Agency:</strong> Solo Gate Real Estate (Alliance by EMAAR)</li>
+                    </ul>
+                </section>
+
+                <!-- Agreement -->
+                <section class="mt-12 p-6 bg-yellow-900/30 border border-yellow-500/50 rounded-xl">
+                    <h3 class="text-yellow-400 font-bold text-xl mb-4">📝 Agreement</h3>
+                    <p>By creating an account and using the Real Estate Referrer platform, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</p>
+                </section>
+
+            </div>
+
+            <!-- Back to Home -->
+            <div class="text-center mt-8">
+                <a href="/" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition">
+                    ← Back to Home
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 bg-opacity-80 mt-20">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="text-gray-400">
+                    © 2025 Real Estate Referrer. All rights reserved.
+                </div>
+                <div class="flex gap-6">
+                    <a href="/terms.html" class="text-yellow-400 hover:text-yellow-300 transition">Terms of Service</a>
+                    <a href="/privacy.html" class="text-gray-400 hover:text-yellow-400 transition">Privacy Policy</a>
+                    <a href="/how-it-works.html" class="text-gray-400 hover:text-yellow-400 transition">How it Works</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
