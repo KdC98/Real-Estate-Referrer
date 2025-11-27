@@ -374,7 +374,10 @@ export async function handle2FASubmit(event) {
             if (window.setIs2FAMode) window.setIs2FAMode(false);
             
             // Message de succès
-            alert(i18next?.t('auth:two_factor.success') || '✅ Compte créé avec succès !');
+            // Forcer l'utilisation de la langue actuelle
+            const currentLang = i18next?.language || localStorage.getItem('i18nextLng') || 'en';
+            const successMsg = i18next?.t('auth:two_factor.success') || (currentLang === 'fr' ? '✅ Compte créé avec succès !' : '✅ Account created successfully!');
+            alert(successMsg);
             
             // Le onAuthStateChange va gérer la redirection automatiquement
             
