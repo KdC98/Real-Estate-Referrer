@@ -221,7 +221,7 @@ export function renderAuthPage(mode) {
     else if (mode === '2fa') {
         const tempPhone = window.tempPhone || '';
         const maskedPhone = tempPhone ? (tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4)) : '***';
-        const currentLang = window.i18next?.language || 'fr';
+        const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
         
         // ✅ Traductions directes pour éviter les problèmes d'interpolation
         const twoFactorTranslations = {
