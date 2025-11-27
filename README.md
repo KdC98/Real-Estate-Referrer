@@ -1,362 +1,319 @@
-# 📋 Real Estate Referrer - README
+# 📋 README - Real Estate Referrer Application
 
-**Dernière mise à jour** : 17 novembre 2025  
-**Version** : 2.3.0  
-**Status** : 🟢 En production - Refactorisation en cours
+**Dernière mise à jour** : 28 novembre 2025 - 00h20  
+**Version** : 3.4.1  
+**Status** : 🟢 **Fonctionnel - En production**
 
 ---
 
 ## 📌 Description du Projet
 
-Application web complète de gestion d'apporteurs d'affaires pour agent immobilier à Dubai. Permet de recruter des apporteurs, gérer les leads clients, suivre les ventes et calculer automatiquement les commissions.
+Application web complète de gestion d'apporteurs d'affaires pour agent immobilier à Dubai. Permet de recruter des apporteurs dans 8 langues, gérer les leads clients, suivre les ventes et calculer automatiquement les commissions avec système 2FA SMS obligatoire.
+
+**Langues supportées** : 🇫🇷 Français, 🇬🇧 English, 🇦🇪 العربية, 🇷🇺 Русский, 🇮🇳 हिन्दी, 🇵🇰 اردو, 🇨🇳 中文, 🇵🇭 Tagalog
 
 ---
 
 ## 🌐 Accès et URLs
 
-- **Site web** : https://real-estate-referrer.com
-- **Site Vercel** : https://real-estate-referrer-3kp6.vercel.app
-- **GitHub** : https://github.com/KdC98/Real-Estate-Referrer
-- **Supabase** : https://cgizcgwhwxswvoodqver.supabase.co
+| Service | URL |
+|---------|-----|
+| **Site web** | https://real-estate-referrer.com |
+| **GitHub** | https://github.com/KdC98/Real-Estate-Referrer |
+| **Supabase** | https://cgizcgwhwxswvoodqver.supabase.co |
+| **Vercel** | Auto-deploy depuis GitHub |
 
 ---
 
-## ✅ ÉTAT ACTUEL DU PROJET (17 novembre 2025)
+## ✅ CE QUI FONCTIONNE (100%)
 
-### 🏗️ Refactorisation en Architecture Modulaire - EN COURS
+### Core Features
+| Fonctionnalité | Status |
+|----------------|--------|
+| Landing page multilingue (8 langues) | ✅ |
+| Inscription avec 2FA SMS (Itooki.fr) | ✅ |
+| Page 2FA multilingue (8 langues) | ✅ |
+| Connexion email/mot de passe | ✅ |
+| OAuth Google & Apple | ✅ |
+| Mot de passe oublié | ✅ |
+| Changement mot de passe | ✅ |
 
-**Objectif** : Découper le fichier monolithique `index.html` (2450 lignes) en modules JavaScript réutilisables.
+### Dashboard
+| Fonctionnalité | Status |
+|----------------|--------|
+| Dashboard apporteur | ✅ |
+| Dashboard admin avec colonne "Apporteur" | ✅ |
+| Ajout de leads (4 types) | ✅ |
+| Checkbox consentement RGPD | ✅ |
+| Suivi statuts (New → Viewing → Offer → Sold) | ✅ |
 
-**Progression** : 2/50 fonctions refactorisées (~4%)
+### Contrats
+| Fonctionnalité | Status |
+|----------------|--------|
+| Signature électronique du contrat | ✅ |
+| Canvas signature corrigé (desktop + mobile) | ✅ |
+| Upload contrats PDF | ✅ |
+| Bandeau "Contrat signé et validé" | ✅ |
 
-#### ✅ Modules créés (8 fichiers)
-```
-js/
-├── config.js           ✅ Créé - Configuration Supabase & constantes
-├── translations.js     ✅ Créé - Gestion i18next multilingue
-├── utils.js            ✅ Créé - Fonctions utilitaires (1/5 utilisée)
-├── validation.js       ✅ Créé - Validation formulaires (1/6 utilisée)
-├── auth.js             ✅ Créé - Authentification & profils
-├── leads.js            ✅ Créé - Gestion des leads
-├── dashboard.js        ✅ Créé - Chargement dashboard
-└── main.js             ✅ Créé - Point d'entrée (non utilisé encore)
-```
+### Commissions
+| Fonctionnalité | Status |
+|----------------|--------|
+| Calcul ventes : 2-5% ajustable (off-plan) | ✅ |
+| Calcul locations : 5% fixe | ✅ |
+| Commission acheteur : 25% | ✅ |
+| Commission autres : 20% | ✅ |
 
-#### ✅ Fonctions refactorisées avec succès
-
-| Fonction | Module | Status | Ligne index.html |
-|----------|--------|--------|------------------|
-| `toggleMobileMenu` | `utils.js` | ✅ Opérationnelle | ~2293 |
-| `validateEmail` | `validation.js` | ✅ Opérationnelle | ~2009 |
-
-**Pattern utilisé** : Fallback intelligent
-```javascript
-function maFonction() {
-    // Tente d'utiliser le module
-    if (window.MODULE?.maFonction) {
-        return window.MODULE.maFonction();
-    }
-    
-    // Fallback inline si module pas chargé
-    console.warn('⚠️ MODULE pas encore chargé');
-    // ... code original ...
-}
-```
-
-#### 🔄 Prochaines fonctions à refactoriser
-
-**Priorité 1 - Validation (5 fonctions restantes)**
-- [ ] `validatePassword` - ~2047-2130 (priorité immédiate)
-- [ ] `validateConfirmPassword` - ~2132-2150
-- [ ] `validateName` - ~1950-1980
-- [ ] `validatePhone` - ~1982-2007
-- [ ] `checkFormValidity` - ~2152-2175
-
-**Priorité 2 - Utilitaires (4 fonctions restantes)**
-- [ ] `togglePasswordVisibility` - ~2177-2187
-- [ ] `downloadContractTemplate` - ~2189-2220
-- [ ] `prefillTestData` - ~844-860
-- [ ] `getQueryParams` - Déjà dans module
-
-**Priorité 3 - Auth (grandes fonctions)**
-- [ ] `handleSignup` - ~862-1000
-- [ ] `handleLogin` - ~1002-1050
-- [ ] Système 2FA complet
+### Pages statiques
+| Page | Status |
+|------|--------|
+| how-it-works.html (8 langues, montants à jour) | ✅ |
+| terms.html (CGU) | ✅ |
+| privacy.html | ✅ |
+| contract-signature.html | ✅ |
 
 ---
 
-## 🔒 Authentification & Sécurité - 100% COMPLET
+## 💰 Système de Commissions (v3.4)
 
-### ✅ Système d'authentification Supabase Auth
-- Mots de passe hashés (bcrypt via Supabase)
-- Sessions JWT sécurisées
-- Inscription avec confirmation
-- Validation stricte : min 8 caractères, 1 lettre, 1 chiffre
-- Mot de passe oublié fonctionnel
-- Déconnexion sécurisée
+### Types de leads et commissions
 
-### ✅ 2FA par SMS (via Itooki.fr)
-- Vérification unique à l'inscription
-- Code à 6 chiffres
-- Support UAE (+971)
+| Type de Lead | Commission Apporteur | Priorité |
+|--------------|---------------------|----------|
+| 🏆 **ACHETEUR (Buyer)** | **25%** | ⭐ PREMIUM - Mis en avant |
+| Vendeur (Seller) | 20% | Standard |
+| Propriétaire bailleur (Landlord) | 20% | Standard |
+| Locataire (Tenant) | 20% | Standard |
 
-### ⚠️ Problème connu - Flux 2FA
-**Status** : À corriger
-- Le champ de saisie du code SMS n'apparaît pas au bon moment
-- L'ordre des étapes n'est pas correct
-- À debugger dans une prochaine session
+### Calcul pour les VENTES
 
-### ⚠️ RLS (Row Level Security) - DÉSACTIVÉ
-**Raison** : Les politiques causaient une récursion infinie  
-**Impact** : Tous les utilisateurs authentifiés peuvent lire toutes les données  
-**Action requise** : Réactiver avec fonction PostgreSQL avant production publique
+```
+Vente d'un bien à 2,000,000 AED (taux 2% par défaut)
+├─ Commission totale : 40,000 AED (2%)
+├─ Part agent : 20,000 AED (50%)
+└─ Commission apporteur :
+   - Si ACHETEUR (25%) → 5,000 AED ⭐
+   - Si VENDEUR (20%)  → 4,000 AED
+
+Vente OFF-PLAN à 2,000,000 AED (taux 5%)
+├─ Commission totale : 100,000 AED (5%)
+├─ Part agent : 50,000 AED (50%)
+└─ Commission apporteur :
+   - Si ACHETEUR (25%) → 12,500 AED ⭐
+```
+
+### Calcul pour les LOCATIONS
+
+```
+Location annuelle 300,000 AED
+├─ Commission totale : 15,000 AED (5% fixe)
+├─ Part agent : 7,500 AED (50%)
+└─ Commission apporteur (20%) : 1,500 AED
+```
 
 ---
 
-## 📊 Base de données - COMPLET
+## 🟠 PRIORITÉ 2 - À FAIRE
 
-### Structure PostgreSQL via Supabase
+### Notifications Email
 
-**Table `profiles`**
+Envoyer des emails automatiques quand :
+
+| Événement | Destinataire | Contenu |
+|-----------|--------------|---------|
+| Nouveau lead ajouté | Admin | Nom client, apporteur, type |
+| Statut lead change | Apporteur | Nouveau statut, prochaines étapes |
+| Vente conclue | Apporteur | Montant commission, délai paiement |
+
+**Solution technique** : Supabase Edge Functions + Resend ou SendGrid
+
+---
+
+## 🟡 PRIORITÉ 3 - Avant lancement public
+
+### Licence RERA requise
+
+| Étape | Temps estimé | Coût |
+|-------|--------------|------|
+| Formation DREI | 2-3 jours | ~3,000 AED |
+| Examen RERA | 1 jour | ~500 AED |
+| Permis Trakheesi | 1-2 semaines | ~5,000 AED |
+| **Total** | **2-4 semaines** | **~8,500 AED** |
+
+---
+
+## 🔵 Améliorations optionnelles
+
+| Amélioration | Description | Priorité |
+|--------------|-------------|----------|
+| 📊 Analytics | Google Analytics ou Plausible | Basse |
+| 📱 PWA | App installable sur mobile | Basse |
+| 🔔 Push notifications | Alertes en temps réel | Moyenne |
+| 📄 Export PDF | Rapports pour apporteurs | Basse |
+| 💳 Paiements auto | Intégration Stripe | Future |
+
+---
+
+## 📊 Base de données
+
+### Table `profiles`
 ```sql
-- id UUID PRIMARY KEY (référence auth.users)
-- name TEXT
-- phone TEXT
-- role TEXT ('admin' ou 'referrer')
-- contract_path TEXT
-- contract_status TEXT
-- created_at TIMESTAMP
+id UUID PRIMARY KEY
+name TEXT
+phone TEXT UNIQUE
+email TEXT
+role TEXT ('admin' ou 'referrer')
+contract_status TEXT ('pending', 'signed', 'validated')
+contract_path TEXT
+contract_file_url TEXT
+contract_signed_at TIMESTAMP
+phone_verified BOOLEAN
+created_at TIMESTAMP
 ```
 
-**Table `leads`**
+### Table `leads`
 ```sql
-- id BIGSERIAL PRIMARY KEY
-- referrer_id UUID (référence auth.users)
-- client_name TEXT
-- client_email TEXT
-- client_phone TEXT
-- property_type TEXT
-- transaction_type TEXT ('sale_buyer', 'sale_seller', 'rental_landlord', 'rental_tenant')
-- budget NUMERIC
-- status TEXT ('nouveau', 'visite', 'offre', 'vendu')
-- sale_price NUMERIC
-- agent_commission NUMERIC
-- referrer_commission NUMERIC
-- created_at TIMESTAMP
-- closed_at TIMESTAMP
+id BIGSERIAL PRIMARY KEY
+referrer_id UUID REFERENCES profiles(id)
+client_name TEXT
+client_email TEXT
+client_phone TEXT
+lead_type TEXT ('sale_buyer', 'sale_seller', 'rental_landlord', 'rental_tenant')
+budget NUMERIC
+status TEXT ('new', 'contacted', 'viewing', 'offer', 'sold', 'lost')
+client_consent BOOLEAN DEFAULT true
+commission_rate NUMERIC (0.25 ou 0.20)
+sale_price NUMERIC
+agent_commission NUMERIC
+referrer_commission NUMERIC
+created_at TIMESTAMP
+closed_at TIMESTAMP
 ```
 
----
-
-## 🌍 Internationalisation - 80% COMPLET
-
-### ✅ 8 langues supportées
-- 🇫🇷 Français (100%)
-- 🇬🇧 English (100%)
-- 🇦🇪 العربية (80%)
-- 🇷🇺 Русский (80%)
-- 🇮🇳 हिन्दी (80%)
-- 🇵🇰 اردو (80%)
-- 🇨🇳 中文 (80%)
-- 🇵🇭 Tagalog (80%)
-
-**Fichiers de traduction** : `/locales/{lang}/{namespace}.json`
-- `translation.json` - Textes généraux
-- `auth.json` - Authentification
-- `dashboard.json` - Interface dashboard
-- `common.json` - Éléments communs
-
----
-
-## 💰 Système de commissions - COMPLET
-
-### Modèle de calcul
-
-**Pour les ventes**
-```
-Prix de vente : 1,000,000 AED
-├─ Commission totale (2%) : 20,000 AED
-   ├─ Agence (50%) : 10,000 AED
-   └─ Agent (50%) : 10,000 AED
-      ├─ Apporteur (20%) : 2,000 AED ✅
-      └─ Agent (80%) : 8,000 AED
-```
-
-**Pour les locations**
-```
-Loyer annuel : 100,000 AED
-├─ Commission totale (5%) : 5,000 AED
-   ├─ Agence (50%) : 2,500 AED
-   └─ Agent (50%) : 2,500 AED
-      ├─ Apporteur (20%) : 500 AED ✅
-      └─ Agent (80%) : 2,000 AED
-```
-
-### Calcul automatique
-- Déclenchement : Admin marque lead comme "vendu"
-- Saisie du prix de vente/loyer
-- Calcul automatique des commissions
-- Stockage en base de données
-
----
-
-## 🚀 Stack Technique
-
-| Composant | Technologie | Version |
-|-----------|-------------|---------|
-| **Frontend** | React 18 | ESM via CDN |
-| **Styling** | Tailwind CSS | 3.4.17 via CDN |
-| **Traductions** | i18next | 23.7.6 |
-| **Backend/Auth** | Supabase | PostgreSQL + Auth + Storage |
-| **SMS 2FA** | Itooki.fr API | UAE support |
-| **Hébergement** | Vercel | Auto-deploy from GitHub |
-| **Contrôle version** | GitHub | Branch: main |
-
----
-
-## 📝 TODO - PRIORITÉS
-
-### 🔴 PRIORITÉ 1 - Refactorisation (en cours)
-
-**Objectif immédiat** : Continuer le découpage de `index.html`
-
-**Prochaines étapes** :
-1. ✅ `validatePassword` - Fonction suivante à refactoriser
-2. ✅ `validateConfirmPassword`
-3. ✅ `validateName`
-4. ✅ `validatePhone`
-5. ✅ `checkFormValidity`
-
-**Estimation** : 2-3 heures pour les 5 fonctions de validation
-
-### 🟡 PRIORITÉ 2 - Corrections UX (1-2 jours)
-
-**Flux 2FA à corriger**
-- Affichage du champ de saisie au bon moment
-- Ordre des étapes correct
-- Interface clavier/saisie disponible
-
-**Contraintes mot de passe à afficher**
-- Ajouter indicateurs visuels manquants
-- Afficher : "Au moins 1 majuscule", "Au moins 1 caractère spécial"
-- Correspondre aux validations strictes du code
-
-### 🟢 PRIORITÉ 3 - Sécurité (avant production publique)
-
-1. **Réactiver RLS avec politiques optimisées**
+### Table `verification_codes`
 ```sql
-CREATE OR REPLACE FUNCTION public.is_admin()
-RETURNS boolean AS $$
-BEGIN
-    RETURN EXISTS (
-        SELECT 1 FROM public.profiles
-        WHERE id = auth.uid() AND role = 'admin'
-    );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+id UUID PRIMARY KEY
+phone TEXT
+code TEXT
+expires_at TIMESTAMP
+used BOOLEAN DEFAULT false
+verified BOOLEAN DEFAULT false
+attempts INTEGER DEFAULT 0
+user_id UUID
+created_at TIMESTAMP
 ```
 
-2. **Changer mot de passe admin**
-3. **Tester toutes les fonctionnalités avec RLS activé**
-
-### 🔵 PRIORITÉ 4 - Documentation légale (1-2 semaines)
-
-- [ ] Créer les CGU (Conditions Générales d'Utilisation)
-- [ ] Créer la page "Comment ça marche"
-- [ ] Créer la Politique de confidentialité (RGPD/GDPR)
-
-### 🟣 PRIORITÉ 5 - Conformité RERA (2-4 semaines)
-
-- [ ] Obtenir licence RERA
-- [ ] Examen DREI
-- [ ] Permis publicitaire Trakheesi (5,000 AED)
-
----
-
-## 🎉 HISTORIQUE DES VERSIONS
-
-### Version 2.3.0 - 17 novembre 2025
-- ✅ Création architecture modulaire (8 fichiers JS)
-- ✅ Refactorisation `toggleMobileMenu` avec fallback
-- ✅ Refactorisation `validateEmail` avec fallback
-- ✅ Tests réussis - site 100% fonctionnel
-- ✅ Documentation complète
-
-### Version 2.2.0 - 31 octobre 2025
-- ✅ Correction timeout upload contrats (30s)
-- ✅ Simplification politiques Storage RLS
-- ✅ Upload instantané et fonctionnel
-
-### Version 2.1.0 - 16 octobre 2025
-- ✅ Ajout "Mot de passe oublié"
-- ✅ Flux reset password complet
-- ✅ Affichage noms apporteurs corrigé
-- ✅ Désactivation RLS (temporaire)
-
-### Version 2.0.0 - 15 octobre 2025
-- ✅ Migration Supabase Auth
-- ✅ Première version déployée
-
-### Version 1.0.0 - 14 octobre 2025
-- ✅ Création initiale
-
----
-
-## 🆘 COMMANDES SQL UTILES
-
-**Voir tous les profils**
+### Table `pending_signups`
 ```sql
-SELECT * FROM profiles;
+id UUID PRIMARY KEY
+email TEXT UNIQUE
+password TEXT
+name TEXT
+phone TEXT UNIQUE
+expires_at TIMESTAMP
+created_at TIMESTAMP
 ```
 
-**Voir tous les leads avec noms d'apporteurs**
-```sql
-SELECT 
-    l.*,
-    p.name as referrer_name
-FROM leads l
-LEFT JOIN profiles p ON l.referrer_id = p.id;
-```
+### RLS (Row Level Security)
+- ✅ 26 politiques actives
+- ✅ Testées et fonctionnelles
 
-**Statistiques globales**
-```sql
-SELECT
-    COUNT(*) as total_leads,
-    SUM(CASE WHEN status = 'vendu' THEN 1 ELSE 0 END) as ventes,
-    SUM(referrer_commission) as commissions_totales
-FROM leads;
+---
+
+## 🚀 Stack technique
+
+| Composant | Technologie |
+|-----------|-------------|
+| Frontend | Vanilla JS + ESM modules |
+| Styling | Tailwind CSS (via CDN) |
+| Backend | Supabase (PostgreSQL + Auth + Storage + Edge Functions) |
+| SMS 2FA | Itooki.fr API |
+| Hébergement | Vercel (auto-deploy) |
+| Domaine | OVH (real-estate-referrer.com) |
+| i18n | i18next (8 langues) |
+
+---
+
+## 📁 Structure des fichiers
+
+```
+Real-Estate-Referrer/
+├── index.html                 # App principale (SPA)
+├── how-it-works.html          # Page explicative
+├── contract-signature.html    # Signature électronique
+├── terms.html                 # CGU
+├── privacy.html               # Politique de confidentialité
+├── js/
+│   ├── config.js              # Configuration Supabase
+│   ├── auth.js                # Authentification
+│   ├── 2fa.js                 # Vérification SMS
+│   ├── dashboard.js           # Logique dashboard
+│   ├── leads.js               # Gestion des leads
+│   ├── rendering.js           # Génération HTML
+│   ├── validation.js          # Validation formulaires
+│   └── utils.js               # Fonctions utilitaires
+├── locales/
+│   ├── en/                    # Anglais
+│   ├── fr/                    # Français
+│   ├── ar/                    # Arabe
+│   ├── ru/                    # Russe
+│   ├── hi/                    # Hindi
+│   ├── ur/                    # Ourdou
+│   ├── zh/                    # Chinois
+│   └── tl/                    # Tagalog
+└── vercel.json                # Config déploiement
 ```
 
 ---
 
-## 📚 Ressources & Documentation
+## 🎉 Historique des versions
 
-- **Supabase** : https://docs.supabase.com
-- **Vercel** : https://vercel.com/docs
-- **Tailwind CSS** : https://tailwindcss.com/docs
-- **i18next** : https://www.i18next.com
-- **React** : https://react.dev
-
----
-
-## 📞 Support
-
-Pour toute question sur ce projet, référez-vous à cette documentation ou aux conversations Claude précédentes.
-
-**Dernière session** : 17 novembre 2025 - Refactorisation modulaire  
-**Durée totale du projet** : ~15 heures de développement
+| Date | Version | Changements |
+|------|---------|-------------|
+| 14-16 oct | v2.1.0 | Création initiale, Auth Supabase |
+| 31 oct | v2.2.0 | Upload contrats, Storage RLS |
+| 22 nov | v3.0.0 | 2FA SMS, Edge Function |
+| 23 nov | v3.0.5 | Intégration frontend 2FA |
+| 24 nov | v3.1.0 | Corrections console, 2FA 100% |
+| 25 nov | v3.2.0 | Traductions dashboard, signature électronique |
+| 26 nov | v3.3.0 | Nouveau formulaire leads 25%/20%, checkbox RGPD |
+| **27 nov** | **v3.4.0** | Calculs commissions corrigés, colonne Apporteur |
+| **28 nov** | **v3.4.1** | Page 2FA multilingue, bouton retour corrigé |
 
 ---
 
-## 🏆 Points clés à retenir
+## 🐛 Bugs corrigés (27-28 novembre 2025)
 
-✅ **Application 100% fonctionnelle en production**  
-✅ **Authentification sécurisée avec 2FA SMS**  
-✅ **Support multilingue 8 langues**  
-✅ **Calcul automatique des commissions**  
-✅ **Architecture modulaire en cours (4% complété)**  
-⚠️ **RLS désactivé - À réactiver avant production publique**  
-⚠️ **Flux 2FA à corriger**  
-⚠️ **Documentation légale à créer**
+| Bug | Solution | Status |
+|-----|----------|--------|
+| Calcul location utilisait 1% au lieu de 5% | Nouveau système dans `leads.js` | ✅ |
+| Pas de colonne Apporteur dans admin | Ajout colonne + requête SQL | ✅ |
+| Message succès 2FA en anglais | Forcer langue actuelle | ✅ |
+| Bouton "Changer mot de passe" désactivé | Fix `validation.js` pour mode change-password | ✅ |
+| Curseur signature décalé | Conversion coordonnées canvas | ✅ |
+| Page 2FA en anglais | Traductions directes 8 langues dans `rendering.js` | ✅ |
+| Bouton retour 2FA ne fonctionnait pas | Fonction `backTo2FASignup()` | ✅ |
+| Numéro affichait `{{phone}}` | Interpolation directe dans template | ✅ |
+| Traductions how-it-works obsolètes | Mise à jour 8 langues avec 25% | ✅ |
 
-**Statut global** : Prêt pour tests privés, pas encore pour production publique
+---
+
+## 🔐 Accès Admin
+
+| Email | Mot de passe |
+|-------|--------------|
+| karyne.declercq@icloud.com | wyqsuc-Necxur-1pedpy@# |
+
+---
+
+## 📞 Pour reprendre le développement
+
+1. Ouvrir ce README
+2. Vérifier la version actuelle sur GitHub
+3. Consulter la section "À FAIRE" pour les prochaines priorités
+4. Tester en navigation privée après chaque déploiement
+
+---
+
+**Dernière mise à jour** : 28 novembre 2025 - 00h20  
+**Version** : 3.4.1  
+**Prochaine priorité** : Notifications email
