@@ -1,18 +1,18 @@
 {
   "header": {
-    "brand": "房地产推荐人",
+    "brand": "Real Estate Referrer",
     "login": "登录"
   },
   "hero": {
     "title": "如何运作？",
-    "subtitle": "通过5个简单步骤成为迪拜房地产推荐人"
+    "subtitle": "5个简单步骤成为迪拜房地产推荐人"
   },
   "timeline": {
     "step1": {
       "badge": "1",
       "title": "注册（2分钟）",
       "items": [
-        "免费创建您的账户",
+        "免费创建账户",
         "填写您的信息",
         "签署推荐人协议"
       ]
@@ -21,17 +21,17 @@
       "badge": "2",
       "title": "寻找客户",
       "items": [
-        "向您的网络介绍该计划",
-        "识别对迪拜房地产感兴趣的人",
+        "向您的人脉介绍此项目",
+        "找出对迪拜房地产感兴趣的人",
         "无需房地产执照！"
       ]
     },
     "step3": {
       "badge": "3",
-      "title": "添加您的潜在客户",
+      "title": "添加潜在客户",
       "items": [
         "登录您的仪表板",
-        "点击添加潜在客户",
+        "点击\"添加潜在客户\"",
         "填写客户信息"
       ]
     },
@@ -39,62 +39,66 @@
       "badge": "4",
       "title": "实时跟踪",
       "description": "跟踪您的潜在客户进度",
-      "status_new": "📄 新客户",
+      "status_new": "📄 新建",
       "status_visit": "🏠 看房",
       "status_offer": "🤝 报价",
-      "status_sold": "✅ 已售",
-      "footer": "您的佣金完全透明"
+      "status_sold": "✅ 成交",
+      "footer": "佣金完全透明"
     },
     "step5": {
       "badge": "5",
-      "title": "获得您的佣金",
-      "description": "一旦完成销售，您的佣金即刻计算",
+      "title": "获得佣金",
+      "description": "交易完成后，您的佣金即刻计算",
       "payment_delay": "45-60天内付款",
-      "commission_text": "⭐ 经纪人佣金的20%"
+      "commission_text": "⭐ 最高25%代理佣金（买家25%，其他20%）"
     }
   },
   "earnings": {
     "section_title": "💰 我能赚多少？",
+    "subtitle": "🏆 买家潜在客户示例（25%佣金）",
     "example1": {
-      "your_amount": "2,000迪拉姆",
-      "property_type": "公寓 - 100万迪拉姆",
-      "total_commission": "总佣金（2%）：20,000迪拉姆",
-      "agent_commission": "经纪人佣金（50%）：10,000迪拉姆",
-      "your_commission": "您的佣金（20%）：2,000迪拉姆"
+      "your_amount": "2,500 AED",
+      "property_type": "公寓 - 100万 AED",
+      "total_commission": "总佣金 (2%): 20,000 AED",
+      "agent_commission": "代理佣金 (50%): 10,000 AED",
+      "your_commission": "您的佣金 (25%): 2,500 AED"
     },
     "example2": {
-      "your_amount": "10,000迪拉姆",
-      "property_type": "别墅 - 500万迪拉姆",
-      "total_amount": "100,000迪拉姆",
-      "agent_amount": "50,000迪拉姆"
+      "your_amount": "12,500 AED",
+      "property_type": "别墅 - 500万 AED",
+      "total_commission": "总佣金 (2%): 100,000 AED",
+      "agent_commission": "代理佣金 (50%): 50,000 AED",
+      "your_commission": "您的佣金 (25%): 12,500 AED"
     },
     "example3": {
-      "your_amount": "20,000迪拉姆",
-      "property_type": "顶层公寓 - 1000万迪拉姆",
-      "total_amount": "200,000迪拉姆",
-      "agent_amount": "100,000迪拉姆"
+      "your_amount": "25,000 AED",
+      "property_type": "顶层公寓 - 1000万 AED",
+      "total_commission": "总佣金 (2%): 200,000 AED",
+      "agent_commission": "代理佣金 (50%): 100,000 AED",
+      "your_commission": "您的佣金 (25%): 25,000 AED"
     },
-    "unlimited": "✨ 没有限制！您带来的客户越多，赚得越多。"
+    "note": "ℹ️ 注意：卖家、房东和租户 = 20%佣金",
+    "unlimited": "✨ 无上限！带来的客户越多，赚得越多。"
   },
   "lead_criteria": {
-    "section_title": "📋 优质潜在客户的标准",
+    "section_title": "📋 优质潜在客户标准",
     "good_lead": {
-      "title": "合格的潜在客户",
+      "title": "合格潜在客户",
       "criteria": [
-        "他们真正想要购买或租赁",
-        "他们心中有明确的预算",
-        "他们现在就在寻找（不是2年后！）",
+        "确实想购买或租赁",
+        "有明确的预算",
+        "现在就在寻找（不是2年后！）",
         "您可以轻松联系到他们",
-        "他们知道自己想要什么"
+        "知道自己想要什么"
       ]
     },
     "bad_lead": {
-      "title": "不合格的潜在客户",
+      "title": "不合格潜在客户",
       "criteria": [
         "只是好奇，并非真正感兴趣",
-        "对预算没有概念（或不切实际）",
-        "在遥远的未来寻找（1年以上）",
-        "无法联系或虚假联系信息",
+        "不知道预算（或不切实际）",
+        "在遥远的将来寻找（1年以上）",
+        "无法联系或虚假联系方式",
         "完全不知道自己想要什么"
       ]
     }
@@ -103,15 +107,15 @@
     "section_title": "❓ 常见问题",
     "q1": {
       "question": "我可以带来多少潜在客户？",
-      "answer": "没有限制！您带来的越多，赚得越多。"
+      "answer": "无限！带来越多，赚得越多。"
     },
     "q2": {
       "question": "我需要房地产执照吗？",
-      "answer": "不需要！该计划对所有人开放。"
+      "answer": "不需要！该项目向所有人开放。"
     },
     "q3": {
-      "question": "我什么时候能拿到钱？",
-      "answer_intro": "签订合同后45-60天。"
+      "question": "我什么时候能收到付款？",
+      "answer_intro": "合同签署后45-60天。"
     },
     "q4": {
       "question": "我可以推荐其他推荐人吗？",
@@ -119,8 +123,12 @@
       "email": "contact@real-estate-referrer.com"
     },
     "q5": {
-      "question": "如果客户不购买会怎么样？",
-      "answer": "没问题！您不会损失任何东西。"
+      "question": "如果客户不购买会怎样？",
+      "answer": "没问题！您不会有任何损失。"
+    },
+    "q6": {
+      "question": "为什么买家能赚更多？",
+      "answer": "买家是最有价值的潜在客户，因为他们产生更大的交易。因此我们提供25%而非20%来鼓励这类潜在客户。"
     }
   },
   "cta": {
