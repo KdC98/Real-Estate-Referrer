@@ -1,6 +1,7 @@
 // ============================================
 // VALIDATION DES FORMULAIRES
 // Real Estate Referrer - Dubai
+// Version 3.4.0 - Fix change password validation
 // ============================================
 
 // Validation renforcée du mot de passe
@@ -101,7 +102,6 @@ export function validateEmail(email) {
 // Validation du téléphone (format international)
 export function validatePhone(phone) {
     if (!phone || typeof phone !== 'string') return false;
-    // Accepte +XXX suivi de 6 à 15 chiffres
     const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
     const phoneRegex = /^\+\d{1,3}\d{6,15}$/;
     return phoneRegex.test(cleanPhone);
@@ -112,86 +112,168 @@ export function validateName(name) {
     return name && name.trim().length >= 2;
 }
 
-// Vérifier la correspondance des mots de passe
+// ✅ CORRIGÉ: Détecte automatiquement le mode (signup ou change-password)
+function getPasswordFields() {
+    // Mode change-password
+    const newPassword = document.getElementById('newPassword');
+    const confirmNewPassword = document.getElementById('confirmNewPassword');
+    
+    if (newPassword && confirmNewPassword) {
+        return {
+            password: newPassword,
+            confirmPassword: confirmNewPassword,
+            mode: 'change-password'
+        };
+    }
+    
+    // Mode signup
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirmPassword');
+    
+    return {
+        password: password,
+        confirmPassword: confirmPassword,
+        mode: 'signup'
+    };
+}
+
+// ✅ CORRIGÉ: Vérifier la correspondance des mots de passe
 function checkPasswordMatch() {
-    const password = document.getElementById('password')?.value;
-    const confirmPassword = document.getElementById('confirmPassword')?.value;
-    const matchIndicator = document.getElementById('passwordMatchIndicator');
-    
-    if (!matchIndicator || !confirmPassword) return;
-    
+    const fields = getPasswordFields();
     const i18next = window.i18next;
     
-    if (password === confirmPassword) {
-        matchIndicator.innerHTML = `
-            <div class="text-green-400 text-sm flex items-center gap-2">
-                ✓ ${i18next?.t('auth:password_validation.passwords_match') || 'Les mots de passe correspondent'}
-            </div>
-        `;
+    if (!fields.password || !fields.confirmPassword) return;
+    
+    const password = fields.password.value;
+    const confirmPassword = fields.confirmPassword.value;
+    
+    // Afficher l'indicateur sous le champ confirmation
+    const matchIndicator = document.getElementById('passwordMatchIndicator');
+    const confirmError = document.getElementById('confirmPasswordError');
+    const confirmSuccess = document.getElementById('confirmPasswordSuccess');
+    
+    if (confirmPassword.length === 0) {
+        if (matchIndicator) matchIndicator.classList.add('hidden');
+        if (confirmError) confirmError.classList.add('hidden');
+        if (confirmSuccess) confirmSuccess.classList.add('hidden');
+        return;
+    }
+    
+    const match = password === confirmPassword;
+    
+    if (matchIndicator) {
+        if (match) {
+            matchIndicator.innerHTML = `
+                <div class="text-green-400 text-sm flex items-center gap-2">
+                    ✓ ${i18next?.t('auth:password_validation.passwords_match') || 'Les mots de passe correspondent'}
+                </div>
+            `;
+        } else {
+            matchIndicator.innerHTML = `
+                <div class="text-red-400 text-sm flex items-center gap-2">
+                    ✗ ${i18next?.t('auth:password_validation.passwords_no_match') || 'Les mots de passe ne correspondent pas'}
+                </div>
+            `;
+        }
         matchIndicator.classList.remove('hidden');
-    } else {
-        matchIndicator.innerHTML = `
-            <div class="text-red-400 text-sm flex items-center gap-2">
-                ✗ ${i18next?.t('auth:password_validation.passwords_no_match') || 'Les mots de passe ne correspondent pas'}
-            </div>
-        `;
-        matchIndicator.classList.remove('hidden');
+    }
+    
+    if (confirmError) {
+        if (match) {
+            confirmError.classList.add('hidden');
+        } else {
+            confirmError.textContent = i18next?.t('auth:password_validation.passwords_no_match') || 'Les mots de passe ne correspondent pas';
+            confirmError.classList.remove('hidden');
+        }
+    }
+    
+    if (confirmSuccess) {
+        if (match) {
+            confirmSuccess.classList.remove('hidden');
+        } else {
+            confirmSuccess.classList.add('hidden');
+        }
     }
 }
 
-// Vérifier la validité du formulaire et activer/désactiver le bouton
+// ✅ CORRIGÉ: Vérifier la validité du formulaire et activer/désactiver le bouton
 export function checkFormValidity() {
-    const name = document.getElementById('name')?.value.trim();
-    const email = document.getElementById('email')?.value.trim();
-    const phone = document.getElementById('phone')?.value.trim();
-    const countryCode = document.getElementById('countryCode')?.value;
-    const password = document.getElementById('password')?.value;
-    const confirmPassword = document.getElementById('confirmPassword')?.value;
     const submitButton = document.getElementById('submitButton');
-    
     if (!submitButton) return;
     
-    // Vérifier tous les champs
-    const nameValid = validateName(name);
-    const emailValid = validateEmail(email);
-    const phoneValid = phone && phone.length >= 6;
-    const passwordResult = validatePassword(password);
-    const passwordsMatch = password && confirmPassword && password === confirmPassword;
+    const fields = getPasswordFields();
     
-    const allValid = nameValid && emailValid && phoneValid && passwordResult.isValid && passwordsMatch;
-    
-    submitButton.disabled = !allValid;
+    if (fields.mode === 'change-password') {
+        // Mode change-password: seulement mot de passe + confirmation
+        const password = fields.password?.value || '';
+        const confirmPassword = fields.confirmPassword?.value || '';
+        
+        const passwordResult = validatePassword(password);
+        const passwordsMatch = password && confirmPassword && password === confirmPassword;
+        
+        const allValid = passwordResult.isValid && passwordsMatch;
+        submitButton.disabled = !allValid;
+        
+        console.log('🔐 Change password validation:', { 
+            passwordValid: passwordResult.isValid, 
+            passwordsMatch, 
+            allValid 
+        });
+        
+    } else {
+        // Mode signup: tous les champs
+        const name = document.getElementById('name')?.value.trim();
+        const email = document.getElementById('email')?.value.trim();
+        const phone = document.getElementById('phone')?.value.trim();
+        const password = fields.password?.value || '';
+        const confirmPassword = fields.confirmPassword?.value || '';
+        
+        const nameValid = validateName(name);
+        const emailValid = validateEmail(email);
+        const phoneValid = phone && phone.length >= 6;
+        const passwordResult = validatePassword(password);
+        const passwordsMatch = password && confirmPassword && password === confirmPassword;
+        
+        const allValid = nameValid && emailValid && phoneValid && passwordResult.isValid && passwordsMatch;
+        submitButton.disabled = !allValid;
+    }
 }
 
-// Attacher les événements de validation
+// ✅ CORRIGÉ: Attacher les événements de validation
 export function attachPasswordValidation() {
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const phoneInput = document.getElementById('phone');
+    const fields = getPasswordFields();
     
-    if (passwordInput) {
-        passwordInput.addEventListener('input', (e) => {
+    console.log('🔧 Attaching password validation for mode:', fields.mode);
+    
+    if (fields.password) {
+        fields.password.addEventListener('input', (e) => {
             updatePasswordStrengthIndicator(e.target.value);
-            if (confirmPasswordInput && confirmPasswordInput.value) {
+            if (fields.confirmPassword && fields.confirmPassword.value) {
                 checkPasswordMatch();
             }
             checkFormValidity();
         });
+        console.log('✅ Password input listener attached');
     }
     
-    if (confirmPasswordInput) {
-        confirmPasswordInput.addEventListener('input', () => {
+    if (fields.confirmPassword) {
+        fields.confirmPassword.addEventListener('input', () => {
             checkPasswordMatch();
             checkFormValidity();
         });
+        console.log('✅ Confirm password input listener attached');
     }
     
-    // Attacher aussi aux autres champs
-    if (nameInput) nameInput.addEventListener('input', checkFormValidity);
-    if (emailInput) emailInput.addEventListener('input', checkFormValidity);
-    if (phoneInput) phoneInput.addEventListener('input', checkFormValidity);
+    // Attacher aussi aux autres champs (mode signup uniquement)
+    if (fields.mode === 'signup') {
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        
+        if (nameInput) nameInput.addEventListener('input', checkFormValidity);
+        if (emailInput) emailInput.addEventListener('input', checkFormValidity);
+        if (phoneInput) phoneInput.addEventListener('input', checkFormValidity);
+    }
 }
 
 // Valider le formulaire d'inscription complet
@@ -206,29 +288,24 @@ export function validateSignupForm() {
     const i18next = window.i18next;
     const errors = [];
     
-    // Validation du nom
     if (!validateName(name)) {
         errors.push(i18next?.t('auth:errors.name_invalid') || 'Le nom doit contenir au moins 2 caractères');
     }
     
-    // Validation de l'email
     if (!validateEmail(email)) {
         errors.push(i18next?.t('auth:errors.email_invalid') || 'Email invalide');
     }
     
-    // Validation du téléphone
     const fullPhone = countryCode + phone;
     if (!validatePhone(fullPhone)) {
         errors.push(i18next?.t('auth:errors.phone_invalid') || 'Numéro de téléphone invalide');
     }
     
-    // Validation du mot de passe
     const passwordResult = validatePassword(password);
     if (!passwordResult.isValid) {
         errors.push(i18next?.t('auth:errors.password_weak') || 'Le mot de passe ne respecte pas tous les critères');
     }
     
-    // Vérification de la correspondance
     if (password !== confirmPassword) {
         errors.push(i18next?.t('auth:errors.passwords_dont_match') || 'Les mots de passe ne correspondent pas');
     }
