@@ -1,4 +1,8 @@
 {
+  "header": {
+    "brand": "Real Estate Referrer",
+    "login": "Connexion"
+  },
   "hero": {
     "title": "Comment ça marche ?",
     "subtitle": "Devenez apporteur d'affaires immobilier à Dubai en 5 étapes simples"
@@ -46,30 +50,34 @@
       "title": "Recevez vos commissions",
       "description": "Dès qu'une vente est conclue, votre commission est calculée",
       "payment_delay": "Paiement dans les 45-60 jours",
-      "commission_text": "⭐ 20% de la commission agent"
+      "commission_text": "⭐ Jusqu'à 25% de la commission agent (25% acheteurs, 20% autres)"
     }
   },
   "earnings": {
     "section_title": "💰 Combien puis-je gagner ?",
+    "subtitle": "🏆 Exemples pour des leads Acheteurs (25% de commission)",
     "example1": {
-      "your_amount": "2,000 AED",
+      "your_amount": "2,500 AED",
       "property_type": "Appartement - 1M AED",
       "total_commission": "Commission totale (2%): 20,000 AED",
       "agent_commission": "Commission agent (50%): 10,000 AED",
-      "your_commission": "Votre commission (20%): 2,000 AED"
+      "your_commission": "Votre commission (25%): 2,500 AED"
     },
     "example2": {
-      "your_amount": "10,000 AED",
+      "your_amount": "12,500 AED",
       "property_type": "Villa - 5M AED",
-      "total_amount": "100,000 AED",
-      "agent_amount": "50,000 AED"
+      "total_commission": "Commission totale (2%): 100,000 AED",
+      "agent_commission": "Commission agent (50%): 50,000 AED",
+      "your_commission": "Votre commission (25%): 12,500 AED"
     },
     "example3": {
-      "your_amount": "20,000 AED",
+      "your_amount": "25,000 AED",
       "property_type": "Penthouse - 10M AED",
-      "total_amount": "200,000 AED",
-      "agent_amount": "100,000 AED"
+      "total_commission": "Commission totale (2%): 200,000 AED",
+      "agent_commission": "Commission agent (50%): 100,000 AED",
+      "your_commission": "Votre commission (25%): 25,000 AED"
     },
+    "note": "ℹ️ Note : Vendeurs, Propriétaires et Locataires = 20% de commission",
     "unlimited": "✨ Pas de limite ! Plus vous apportez de clients, plus vous gagnez."
   },
   "lead_criteria": {
@@ -117,11 +125,20 @@
     "q5": {
       "question": "Que se passe-t-il si le client n'achète pas ?",
       "answer": "Aucun problème ! Vous ne perdez rien."
+    },
+    "q6": {
+      "question": "Pourquoi les acheteurs rapportent plus ?",
+      "answer": "Les acheteurs sont les leads les plus précieux car ils génèrent des transactions plus importantes. C'est pourquoi nous offrons 25% au lieu de 20% pour encourager ce type de lead."
     }
   },
   "cta": {
     "title": "Prêt à commencer ?",
     "subtitle_part1": "Inscrivez-vous maintenant et commencez à gagner des commissions dès aujourd'hui",
     "button_signup": "Je me lance ! 🚀"
+  },
+  "footer": {
+    "copyright": "Tous droits réservés.",
+    "navigation_home": "Accueil",
+    "navigation_how": "Comment ça marche"
   }
 }
