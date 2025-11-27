@@ -1,7 +1,7 @@
 // ============================================
 // GESTION DU DASHBOARD
 // Real Estate Referrer - Dubai
-// Version: 3.3.0 - Fix leads loading
+// Version: 3.4.0 - Ajout colonne Apporteur
 // ============================================
 
 import { STATUS_COLORS } from './config.js';
@@ -23,7 +23,7 @@ export async function loadDashboardContent() {
     const isAdmin = userProfile.role === 'admin';
     
     try {
-        // Charger les leads (requête simple sans jointure)
+        // Charger les leads
         let query = supabase
             .from('leads')
             .select('*')
@@ -47,6 +47,25 @@ export async function loadDashboardContent() {
         
         console.log('✅ Leads loaded:', leads?.length || 0);
         
+        // Si admin, charger les noms des apporteurs
+        let referrerNames = {};
+        if (isAdmin && leads && leads.length > 0) {
+            const referrerIds = [...new Set(leads.map(l => l.referrer_id).filter(Boolean))];
+            
+            if (referrerIds.length > 0) {
+                const { data: profiles, error: profilesError } = await supabase
+                    .from('profiles')
+                    .select('id, name, email')
+                    .in('id', referrerIds);
+                
+                if (!profilesError && profiles) {
+                    profiles.forEach(p => {
+                        referrerNames[p.id] = p.name || p.email || 'Unknown';
+                    });
+                }
+            }
+        }
+        
         // Calculer les statistiques
         const totalEarnings = (leads || [])
             .filter(l => l.status === 'vendu')
@@ -58,7 +77,7 @@ export async function loadDashboardContent() {
         renderStats(isAdmin, (leads || []).length, totalEarnings, activeLeads, closedSales);
         
         // Afficher le tableau des leads
-        renderLeadsTable(isAdmin, leads || []);
+        renderLeadsTable(isAdmin, leads || [], referrerNames);
         
     } catch (err) {
         console.error('❌ Exception loading dashboard:', err);
@@ -102,7 +121,7 @@ function renderStats(isAdmin, totalLeads, totalEarnings, activeLeads, closedSale
 }
 
 // Afficher le tableau des leads
-function renderLeadsTable(isAdmin, leads) {
+function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
     const i18next = window.i18next;
     const tableDiv = document.getElementById('leadsTable');
     
@@ -120,6 +139,7 @@ function renderLeadsTable(isAdmin, leads) {
             <thead>
                 <tr class="border-b border-gray-700">
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:client_name')}</th>
+                    ${isAdmin ? `<th class="text-left py-3 px-4">${i18next.t('dashboard:referrer')}</th>` : ''}
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:lead_type')}</th>
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:budget')}</th>
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:status')}</th>
@@ -130,7 +150,7 @@ function renderLeadsTable(isAdmin, leads) {
             <tbody>
                 ${leads.length === 0 ? `
                     <tr>
-                        <td colspan="${isAdmin ? '6' : '5'}" class="py-8 text-center text-gray-400">
+                        <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
                             ${i18next.t('dashboard:no_leads')}<br>
                             <span class="text-sm">${i18next.t('dashboard:start_adding')}</span>
                         </td>
@@ -140,6 +160,7 @@ function renderLeadsTable(isAdmin, leads) {
                     const leadTypeLabel = i18next.t('dashboard:' + leadTypeKey) || leadTypeKey;
                     const commissionRate = lead.commission_rate ? (lead.commission_rate * 100) + '%' : '20%';
                     const statusColor = STATUS_COLORS[lead.status] || 'bg-gray-500';
+                    const referrerName = referrerNames[lead.referrer_id] || '-';
                     
                     return `
                     <tr class="border-b border-gray-700 hover:bg-gray-700/30">
@@ -147,6 +168,11 @@ function renderLeadsTable(isAdmin, leads) {
                             <div class="font-medium">${lead.client_name}</div>
                             <div class="text-xs text-gray-400">${lead.client_email}</div>
                         </td>
+                        ${isAdmin ? `
+                            <td class="py-3 px-4">
+                                <span class="text-cyan-400 font-medium">${referrerName}</span>
+                            </td>
+                        ` : ''}
                         <td class="py-3 px-4">
                             <span class="${leadTypeKey === 'sale_buyer' ? 'text-yellow-400 font-bold' : 'text-gray-300'}">
                                 ${leadTypeKey === 'sale_buyer' ? '🏆 ' : ''}${leadTypeLabel}
