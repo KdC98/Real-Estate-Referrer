@@ -911,6 +911,19 @@
         window.showSignup = UTILS.showSignup;
         window.showReset = UTILS.showReset;
         window.backToHome = UTILS.backToHome;
+        // ✅ Fonction pour revenir à l'inscription depuis 2FA
+        window.backTo2FASignup = function() {
+        console.log('🔙 Back to signup from 2FA');
+        is2FAMode = false;
+        window.is2FAMode = false;
+        tempPhone = null;
+        window.tempPhone = null;
+        pendingSignupId = null;
+        window.pendingSignupId = null;
+        currentPage = 'auth-signup';
+        window.currentPage = 'auth-signup';
+        render();
+        };
         window.renderLandingPage = RENDERING.renderLandingPage;
         window.renderAuthPage = RENDERING.renderAuthPage;
         window.renderDashboard = RENDERING.renderDashboard;
