@@ -277,11 +277,33 @@
             }
         };
         
+        // ✅ CORRIGÉ: Fonction pour calculer les coordonnées avec mise à l'échelle
+        function getCanvasCoordinates(e, rect) {
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        }
+        
+        // ✅ CORRIGÉ: Fonction pour les coordonnées tactiles
+        function getTouchCoordinates(touch, rect) {
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (touch.clientX - rect.left) * scaleX,
+                y: (touch.clientY - rect.top) * scaleY
+            };
+        }
+        
+        // ✅ CORRIGÉ: Dessin souris
         function startDrawing(e) {
             isDrawing = true;
             const rect = canvas.getBoundingClientRect();
+            const coords = getCanvasCoordinates(e, rect);
             ctx.beginPath();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.moveTo(coords.x, coords.y);
             hasSignature = true;
             document.getElementById('validateBtn').disabled = false;
         }
@@ -289,7 +311,8 @@
         function draw(e) {
             if (!isDrawing) return;
             const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            const coords = getCanvasCoordinates(e, rect);
+            ctx.lineTo(coords.x, coords.y);
             ctx.stroke();
         }
         
@@ -297,13 +320,15 @@
             isDrawing = false;
         }
         
+        // ✅ CORRIGÉ: Dessin tactile (mobile)
         function handleTouchStart(e) {
             e.preventDefault();
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
+            const coords = getTouchCoordinates(touch, rect);
             isDrawing = true;
             ctx.beginPath();
-            ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+            ctx.moveTo(coords.x, coords.y);
             hasSignature = true;
             document.getElementById('validateBtn').disabled = false;
         }
@@ -313,7 +338,8 @@
             if (!isDrawing) return;
             const touch = e.touches[0];
             const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+            const coords = getTouchCoordinates(touch, rect);
+            ctx.lineTo(coords.x, coords.y);
             ctx.stroke();
         }
         
@@ -371,7 +397,6 @@
                 if (updateError) throw updateError;
                 
                 showSuccess(t('contract:success_message'));
-
                 setTimeout(() => {
                     const baseUrl = window.location.origin;
                     const redirectUrl = baseUrl + '/?signed=' + Date.now();
