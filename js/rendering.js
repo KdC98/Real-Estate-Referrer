@@ -6,8 +6,8 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.3.0 - Nouveau formulaire leads avec commissions 25%/20%
-// Date: 26 novembre 2025
+// Version: 3.4.1 - Fix 2FA translations + back button
+// Date: 27 novembre 2025
 // ============================================
 
 /**
@@ -39,7 +39,6 @@ export function renderLandingPage() {
                         <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
                         <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
                     </div>
-
                     <!-- Mobile Menu Button -->
                     <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl">
                         <span id="menuIcon">☰</span>
@@ -218,78 +217,154 @@ export function renderAuthPage(mode) {
         linkText = t('auth:back_to_login');
         linkAction = 'showLogin()';
     } 
-    // ✅ MODE 2FA - Vérification du code SMS
+    // ✅ MODE 2FA - Vérification du code SMS (CORRIGÉ v3.4.1)
     else if (mode === '2fa') {
         const tempPhone = window.tempPhone || '';
-        const maskedPhone = tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4);
+        const maskedPhone = tempPhone ? (tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4)) : '***';
+        const currentLang = window.i18next?.language || 'fr';
         
-        title = t('auth:two_factor.title') || 'Vérification SMS';
-        subtitle = t('auth:two_factor.subtitle', { phone: maskedPhone }) || 'Code envoyé au ' + maskedPhone;
+        // ✅ Traductions directes pour éviter les problèmes d'interpolation
+        const twoFactorTranslations = {
+            fr: {
+                title: 'Vérification SMS',
+                subtitle: `Code envoyé au ${maskedPhone}`,
+                code_label: 'Code de vérification (6 chiffres)',
+                code_help: 'Entrez le code à 6 chiffres reçu par SMS',
+                verify_button: 'Vérifier',
+                resend_code: 'Renvoyer le code',
+                back_to_signup: '← Retour à l\'inscription',
+                back_button: '← Retour'
+            },
+            en: {
+                title: 'SMS Verification',
+                subtitle: `Code sent to ${maskedPhone}`,
+                code_label: 'Verification code (6 digits)',
+                code_help: 'Enter the 6-digit code received by SMS',
+                verify_button: 'Verify',
+                resend_code: 'Resend code',
+                back_to_signup: '← Back to signup',
+                back_button: '← Back'
+            },
+            ar: {
+                title: 'التحقق عبر الرسائل القصيرة',
+                subtitle: `تم إرسال الرمز إلى ${maskedPhone}`,
+                code_label: 'رمز التحقق (6 أرقام)',
+                code_help: 'أدخل الرمز المكون من 6 أرقام المستلم عبر الرسائل القصيرة',
+                verify_button: 'تحقق',
+                resend_code: 'إعادة إرسال الرمز',
+                back_to_signup: '← العودة إلى التسجيل',
+                back_button: '← رجوع'
+            },
+            ru: {
+                title: 'Проверка по SMS',
+                subtitle: `Код отправлен на ${maskedPhone}`,
+                code_label: 'Код подтверждения (6 цифр)',
+                code_help: 'Введите 6-значный код, полученный по SMS',
+                verify_button: 'Подтвердить',
+                resend_code: 'Отправить код повторно',
+                back_to_signup: '← Вернуться к регистрации',
+                back_button: '← Назад'
+            },
+            hi: {
+                title: 'SMS सत्यापन',
+                subtitle: `कोड ${maskedPhone} पर भेजा गया`,
+                code_label: 'सत्यापन कोड (6 अंक)',
+                code_help: 'SMS द्वारा प्राप्त 6 अंकों का कोड दर्ज करें',
+                verify_button: 'सत्यापित करें',
+                resend_code: 'कोड पुनः भेजें',
+                back_to_signup: '← पंजीकरण पर वापस जाएं',
+                back_button: '← वापस'
+            },
+            ur: {
+                title: 'SMS تصدیق',
+                subtitle: `کوڈ ${maskedPhone} پر بھیجا گیا`,
+                code_label: 'تصدیقی کوڈ (6 ہندسے)',
+                code_help: 'SMS کے ذریعے موصول ہونے والا 6 ہندسوں کا کوڈ درج کریں',
+                verify_button: 'تصدیق کریں',
+                resend_code: 'کوڈ دوبارہ بھیجیں',
+                back_to_signup: '← رجسٹریشن پر واپس جائیں',
+                back_button: '← واپس'
+            },
+            zh: {
+                title: '短信验证',
+                subtitle: `验证码已发送至 ${maskedPhone}`,
+                code_label: '验证码（6位数字）',
+                code_help: '请输入短信收到的6位验证码',
+                verify_button: '验证',
+                resend_code: '重新发送验证码',
+                back_to_signup: '← 返回注册',
+                back_button: '← 返回'
+            },
+            tl: {
+                title: 'SMS Verification',
+                subtitle: `Code ipinadala sa ${maskedPhone}`,
+                code_label: 'Verification code (6 digits)',
+                code_help: 'Ilagay ang 6-digit code na natanggap sa SMS',
+                verify_button: 'I-verify',
+                resend_code: 'Ipadala muli ang code',
+                back_to_signup: '← Bumalik sa signup',
+                back_button: '← Bumalik'
+            }
+        };
         
-        formContent = `
-            <form id="form2FA" class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium mb-2">
-                        ${t('auth:two_factor.code_label') || 'Code de vérification (6 chiffres)'}
-                    </label>
-                    <input 
-                        type="text" 
-                        id="code2fa" 
-                        inputmode="numeric"
-                        pattern="[0-9]{6}"
-                        maxlength="6"
-                        placeholder="000000"
-                        class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-yellow-500 text-center text-2xl tracking-widest font-mono"
-                        required
-                        autocomplete="one-time-code"
-                    />
-                    <p class="mt-2 text-sm text-gray-400">
-                        ${t('auth:two_factor.code_help') || 'Entrez le code à 6 chiffres reçu par SMS'}
-                    </p>
-                </div>
-
-                <div id="authError" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg"></div>
-
-                <button 
-                    type="submit" 
-                    class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-3 rounded-lg transition transform hover:scale-105"
-                >
-                    ${t('auth:two_factor.verify_button') || 'Vérifier'}
-                </button>
-
-                <div class="text-center">
-                    <button 
-                        type="button"
-                        onclick="window.resend2FACode()"
-                        class="text-yellow-500 hover:text-yellow-400 text-sm font-medium"
-                    >
-                        ${t('auth:two_factor.resend_code') || 'Renvoyer le code'}
-                    </button>
-                </div>
-
-                <div class="text-center">
-                    <button 
-                        type="button"
-                        onclick="window.showSignup()"
-                        class="text-gray-400 hover:text-white text-sm"
-                    >
-                        ${t('auth:two_factor.back_to_signup') || '← Retour à l\'inscription'}
-                    </button>
-                </div>
-            </form>
-        `;
+        const trans = twoFactorTranslations[currentLang] || twoFactorTranslations['en'];
         
         return `
             <div class="min-h-screen flex items-center justify-center px-4">
                 <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
-                    <button onclick="window.showSignup()" class="text-gray-400 hover:text-white mb-6 flex items-center">
-                        ← Retour
+                    <button onclick="window.backTo2FASignup()" class="text-gray-400 hover:text-white mb-6 flex items-center">
+                        ${trans.back_button}
                     </button>
                     
-                    <h2 class="text-3xl font-bold mb-2 text-center">${title}</h2>
-                    ${subtitle ? '<p class="text-center text-gray-400 mb-6">' + subtitle + '</p>' : ''}
+                    <h2 class="text-3xl font-bold mb-2 text-center">${trans.title}</h2>
+                    <p class="text-center text-gray-400 mb-6">${trans.subtitle}</p>
                     
-                    ${formContent}
+                    <form id="form2FA" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">
+                                ${trans.code_label}
+                            </label>
+                            <input 
+                                type="text" 
+                                id="code2fa" 
+                                inputmode="numeric"
+                                pattern="[0-9]{6}"
+                                maxlength="6"
+                                placeholder="000000"
+                                class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-yellow-500 text-center text-2xl tracking-widest font-mono"
+                                required
+                                autocomplete="one-time-code"
+                            />
+                            <p class="mt-2 text-sm text-gray-400">
+                                ${trans.code_help}
+                            </p>
+                        </div>
+                        <div id="authError" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg"></div>
+                        <button 
+                            type="submit" 
+                            class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-3 rounded-lg transition transform hover:scale-105"
+                        >
+                            ${trans.verify_button}
+                        </button>
+                        <div class="text-center">
+                            <button 
+                                type="button"
+                                onclick="window.resend2FACode()"
+                                class="text-yellow-500 hover:text-yellow-400 text-sm font-medium"
+                            >
+                                ${trans.resend_code}
+                            </button>
+                        </div>
+                        <div class="text-center">
+                            <button 
+                                type="button"
+                                onclick="window.backTo2FASignup()"
+                                class="text-gray-400 hover:text-white text-sm"
+                            >
+                                ${trans.back_to_signup}
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         `;
@@ -602,7 +677,6 @@ export function renderDashboard() {
                                         <li>✅ <strong>${t('dashboard:contract.benefit5_title')}</strong> ${t('dashboard:contract.benefit5_desc')}</li>
                                     </ul>
                                 </div>
-
                                 <div class="grid md:grid-cols-2 gap-8">
                                     <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 p-6 rounded-lg">
                                         <div class="flex items-center gap-3 mb-4">
