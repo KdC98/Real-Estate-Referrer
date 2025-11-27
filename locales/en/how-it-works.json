@@ -50,30 +50,34 @@
       "title": "Receive Your Commissions",
       "description": "As soon as a sale is completed, your commission is calculated",
       "payment_delay": "Payment within 45-60 days",
-      "commission_text": "⭐ 20% of agent commission"
+      "commission_text": "⭐ Up to 25% of agent commission (25% buyers, 20% others)"
     }
   },
   "earnings": {
     "section_title": "💰 How Much Can I Earn?",
+    "subtitle": "🏆 Examples for Buyer Leads (25% commission)",
     "example1": {
-      "your_amount": "2,000 AED",
+      "your_amount": "2,500 AED",
       "property_type": "Apartment - 1M AED",
       "total_commission": "Total commission (2%): 20,000 AED",
       "agent_commission": "Agent commission (50%): 10,000 AED",
-      "your_commission": "Your commission (20%): 2,000 AED"
+      "your_commission": "Your commission (25%): 2,500 AED"
     },
     "example2": {
-      "your_amount": "10,000 AED",
+      "your_amount": "12,500 AED",
       "property_type": "Villa - 5M AED",
-      "total_amount": "100,000 AED",
-      "agent_amount": "50,000 AED"
+      "total_commission": "Total commission (2%): 100,000 AED",
+      "agent_commission": "Agent commission (50%): 50,000 AED",
+      "your_commission": "Your commission (25%): 12,500 AED"
     },
     "example3": {
-      "your_amount": "20,000 AED",
+      "your_amount": "25,000 AED",
       "property_type": "Penthouse - 10M AED",
-      "total_amount": "200,000 AED",
-      "agent_amount": "100,000 AED"
+      "total_commission": "Total commission (2%): 200,000 AED",
+      "agent_commission": "Agent commission (50%): 100,000 AED",
+      "your_commission": "Your commission (25%): 25,000 AED"
     },
+    "note": "ℹ️ Note: Sellers, Landlords and Tenants = 20% commission",
     "unlimited": "✨ No limit! The more clients you bring, the more you earn."
   },
   "lead_criteria": {
@@ -121,6 +125,10 @@
     "q5": {
       "question": "What happens if the client doesn't buy?",
       "answer": "No problem! You don't lose anything."
+    },
+    "q6": {
+      "question": "Why do buyers earn more?",
+      "answer": "Buyers are the most valuable leads as they generate larger transactions. That's why we offer 25% instead of 20% to encourage this type of lead."
     }
   },
   "cta": {
