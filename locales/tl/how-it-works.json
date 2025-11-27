@@ -10,7 +10,7 @@
   "timeline": {
     "step1": {
       "badge": "1",
-      "title": "Mag-sign Up (2 minuto)",
+      "title": "Mag-sign Up (2 min)",
       "items": [
         "Gumawa ng libreng account",
         "Punan ang iyong impormasyon",
@@ -19,113 +19,121 @@
     },
     "step2": {
       "badge": "2",
-      "title": "Maghanap ng Mga Kliyente",
+      "title": "Maghanap ng Kliyente",
       "items": [
-        "Sabihin sa iyong network ang tungkol sa programa",
-        "Tukuyin ang mga taong interesado sa Dubai real estate",
-        "Walang kailangang real estate license!"
+        "Ipaalam sa iyong network ang programa",
+        "Tukuyin ang mga interesado sa Dubai real estate",
+        "Hindi kailangan ng real estate license!"
       ]
     },
     "step3": {
       "badge": "3",
-      "title": "Idagdag ang Iyong Mga Lead",
+      "title": "Idagdag ang Iyong Leads",
       "items": [
-        "Mag-log in sa iyong dashboard",
+        "Mag-login sa iyong dashboard",
         "I-click ang \"Magdagdag ng lead\"",
         "Punan ang impormasyon ng kliyente"
       ]
     },
     "step4": {
       "badge": "4",
-      "title": "Real-Time na Pagsubaybay",
-      "description": "Subaybayan ang progreso ng iyong mga lead",
+      "title": "Real-Time Tracking",
+      "description": "Subaybayan ang progreso ng iyong leads",
       "status_new": "📄 Bago",
-      "status_visit": "🏠 Pagbisita",
+      "status_visit": "🏠 Viewing",
       "status_offer": "🤝 Alok",
       "status_sold": "✅ Nabenta",
-      "footer": "Ganap na transparency sa iyong mga komisyon"
+      "footer": "Buong transparency sa iyong komisyon"
     },
     "step5": {
       "badge": "5",
-      "title": "Tanggapin ang Iyong Mga Komisyon",
-      "description": "Kapag nakumpleto ang pagbebenta, kinakalkula ang iyong komisyon",
-      "payment_delay": "Pagbabayad sa loob ng 45-60 araw",
-      "commission_text": "⭐ 20% ng komisyon ng agent"
+      "title": "Tanggapin ang Iyong Komisyon",
+      "description": "Pagkatapos makumpleto ang benta, kakalkulahin ang iyong komisyon",
+      "payment_delay": "Bayad sa loob ng 45-60 araw",
+      "commission_text": "⭐ Hanggang 25% ng komisyon ng ahente (25% buyers, 20% iba pa)"
     }
   },
   "earnings": {
-    "section_title": "💰 Magkano ang Maaari Kong Kitain?",
+    "section_title": "💰 Magkano ang Kikitain Ko?",
+    "subtitle": "🏆 Mga halimbawa para sa Buyer Leads (25% komisyon)",
     "example1": {
-      "your_amount": "2,000 AED",
+      "your_amount": "2,500 AED",
       "property_type": "Apartment - 1M AED",
       "total_commission": "Kabuuang komisyon (2%): 20,000 AED",
-      "agent_commission": "Komisyon ng agent (50%): 10,000 AED",
-      "your_commission": "Iyong komisyon (20%): 2,000 AED"
+      "agent_commission": "Komisyon ng ahente (50%): 10,000 AED",
+      "your_commission": "Iyong komisyon (25%): 2,500 AED"
     },
     "example2": {
-      "your_amount": "10,000 AED",
+      "your_amount": "12,500 AED",
       "property_type": "Villa - 5M AED",
-      "total_amount": "100,000 AED",
-      "agent_amount": "50,000 AED"
+      "total_commission": "Kabuuang komisyon (2%): 100,000 AED",
+      "agent_commission": "Komisyon ng ahente (50%): 50,000 AED",
+      "your_commission": "Iyong komisyon (25%): 12,500 AED"
     },
     "example3": {
-      "your_amount": "20,000 AED",
+      "your_amount": "25,000 AED",
       "property_type": "Penthouse - 10M AED",
-      "total_amount": "200,000 AED",
-      "agent_amount": "100,000 AED"
+      "total_commission": "Kabuuang komisyon (2%): 200,000 AED",
+      "agent_commission": "Komisyon ng ahente (50%): 100,000 AED",
+      "your_commission": "Iyong komisyon (25%): 25,000 AED"
     },
-    "unlimited": "✨ Walang limitasyon! Mas maraming kliyente ang iyong dadalhin, mas marami kang kikitain."
+    "note": "ℹ️ Paalala: Sellers, Landlords at Tenants = 20% komisyon",
+    "unlimited": "✨ Walang limit! Mas maraming kliyente, mas malaki ang kikitain."
   },
   "lead_criteria": {
-    "section_title": "📋 Mga Pamantayan ng Magandang Lead",
+    "section_title": "📋 Pamantayan para sa Magandang Lead",
     "good_lead": {
       "title": "Kwalipikadong Lead",
       "criteria": [
         "Talagang gustong bumili o umupa",
-        "May malinaw na badyet sa isip",
-        "Naghahanap ngayon (hindi sa loob ng 2 taon!)",
-        "Madaling makausap",
-        "Alam ang gusto nila"
+        "May malinaw na budget",
+        "Naghahanap ngayon (hindi sa 2 taon!)",
+        "Madali silang makontak",
+        "Alam nila ang gusto nila"
       ]
     },
     "bad_lead": {
       "title": "Hindi Kwalipikadong Lead",
       "criteria": [
-        "Curious lang, hindi talagang interesado",
-        "Walang ideya sa badyet (o hindi realistic)",
+        "Curious lang, hindi talaga interesado",
+        "Walang ideya sa budget (o hindi realistic)",
         "Naghahanap sa malayong hinaharap (1 taon+)",
-        "Hindi maabot o pekeng contact details",
-        "Hindi alam kung ano ang gusto"
+        "Hindi makontak o pekeng contact details",
+        "Hindi talaga alam ang gusto nila"
       ]
     }
   },
   "faq": {
     "section_title": "❓ Mga Madalas Itanong",
     "q1": {
-      "question": "Ilang lead ang maaari kong dalhin?",
-      "answer": "Walang limitasyon! Mas marami ang dadalhin, mas marami ang kikitain."
+      "question": "Ilang leads ang pwede kong dalhin?",
+      "answer": "Walang limit! Mas marami, mas malaki ang kita."
     },
     "q2": {
       "question": "Kailangan ko ba ng real estate license?",
-      "answer": "Hindi! Bukas ang programa para sa lahat."
+      "answer": "Hindi! Bukas ang programa sa lahat."
     },
     "q3": {
       "question": "Kailan ako mababayaran?",
-      "answer_intro": "45-60 araw pagkatapos ng pagpirma ng kontrata."
+      "answer_intro": "45-60 araw pagkatapos pumirma ng kontrata."
     },
     "q4": {
-      "question": "Maaari ko bang i-sponsor ang ibang mga referrer?",
+      "question": "Pwede ba akong mag-sponsor ng ibang referrers?",
       "answer_part1": "Oo! Makipag-ugnayan sa amin sa",
       "email": "contact@real-estate-referrer.com"
     },
     "q5": {
-      "question": "Ano ang mangyayari kung hindi bibili ang kliyente?",
+      "question": "Ano ang mangyayari kung hindi bumili ang kliyente?",
       "answer": "Walang problema! Wala kang mawawala."
+    },
+    "q6": {
+      "question": "Bakit mas malaki ang kita sa buyers?",
+      "answer": "Ang buyers ang pinakamahalagang leads dahil sila ang gumagawa ng malalaking transaksyon. Kaya nag-aalok kami ng 25% sa halip na 20% para hikayatin ang ganitong uri ng lead."
     }
   },
   "cta": {
-    "title": "Handa Nang Magsimula?",
-    "subtitle_part1": "Mag-sign up ngayon at magsimulang kumita ng mga komisyon ngayong araw",
+    "title": "Handa Ka Na Bang Magsimula?",
+    "subtitle_part1": "Mag-sign up ngayon at magsimulang kumita ng komisyon ngayon",
     "button_signup": "Tara Na! 🚀"
   },
   "footer": {
