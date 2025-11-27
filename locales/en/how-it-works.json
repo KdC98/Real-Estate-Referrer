@@ -1,144 +1,144 @@
 {
   "header": {
     "brand": "Real Estate Referrer",
-    "login": "Login"
+    "login": "تسجيل الدخول"
   },
   "hero": {
-    "title": "How It Works?",
-    "subtitle": "Become a real estate referrer in Dubai in 5 simple steps"
+    "title": "كيف يعمل؟",
+    "subtitle": "كن وسيط عقارات في دبي في 5 خطوات بسيطة"
   },
   "timeline": {
     "step1": {
       "badge": "1",
-      "title": "Sign Up (2 min)",
+      "title": "التسجيل (دقيقتان)",
       "items": [
-        "Create your free account",
-        "Fill in your information",
-        "Sign the referrer agreement"
+        "أنشئ حسابك مجاناً",
+        "أدخل معلوماتك",
+        "وقّع اتفاقية الوسيط"
       ]
     },
     "step2": {
       "badge": "2",
-      "title": "Find Clients",
+      "title": "ابحث عن عملاء",
       "items": [
-        "Tell your network about the program",
-        "Identify people interested in Dubai real estate",
-        "No real estate license required!"
+        "أخبر شبكتك عن البرنامج",
+        "حدد الأشخاص المهتمين بعقارات دبي",
+        "لا تحتاج رخصة عقارية!"
       ]
     },
     "step3": {
       "badge": "3",
-      "title": "Add Your Leads",
+      "title": "أضف عملاءك المحتملين",
       "items": [
-        "Log in to your dashboard",
-        "Click \"Add a lead\"",
-        "Fill in client information"
+        "سجّل الدخول إلى لوحة التحكم",
+        "انقر على \"إضافة عميل محتمل\"",
+        "أدخل معلومات العميل"
       ]
     },
     "step4": {
       "badge": "4",
-      "title": "Real-Time Tracking",
-      "description": "Track your leads' progress",
-      "status_new": "📄 New",
-      "status_visit": "🏠 Viewing",
-      "status_offer": "🤝 Offer",
-      "status_sold": "✅ Sold",
-      "footer": "Full transparency on your commissions"
+      "title": "متابعة فورية",
+      "description": "تابع تقدم عملائك المحتملين",
+      "status_new": "📄 جديد",
+      "status_visit": "🏠 معاينة",
+      "status_offer": "🤝 عرض",
+      "status_sold": "✅ مباع",
+      "footer": "شفافية كاملة في عمولاتك"
     },
     "step5": {
       "badge": "5",
-      "title": "Receive Your Commissions",
-      "description": "As soon as a sale is completed, your commission is calculated",
-      "payment_delay": "Payment within 45-60 days",
-      "commission_text": "⭐ Up to 25% of agent commission (25% buyers, 20% others)"
+      "title": "استلم عمولاتك",
+      "description": "بمجرد إتمام البيع، يتم حساب عمولتك",
+      "payment_delay": "الدفع خلال 45-60 يوماً",
+      "commission_text": "⭐ حتى 25% من عمولة الوكيل (25% للمشترين، 20% للآخرين)"
     }
   },
   "earnings": {
-    "section_title": "💰 How Much Can I Earn?",
-    "subtitle": "🏆 Examples for Buyer Leads (25% commission)",
+    "section_title": "💰 كم يمكنني أن أكسب؟",
+    "subtitle": "🏆 أمثلة لعملاء المشترين (عمولة 25%)",
     "example1": {
-      "your_amount": "2,500 AED",
-      "property_type": "Apartment - 1M AED",
-      "total_commission": "Total commission (2%): 20,000 AED",
-      "agent_commission": "Agent commission (50%): 10,000 AED",
-      "your_commission": "Your commission (25%): 2,500 AED"
+      "your_amount": "2,500 درهم",
+      "property_type": "شقة - 1 مليون درهم",
+      "total_commission": "العمولة الإجمالية (2%): 20,000 درهم",
+      "agent_commission": "عمولة الوكيل (50%): 10,000 درهم",
+      "your_commission": "عمولتك (25%): 2,500 درهم"
     },
     "example2": {
-      "your_amount": "12,500 AED",
-      "property_type": "Villa - 5M AED",
-      "total_commission": "Total commission (2%): 100,000 AED",
-      "agent_commission": "Agent commission (50%): 50,000 AED",
-      "your_commission": "Your commission (25%): 12,500 AED"
+      "your_amount": "12,500 درهم",
+      "property_type": "فيلا - 5 مليون درهم",
+      "total_commission": "العمولة الإجمالية (2%): 100,000 درهم",
+      "agent_commission": "عمولة الوكيل (50%): 50,000 درهم",
+      "your_commission": "عمولتك (25%): 12,500 درهم"
     },
     "example3": {
-      "your_amount": "25,000 AED",
-      "property_type": "Penthouse - 10M AED",
-      "total_commission": "Total commission (2%): 200,000 AED",
-      "agent_commission": "Agent commission (50%): 100,000 AED",
-      "your_commission": "Your commission (25%): 25,000 AED"
+      "your_amount": "25,000 درهم",
+      "property_type": "بنتهاوس - 10 مليون درهم",
+      "total_commission": "العمولة الإجمالية (2%): 200,000 درهم",
+      "agent_commission": "عمولة الوكيل (50%): 100,000 درهم",
+      "your_commission": "عمولتك (25%): 25,000 درهم"
     },
-    "note": "ℹ️ Note: Sellers, Landlords and Tenants = 20% commission",
-    "unlimited": "✨ No limit! The more clients you bring, the more you earn."
+    "note": "ℹ️ ملاحظة: البائعون والملاك والمستأجرون = عمولة 20%",
+    "unlimited": "✨ بلا حدود! كلما جلبت عملاء أكثر، كسبت أكثر."
   },
   "lead_criteria": {
-    "section_title": "📋 Criteria for a Good Lead",
+    "section_title": "📋 معايير العميل المحتمل الجيد",
     "good_lead": {
-      "title": "Qualified Lead",
+      "title": "عميل مؤهل",
       "criteria": [
-        "They really want to buy or rent",
-        "They have a clear budget in mind",
-        "They're looking now (not in 2 years!)",
-        "You can easily reach them",
-        "They know what they want"
+        "يريدون فعلاً الشراء أو الإيجار",
+        "لديهم ميزانية واضحة",
+        "يبحثون الآن (ليس بعد سنتين!)",
+        "يمكنك الوصول إليهم بسهولة",
+        "يعرفون ما يريدون"
       ]
     },
     "bad_lead": {
-      "title": "Unqualified Lead",
+      "title": "عميل غير مؤهل",
       "criteria": [
-        "Just curious, not really interested",
-        "No idea of their budget (or unrealistic)",
-        "Looking far in the future (1 year+)",
-        "Unreachable or fake contact details",
-        "Don't know what they want at all"
+        "فضولي فقط، غير مهتم حقاً",
+        "لا فكرة عن ميزانيته (أو غير واقعية)",
+        "يبحث في المستقبل البعيد (سنة+)",
+        "لا يمكن الوصول إليه أو معلومات اتصال مزيفة",
+        "لا يعرف ما يريد إطلاقاً"
       ]
     }
   },
   "faq": {
-    "section_title": "❓ Frequently Asked Questions",
+    "section_title": "❓ الأسئلة الشائعة",
     "q1": {
-      "question": "How many leads can I bring?",
-      "answer": "Unlimited! The more you bring, the more you earn."
+      "question": "كم عميل محتمل يمكنني إحضاره؟",
+      "answer": "بلا حدود! كلما أحضرت أكثر، كسبت أكثر."
     },
     "q2": {
-      "question": "Do I need a real estate license?",
-      "answer": "No! The program is open to everyone."
+      "question": "هل أحتاج رخصة عقارية؟",
+      "answer": "لا! البرنامج مفتوح للجميع."
     },
     "q3": {
-      "question": "When do I get paid?",
-      "answer_intro": "45-60 days after contract signing."
+      "question": "متى أحصل على المال؟",
+      "answer_intro": "45-60 يوماً بعد توقيع العقد."
     },
     "q4": {
-      "question": "Can I sponsor other referrers?",
-      "answer_part1": "Yes! Contact us at",
+      "question": "هل يمكنني رعاية وسطاء آخرين؟",
+      "answer_part1": "نعم! تواصل معنا على",
       "email": "contact@real-estate-referrer.com"
     },
     "q5": {
-      "question": "What happens if the client doesn't buy?",
-      "answer": "No problem! You don't lose anything."
+      "question": "ماذا يحدث إذا لم يشترِ العميل؟",
+      "answer": "لا مشكلة! لن تخسر شيئاً."
     },
     "q6": {
-      "question": "Why do buyers earn more?",
-      "answer": "Buyers are the most valuable leads as they generate larger transactions. That's why we offer 25% instead of 20% to encourage this type of lead."
+      "question": "لماذا المشترون يكسبون أكثر؟",
+      "answer": "المشترون هم أثمن العملاء لأنهم يولدون صفقات أكبر. لهذا نقدم 25% بدلاً من 20% لتشجيع هذا النوع من العملاء."
     }
   },
   "cta": {
-    "title": "Ready to Start?",
-    "subtitle_part1": "Sign up now and start earning commissions today",
-    "button_signup": "Let's Go! 🚀"
+    "title": "مستعد للبدء؟",
+    "subtitle_part1": "سجّل الآن وابدأ بكسب العمولات اليوم",
+    "button_signup": "هيا بنا! 🚀"
   },
   "footer": {
-    "copyright": "All rights reserved.",
-    "navigation_home": "Home",
-    "navigation_how": "How it Works"
+    "copyright": "جميع الحقوق محفوظة.",
+    "navigation_home": "الرئيسية",
+    "navigation_how": "كيف يعمل"
   }
 }
