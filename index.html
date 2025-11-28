@@ -805,6 +805,24 @@
                                 }
                                 
                                 console.log('✅ Profile updated successfully with contract_path:', fileName);
+                                // ✅ Envoyer notification email à l'admin
+                                try {
+                                    console.log('📧 Sending email notification...');
+                                    const { data: emailData, error: emailError } = await supabase.functions.invoke('send-email-notification', {
+                                        body: {
+                                            referrerName: userProfile.name || 'Inconnu',
+                                            referrerEmail: currentUser.email,
+                                            contractPath: fileName
+                                        }
+                                    });
+                                    if (emailError) {
+                                        console.error('❌ Email notification error:', emailError);
+                                    } else {
+                                        console.log('✅ Email notification sent:', emailData);
+                                    }
+                                } catch (emailErr) {
+                                    console.error('❌ Email notification exception:', emailErr);
+                                }
                                 
                                 alert('✅ Contrat uploadé avec succès !');
                                 await loadUserProfile();
