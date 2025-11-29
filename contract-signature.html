@@ -399,14 +399,26 @@
                 // ✅ Envoyer notification email à l'admin AVANT la redirection
                 console.log('📧 Sending email notification...');
                 try {
+                    const session = await supabase.auth.getSession();
+                    const token = session.data.session?.access_token;
+                    
+                    // Récupérer le nom depuis le profil
+                    const { data: profileData } = await supabase
+                        .from('profiles')
+                        .select('name')
+                        .eq('id', currentUser.id)
+                        .single();
+                    
+                    const referrerName = profileData?.name || currentUser.user_metadata?.name || 'Nouvel apporteur';
+                    
                     const response = await fetch('https://cgizcgwhwxswvoodqver.supabase.co/functions/v1/send-email-notification', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`
+                            'Authorization': 'Bearer ' + token
                         },
                         body: JSON.stringify({
-                            referrerName: currentUser.user_metadata?.name || 'Nouvel apporteur',
+                            referrerName: referrerName,
                             referrerEmail: currentUser.email,
                             contractPath: fileName
                         })
