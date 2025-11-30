@@ -345,7 +345,7 @@ export async function handle2FASubmit(e) {
         // =====================================================
         // ✅ MESSAGE DE SUCCÈS TRADUIT
         // =====================================================
-        const successMessage = i18next?.t('auth:two_factor.account_created') || '✅ Compte créé avec succès !';
+        const successMessage = i18next?.t('auth:two_factor.success') || '✅ Compte créé avec succès !';
         alert(successMessage);
         
         // Auto-login
