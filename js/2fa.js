@@ -1,6 +1,7 @@
 // =====================================================
 // 2FA MODULE - Vérification SMS avec Spinner
-// Version: 2.3.1 - 30 novembre 2025
+// Version: 2.3.2 - 30 novembre 2025
+// CORRIGÉ: Utilise Edge Function Supabase (pas d'appel direct Itooki)
 // =====================================================
 
 // Fonction pour vérifier si un numéro de téléphone existe déjà
@@ -32,35 +33,24 @@ export async function checkPhoneExists(phone) {
     }
 }
 
-// Fonction pour envoyer le code 2FA via Itooki
+// =====================================================
+// FONCTION ENVOI SMS VIA EDGE FUNCTION SUPABASE
+// =====================================================
 export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) {
     console.log('📱 Sending 2FA code to:', phone);
     
-    // Messages selon la langue
-    const messages = {
-        fr: 'Votre code de vérification Real Estate Referrer est: ',
-        en: 'Your Real Estate Referrer verification code is: ',
-        ar: 'رمز التحقق الخاص بك هو: ',
-        ru: 'Ваш код подтверждения: ',
-        hi: 'आपका सत्यापन कोड है: ',
-        ur: 'آپ کا تصدیقی کوڈ ہے: ',
-        zh: '您的验证码是: ',
-        tl: 'Ang iyong verification code ay: '
-    };
-    
-    const message = messages[lang] || messages['fr'];
-    
-    // Générer un code à 6 chiffres
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log('🔢 Generated code:', code);
+    const supabase = window.supabase;
+    const SUPABASE_URL = window.SUPABASE_URL;
     
     try {
-        // Sauvegarder le pending signup avec le code
+        // ✅ ÉTAPE 1: Sauvegarder le pending signup
         if (pendingSignupData) {
             console.log('💾 Saving pending signup data...');
             
-            // Vérifier si un pending signup existe déjà pour ce téléphone
-            const { data: existing } = await window.supabase
+            const expiresAt = new Date();
+            expiresAt.setMinutes(expiresAt.getMinutes() + 10);
+            
+            const { data: existing } = await supabase
                 .from('pending_signups')
                 .select('id, attempts, last_attempt')
                 .eq('phone', phone)
@@ -77,120 +67,138 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
                     throw new Error(`Trop de tentatives. Veuillez attendre ${waitMinutes} minutes.`);
                 }
                 
-                // Reset les tentatives si plus d'une heure
                 const newAttempts = lastAttempt > hourAgo ? existing.attempts + 1 : 1;
                 
-                // Mettre à jour le pending signup existant
-                const { error: updateError } = await window.supabase
+                const { error: updateError } = await supabase
                     .from('pending_signups')
                     .update({
                         email: pendingSignupData.email,
                         password: pendingSignupData.password,
                         name: pendingSignupData.name,
-                        verification_code: code,
                         attempts: newAttempts,
                         last_attempt: new Date().toISOString(),
-                        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 min
+                        expires_at: expiresAt.toISOString()
                     })
                     .eq('id', existing.id);
                 
                 if (updateError) {
                     console.error('❌ Error updating pending signup:', updateError);
-                    throw updateError;
+                } else {
+                    console.log('✅ Pending signup updated');
+                    window.pendingSignupId = existing.id;
                 }
-                
-                window.pendingSignupId = existing.id;
             } else {
-                // Créer un nouveau pending signup
-                const { data: newPending, error: insertError } = await window.supabase
+                const { data: newPending, error: insertError } = await supabase
                     .from('pending_signups')
                     .insert({
                         phone: phone,
                         email: pendingSignupData.email,
                         password: pendingSignupData.password,
                         name: pendingSignupData.name,
-                        verification_code: code,
                         attempts: 1,
                         last_attempt: new Date().toISOString(),
-                        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 min
+                        expires_at: expiresAt.toISOString()
                     })
                     .select()
                     .single();
                 
                 if (insertError) {
                     console.error('❌ Error creating pending signup:', insertError);
-                    throw insertError;
+                } else {
+                    console.log('✅ Pending signup saved with ID:', newPending.id);
+                    window.pendingSignupId = newPending.id;
                 }
-                
-                window.pendingSignupId = newPending.id;
             }
-            
-            console.log('✅ Pending signup saved/updated');
         }
         
-        // Appeler l'API Itooki pour envoyer le SMS
-        const itookiUrl = 'https://www.itooki.fr/http.php';
-        const params = new URLSearchParams({
-            email: 'karyne.declercq@icloud.com',
-            pass: 'Paris97440',
-            numero: phone.replace('+', ''),
-            message: message + code,
-            expediteur: 'RealEstate'
+        // ✅ ÉTAPE 2: Appeler l'Edge Function Supabase (pas d'appel direct à Itooki)
+        console.log('📞 Calling Edge Function send-2fa-code...');
+        
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                phone: phone,
+                language: lang
+            })
         });
         
-        console.log('📤 Sending SMS via Itooki...');
-        const response = await fetch(`${itookiUrl}?${params.toString()}`);
-        const result = await response.text();
-        console.log('📥 Itooki response:', result);
+        const result = await response.json();
         
-        if (result.includes('KO') || result.includes('error')) {
-            throw new Error('Erreur lors de l\'envoi du SMS');
+        if (!response.ok) {
+            console.error('❌ SMS send error:', result);
+            
+            // Gestion des erreurs de rate limiting
+            if (result.error && result.error.includes('wait')) {
+                throw new Error(result.error);
+            }
+            if (result.error && result.error.includes('maximum')) {
+                throw new Error(result.error);
+            }
+            
+            throw new Error(result.error || 'Erreur envoi SMS');
         }
         
-        console.log('✅ SMS sent successfully');
-        return { success: true, code: code };
+        console.log('✅ SMS code sent successfully');
+        console.log('⏰ Code expires at:', result.expiresAt);
+        return { success: true, expiresAt: result.expiresAt };
         
     } catch (error) {
-        console.error('❌ Error sending 2FA code:', error);
+        console.error('❌ Erreur send2FACode:', error);
         throw error;
     }
 }
 
-// Fonction pour vérifier le code 2FA
+// =====================================================
+// FONCTION VÉRIFICATION DU CODE
+// =====================================================
 export async function verify2FACode(phone, code) {
     console.log('🔐 Verifying 2FA code for:', phone);
     
+    const supabase = window.supabase;
+    const SUPABASE_URL = window.SUPABASE_URL;
+    
     try {
-        // Récupérer le pending signup
-        const { data: pending, error } = await window.supabase
+        // Appeler l'Edge Function pour vérifier le code
+        console.log('📞 Calling Edge Function verify-2fa-code...');
+        
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/verify-2fa-code`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ 
+                phone: phone,
+                code: code
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (!response.ok || !result.success) {
+            console.error('❌ Code verification failed:', result);
+            return { 
+                success: false, 
+                error: result.error || 'Code invalide ou expiré' 
+            };
+        }
+        
+        console.log('✅ Code verified successfully');
+        
+        // Récupérer les données du pending signup
+        const { data: pending, error: fetchError } = await supabase
             .from('pending_signups')
             .select('*')
             .eq('phone', phone)
             .maybeSingle();
         
-        if (error) {
-            console.error('❌ Error fetching pending signup:', error);
-            return { success: false, error: 'Erreur de vérification' };
+        if (fetchError || !pending) {
+            console.error('❌ Could not fetch pending signup:', fetchError);
+            return { success: false, error: 'Données d\'inscription non trouvées' };
         }
         
-        if (!pending) {
-            console.error('❌ No pending signup found for phone:', phone);
-            return { success: false, error: 'Aucune inscription en attente' };
-        }
-        
-        // Vérifier l'expiration
-        if (new Date(pending.expires_at) < new Date()) {
-            console.error('❌ Code expired');
-            return { success: false, error: 'Code expiré. Veuillez en demander un nouveau.' };
-        }
-        
-        // Vérifier le code
-        if (pending.verification_code !== code) {
-            console.error('❌ Invalid code');
-            return { success: false, error: 'Code invalide' };
-        }
-        
-        console.log('✅ Code verified successfully');
         return { 
             success: true, 
             pendingData: pending 
@@ -341,13 +349,11 @@ export async function handle2FASubmit(e) {
         
         if (loginError) {
             console.error('❌ Auto-login failed:', loginError);
-            // Rediriger vers la page de connexion
             if (window.showLogin) {
                 window.showLogin();
             }
         } else {
             console.log('✅ Auto-login successful');
-            // Le onAuthStateChange va gérer la suite
         }
         
     } catch (error) {
@@ -374,7 +380,9 @@ export async function handle2FASubmit(e) {
     }
 }
 
-// Fonction pour renvoyer le code 2FA
+// =====================================================
+// FONCTION RENVOYER LE CODE
+// =====================================================
 export async function resend2FACode() {
     console.log('🔄 Resending 2FA code...');
     
@@ -407,7 +415,7 @@ export async function resend2FACode() {
             throw new Error('Données d\'inscription non trouvées. Veuillez recommencer.');
         }
         
-        // Renvoyer le code
+        // Renvoyer le code via Edge Function
         const result = await send2FACode(phone, currentLang, {
             email: pending.email,
             password: pending.password,
@@ -421,7 +429,6 @@ export async function resend2FACode() {
     } catch (error) {
         console.error('❌ Error resending code:', error);
         
-        // Messages d'erreur spécifiques pour le rate limiting
         if (error.message.includes('wait') || error.message.includes('attendre')) {
             alert(error.message);
         } else if (error.message.includes('maximum')) {
