@@ -1,7 +1,7 @@
 // =====================================================
 // 2FA MODULE - Vérification SMS avec Spinner
-// Version: 2.3.2 - 30 novembre 2025
-// CORRIGÉ: Utilise Edge Function Supabase (pas d'appel direct Itooki)
+// Version: 2.3.3 - 30 novembre 2025
+// CORRIGÉ: Vérification code via BDD (pas Edge Function verify)
 // =====================================================
 
 // Fonction pour vérifier si un numéro de téléphone existe déjà
@@ -111,7 +111,7 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
             }
         }
         
-        // ✅ ÉTAPE 2: Appeler l'Edge Function Supabase (pas d'appel direct à Itooki)
+        // ✅ ÉTAPE 2: Appeler l'Edge Function Supabase pour envoyer le SMS
         console.log('📞 Calling Edge Function send-2fa-code...');
         
         const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
@@ -130,7 +130,6 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
         if (!response.ok) {
             console.error('❌ SMS send error:', result);
             
-            // Gestion des erreurs de rate limiting
             if (result.error && result.error.includes('wait')) {
                 throw new Error(result.error);
             }
@@ -152,40 +151,43 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
 }
 
 // =====================================================
-// FONCTION VÉRIFICATION DU CODE
+// FONCTION VÉRIFICATION DU CODE - VIA BASE DE DONNÉES
 // =====================================================
 export async function verify2FACode(phone, code) {
     console.log('🔐 Verifying 2FA code for:', phone);
     
     const supabase = window.supabase;
-    const SUPABASE_URL = window.SUPABASE_URL;
     
     try {
-        // Appeler l'Edge Function pour vérifier le code
-        console.log('📞 Calling Edge Function verify-2fa-code...');
+        // ✅ Vérifier le code dans la table verification_codes
+        console.log('🔍 Checking code in verification_codes table...');
         
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/verify-2fa-code`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                phone: phone,
-                code: code
-            })
-        });
+        const { data: verificationData, error: verificationError } = await supabase
+            .from('verification_codes')
+            .select('*')
+            .eq('phone', phone)
+            .eq('code', code)
+            .eq('verified', false)
+            .gte('expires_at', new Date().toISOString())
+            .maybeSingle();
         
-        const result = await response.json();
-        
-        if (!response.ok || !result.success) {
-            console.error('❌ Code verification failed:', result);
-            return { 
-                success: false, 
-                error: result.error || 'Code invalide ou expiré' 
-            };
+        if (verificationError) {
+            console.error('❌ Error checking verification code:', verificationError);
+            return { success: false, error: 'Erreur de vérification' };
         }
         
-        console.log('✅ Code verified successfully');
+        if (!verificationData) {
+            console.error('❌ Code not found or expired');
+            return { success: false, error: 'Code invalide ou expiré' };
+        }
+        
+        console.log('✅ Code found and valid!');
+        
+        // Marquer le code comme vérifié
+        await supabase
+            .from('verification_codes')
+            .update({ verified: true })
+            .eq('id', verificationData.id);
         
         // Récupérer les données du pending signup
         const { data: pending, error: fetchError } = await supabase
@@ -243,7 +245,7 @@ export async function handle2FASubmit(e) {
     const originalContent = submitBtn.innerHTML;
     submitBtn.disabled = true;
     submitBtn.innerHTML = `
-        <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-gray-900 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
@@ -266,7 +268,7 @@ export async function handle2FASubmit(e) {
         
         console.log('🔐 Verifying code for phone:', phone);
         
-        // Vérifier le code
+        // Vérifier le code dans la BDD
         const verifyResult = await verify2FACode(phone, code);
         
         if (!verifyResult.success) {
@@ -386,7 +388,7 @@ export async function handle2FASubmit(e) {
 export async function resend2FACode() {
     console.log('🔄 Resending 2FA code...');
     
-    const resendBtn = document.querySelector('[onclick*="resend2FACode"]') || document.getElementById('resendBtn');
+    const resendBtn = document.getElementById('resendBtn');
     const originalText = resendBtn?.textContent || 'Renvoyer le code';
     
     try {
