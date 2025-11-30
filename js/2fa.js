@@ -228,22 +228,13 @@ export async function handle2FASubmit(e) {
         return;
     }
     
-    const code = codeInput.value.trim();
-    
-    // Validation du format
-    if (!/^\d{6}$/.test(code)) {
-        if (errorDiv) {
-            errorDiv.textContent = i18next?.t('auth:two_factor.code_format_error') || 'Le code doit contenir exactement 6 chiffres';
-            errorDiv.classList.remove('hidden');
-        }
-        return;
-    }
-    
     // =====================================================
-    // ✅ SPINNER - DÉBUT
+    // ✅ FEEDBACK IMMÉDIAT - Griser le bouton TOUT DE SUITE
     // =====================================================
     const originalContent = submitBtn.innerHTML;
     submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+    submitBtn.style.cursor = 'wait';
     submitBtn.innerHTML = `
         <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-gray-900 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -252,11 +243,26 @@ export async function handle2FASubmit(e) {
         ${i18next?.t('auth:two_factor.verifying') || 'Vérification...'}
     `;
     // =====================================================
-    // ✅ SPINNER - FIN
-    // =====================================================
     
     if (errorDiv) {
         errorDiv.classList.add('hidden');
+    }
+    
+    const code = codeInput.value.trim();
+    
+    // Validation du format
+    if (!/^\d{6}$/.test(code)) {
+        // Restaurer le bouton si erreur de validation
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
+        submitBtn.innerHTML = originalContent;
+        
+        if (errorDiv) {
+            errorDiv.textContent = i18next?.t('auth:two_factor.code_format_error') || 'Le code doit contenir exactement 6 chiffres';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
     }
     
     try {
@@ -365,6 +371,8 @@ export async function handle2FASubmit(e) {
         // ✅ RESTAURER LE BOUTON EN CAS D'ERREUR
         // =====================================================
         submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
         submitBtn.innerHTML = originalContent;
         
         if (errorDiv) {
