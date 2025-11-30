@@ -1,446 +1,446 @@
-// ============================================
-// AUTHENTIFICATION 2FA (SMS)
-// Real Estate Referrer - Dubai
-// Version 3.1 - CORRECTIF ERREURS CONSOLE
-// Date: 24 novembre 2025
-// ============================================
+// =====================================================
+// 2FA MODULE - Vérification SMS avec Spinner
+// Version: 2.3.1 - 30 novembre 2025
+// =====================================================
 
-// ✅ Vérifier si un numéro de téléphone existe déjà (VERSION CORRIGÉE)
+// Fonction pour vérifier si un numéro de téléphone existe déjà
 export async function checkPhoneExists(phone) {
-    const supabase = window.supabase;
+    console.log('🔍 Checking if phone exists:', phone);
     
     try {
-        // Nettoyer le numéro (enlever espaces, tirets, etc.)
-        const cleanPhone = phone.replace(/[\s\-\(\)]/g, '');
-        
-        // ✅ Requête simplifiée qui ne génère pas d'erreur 406
-        const { data, error } = await supabase
+        const { data, error } = await window.supabase
             .from('profiles')
             .select('id, name')
-            .eq('phone', cleanPhone)
-            .maybeSingle(); // ✅ maybeSingle() au lieu de single() - pas d'erreur si vide
+            .eq('phone', phone)
+            .maybeSingle();
         
-        // Si erreur de permissions ou autre, on retourne "n'existe pas" pour ne pas bloquer
-        if (error) {
-            console.warn('⚠️ Could not check phone (this is OK):', error.message);
+        if (error && error.code !== 'PGRST116') {
+            console.error('❌ Error checking phone:', error);
             return { exists: false };
         }
         
-        // Si data existe, le téléphone est déjà utilisé
         if (data) {
-            console.log('📱 Phone already exists in database');
+            console.log('⚠️ Phone already exists for user:', data.name);
             return { exists: true, userName: data.name };
         }
         
-        // Téléphone disponible
-        console.log('✅ Phone available');
+        console.log('✅ Phone is available');
         return { exists: false };
-        
     } catch (err) {
-        console.warn('⚠️ Exception checking phone (continuing anyway):', err.message);
-        // En cas d'erreur, on retourne "n'existe pas" pour ne pas bloquer l'inscription
+        console.error('❌ Exception checking phone:', err);
         return { exists: false };
     }
 }
 
-// ✅ FONCTION CORRIGÉE : Envoyer un code 2FA avec upsert au lieu de insert
-export async function send2FACode(phone, language = 'fr', pendingSignupData = null) {
-    const SUPABASE_URL = window.SUPABASE_URL || 'https://cgizcgwhwxswvoodqver.supabase.co';
+// Fonction pour envoyer le code 2FA via Itooki
+export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) {
+    console.log('📱 Sending 2FA code to:', phone);
+    
+    // Messages selon la langue
+    const messages = {
+        fr: 'Votre code de vérification Real Estate Referrer est: ',
+        en: 'Your Real Estate Referrer verification code is: ',
+        ar: 'رمز التحقق الخاص بك هو: ',
+        ru: 'Ваш код подтверждения: ',
+        hi: 'आपका सत्यापन कोड है: ',
+        ur: 'آپ کا تصدیقی کوڈ ہے: ',
+        zh: '您的验证码是: ',
+        tl: 'Ang iyong verification code ay: '
+    };
+    
+    const message = messages[lang] || messages['fr'];
+    
+    // Générer un code à 6 chiffres
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log('🔢 Generated code:', code);
     
     try {
-        console.log('📱 Sending 2FA code via SMS to:', phone, 'language:', language);
-        
-        // ✅ Si c'est pour une inscription, sauvegarder les données temporaires
+        // Sauvegarder le pending signup avec le code
         if (pendingSignupData) {
-            const supabase = window.supabase;
-            const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString(); // 30 minutes
-            
             console.log('💾 Saving pending signup data...');
             
-            // ✅ UPSERT au lieu de INSERT pour éviter erreur 409
-            const { data, error } = await supabase
+            // Vérifier si un pending signup existe déjà pour ce téléphone
+            const { data: existing } = await window.supabase
                 .from('pending_signups')
-                .upsert([{
-                    email: pendingSignupData.email,
-                    password: pendingSignupData.password,
-                    name: pendingSignupData.name,
-                    phone: phone,
-                    expires_at: expiresAt
-                }], {
-                    onConflict: 'phone', // Si le téléphone existe déjà, UPDATE au lieu de INSERT
-                    ignoreDuplicates: false
-                })
-                .select()
-                .single();
+                .select('id, attempts, last_attempt')
+                .eq('phone', phone)
+                .maybeSingle();
             
-            if (error) {
-                console.error('❌ Error saving pending signup:', error);
-                // ⚠️ Ne pas bloquer le flux - le SMS peut quand même être envoyé
-                console.warn('⚠️ Continuing despite pending_signup error...');
+            if (existing) {
+                // Vérifier le rate limiting (max 5 tentatives par heure)
+                const lastAttempt = new Date(existing.last_attempt);
+                const now = new Date();
+                const hourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+                
+                if (lastAttempt > hourAgo && existing.attempts >= 5) {
+                    const waitMinutes = Math.ceil((lastAttempt.getTime() + 60 * 60 * 1000 - now.getTime()) / 60000);
+                    throw new Error(`Trop de tentatives. Veuillez attendre ${waitMinutes} minutes.`);
+                }
+                
+                // Reset les tentatives si plus d'une heure
+                const newAttempts = lastAttempt > hourAgo ? existing.attempts + 1 : 1;
+                
+                // Mettre à jour le pending signup existant
+                const { error: updateError } = await window.supabase
+                    .from('pending_signups')
+                    .update({
+                        email: pendingSignupData.email,
+                        password: pendingSignupData.password,
+                        name: pendingSignupData.name,
+                        verification_code: code,
+                        attempts: newAttempts,
+                        last_attempt: new Date().toISOString(),
+                        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 min
+                    })
+                    .eq('id', existing.id);
+                
+                if (updateError) {
+                    console.error('❌ Error updating pending signup:', updateError);
+                    throw updateError;
+                }
+                
+                window.pendingSignupId = existing.id;
             } else {
-                console.log('✅ Pending signup saved/updated with ID:', data.id);
-                window.pendingSignupId = data.id;
+                // Créer un nouveau pending signup
+                const { data: newPending, error: insertError } = await window.supabase
+                    .from('pending_signups')
+                    .insert({
+                        phone: phone,
+                        email: pendingSignupData.email,
+                        password: pendingSignupData.password,
+                        name: pendingSignupData.name,
+                        verification_code: code,
+                        attempts: 1,
+                        last_attempt: new Date().toISOString(),
+                        expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 min
+                    })
+                    .select()
+                    .single();
+                
+                if (insertError) {
+                    console.error('❌ Error creating pending signup:', insertError);
+                    throw insertError;
+                }
+                
+                window.pendingSignupId = newPending.id;
             }
+            
+            console.log('✅ Pending signup saved/updated');
         }
         
-        // ✅ Appel de la fonction Edge (publique, pas de JWT requis)
-        console.log('📞 Calling Edge Function send-2fa-code...');
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/send-2fa-code`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ 
-                phone: phone,
-                language: language
-            })
+        // Appeler l'API Itooki pour envoyer le SMS
+        const itookiUrl = 'https://www.itooki.fr/http.php';
+        const params = new URLSearchParams({
+            email: 'karyne.declercq@icloud.com',
+            pass: 'Paris97440',
+            numero: phone.replace('+', ''),
+            message: message + code,
+            expediteur: 'RealEstate'
         });
         
-        const result = await response.json();
+        console.log('📤 Sending SMS via Itooki...');
+        const response = await fetch(`${itookiUrl}?${params.toString()}`);
+        const result = await response.text();
+        console.log('📥 Itooki response:', result);
         
-        if (!response.ok) {
-            console.error('❌ SMS send error:', result);
-            
-            // Gestion des erreurs de rate limiting
-            if (result.error && result.error.includes('wait')) {
-                throw new Error(result.error);
-            }
-            if (result.error && result.error.includes('maximum')) {
-                throw new Error(result.error);
-            }
-            
-            throw new Error(result.error || 'Erreur envoi SMS');
+        if (result.includes('KO') || result.includes('error')) {
+            throw new Error('Erreur lors de l\'envoi du SMS');
         }
         
-        console.log('✅ SMS code sent successfully');
-        console.log('⏰ Code expires at:', result.expiresAt);
-        return { success: true, expiresAt: result.expiresAt };
+        console.log('✅ SMS sent successfully');
+        return { success: true, code: code };
         
     } catch (error) {
-        console.error('❌ Erreur send2FACode:', error);
+        console.error('❌ Error sending 2FA code:', error);
         throw error;
     }
 }
 
-// ✅ FONCTION SIMPLIFIÉE : Vérifier code ET créer le compte
-export async function verify2FACode(code, phone) {
-    const supabase = window.supabase;
+// Fonction pour vérifier le code 2FA
+export async function verify2FACode(phone, code) {
+    console.log('🔐 Verifying 2FA code for:', phone);
     
     try {
-        console.log('🔍 Verifying 2FA code for phone:', phone);
-        
-        // 1. Vérifier le code
-        const { data: codeData, error: codeError } = await supabase
-            .from('verification_codes')
+        // Récupérer le pending signup
+        const { data: pending, error } = await window.supabase
+            .from('pending_signups')
             .select('*')
             .eq('phone', phone)
-            .eq('code', code)
-            .eq('used', false)
-            .eq('verified', false)
-            .gt('expires_at', new Date().toISOString())
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single();
+            .maybeSingle();
         
-        if (codeError || !codeData) {
-            console.log('❌ Code not found or invalid');
-            
-            // Incrémenter le compteur de tentatives (silencieux si erreur)
-            try {
-                const { data: currentCodes } = await supabase
-                    .from('verification_codes')
-                    .select('id, attempts')
-                    .eq('phone', phone)
-                    .eq('used', false)
-                    .order('created_at', { ascending: false })
-                    .limit(1)
-                    .single();
-                
-                if (currentCodes) {
-                    await supabase
-                        .from('verification_codes')
-                        .update({ attempts: (currentCodes.attempts || 0) + 1 })
-                        .eq('id', currentCodes.id);
-                }
-            } catch (e) {
-                // Ignorer les erreurs de compteur
-                console.warn('⚠️ Could not update attempt counter:', e);
-            }
-            
-            return { success: false, error: 'Code invalide ou expiré' };
+        if (error) {
+            console.error('❌ Error fetching pending signup:', error);
+            return { success: false, error: 'Erreur de vérification' };
         }
         
-        console.log('✅ Code validated');
-        
-        // 2. Récupérer le pending_signup (optionnel - peut ne pas exister)
-        let pendingSignup = null;
-        try {
-            const { data, error } = await supabase
-                .from('pending_signups')
-                .select('*')
-                .eq('phone', phone)
-                .order('created_at', { ascending: false })
-                .limit(1)
-                .single();
-            
-            if (!error && data) {
-                pendingSignup = data;
-                console.log('✅ Pending signup found:', pendingSignup);
-            }
-        } catch (e) {
-            console.warn('⚠️ No pending signup found (this is OK if already signed up)');
+        if (!pending) {
+            console.error('❌ No pending signup found for phone:', phone);
+            return { success: false, error: 'Aucune inscription en attente' };
         }
         
-        if (!pendingSignup) {
-            console.log('❌ No pending signup - user might be trying to login instead');
-            return { success: false, error: 'Aucune inscription en attente trouvée' };
+        // Vérifier l'expiration
+        if (new Date(pending.expires_at) < new Date()) {
+            console.error('❌ Code expired');
+            return { success: false, error: 'Code expiré. Veuillez en demander un nouveau.' };
         }
         
-        // 3. Créer le compte Supabase
-        console.log('📝 Creating Supabase account...');
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-            email: pendingSignup.email,
-            password: pendingSignup.password,
+        // Vérifier le code
+        if (pending.verification_code !== code) {
+            console.error('❌ Invalid code');
+            return { success: false, error: 'Code invalide' };
+        }
+        
+        console.log('✅ Code verified successfully');
+        return { 
+            success: true, 
+            pendingData: pending 
+        };
+        
+    } catch (error) {
+        console.error('❌ Exception verifying code:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// =====================================================
+// HANDLER 2FA SUBMIT - AVEC SPINNER
+// =====================================================
+export async function handle2FASubmit(e) {
+    e.preventDefault();
+    console.log('📱 2FA form submitted');
+    
+    const codeInput = document.getElementById('code2fa');
+    const errorDiv = document.getElementById('error2fa');
+    const submitBtn = document.getElementById('verify2faBtn');
+    
+    if (!codeInput || !submitBtn) {
+        console.error('❌ Required elements not found');
+        return;
+    }
+    
+    const code = codeInput.value.trim();
+    
+    // Validation du format
+    if (!/^\d{6}$/.test(code)) {
+        if (errorDiv) {
+            errorDiv.textContent = i18next?.t('auth:two_factor.code_format_error') || 'Le code doit contenir exactement 6 chiffres';
+            errorDiv.classList.remove('hidden');
+        }
+        return;
+    }
+    
+    // =====================================================
+    // ✅ SPINNER - DÉBUT
+    // =====================================================
+    const originalContent = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        ${i18next?.t('auth:two_factor.verifying') || 'Vérification...'}
+    `;
+    // =====================================================
+    // ✅ SPINNER - FIN
+    // =====================================================
+    
+    if (errorDiv) {
+        errorDiv.classList.add('hidden');
+    }
+    
+    try {
+        const phone = window.tempPhone;
+        
+        if (!phone) {
+            throw new Error('Numéro de téléphone non trouvé');
+        }
+        
+        console.log('🔐 Verifying code for phone:', phone);
+        
+        // Vérifier le code
+        const verifyResult = await verify2FACode(phone, code);
+        
+        if (!verifyResult.success) {
+            throw new Error(verifyResult.error || 'Code invalide ou expiré');
+        }
+        
+        console.log('✅ Code verified, creating account...');
+        
+        const pendingData = verifyResult.pendingData;
+        
+        // Créer le compte Supabase
+        const { data: signUpData, error: signUpError } = await window.supabase.auth.signUp({
+            email: pendingData.email,
+            password: pendingData.password,
             options: {
-                data: { 
-                    name: pendingSignup.name, 
-                    phone: phone 
-                }
+                data: {
+                    name: pendingData.name,
+                    phone: phone
+                },
+                emailRedirectTo: window.location.origin
             }
         });
         
         if (signUpError) {
-            console.error('❌ Error creating account:', signUpError);
-            
-            // Si l'utilisateur existe déjà, essayer de se connecter
-            if (signUpError.message.includes('already registered')) {
-                console.log('🔄 User already exists, attempting login...');
-                const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-                    email: pendingSignup.email,
-                    password: pendingSignup.password
-                });
-                
-                if (signInError) {
-                    throw new Error('Compte déjà existant. Veuillez vous connecter.');
-                }
-                
-                // Marquer le code comme utilisé
-                await supabase
-                    .from('verification_codes')
-                    .update({ 
-                        used: true,
-                        verified: true,
-                        user_id: signInData.user.id
-                    })
-                    .eq('id', codeData.id);
-                
-                // Nettoyer pending_signup
-                await supabase
-                    .from('pending_signups')
-                    .delete()
-                    .eq('id', pendingSignup.id);
-                
-                return { 
-                    success: true, 
-                    user: signInData.user,
-                    session: signInData.session,
-                    message: 'Connexion réussie'
-                };
-            }
-            
+            console.error('❌ Signup error:', signUpError);
             throw signUpError;
         }
         
-        console.log('✅ Account created successfully');
-        const userId = signUpData.user.id;
+        console.log('✅ Account created successfully:', signUpData);
         
-        // 4. Créer le profil (avec gestion d'erreur silencieuse si déjà créé par trigger)
-        console.log('📝 Creating user profile...');
-        try {
-            const { error: profileError } = await supabase
+        // Mettre à jour le profil avec phone_verified = true
+        if (signUpData.user) {
+            const { error: profileError } = await window.supabase
                 .from('profiles')
                 .upsert({
-                    id: userId,
-                    name: pendingSignup.name,
+                    id: signUpData.user.id,
+                    name: pendingData.name,
                     phone: phone,
-                    email: pendingSignup.email,
+                    email: pendingData.email,
                     role: 'referrer',
-                    contract_status: 'pending',
-                    phone_verified: true
+                    phone_verified: true,
+                    contract_status: 'pending'
                 }, { onConflict: 'id' });
             
-            if (profileError && profileError.code !== '23505') {
-                console.warn('⚠️ Profile creation warning:', profileError);
-                // Ne pas bloquer si erreur de profil (peut-être créé par trigger)
+            if (profileError) {
+                console.error('❌ Profile update error:', profileError);
             } else {
-                console.log('✅ Profile created/updated');
+                console.log('✅ Profile updated with phone_verified = true');
             }
-        } catch (e) {
-            console.warn('⚠️ Profile might already exist:', e);
         }
         
-        // 5. Marquer le code comme utilisé
-        await supabase
-            .from('verification_codes')
-            .update({ 
-                used: true,
-                verified: true,
-                user_id: userId
-            })
-            .eq('id', codeData.id);
-        
-        console.log('✅ Verification code marked as used');
-        
-        // 6. Supprimer le pending_signup
-        await supabase
+        // Supprimer le pending signup
+        await window.supabase
             .from('pending_signups')
             .delete()
-            .eq('id', pendingSignup.id);
+            .eq('phone', phone);
         
-        console.log('✅ Pending signup cleaned up');
+        console.log('✅ Pending signup deleted');
         
-        // 7. Connexion automatique
+        // Reset le mode 2FA
+        if (window.setIs2FAMode) {
+            window.setIs2FAMode(false);
+        }
+        window.is2FAMode = false;
+        window.tempPhone = null;
+        window.pendingSignupId = null;
+        
+        // =====================================================
+        // ✅ MESSAGE DE SUCCÈS TRADUIT
+        // =====================================================
+        const successMessage = i18next?.t('auth:two_factor.account_created') || '✅ Compte créé avec succès !';
+        alert(successMessage);
+        
+        // Auto-login
         console.log('🔐 Auto-login after verification...');
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email: pendingSignup.email,
-            password: pendingSignup.password
+        const { data: loginData, error: loginError } = await window.supabase.auth.signInWithPassword({
+            email: pendingData.email,
+            password: pendingData.password
         });
         
-        if (signInError) {
-            console.error('❌ Error during auto-login:', signInError);
-            // Ne pas bloquer - l'utilisateur peut se connecter manuellement
-            console.warn('⚠️ Auto-login failed but account created. User can login manually.');
+        if (loginError) {
+            console.error('❌ Auto-login failed:', loginError);
+            // Rediriger vers la page de connexion
+            if (window.showLogin) {
+                window.showLogin();
+            }
         } else {
-            console.log('✅ User signed in successfully after 2FA');
+            console.log('✅ Auto-login successful');
+            // Le onAuthStateChange va gérer la suite
         }
-        
-        return { 
-            success: true, 
-            user: signInData?.user || signUpData.user,
-            session: signInData?.session,
-            message: 'Compte créé avec succès'
-        };
         
     } catch (error) {
-        console.error('❌ Error verify2FACode:', error);
-        return { 
-            success: false, 
-            error: error.message || 'Erreur lors de la vérification'
-        };
-    }
-}
-
-// ✅ Gérer la soumission du formulaire 2FA
-export async function handle2FASubmit(event) {
-    event.preventDefault();
-    
-    const code = document.getElementById('code2fa').value;
-    const submitBtn = event.target.querySelector('button[type="submit"]');
-    const codeInput = document.getElementById('code2fa');
-    const i18next = window.i18next;
-    
-    // Validation du format
-    if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
-        alert(i18next?.t('auth:two_factor.invalid_code') || 'Le code doit contenir exactement 6 chiffres');
-        return;
-    }
-    
-    // Désactiver le bouton pendant la vérification
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.textContent = i18next?.t('auth:two_factor.verifying') || 'Vérification...';
-    }
-    if (codeInput) {
-        codeInput.disabled = true;
-    }
-    
-    try {
-        console.log('🔍 Verifying 2FA code...');
+        console.error('❌ 2FA verification error:', error);
         
-        const tempPhone = window.tempPhone;
+        // =====================================================
+        // ✅ RESTAURER LE BOUTON EN CAS D'ERREUR
+        // =====================================================
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
         
-        if (!tempPhone) {
-            throw new Error('Numéro de téléphone manquant');
-        }
-        
-        const result = await verify2FACode(code, tempPhone);
-        
-        if (result.success) {
-            console.log('✅ 2FA code validated successfully, account created');
+        if (errorDiv) {
+            let errorMessage = error.message;
             
-            // Nettoyer les variables temporaires
-            delete window.tempPhone;
-            delete window.pendingSignupId;
-            if (window.setIs2FAMode) window.setIs2FAMode(false);
-            
-            // Message de succès
-            // Forcer l'utilisation de la langue actuelle
-            const currentLang = i18next?.language || localStorage.getItem('i18nextLng') || 'en';
-            const successMsg = i18next?.t('auth:two_factor.success') || (currentLang === 'fr' ? '✅ Compte créé avec succès !' : '✅ Account created successfully!');
-            alert(successMsg);
-            
-            // Le onAuthStateChange va gérer la redirection automatiquement
-            
-        } else {
-            console.error('❌ 2FA code validation failed:', result.error);
-            alert(result.error || (i18next?.t('auth:two_factor.invalid_or_expired') || 'Code invalide ou expiré. Veuillez réessayer.'));
-            
-            // Réactiver les champs
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = i18next?.t('auth:two_factor.verify_button') || 'Vérifier';
+            if (error.message.includes('Invalid') || error.message.includes('invalide')) {
+                errorMessage = i18next?.t('auth:two_factor.invalid_or_expired') || 'Code invalide ou expiré. Veuillez réessayer.';
+            } else if (error.message.includes('User already registered')) {
+                errorMessage = 'Cet email est déjà utilisé';
             }
-            if (codeInput) {
-                codeInput.disabled = false;
-                codeInput.value = '';
-                codeInput.focus();
-            }
-        }
-    } catch (error) {
-        console.error('❌ Error during 2FA verification:', error);
-        alert(i18next?.t('auth:two_factor.error') || 'Erreur lors de la vérification. Veuillez réessayer.');
-        
-        // Réactiver les champs
-        if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.textContent = i18next?.t('auth:two_factor.verify_button') || 'Vérifier';
-        }
-        if (codeInput) {
-            codeInput.disabled = false;
-            codeInput.value = '';
-            codeInput.focus();
+            
+            errorDiv.textContent = errorMessage;
+            errorDiv.classList.remove('hidden');
         }
     }
 }
 
-// ✅ Renvoyer le code 2FA
+// Fonction pour renvoyer le code 2FA
 export async function resend2FACode() {
-    const tempPhone = window.tempPhone;
-    const i18next = window.i18next;
+    console.log('🔄 Resending 2FA code...');
     
-    if (!tempPhone) {
-        console.error('❌ No phone available for resend');
-        alert(i18next?.t('auth:two_factor.no_phone') || 'Impossible de renvoyer le code. Veuillez recommencer l\'inscription.');
-        return;
-    }
+    const resendBtn = document.querySelector('[onclick*="resend2FACode"]') || document.getElementById('resendBtn');
+    const originalText = resendBtn?.textContent || 'Renvoyer le code';
     
     try {
+        const phone = window.tempPhone;
+        
+        if (!phone) {
+            throw new Error(i18next?.t('auth:two_factor.no_phone') || 'Impossible de renvoyer le code. Veuillez recommencer l\'inscription.');
+        }
+        
+        // Désactiver le bouton
+        if (resendBtn) {
+            resendBtn.disabled = true;
+            resendBtn.textContent = i18next?.t('auth:two_factor.sending') || 'Envoi...';
+        }
+        
         const currentLang = i18next?.language || 'fr';
-        const result = await send2FACode(tempPhone, currentLang);
+        
+        // Récupérer les données du pending signup
+        const { data: pending } = await window.supabase
+            .from('pending_signups')
+            .select('*')
+            .eq('phone', phone)
+            .maybeSingle();
+        
+        if (!pending) {
+            throw new Error('Données d\'inscription non trouvées. Veuillez recommencer.');
+        }
+        
+        // Renvoyer le code
+        const result = await send2FACode(phone, currentLang, {
+            email: pending.email,
+            password: pending.password,
+            name: pending.name
+        });
         
         if (result.success) {
             alert(i18next?.t('auth:two_factor.code_sent') || '✅ Code envoyé !');
         }
+        
     } catch (error) {
         console.error('❌ Error resending code:', error);
         
         // Messages d'erreur spécifiques pour le rate limiting
-        if (error.message.includes('wait')) {
+        if (error.message.includes('wait') || error.message.includes('attendre')) {
             alert(error.message);
         } else if (error.message.includes('maximum')) {
             alert(error.message);
         } else {
             alert(i18next?.t('auth:two_factor.resend_error') || 'Erreur lors du renvoi du code. Veuillez réessayer.');
         }
+    } finally {
+        // Réactiver le bouton
+        if (resendBtn) {
+            resendBtn.disabled = false;
+            resendBtn.textContent = originalText;
+        }
     }
 }
+
+// Exposer les fonctions globalement
+window.send2FACode = send2FACode;
+window.verify2FACode = verify2FACode;
+window.handle2FASubmit = handle2FASubmit;
+window.resend2FACode = resend2FACode;
+window.checkPhoneExists = checkPhoneExists;
