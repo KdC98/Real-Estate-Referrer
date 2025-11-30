@@ -6,10 +6,9 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.4.1 - Fix 2FA translations + back button
-// Date: 27 novembre 2025
+// Version: 3.4.2 - Fix 2FA form IDs (verify2faBtn, error2fa)
+// Date: 30 novembre 2025
 // ============================================
-
 /**
  * Génère le HTML de la landing page
  * @returns {string} HTML de la landing page
@@ -189,7 +188,6 @@ export function renderLandingPage() {
         </div>
     `;
 }
-
 /**
  * Génère le HTML des pages d'authentification
  * @param {string} mode - Mode: 'login', 'signup', 'reset', 'change-password', '2fa'
@@ -217,7 +215,7 @@ export function renderAuthPage(mode) {
         linkText = t('auth:back_to_login');
         linkAction = 'showLogin()';
     } 
-    // ✅ MODE 2FA - Vérification du code SMS (CORRIGÉ v3.4.1)
+    // ✅ MODE 2FA - Vérification du code SMS (CORRIGÉ v3.4.2 - IDs ajoutés)
     else if (mode === '2fa') {
         const tempPhone = window.tempPhone || '';
         const maskedPhone = tempPhone ? (tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4)) : '***';
@@ -309,6 +307,7 @@ export function renderAuthPage(mode) {
         
         const trans = twoFactorTranslations[currentLang] || twoFactorTranslations['en'];
         
+        // ✅ CORRIGÉ: Ajout des IDs verify2faBtn et error2fa
         return `
             <div class="min-h-screen flex items-center justify-center px-4">
                 <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
@@ -339,16 +338,23 @@ export function renderAuthPage(mode) {
                                 ${trans.code_help}
                             </p>
                         </div>
-                        <div id="authError" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg"></div>
+                        
+                        <!-- ✅ CORRIGÉ: ID changé de authError à error2fa -->
+                        <div id="error2fa" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg"></div>
+                        
+                        <!-- ✅ CORRIGÉ: Ajout de id="verify2faBtn" -->
                         <button 
                             type="submit" 
+                            id="verify2faBtn"
                             class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-3 rounded-lg transition transform hover:scale-105"
                         >
                             ${trans.verify_button}
                         </button>
+                        
                         <div class="text-center">
                             <button 
                                 type="button"
+                                id="resendBtn"
                                 onclick="window.resend2FACode()"
                                 class="text-yellow-500 hover:text-yellow-400 text-sm font-medium"
                             >
@@ -600,7 +606,6 @@ export function renderAuthPage(mode) {
         </div>
     `;
 }
-
 /**
  * Génère le HTML du dashboard (admin ou referrer)
  * @returns {string} HTML du dashboard
