@@ -155,8 +155,8 @@
         let isPasswordRecoveryMode = false;
         let is2FAMode = false;
         let isSignupInProgress = false;
-        let tempPhone = null;  // ✅ NOUVEAU: stocker le téléphone temporairement
-        let pendingSignupId = null;  // ✅ NOUVEAU: ID du pending_signup
+        let tempPhone = null;
+        let pendingSignupId = null;
         let globalIsUploading = false;
         let contractJustSigned = false;
 
@@ -167,7 +167,6 @@
         window.tempPhone = null;
         window.pendingSignupId = null;
         
-        // ✅ NOUVEAU: Fonctions setters
         window.setIs2FAMode = function(value) {
             is2FAMode = value;
             window.is2FAMode = value;
@@ -249,14 +248,13 @@
                         const countryCode = document.getElementById('countryCode').value;
                         const confirmPassword = document.getElementById('confirmPassword').value;
                         const fullPhone = countryCode + phone;
-                        // Validations
+                        
                         if (!VALIDATION.validateName(name)) throw new Error('Nom invalide');
                         if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Numéro de téléphone invalide');
                         if (!VALIDATION.validateEmail(email)) throw new Error('Email invalide');
                         if (!VALIDATION.validatePassword(password)) throw new Error('Mot de passe invalide');
                         if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
     
-                        // ✅ ÉTAPE 1: Vérifier que le téléphone n'existe pas déjà
                         console.log('🔍 Checking if phone exists:', fullPhone);
                         const phoneCheck = await TFA.checkPhoneExists(fullPhone);
                         
@@ -278,7 +276,6 @@
                             return;
                         }
                         
-                        // ✅ ÉTAPE 2: Désactiver le bouton
                         const submitButton = document.getElementById('submitButton');
                         submitButton.disabled = true;
                         submitButton.textContent = 'Envoi du code SMS...';
@@ -287,13 +284,12 @@
                         console.log('🔒 Signup in progress - sending SMS first');
                         
                         try {
-                            // ✅ ÉTAPE 3: Envoyer le SMS SANS créer de compte
                             console.log('📱 Sending SMS code BEFORE creating account...');
                             const currentLang = i18next.language || 'fr';
                             
                             const pendingSignupData = {
                                 email: email,
-                                password: password,  // Sera hashé par Supabase lors de signUp
+                                password: password,
                                 name: name,
                                 phone: fullPhone
                             };
@@ -306,11 +302,9 @@
                             
                             console.log('✅ SMS sent successfully');
                             
-                            // ✅ ÉTAPE 4: Stocker le téléphone temporairement
                             tempPhone = fullPhone;
                             window.tempPhone = fullPhone;
                             
-                            // ✅ ÉTAPE 5: Activer le mode 2FA
                             is2FAMode = true;
                             window.is2FAMode = true;
                             isSignupInProgress = false;
@@ -322,15 +316,13 @@
                             console.error('❌ Error sending SMS:', error);
                             isSignupInProgress = false;
                             
-                            // Réactiver le bouton
                             submitButton.disabled = false;
                             submitButton.textContent = t('auth:signup_button');
                             
-                            // Afficher l'erreur
                             let errorMessage = error.message;
                             
                             if (error.message.includes('wait')) {
-                                errorMessage = error.message; // Message rate limiting déjà traduit
+                                errorMessage = error.message;
                             } else if (error.message.includes('maximum')) {
                                 errorMessage = error.message;
                             }
@@ -683,20 +675,19 @@
             
             const app = document.getElementById('app');
             
+            // ✅ MODE 2FA - CORRIGÉ: Handler attaché IMMÉDIATEMENT (pas de setTimeout)
             if (is2FAMode) {
                 console.log('📱 2FA mode active - showing 2FA form');
-                app.innerHTML = RENDERING.renderAuthPage('2fa');  // ✅ Changé de 'login' à '2fa'
+                app.innerHTML = RENDERING.renderAuthPage('2fa');
                 
-                // ✅ Attacher le handler du formulaire 2FA
-                setTimeout(() => {
-                    const form2FA = document.getElementById('form2FA');
-                    if (form2FA) {
-                        form2FA.addEventListener('submit', TFA.handle2FASubmit);
-                        console.log('✅ 2FA form handler attached');
-                    }
-                    // Auto-focus sur le champ code
-                    document.getElementById('code2fa')?.focus();
-                }, 100);
+                // ✅ Attacher le handler IMMÉDIATEMENT
+                const form2FA = document.getElementById('form2FA');
+                if (form2FA) {
+                    form2FA.onsubmit = TFA.handle2FASubmit;
+                    console.log('✅ 2FA form handler attached immediately');
+                }
+                // Auto-focus sur le champ code
+                document.getElementById('code2fa')?.focus();
                 return;
             }
             
@@ -805,7 +796,7 @@
                                 }
                                 
                                 console.log('✅ Profile updated successfully with contract_path:', fileName);
-                                // ✅ Envoyer notification email à l'admin
+                                
                                 try {
                                     console.log('📧 Sending email notification...');
                                     const { data: emailData, error: emailError } = await supabase.functions.invoke('send-email-notification', {
@@ -875,15 +866,14 @@
                 console.log('📝 Rendering signup page');
                 app.innerHTML = RENDERING.renderAuthPage('signup');
                 setTimeout(() => {
-    console.log('⏱️ Attempting to attach signup handler');
-    handleAuth('signup');
-    
-    // ✅ Attacher la validation du mot de passe
-    if (window.VALIDATION && window.VALIDATION.attachPasswordValidation) {
-        window.VALIDATION.attachPasswordValidation();
-        console.log('✅ Password validation attached in signup render');
-    }
-}, 500);
+                    console.log('⏱️ Attempting to attach signup handler');
+                    handleAuth('signup');
+                    
+                    if (window.VALIDATION && window.VALIDATION.attachPasswordValidation) {
+                        window.VALIDATION.attachPasswordValidation();
+                        console.log('✅ Password validation attached in signup render');
+                    }
+                }, 500);
             } else if (currentPage === 'auth-reset') {
                 console.log('🔑 Rendering reset page');
                 app.innerHTML = RENDERING.renderAuthPage('reset');
@@ -929,19 +919,20 @@
         window.showSignup = UTILS.showSignup;
         window.showReset = UTILS.showReset;
         window.backToHome = UTILS.backToHome;
-        // ✅ Fonction pour revenir à l'inscription depuis 2FA
+        
         window.backTo2FASignup = function() {
-        console.log('🔙 Back to signup from 2FA');
-        is2FAMode = false;
-        window.is2FAMode = false;
-        tempPhone = null;
-        window.tempPhone = null;
-        pendingSignupId = null;
-        window.pendingSignupId = null;
-        currentPage = 'auth-signup';
-        window.currentPage = 'auth-signup';
-        render();
+            console.log('🔙 Back to signup from 2FA');
+            is2FAMode = false;
+            window.is2FAMode = false;
+            tempPhone = null;
+            window.tempPhone = null;
+            pendingSignupId = null;
+            window.pendingSignupId = null;
+            currentPage = 'auth-signup';
+            window.currentPage = 'auth-signup';
+            render();
         };
+        
         window.renderLandingPage = RENDERING.renderLandingPage;
         window.renderAuthPage = RENDERING.renderAuthPage;
         window.renderDashboard = RENDERING.renderDashboard;
