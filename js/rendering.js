@@ -6,8 +6,8 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.4.2 - Fix 2FA form IDs (verify2faBtn, error2fa)
-// Date: 30 novembre 2025
+// Version: 3.5.0 - Ajout illustration Dubai dashboard
+// Date: 1 décembre 2025
 // ============================================
 /**
  * Génère le HTML de la landing page
@@ -723,12 +723,65 @@ export function renderDashboard() {
                 ` : ''}
                 
                 ${hasValidContract && !isAdmin ? `
-                    <div id="contractUploaded" class="mb-6 bg-green-900 bg-opacity-50 border-l-4 border-green-500 p-6 rounded-lg shadow-lg">
-                        <div class="flex items-center gap-4">
-                            <div class="text-3xl flex-shrink-0">✅</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-green-300">${t('dashboard:contract.signed_validated')}</h3>
-                                <p class="text-gray-300">${t('dashboard:contract.can_add_leads')}</p>
+                    <div id="contractUploaded" class="mb-6 bg-gradient-to-r from-green-900/50 to-blue-900/30 border border-green-500/50 p-6 rounded-xl shadow-lg">
+                        <div class="flex flex-col md:flex-row items-center gap-6">
+                            <!-- Illustration Dubai Skyline -->
+                            <div class="flex-shrink-0 w-32 h-32 md:w-40 md:h-40">
+                                <svg viewBox="0 0 200 200" class="w-full h-full">
+                                    <!-- Ciel gradient -->
+                                    <defs>
+                                        <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#fbbf24;stop-opacity:0.3" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect x="0" y="0" width="200" height="200" fill="url(#skyGrad)" rx="20"/>
+                                    
+                                    <!-- Soleil/Lune -->
+                                    <circle cx="160" cy="40" r="20" fill="#fbbf24" opacity="0.8"/>
+                                    
+                                    <!-- Burj Khalifa (centre) -->
+                                    <polygon points="100,30 95,150 105,150" fill="#1e293b"/>
+                                    <polygon points="100,30 92,150 108,150" fill="#334155" opacity="0.5"/>
+                                    <rect x="97" y="50" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
+                                    <rect x="97" y="60" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
+                                    <rect x="97" y="70" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
+                                    <rect x="97" y="80" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
+                                    
+                                    <!-- Buildings gauche -->
+                                    <rect x="20" y="100" width="25" height="50" fill="#1e293b" rx="2"/>
+                                    <rect x="50" y="80" width="20" height="70" fill="#334155" rx="2"/>
+                                    <rect x="22" y="105" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
+                                    <rect x="28" y="105" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
+                                    <rect x="22" y="115" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
+                                    <rect x="28" y="115" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
+                                    
+                                    <!-- Buildings droite -->
+                                    <rect x="130" y="90" width="22" height="60" fill="#1e293b" rx="2"/>
+                                    <rect x="155" y="110" width="25" height="40" fill="#334155" rx="2"/>
+                                    <rect x="133" y="95" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
+                                    <rect x="140" y="95" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
+                                    <rect x="133" y="105" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
+                                    
+                                    <!-- Sol/Eau -->
+                                    <rect x="0" y="150" width="200" height="50" fill="#1e293b" rx="0 0 20 20"/>
+                                    <rect x="10" y="155" width="180" height="2" fill="#fbbf24" opacity="0.3"/>
+                                    <rect x="20" y="162" width="160" height="1" fill="#fbbf24" opacity="0.2"/>
+                                    
+                                    <!-- Checkmark de succès -->
+                                    <circle cx="165" cy="165" r="20" fill="#22c55e"/>
+                                    <polyline points="155,165 162,172 177,157" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            
+                            <!-- Texte -->
+                            <div class="text-center md:text-left flex-1">
+                                <h3 class="text-2xl font-bold text-green-300 mb-2">${t('dashboard:contract.signed_validated')}</h3>
+                                <p class="text-gray-300 mb-3">${t('dashboard:contract.can_add_leads')}</p>
+                                <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                                    <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full">💰 25% commission acheteurs</span>
+                                    <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full">🏠 20% autres leads</span>
+                                </div>
                             </div>
                         </div>
                     </div>
