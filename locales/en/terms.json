@@ -1,4 +1,74 @@
-"section4": {
+{
+  "page_title": "Terms of Service - Real Estate Referrer",
+  "title": "Terms of Service",
+  "last_updated": "Last updated: November 25, 2025",
+  "back_home": "← Back to Home",
+  "nav": {
+    "home": "Home",
+    "how": "How it works",
+    "privacy": "Privacy"
+  },
+  "footer": {
+    "copyright": "© 2025 Real Estate Referrer. All rights reserved.",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "how": "How it works"
+  },
+  "section1": {
+    "title": "1. Introduction",
+    "intro": "Welcome to Real Estate Referrer (\"Platform\", \"we\", \"us\", or \"our\"). These Terms of Service (\"Terms\") govern your use of our referral program platform for real estate transactions in Dubai, United Arab Emirates.",
+    "agreement": "By creating an account or using our services, you agree to be bound by these Terms. If you do not agree, please do not use our Platform."
+  },
+  "section2": {
+    "title": "2. Definitions",
+    "referrer": {
+      "term": "Referrer / Business Introducer:",
+      "definition": "An individual who registers on the Platform to refer potential clients (leads) to the real estate agent."
+    },
+    "lead": {
+      "term": "Lead:",
+      "definition": "A potential client referred by a Referrer who is interested in buying, selling, renting, or leasing real estate in Dubai."
+    },
+    "qualified_lead": {
+      "term": "Qualified Lead:",
+      "definition": "A lead with genuine interest, defined budget, complete contact information, and active timeline (0-6 months)."
+    },
+    "agent": {
+      "term": "Agent:",
+      "definition": "The licensed real estate professional operating under Solo Gate Real Estate (Alliance by EMAAR)."
+    },
+    "commission": {
+      "term": "Commission:",
+      "definition": "The payment due to the Referrer upon successful completion of a real estate transaction."
+    },
+    "transaction": {
+      "term": "Transaction:",
+      "definition": "A completed sale or rental agreement facilitated through a referred lead."
+    }
+  },
+  "section3": {
+    "title": "3. Eligibility & Registration",
+    "eligibility": {
+      "title": "3.1 Eligibility Requirements",
+      "intro": "To become a Referrer, you must:",
+      "items": [
+        "Be at least 18 years of age",
+        "Provide accurate and complete registration information",
+        "Have a valid phone number for SMS verification",
+        "Sign the Business Introducer Agreement (electronically or physically)",
+        "Not hold a real estate license in the UAE (unless disclosed)"
+      ]
+    },
+    "security": {
+      "title": "3.2 Account Security",
+      "text": "You are responsible for maintaining the confidentiality of your account credentials. You must immediately notify us of any unauthorized use of your account."
+    },
+    "sms": {
+      "title": "3.3 SMS Verification",
+      "text": "We use SMS verification (2FA) to secure your account. Standard messaging rates may apply. By registering, you consent to receive SMS messages for verification purposes."
+    }
+  },
+  "section4": {
     "title": "4. Commissions",
     "rate": {
       "title": "4.1 Commission Rate",
@@ -32,3 +102,189 @@
       ]
     }
   },
+  "section5": {
+    "title": "5. Lead Submission & Protection",
+    "requirements": {
+      "title": "5.1 Lead Requirements",
+      "intro": "Each lead must include:",
+      "items": [
+        "Client's full name",
+        "Valid email address",
+        "Valid phone number",
+        "Type of lead (Buyer, Seller, Landlord, or Tenant)",
+        "Approximate budget",
+        "Client's explicit consent to be contacted"
+      ]
+    },
+    "consent": {
+      "title": "5.2 Client Consent (MANDATORY)",
+      "important": "IMPORTANT:",
+      "text": "You must obtain the client's explicit consent before submitting their information. By submitting a lead, you confirm that:",
+      "items": [
+        "The client knows they will be contacted by a real estate agent",
+        "The client has agreed to share their contact information",
+        "You have not misrepresented the purpose of collecting their information"
+      ],
+      "warning": "Submitting leads without proper consent is a violation of these Terms and GDPR regulations, and may result in immediate account termination."
+    },
+    "protection": {
+      "title": "5.3 Lead Protection",
+      "items": [
+        "Leads are timestamped and attributed to the first Referrer who submits them",
+        "Duplicate leads are automatically rejected",
+        "Lead ownership is valid for 12 months from submission date",
+        "You can track your lead status in real-time through your dashboard"
+      ]
+    },
+    "prohibited": {
+      "title": "5.4 Prohibited Practices",
+      "intro": "The following are strictly prohibited:",
+      "items": [
+        "Submitting fake or fabricated leads",
+        "Submitting leads without the client's consent",
+        "Direct solicitation or cold calling on behalf of the agent",
+        "Misrepresenting yourself as a licensed real estate agent",
+        "Submitting your own contact information as a lead",
+        "Any activity that violates RERA regulations"
+      ]
+    }
+  },
+  "section6": {
+    "title": "6. Referrer Obligations",
+    "intro": "As a Referrer, you agree to:",
+    "items": [
+      "Provide accurate information about yourself and your leads",
+      "Obtain proper consent from clients before submission",
+      "Not engage in any illegal or unethical marketing practices",
+      "Respect the confidentiality of client information",
+      "Not negotiate directly with clients on real estate matters",
+      "Comply with all applicable UAE laws and RERA regulations",
+      "Maintain the signed Business Introducer Agreement"
+    ]
+  },
+  "section7": {
+    "title": "7. Agent Obligations",
+    "intro": "The Agent commits to:",
+    "items": [
+      "Follow up on all qualified leads within 48 hours",
+      "Provide transparent status updates through the Platform",
+      "Pay commissions within the agreed timeframe",
+      "Treat all referred clients professionally",
+      "Not circumvent the Referrer's commission rights",
+      "Maintain all required RERA licenses and permits"
+    ]
+  },
+  "section8": {
+    "title": "8. Intellectual Property",
+    "intro": "The Platform, including its design, features, and content, is owned by us and protected by intellectual property laws. You may not:",
+    "items": [
+      "Copy, modify, or distribute any part of the Platform",
+      "Use our branding without written permission",
+      "Reverse engineer or attempt to extract source code",
+      "Use the Platform for any purpose other than its intended use"
+    ]
+  },
+  "section9": {
+    "title": "9. Privacy & Data Protection",
+    "intro": "Your use of the Platform is also governed by our",
+    "link": "Privacy Policy",
+    "items": [
+      "We collect and process personal data in accordance with GDPR",
+      "Client data is used solely for real estate transactions",
+      "We do not sell personal data to third parties",
+      "You have the right to access, correct, or delete your data",
+      "Data is stored securely with encryption"
+    ]
+  },
+  "section10": {
+    "title": "10. Termination",
+    "byReferrer": {
+      "title": "10.1 Termination by Referrer",
+      "text": "You may terminate your account at any time by contacting us. Pending commissions for completed transactions will still be paid."
+    },
+    "byUs": {
+      "title": "10.2 Termination by Us",
+      "intro": "We may suspend or terminate your account if you:",
+      "items": [
+        "Violate these Terms",
+        "Submit fraudulent leads",
+        "Engage in prohibited practices",
+        "Fail to maintain the Business Introducer Agreement"
+      ]
+    },
+    "effect": {
+      "title": "10.3 Effect of Termination",
+      "intro": "Upon termination:",
+      "items": [
+        "Your access to the Platform will be revoked",
+        "Pending qualified leads may still earn commission if converted within 90 days",
+        "Unpaid commissions over 500 AED will be paid within 30 days"
+      ]
+    }
+  },
+  "section11": {
+    "title": "11. Limitation of Liability",
+    "intro": "To the maximum extent permitted by law:",
+    "items": [
+      "We are not liable for any indirect, incidental, or consequential damages",
+      "Our total liability is limited to the commissions earned in the past 12 months",
+      "We do not guarantee any specific income or number of conversions",
+      "We are not responsible for client behavior or transaction outcomes"
+    ]
+  },
+  "section12": {
+    "title": "12. RERA Compliance",
+    "intro": "This Platform operates in compliance with the Real Estate Regulatory Agency (RERA) of Dubai. Important notes:",
+    "items": [
+      "Referrers act as business introducers, not licensed real estate agents",
+      "All real estate activities are conducted by licensed professionals",
+      "The Agent maintains all required RERA permits and licenses",
+      "Referrers must not engage in activities requiring a real estate license"
+    ]
+  },
+  "section13": {
+    "title": "13. Dispute Resolution",
+    "informal": {
+      "title": "13.1 Informal Resolution",
+      "text": "We encourage you to contact us first to resolve any disputes amicably."
+    },
+    "law": {
+      "title": "13.2 Governing Law",
+      "text": "These Terms are governed by the laws of the United Arab Emirates, specifically the Emirate of Dubai."
+    },
+    "jurisdiction": {
+      "title": "13.3 Jurisdiction",
+      "text": "Any disputes shall be subject to the exclusive jurisdiction of the courts of Dubai, UAE."
+    }
+  },
+  "section14": {
+    "title": "14. Changes to Terms",
+    "intro": "We may update these Terms from time to time. We will notify you of significant changes via:",
+    "items": [
+      "Email notification",
+      "Platform notification",
+      "Updated \"Last modified\" date"
+    ],
+    "continued": "Continued use of the Platform after changes constitutes acceptance of the new Terms."
+  },
+  "section15": {
+    "title": "15. Contact Information",
+    "intro": "For questions about these Terms, please contact us:",
+    "email": {
+      "label": "Email:",
+      "value": "contact@real-estate-referrer.com"
+    },
+    "location": {
+      "label": "Location:",
+      "value": "Dubai, United Arab Emirates"
+    },
+    "agency": {
+      "label": "Agency:",
+      "value": "Solo Gate Real Estate (Alliance by EMAAR)"
+    }
+  },
+  "agreement": {
+    "title": "Agreement",
+    "text": "By creating an account and using the Real Estate Referrer platform, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service."
+  }
+}
