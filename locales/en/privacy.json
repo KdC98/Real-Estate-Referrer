@@ -6,15 +6,15 @@
     
     "nav": {
       "home": "Home",
-      "howItWorks": "How it Works",
+      "howItWorks": "How it works",
       "login": "Login"
     },
     
     "intro": {
       "title": "Introduction",
       "p1": "This Privacy Policy describes how Karyne de Clercq Real Estate collects, uses, shares and protects your personal information.",
-      "p2": "By using our service, you accept the practices described in this policy.",
-      "p3": "We are committed to protecting your privacy in accordance with GDPR and United Arab Emirates laws."
+      "p2": "By using our service, you agree to the practices described in this policy.",
+      "p3": "We are committed to protecting your privacy in accordance with GDPR and UAE laws."
     },
     
     "section1": {
@@ -28,7 +28,7 @@
     },
     
     "section2": {
-      "title": "2. Data Usage",
+      "title": "2. Use of Data",
       "intro": "Your data is used to:",
       "item1": "Manage your account and leads",
       "item2": "Calculate and pay your commissions",
@@ -50,17 +50,18 @@
       "title": "4. Your GDPR Rights",
       "intro": "You have the right to:",
       "item1": "Access your data",
-      "item2": "Rectify your information",
+      "item2": "Correct your information",
       "item3": "Delete your data",
       "item4": "Export your data",
       "item5": "Object to processing",
-      "contact": "Contact privacy@real-estate-referrer.com to exercise your rights (response within 30 days)"
+      "contact": "Contact contact@real-estate-referrer.com to exercise your rights (response within 30 days)"
     },
     
     "section5": {
       "title": "5. Contact",
       "responsible": "Data Controller",
-      "coordinates": "Contact Information"
+      "coordinates": "Contact Us",
+      "chat": "Chat available on site"
     },
     
     "cta": {
@@ -74,7 +75,7 @@
       "tagline": "Real estate referral program in Dubai",
       "navigation": "Navigation",
       "home": "Home",
-      "howItWorks": "How it Works",
+      "howItWorks": "How it works",
       "loginLink": "Login",
       "signup": "Sign Up",
       "legal": "Legal",
@@ -82,6 +83,7 @@
       "privacy": "Privacy",
       "contract": "Contract Template",
       "contact": "Contact",
+      "chatAvailable": "Chat available",
       "copyright": "© 2025 Karyne de Clercq. All rights reserved."
     }
   }
