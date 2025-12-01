@@ -155,6 +155,17 @@
             });
         }
 
+        // Helper function pour récupérer les arrays de façon sécurisée
+        function getItems(key) {
+            const items = i18next.t(key, { returnObjects: true });
+            return Array.isArray(items) ? items : [];
+        }
+
+        // Helper function pour créer des listes HTML
+        function renderList(key) {
+            return getItems(key).map(item => `<li>${item}</li>`).join('');
+        }
+
         // Charger le contenu des CGU
         function loadTermsContent() {
             const t = (key) => i18next.t(key);
@@ -185,9 +196,7 @@
                     <h2>${t('section3.title')}</h2>
                     <h3>${t('section3.eligibility.title')}</h3>
                     <p>${t('section3.eligibility.intro')}</p>
-                    <ul>
-                        ${(t('section3.eligibility.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section3.eligibility.items')}</ul>
                     
                     <h3>${t('section3.security.title')}</h3>
                     <p>${t('section3.security.text')}</p>
@@ -202,9 +211,7 @@
                     <h3>${t('section4.rate.title')}</h3>
                     <p>${t('section4.rate.text')} <strong>${t('section4.rate.percentage')}</strong> ${t('section4.rate.text2')}</p>
                     <p><strong>${t('section4.rate.exampleTitle')}</strong></p>
-                    <ul>
-                        ${(t('section4.rate.exampleItems', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section4.rate.exampleItems')}</ul>
                     
                     <h3>${t('section4.payment.title')}</h3>
                     <p>${t('section4.payment.text')}</p>
@@ -214,9 +221,7 @@
                     
                     <h3>${t('section4.nonPayment.title')}</h3>
                     <p>${t('section4.nonPayment.intro')}</p>
-                    <ul>
-                        ${(t('section4.nonPayment.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section4.nonPayment.items')}</ul>
                 </section>
 
                 <!-- Section 5 -->
@@ -224,63 +229,47 @@
                     <h2>${t('section5.title')}</h2>
                     <h3>${t('section5.requirements.title')}</h3>
                     <p>${t('section5.requirements.intro')}</p>
-                    <ul>
-                        ${(t('section5.requirements.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section5.requirements.items')}</ul>
                     
                     <h3>${t('section5.consent.title')}</h3>
                     <p><strong>${t('section5.consent.important')}</strong> ${t('section5.consent.text')}</p>
-                    <ul>
-                        ${(t('section5.consent.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section5.consent.items')}</ul>
                     <p>${t('section5.consent.warning')}</p>
                     
                     <h3>${t('section5.protection.title')}</h3>
-                    <ul>
-                        ${(t('section5.protection.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section5.protection.items')}</ul>
                     
                     <h3>${t('section5.prohibited.title')}</h3>
                     <p>${t('section5.prohibited.intro')}</p>
-                    <ul>
-                        ${(t('section5.prohibited.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section5.prohibited.items')}</ul>
                 </section>
 
                 <!-- Section 6 -->
                 <section>
                     <h2>${t('section6.title')}</h2>
                     <p>${t('section6.intro')}</p>
-                    <ul>
-                        ${(t('section6.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section6.items')}</ul>
                 </section>
 
                 <!-- Section 7 -->
                 <section>
                     <h2>${t('section7.title')}</h2>
                     <p>${t('section7.intro')}</p>
-                    <ul>
-                        ${(t('section7.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section7.items')}</ul>
                 </section>
 
                 <!-- Section 8 -->
                 <section>
                     <h2>${t('section8.title')}</h2>
                     <p>${t('section8.intro')}</p>
-                    <ul>
-                        ${(t('section8.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section8.items')}</ul>
                 </section>
 
                 <!-- Section 9 -->
                 <section>
                     <h2>${t('section9.title')}</h2>
                     <p>${t('section9.intro')} <a href="/privacy.html" class="text-yellow-400 hover:text-yellow-300">${t('section9.link')}</a>.</p>
-                    <ul>
-                        ${(t('section9.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section9.items')}</ul>
                 </section>
 
                 <!-- Section 10 -->
@@ -291,33 +280,25 @@
                     
                     <h3>${t('section10.byUs.title')}</h3>
                     <p>${t('section10.byUs.intro')}</p>
-                    <ul>
-                        ${(t('section10.byUs.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section10.byUs.items')}</ul>
                     
                     <h3>${t('section10.effect.title')}</h3>
                     <p>${t('section10.effect.intro')}</p>
-                    <ul>
-                        ${(t('section10.effect.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section10.effect.items')}</ul>
                 </section>
 
                 <!-- Section 11 -->
                 <section>
                     <h2>${t('section11.title')}</h2>
                     <p>${t('section11.intro')}</p>
-                    <ul>
-                        ${(t('section11.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section11.items')}</ul>
                 </section>
 
                 <!-- Section 12 -->
                 <section>
                     <h2>${t('section12.title')}</h2>
                     <p>${t('section12.intro')}</p>
-                    <ul>
-                        ${(t('section12.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section12.items')}</ul>
                 </section>
 
                 <!-- Section 13 -->
@@ -337,9 +318,7 @@
                 <section>
                     <h2>${t('section14.title')}</h2>
                     <p>${t('section14.intro')}</p>
-                    <ul>
-                        ${(t('section14.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
-                    </ul>
+                    <ul>${renderList('section14.items')}</ul>
                     <p>${t('section14.continued')}</p>
                 </section>
 
@@ -362,7 +341,7 @@
             `;
         }
     </script>
-<!-- Crisp Chat -->
-<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="3fc5eae0-c8f6-4c08-98e9-8f83cc5712e2";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+    <!-- Crisp Chat -->
+    <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="3fc5eae0-c8f6-4c08-98e9-8f83cc5712e2";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 </body>
 </html>
