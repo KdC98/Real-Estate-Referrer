@@ -9,10 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
     <style>
-        body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
-            min-height: 100vh;
-        }
         #signatureCanvas {
             touch-action: none;
             border: 2px solid #fbbf24;
@@ -20,7 +16,8 @@
         }
     </style>
 </head>
-<body class="text-white">
+<!-- ✅ Style unifié : dégradé slate/blue -->
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
     
     <script type="module">
@@ -74,11 +71,12 @@
         function renderAccessDenied() {
             document.getElementById('app').innerHTML = `
                 <div class="min-h-screen flex items-center justify-center p-4">
-                    <div class="bg-white rounded-xl p-8 max-w-md text-center">
+                    <!-- ✅ Card avec style unifié -->
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-md text-center border border-white/20">
                         <div class="text-6xl mb-4">⚠️</div>
-                        <h1 class="text-2xl font-bold text-red-600 mb-4">${t('contract:access_denied')}</h1>
-                        <p class="text-gray-700 mb-6">${t('contract:must_login')}</p>
-                        <a href="/" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg inline-block">
+                        <h1 class="text-2xl font-bold text-red-400 mb-4">${t('contract:access_denied')}</h1>
+                        <p class="text-blue-200 mb-6">${t('contract:must_login')}</p>
+                        <a href="/" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg inline-block transition">
                             ${t('contract:go_to_login')}
                         </a>
                     </div>
@@ -90,22 +88,25 @@
             document.getElementById('app').innerHTML = `
                 <div class="min-h-screen p-4">
                     <div class="max-w-4xl mx-auto">
-                        <!-- Header -->
-                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
+                        <!-- ✅ Header avec style unifié -->
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
+                            <a href="/" class="text-blue-200 hover:text-white mb-4 inline-flex items-center transition">
+                                ← Retour au dashboard
+                            </a>
                             <h1 class="text-3xl font-bold text-yellow-400 mb-2">${t('contract:header_title')}</h1>
-                            <p class="text-gray-300">${t('contract:header_subtitle')}</p>
+                            <p class="text-blue-200">${t('contract:header_subtitle')}</p>
                         </div>
                         
-                        <!-- Contract Summary -->
-                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
+                        <!-- ✅ Contract Summary avec style unifié -->
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
                             <div class="flex items-start justify-between mb-4">
                                 <div>
                                     <h2 class="text-xl font-bold text-yellow-400 mb-2">${t('contract:what_is_contract')}</h2>
-                                    <p class="text-gray-300 text-sm">${t('contract:contract_intro')}</p>
+                                    <p class="text-blue-200 text-sm">${t('contract:contract_intro')}</p>
                                 </div>
                             </div>
                             
-                            <div class="space-y-3 text-gray-300 text-sm">
+                            <div class="space-y-3 text-blue-200 text-sm">
                                 <div class="flex items-start gap-2">
                                     <span class="text-green-400 text-xl">✓</span>
                                     <div>
@@ -138,13 +139,13 @@
                                 </div>
                             </div>
                             
-                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-4 mt-6">
+                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-4 mt-6">
                                 <p class="text-blue-200 text-sm">
                                     <strong>ℹ️</strong> ${t('contract:full_contract_notice')}
                                 </p>
                             </div>
                             
-                            <div class="border-t border-gray-600 pt-4 mt-4">
+                            <div class="border-t border-white/10 pt-4 mt-4">
                                 <a href="/contract-template.html" target="_blank" 
                                    class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">
                                     📄 ${t('contract:read_full_contract')}
@@ -152,31 +153,31 @@
                             </div>
                         </div>
                         
-                        <!-- Terms Acceptance -->
-                        <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6">
+                        <!-- ✅ Terms Acceptance avec style unifié -->
+                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
                             <label class="flex items-start gap-3 cursor-pointer">
                                 <input 
                                     type="checkbox" 
                                     id="acceptTerms" 
                                     onchange="toggleAcceptance()"
-                                    class="mt-1 w-5 h-5 text-yellow-500 bg-gray-700 border-gray-600 rounded focus:ring-yellow-500"
+                                    class="mt-1 w-5 h-5 text-yellow-500 bg-slate-700 border-white/30 rounded focus:ring-yellow-500"
                                 />
-                                <span class="text-gray-300">
+                                <span class="text-blue-200">
                                     <strong class="text-white">${t('contract:accept_terms')}</strong><br>
                                     <span class="text-sm">${t('contract:accept_terms_text')}</span>
                                 </span>
                             </label>
                         </div>
                         
-                        <!-- Signature Canvas -->
-                        <div id="signatureSection" class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-6 opacity-50 pointer-events-none">
+                        <!-- ✅ Signature Canvas avec style unifié -->
+                        <div id="signatureSection" class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20 opacity-50 pointer-events-none">
                             <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/30 rounded-xl p-6 mb-6">
                                 <div class="flex items-start gap-3">
                                     <span class="text-4xl">✍️</span>
                                     <div>
                                         <h3 class="text-xl font-bold text-green-400 mb-2">${t('contract:electronic_signature')}</h3>
-                                        <p class="text-gray-300 text-sm mb-3">${t('contract:electronic_signature_intro')}</p>
-                                        <div class="space-y-1 text-sm text-gray-300">
+                                        <p class="text-blue-200 text-sm mb-3">${t('contract:electronic_signature_intro')}</p>
+                                        <div class="space-y-1 text-sm text-blue-200">
                                             <div class="flex items-center gap-2">
                                                 <span class="text-green-400">✓</span>
                                                 <span>${t('contract:signature_feature_1')}</span>
@@ -199,10 +200,10 @@
                             </div>
                             
                             <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:sign_now')}</h2>
-                            <p class="text-gray-300 mb-4">${t('contract:signature_instruction')}</p>
+                            <p class="text-blue-200 mb-4">${t('contract:signature_instruction')}</p>
                             
-                            <div class="bg-white rounded-lg p-4 mb-4">
-                                <canvas id="signatureCanvas" width="700" height="200" class="w-full"></canvas>
+                            <div class="bg-white rounded-xl p-4 mb-4 shadow-lg">
+                                <canvas id="signatureCanvas" width="700" height="200" class="w-full rounded-lg"></canvas>
                             </div>
                             
                             <div class="flex gap-4">
@@ -222,12 +223,12 @@
                                 </button>
                             </div>
                             
-                            <div id="errorMsg" class="hidden mt-4 bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-lg"></div>
-                            <div id="successMsg" class="hidden mt-4 bg-green-900/50 border border-green-500 text-green-200 p-4 rounded-lg"></div>
+                            <div id="errorMsg" class="hidden mt-4 bg-red-500/20 border border-red-500 text-red-200 p-4 rounded-lg"></div>
+                            <div id="successMsg" class="hidden mt-4 bg-green-500/20 border border-green-500 text-green-200 p-4 rounded-lg"></div>
                         </div>
                         
-                        <!-- Legal Notice -->
-                        <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-6">
+                        <!-- ✅ Legal Notice avec style unifié -->
+                        <div class="bg-blue-900/30 border border-blue-500/30 rounded-2xl p-6">
                             <p class="text-xs text-blue-200">
                                 <strong>ℹ️</strong> ${t('contract:legal_notice')}
                             </p>
@@ -364,9 +365,15 @@
             }
             
             const validateBtn = document.getElementById('validateBtn');
-            const originalText = validateBtn.textContent;
+            const originalText = validateBtn.innerHTML;
             validateBtn.disabled = true;
-            validateBtn.textContent = '⏳ ' + t('contract:saving');
+            validateBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                ${t('contract:saving')}
+            `;
             
             try {
                 // Convert canvas to blob
@@ -441,7 +448,7 @@
                 console.error('Signature error:', error);
                 showError(t('contract:error') + ': ' + error.message);
                 validateBtn.disabled = false;
-                validateBtn.textContent = originalText;
+                validateBtn.innerHTML = originalText;
             }
         };
         
