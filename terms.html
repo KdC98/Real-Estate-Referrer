@@ -12,41 +12,56 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
         }
         .prose h2 {
             color: #fbbf24;
             margin-top: 2rem;
             margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
         .prose h3 {
             color: #f59e0b;
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
         }
         .prose p, .prose li {
-            color: #d1d5db;
+            color: #bfdbfe;
             line-height: 1.75;
         }
         .prose ul {
             list-style-type: disc;
             padding-left: 1.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .prose li {
+            margin-bottom: 0.5rem;
         }
         .prose strong {
             color: #fbbf24;
         }
+        .prose a {
+            color: #fbbf24;
+        }
+        .prose a:hover {
+            color: #fde68a;
+        }
     </style>
 </head>
-<body class="text-white">
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <!-- Header -->
-    <header class="bg-gray-900 bg-opacity-80 backdrop-blur-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
-                <a href="/" class="text-2xl font-bold text-yellow-400">Real Estate Referrer</a>
-                <nav class="flex items-center gap-4">
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-white text-xl font-bold">Real Estate Referrer</a>
+                </div>
+                <div class="flex items-center space-x-4">
                     <!-- Sélecteur de langue -->
-                    <select id="languageSelector" class="bg-gray-800 text-white px-3 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                    <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="fr">🇫🇷 Français</option>
                         <option value="en">🇬🇧 English</option>
                         <option value="ar">🇦🇪 العربية</option>
@@ -56,33 +71,33 @@
                         <option value="zh">🇨🇳 中文</option>
                         <option value="tl">🇵🇭 Tagalog</option>
                     </select>
-                    <a href="/" class="text-gray-300 hover:text-yellow-400 transition" data-i18n="nav.home">Accueil</a>
-                    <a href="/how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition" data-i18n="nav.how">Comment ça marche</a>
-                    <a href="/privacy.html" class="text-gray-300 hover:text-yellow-400 transition" data-i18n="nav.privacy">Confidentialité</a>
-                </nav>
+                    <a href="/" class="text-white/70 hover:text-white transition" data-i18n="nav.home">Accueil</a>
+                    <a href="/how-it-works.html" class="text-white/70 hover:text-white transition" data-i18n="nav.how">Comment ça marche</a>
+                    <a href="/privacy.html" class="text-white/70 hover:text-white transition" data-i18n="nav.privacy">Confidentialité</a>
+                </div>
             </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-12">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="max-w-4xl mx-auto">
             <!-- Title -->
             <div class="text-center mb-12">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">
                     <span class="text-yellow-400" data-i18n="title">Conditions Générales d'Utilisation</span>
                 </h1>
-                <p class="text-gray-400" data-i18n="last_updated">Dernière mise à jour : 25 novembre 2025</p>
+                <p class="text-blue-200" data-i18n="last_updated">Dernière mise à jour : 25 novembre 2025</p>
             </div>
 
             <!-- Content -->
-            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-2xl p-8 md:p-12 prose max-w-none" id="terms-content">
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 prose max-w-none" id="terms-content">
                 <!-- Le contenu sera chargé dynamiquement par i18next -->
             </div>
 
             <!-- Back to Home -->
             <div class="text-center mt-8">
-                <a href="/" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition" data-i18n="back_home">
+                <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg transition duration-300" data-i18n="back_home">
                     ← Retour à l'accueil
                 </a>
             </div>
@@ -90,16 +105,16 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 bg-opacity-80 mt-20">
-        <div class="container mx-auto px-4 py-8">
+    <footer class="bg-slate-900 border-t border-white/10 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-gray-400" data-i18n="footer.copyright">
+                <div class="text-blue-200" data-i18n="footer.copyright">
                     © 2025 Real Estate Referrer. Tous droits réservés.
                 </div>
                 <div class="flex gap-6">
                     <a href="/terms.html" class="text-yellow-400 hover:text-yellow-300 transition" data-i18n="footer.terms">CGU</a>
-                    <a href="/privacy.html" class="text-gray-400 hover:text-yellow-400 transition" data-i18n="footer.privacy">Confidentialité</a>
-                    <a href="/how-it-works.html" class="text-gray-400 hover:text-yellow-400 transition" data-i18n="footer.how">Comment ça marche</a>
+                    <a href="/privacy.html" class="text-blue-200 hover:text-white transition" data-i18n="footer.privacy">Confidentialité</a>
+                    <a href="/how-it-works.html" class="text-blue-200 hover:text-white transition" data-i18n="footer.how">Comment ça marche</a>
                 </div>
             </div>
         </div>
@@ -268,7 +283,7 @@
                 <!-- Section 9 -->
                 <section>
                     <h2>${t('section9.title')}</h2>
-                    <p>${t('section9.intro')} <a href="/privacy.html" class="text-yellow-400 hover:text-yellow-300">${t('section9.link')}</a>.</p>
+                    <p>${t('section9.intro')} <a href="/privacy.html">${t('section9.link')}</a>.</p>
                     <ul>${renderList('section9.items')}</ul>
                 </section>
 
