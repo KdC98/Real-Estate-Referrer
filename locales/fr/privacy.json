@@ -54,13 +54,14 @@
       "item3": "Supprimer vos données",
       "item4": "Exporter vos données",
       "item5": "Vous opposer au traitement",
-      "contact": "Contactez privacy@real-estate-referrer.com pour exercer vos droits (réponse sous 30 jours)"
+      "contact": "Contactez contact@real-estate-referrer.com pour exercer vos droits (réponse sous 30 jours)"
     },
     
     "section5": {
       "title": "5. Contact",
       "responsible": "Responsable du traitement",
-      "coordinates": "Coordonnées"
+      "coordinates": "Nous contacter",
+      "chat": "Chat disponible sur le site"
     },
     
     "cta": {
@@ -82,6 +83,7 @@
       "privacy": "Confidentialité",
       "contract": "Template Contrat",
       "contact": "Contact",
+      "chatAvailable": "Chat disponible",
       "copyright": "© 2025 Karyne de Clercq. Tous droits réservés."
     }
   }
