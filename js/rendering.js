@@ -6,7 +6,7 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.5.0 - Ajout illustration Dubai dashboard
+// Version: 3.6.0 - Skyline background + badges traduits
 // Date: 1 décembre 2025
 // ============================================
 /**
@@ -613,6 +613,20 @@ export function renderAuthPage(mode) {
 export function renderDashboard() {
     const t = (key) => window.i18next.t(key);
     const userProfile = window.userProfile;
+    const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
+    
+    // ✅ Traductions des badges de commission (8 langues)
+    const badgeTranslations = {
+        fr: { buyers: '25% commission acheteurs', others: '20% autres leads' },
+        en: { buyers: '25% commission buyers', others: '20% other leads' },
+        ar: { buyers: '٢٥٪ عمولة المشترين', others: '٢٠٪ العملاء الآخرين' },
+        ru: { buyers: '25% комиссия покупатели', others: '20% другие лиды' },
+        hi: { buyers: '25% कमीशन खरीदार', others: '20% अन्य लीड' },
+        ur: { buyers: '25% کمیشن خریدار', others: '20% دیگر لیڈز' },
+        zh: { buyers: '25% 买家佣金', others: '20% 其他线索' },
+        tl: { buyers: '25% commission buyers', others: '20% other leads' }
+    };
+    const badges = badgeTranslations[currentLang] || badgeTranslations['en'];
     
     console.log('🧭 DEBUG renderDashboard called', {
         userProfile,
@@ -723,64 +737,50 @@ export function renderDashboard() {
                 ` : ''}
                 
                 ${hasValidContract && !isAdmin ? `
-                    <div id="contractUploaded" class="mb-6 bg-gradient-to-r from-green-900/50 to-blue-900/30 border border-green-500/50 p-6 rounded-xl shadow-lg">
-                        <div class="flex flex-col md:flex-row items-center gap-6">
-                            <!-- Illustration Dubai Skyline -->
-                            <div class="flex-shrink-0 w-32 h-32 md:w-40 md:h-40">
-                                <svg viewBox="0 0 200 200" class="w-full h-full">
-                                    <!-- Ciel gradient -->
-                                    <defs>
-                                        <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#1e3a8a;stop-opacity:1" />
-                                            <stop offset="100%" style="stop-color:#fbbf24;stop-opacity:0.3" />
-                                        </linearGradient>
-                                    </defs>
-                                    <rect x="0" y="0" width="200" height="200" fill="url(#skyGrad)" rx="20"/>
-                                    
-                                    <!-- Soleil/Lune -->
-                                    <circle cx="160" cy="40" r="20" fill="#fbbf24" opacity="0.8"/>
-                                    
-                                    <!-- Burj Khalifa (centre) -->
-                                    <polygon points="100,30 95,150 105,150" fill="#1e293b"/>
-                                    <polygon points="100,30 92,150 108,150" fill="#334155" opacity="0.5"/>
-                                    <rect x="97" y="50" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
-                                    <rect x="97" y="60" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
-                                    <rect x="97" y="70" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
-                                    <rect x="97" y="80" width="6" height="3" fill="#fbbf24" opacity="0.8"/>
-                                    
-                                    <!-- Buildings gauche -->
-                                    <rect x="20" y="100" width="25" height="50" fill="#1e293b" rx="2"/>
-                                    <rect x="50" y="80" width="20" height="70" fill="#334155" rx="2"/>
-                                    <rect x="22" y="105" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
-                                    <rect x="28" y="105" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
-                                    <rect x="22" y="115" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
-                                    <rect x="28" y="115" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
-                                    
-                                    <!-- Buildings droite -->
-                                    <rect x="130" y="90" width="22" height="60" fill="#1e293b" rx="2"/>
-                                    <rect x="155" y="110" width="25" height="40" fill="#334155" rx="2"/>
-                                    <rect x="133" y="95" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
-                                    <rect x="140" y="95" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
-                                    <rect x="133" y="105" width="4" height="4" fill="#fbbf24" opacity="0.6"/>
-                                    
-                                    <!-- Sol/Eau -->
-                                    <rect x="0" y="150" width="200" height="50" fill="#1e293b" rx="0 0 20 20"/>
-                                    <rect x="10" y="155" width="180" height="2" fill="#fbbf24" opacity="0.3"/>
-                                    <rect x="20" y="162" width="160" height="1" fill="#fbbf24" opacity="0.2"/>
-                                    
-                                    <!-- Checkmark de succès -->
-                                    <circle cx="165" cy="165" r="20" fill="#22c55e"/>
-                                    <polyline points="155,165 162,172 177,157" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </div>
-                            
-                            <!-- Texte -->
-                            <div class="text-center md:text-left flex-1">
+                    <div id="contractUploaded" class="mb-6 relative overflow-hidden bg-gradient-to-r from-green-900/50 to-blue-900/30 border border-green-500/50 p-6 rounded-xl shadow-lg">
+                        <!-- ✅ Skyline Dubai en arrière-plan subtil -->
+                        <div class="absolute bottom-0 left-0 right-0 h-20 opacity-[0.07] pointer-events-none">
+                            <svg viewBox="0 0 1200 100" preserveAspectRatio="none" class="w-full h-full text-white">
+                                <!-- Burj Khalifa (centre) -->
+                                <polygon points="600,5 594,100 606,100" fill="currentColor"/>
+                                <!-- Buildings gauche -->
+                                <rect x="80" y="50" width="35" height="50" fill="currentColor"/>
+                                <rect x="125" y="35" width="28" height="65" fill="currentColor"/>
+                                <rect x="160" y="45" width="40" height="55" fill="currentColor"/>
+                                <rect x="210" y="30" width="25" height="70" fill="currentColor"/>
+                                <rect x="245" y="50" width="45" height="50" fill="currentColor"/>
+                                <rect x="300" y="25" width="30" height="75" fill="currentColor"/>
+                                <rect x="340" y="40" width="35" height="60" fill="currentColor"/>
+                                <rect x="385" y="20" width="25" height="80" fill="currentColor"/>
+                                <rect x="420" y="45" width="40" height="55" fill="currentColor"/>
+                                <rect x="470" y="30" width="30" height="70" fill="currentColor"/>
+                                <rect x="510" y="55" width="35" height="45" fill="currentColor"/>
+                                <rect x="555" y="40" width="25" height="60" fill="currentColor"/>
+                                <!-- Buildings droite -->
+                                <rect x="630" y="50" width="30" height="50" fill="currentColor"/>
+                                <rect x="670" y="35" width="35" height="65" fill="currentColor"/>
+                                <rect x="715" y="25" width="40" height="75" fill="currentColor"/>
+                                <rect x="765" y="45" width="30" height="55" fill="currentColor"/>
+                                <rect x="805" y="20" width="25" height="80" fill="currentColor"/>
+                                <rect x="840" y="40" width="45" height="60" fill="currentColor"/>
+                                <rect x="895" y="30" width="30" height="70" fill="currentColor"/>
+                                <rect x="935" y="50" width="35" height="50" fill="currentColor"/>
+                                <rect x="980" y="35" width="40" height="65" fill="currentColor"/>
+                                <rect x="1030" y="55" width="25" height="45" fill="currentColor"/>
+                                <rect x="1065" y="45" width="35" height="55" fill="currentColor"/>
+                                <rect x="1110" y="40" width="30" height="60" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        
+                        <!-- ✅ Contenu par-dessus -->
+                        <div class="relative z-10 flex items-center gap-4">
+                            <div class="text-4xl flex-shrink-0">✅</div>
+                            <div class="flex-1">
                                 <h3 class="text-2xl font-bold text-green-300 mb-2">${t('dashboard:contract.signed_validated')}</h3>
                                 <p class="text-gray-300 mb-3">${t('dashboard:contract.can_add_leads')}</p>
-                                <div class="flex flex-wrap gap-2 justify-center md:justify-start">
-                                    <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full">💰 25% commission acheteurs</span>
-                                    <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full">🏠 20% autres leads</span>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full">💰 ${badges.buyers}</span>
+                                    <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full">🏠 ${badges.others}</span>
                                 </div>
                             </div>
                         </div>
@@ -807,7 +807,7 @@ export function renderDashboard() {
                 </div>
             </main>
             
-            <!-- ✅ NOUVEAU MODAL AJOUT LEAD avec commissions 25%/20% -->
+            <!-- ✅ MODAL AJOUT LEAD avec commissions 25%/20% -->
             <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                 <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                     <h3 class="text-2xl font-bold mb-6">${t('dashboard:add_lead')}</h3>
