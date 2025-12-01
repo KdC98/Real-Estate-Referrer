@@ -1,347 +1,334 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title id="page-title">Politique de confidentialité - Real Estate Referrer</title>
-<!-- CDN Libraries -->
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-<!-- i18next CDN -->
-<script src="https://unpkg.com/i18next@23.7.6/i18next.min.js"></script>
-<script src="https://unpkg.com/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
-<script src="https://unpkg.com/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-<style>
-:root{
---brand-navy: #1e3a8a;
---brand-blue: #2563eb;
---brand-purple: #7c3aed;
---brand-gold: #fbbf24;
-}
-body {
-  background: linear-gradient(135deg, #1e3a8a 0%, #1e293b 100%);
-  min-height: 100vh;
-}
-.brand-gradient{
-  background-image: linear-gradient(135deg, var(--brand-navy), var(--brand-blue), var(--brand-purple));
-}
-.glass-card{
-  background:rgba(255,255,255,.98);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.3);
-  box-shadow:0 8px 32px rgba(0,0,0,.08)
-}
-html{
-  scroll-behavior: smooth;
-}
-.language-selector {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-.language-selector button {
-  font-size: 24px;
-  border: 2px solid transparent;
-  border-radius: 4px;
-  padding: 2px;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: none;
-}
-.language-selector button:hover {
-  transform: scale(1.15);
-  border-color: #2563eb;
-}
-.language-selector button.active {
-  border-color: #fbbf24;
-  background-color: rgba(251, 191, 36, 0.1);
-}
-.section-title {
-  color: #1e3a8a;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.section-title i {
-  color: #fbbf24;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Politique de confidentialité - Real Estate Referrer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
-<body class="text-gray-900">
-<!-- Header -->
-<header class="bg-gray-800 bg-opacity-50 backdrop-blur-md sticky top-0 z-50 border-b border-blue-900">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-<div class="flex justify-between items-center">
-<a href="index.html" class="text-2xl font-bold text-yellow-400">
-<i class="fas fa-building mr-2"></i>Real Estate Referrer
-</a>
-<nav class="flex gap-4 items-center text-sm font-medium">
-<!-- Language Selector -->
-<div class="language-selector">
-<button onclick="changeLanguage('fr')" title="Français" id="lang-fr">🇫🇷</button>
-<button onclick="changeLanguage('en')" title="English" id="lang-en">🇬🇧</button>
-<button onclick="changeLanguage('ar')" title="العربية" id="lang-ar">🇦🇪</button>
-<button onclick="changeLanguage('ru')" title="Русский" id="lang-ru">🇷🇺</button>
-<button onclick="changeLanguage('hi')" title="हिन्दी" id="lang-hi">🇮🇳</button>
-<button onclick="changeLanguage('ur')" title="اردو" id="lang-ur">🇵🇰</button>
-<button onclick="changeLanguage('zh')" title="中文" id="lang-zh">🇨🇳</button>
-<button onclick="changeLanguage('tl')" title="Tagalog" id="lang-tl">🇵🇭</button>
-</div>
-<a href="index.html" class="text-gray-300 hover:text-yellow-400 transition"><i class="fas fa-home mr-1"></i><span data-i18n="privacy.nav.home">Accueil</span></a>
-<a href="how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition"><i class="fas fa-question-circle mr-1"></i><span data-i18n="privacy.nav.howItWorks">Comment ça marche</span></a>
-<a href="login.html" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 px-6 py-2 rounded-lg transition font-bold">
-<i class="fas fa-sign-in-alt mr-1"></i><span data-i18n="privacy.nav.login">Connexion</span>
-</a>
-</nav>
-</div>
-</div>
-</header>
-<!-- Hero Section -->
-<section class="py-12 px-4 brand-gradient text-white relative overflow-hidden">
-<div class="absolute inset-0 opacity-10">
-<div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
-<div class="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-</div>
-<div class="max-w-4xl mx-auto text-center relative z-10">
-<i class="fas fa-shield-alt text-5xl mb-4"></i>
-<h1 class="text-4xl md:text-5xl font-bold mb-4" data-i18n="privacy.title">Politique de confidentialité</h1>
-<p class="text-lg text-blue-100" data-i18n="privacy.subtitle">Protection de vos données personnelles - Conformité RGPD</p>
-<p class="text-sm text-blue-200 mt-4" data-i18n="privacy.lastUpdated">Dernière mise à jour : 28 octobre 2025</p>
-</div>
-</section>
-<!-- Content -->
-<div class="max-w-5xl mx-auto px-4 py-12">
-<!-- Intro -->
-<div class="glass-card rounded-xl p-8 mb-6 border-l-4 border-blue-600">
-<div class="flex items-start">
-<i class="fas fa-info-circle text-3xl text-blue-600 mr-4 mt-1"></i>
-<div>
-<h2 class="section-title"><i class="fas fa-file-contract"></i><span data-i18n="privacy.intro.title">Introduction</span></h2>
-<p class="text-gray-700 leading-relaxed mb-3" data-i18n="privacy.intro.p1">La présente Politique de confidentialité décrit comment Karyne de Clercq Real Estate collecte, utilise, partage et protège vos informations personnelles.</p>
-<p class="text-gray-700 leading-relaxed mb-3" data-i18n="privacy.intro.p2">En utilisant notre service, vous acceptez les pratiques décrites dans cette politique.</p>
-<p class="text-gray-700 leading-relaxed" data-i18n="privacy.intro.p3">Nous nous engageons à protéger votre vie privée conformément au RGPD et aux lois des Émirats Arabes Unis.</p>
-</div>
-</div>
-</div>
-<!-- Section 1 -->
-<div class="glass-card rounded-xl p-8 mb-6">
-<h2 class="section-title"><i class="fas fa-database"></i><span data-i18n="privacy.section1.title">1. Données collectées</span></h2>
-<p class="text-gray-700 mb-4" data-i18n="privacy.section1.intro">Nous collectons les données suivantes :</p>
-<ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
-<li data-i18n="privacy.section1.item1">Données d'inscription : nom, email, téléphone, mot de passe</li>
-<li data-i18n="privacy.section1.item2">Données des leads : informations clients, budget, type de propriété</li>
-<li data-i18n="privacy.section1.item3">Documents : contrats signés (PDF)</li>
-<li data-i18n="privacy.section1.item4">Transactions : prix de vente, commissions</li>
-<li data-i18n="privacy.section1.item5">Données techniques : IP, navigateur, langue</li>
-</ul>
-</div>
-<!-- Section 2 -->
-<div class="glass-card rounded-xl p-8 mb-6">
-<h2 class="section-title"><i class="fas fa-tasks"></i><span data-i18n="privacy.section2.title">2. Utilisation des données</span></h2>
-<p class="text-gray-700 mb-4" data-i18n="privacy.section2.intro">Vos données sont utilisées pour :</p>
-<div class="space-y-3">
-<div class="flex items-start">
-<i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-<p class="text-gray-700" data-i18n="privacy.section2.item1">Gérer votre compte et vos leads</p>
-</div>
-<div class="flex items-start">
-<i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-<p class="text-gray-700" data-i18n="privacy.section2.item2">Calculer et verser vos commissions</p>
-</div>
-<div class="flex items-start">
-<i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-<p class="text-gray-700" data-i18n="privacy.section2.item3">Vous envoyer des notifications importantes</p>
-</div>
-<div class="flex items-start">
-<i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-<p class="text-gray-700" data-i18n="privacy.section2.item4">Respecter la conformité RERA Dubai</p>
-</div>
-<div class="flex items-start">
-<i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
-<p class="text-gray-700" data-i18n="privacy.section2.item5">Améliorer notre service</p>
-</div>
-</div>
-</div>
-<!-- Section 3 -->
-<div class="glass-card rounded-xl p-8 mb-6">
-<h2 class="section-title"><i class="fas fa-share-alt"></i><span data-i18n="privacy.section3.title">3. Partage des données</span></h2>
-<p class="text-gray-700 mb-4" data-i18n="privacy.section3.intro">Nous ne vendons jamais vos données. Partage limité :</p>
-<div class="space-y-3">
-<div class="bg-blue-50 border-l-4 border-blue-500 p-4">
-<p class="text-gray-700" data-i18n="privacy.section3.item1">✓ Avec l'agent immobilier pour traiter vos leads</p>
-</div>
-<div class="bg-blue-50 border-l-4 border-blue-500 p-4">
-<p class="text-gray-700" data-i18n="privacy.section3.item2">✓ Autorités légales si requis par la loi (RERA)</p>
-</div>
-<div class="bg-blue-50 border-l-4 border-blue-500 p-4">
-<p class="text-gray-700" data-i18n="privacy.section3.item3">✓ Prestataires techniques (Vercel, Supabase)</p>
-</div>
-<div class="bg-red-50 border-l-4 border-red-500 p-4">
-<p class="text-gray-700" data-i18n="privacy.section3.item4">✗ Jamais vendu à des tiers marketing</p>
-</div>
-</div>
-</div>
-<!-- Section 4 -->
-<div class="glass-card rounded-xl p-8 mb-6 border-l-4 border-purple-600">
-<h2 class="section-title"><i class="fas fa-balance-scale"></i><span data-i18n="privacy.section4.title">4. Vos droits RGPD</span></h2>
-<p class="text-gray-700 mb-4" data-i18n="privacy.section4.intro">Vous avez le droit de :</p>
-<div class="space-y-3">
-<div class="bg-purple-50 rounded-lg p-3">
-<p class="text-gray-700"><i class="fas fa-eye text-purple-600 mr-2"></i><span data-i18n="privacy.section4.item1">Accéder à vos données</span></p>
-</div>
-<div class="bg-purple-50 rounded-lg p-3">
-<p class="text-gray-700"><i class="fas fa-edit text-purple-600 mr-2"></i><span data-i18n="privacy.section4.item2">Rectifier vos informations</span></p>
-</div>
-<div class="bg-purple-50 rounded-lg p-3">
-<p class="text-gray-700"><i class="fas fa-trash-alt text-purple-600 mr-2"></i><span data-i18n="privacy.section4.item3">Supprimer vos données</span></p>
-</div>
-<div class="bg-purple-50 rounded-lg p-3">
-<p class="text-gray-700"><i class="fas fa-download text-purple-600 mr-2"></i><span data-i18n="privacy.section4.item4">Exporter vos données</span></p>
-</div>
-<div class="bg-purple-50 rounded-lg p-3">
-<p class="text-gray-700"><i class="fas fa-hand-paper text-purple-600 mr-2"></i><span data-i18n="privacy.section4.item5">Vous opposer au traitement</span></p>
-</div>
-</div>
-<div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-<p class="text-gray-700 text-sm" data-i18n="privacy.section4.contact">Contactez contact@real-estate-referrer.com pour exercer vos droits (réponse sous 30 jours)</p>
-</div>
-</div>
-<!-- Section 5 -->
-<div class="glass-card rounded-xl p-8 mb-6 border-l-4 border-green-600">
-<h2 class="section-title"><i class="fas fa-headset"></i><span data-i18n="privacy.section5.title">5. Contact</span></h2>
-<div class="grid md:grid-cols-2 gap-6">
-<div>
-<h4 class="font-bold text-gray-800 mb-3" data-i18n="privacy.section5.responsible">Responsable du traitement</h4>
-<div class="space-y-2 text-gray-700">
-<p><i class="fas fa-user text-blue-600 mr-2"></i><strong>Karyne de Clercq</strong></p>
-<p><i class="fas fa-building text-blue-600 mr-2"></i>Real Estate Referrer</p>
-<p><i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>Dubai, UAE</p>
-</div>
-</div>
-<div>
-<h4 class="font-bold text-gray-800 mb-3" data-i18n="privacy.section5.coordinates">Nous contacter</h4>
-<div class="space-y-2 text-gray-700">
-<p><i class="fas fa-envelope text-blue-600 mr-2"></i>contact@real-estate-referrer.com</p>
-<p><i class="fas fa-comments text-blue-600 mr-2"></i><span data-i18n="privacy.section5.chat">Chat disponible sur le site</span></p>
-</div>
-</div>
-</div>
-</div>
-<!-- CTA Contact -->
-<div class="glass-card rounded-xl p-8 bg-gradient-to-r from-blue-900 to-purple-900 text-white border-2 border-yellow-400">
-<div class="flex items-start">
-<i class="fas fa-envelope text-5xl text-yellow-400 mr-6"></i>
-<div>
-<h3 class="text-2xl font-bold mb-3" data-i18n="privacy.cta.title">Des questions sur vos données ?</h3>
-<p class="text-gray-100 mb-4" data-i18n="privacy.cta.subtitle">N'hésitez pas à nous contacter. Réponse sous 30 jours maximum.</p>
-<a href="mailto:contact@real-estate-referrer.com" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-bold transition">
-<i class="fas fa-paper-plane mr-2"></i><span data-i18n="privacy.cta.button">Nous contacter</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-<!-- Footer -->
-<footer class="bg-gray-900 text-gray-400 py-10 px-4 mt-12">
-<div class="max-w-6xl mx-auto">
-<div class="grid md:grid-cols-4 gap-8 mb-6">
-<div>
-<h3 class="text-white font-bold mb-4 text-yellow-400" data-i18n="privacy.footer.title">Real Estate Referrer</h3>
-<p class="text-sm" data-i18n="privacy.footer.tagline">Programme d'apporteurs d'affaires immobiliers à Dubai</p>
-</div>
-<div>
-<h4 class="text-white font-bold mb-4" data-i18n="privacy.footer.navigation">Navigation</h4>
-<ul class="space-y-2 text-sm">
-<li><a href="index.html" class="hover:text-white transition" data-i18n="privacy.footer.home">Accueil</a></li>
-<li><a href="how-it-works.html" class="hover:text-white transition" data-i18n="privacy.footer.howItWorks">Comment ça marche</a></li>
-<li><a href="login.html" class="hover:text-white transition" data-i18n="privacy.footer.loginLink">Connexion</a></li>
-<li><a href="signup.html" class="hover:text-white transition" data-i18n="privacy.footer.signup">Inscription</a></li>
-</ul>
-</div>
-<div>
-<h4 class="text-white font-bold mb-4" data-i18n="privacy.footer.legal">Légal</h4>
-<ul class="space-y-2 text-sm">
-<li><a href="terms.html" class="hover:text-white transition" data-i18n="privacy.footer.terms">CGU</a></li>
-<li><a href="privacy.html" class="hover:text-white transition text-yellow-400" data-i18n="privacy.footer.privacy">Confidentialité</a></li>
-<li><a href="contract-template.html" class="hover:text-white transition" data-i18n="privacy.footer.contract">Template Contrat</a></li>
-</ul>
-</div>
-<div>
-<h4 class="text-white font-bold mb-4" data-i18n="privacy.footer.contact">Contact</h4>
-<ul class="space-y-2 text-sm">
-<li><i class="fas fa-envelope mr-2"></i>contact@real-estate-referrer.com</li>
-<li><i class="fas fa-comments mr-2"></i><span data-i18n="privacy.footer.chatAvailable">Chat disponible</span></li>
-<li><i class="fas fa-map-marker-alt mr-2"></i>Dubai, UAE</li>
-</ul>
-</div>
-</div>
-<div class="border-t border-gray-800 pt-6 text-center text-sm">
-<p data-i18n="privacy.footer.copyright">&copy; 2025 Karyne de Clercq. Tous droits réservés.</p>
-</div>
-</div>
-</footer>
-<script>
-// Initialize i18next
-async function initI18n() {
-  await i18next
-    .use(i18nextHttpBackend)
-    .use(i18nextBrowserLanguageDetector)
-    .init({
-      fallbackLng: 'fr',
-      debug: false,
-      load: 'languageOnly',
-      ns: ['privacy'],
-      defaultNS: 'privacy',
-      backend: {
-        loadPath: '/locales/{{lng}}/{{ns}}.json'
-      },
-      detection: {
-        order: ['localStorage', 'navigator'],
-        caches: ['localStorage']
-      }
-    });
-  updateContent();
-  updateActiveLanguage();
-}
-function updateContent() {
-  document.querySelectorAll('[data-i18n]').forEach(element => {
-    const key = element.getAttribute('data-i18n');
-    const translation = i18next.t(key);
-    
-    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-      element.placeholder = translation;
-    } else {
-      element.textContent = translation;
-    }
-  });
-  document.getElementById('page-title').textContent = i18next.t('privacy.title') + ' - Real Estate Referrer';
-}
-function updateActiveLanguage() {
-  const currentLang = i18next.language;
-  document.querySelectorAll('.language-selector button').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  const activeBtn = document.getElementById(`lang-${currentLang}`);
-  if (activeBtn) {
-    activeBtn.classList.add('active');
-  }
-}
-window.changeLanguage = async function(langCode) {
-  try {
-    await i18next.changeLanguage(langCode);
-    localStorage.setItem('i18nextLng', langCode);
-    updateContent();
-    updateActiveLanguage();
-  } catch (error) {
-    console.error('Error changing language:', error);
-  }
-};
-document.addEventListener('DOMContentLoaded', initI18n);
-</script>
-<!-- Crisp Chat -->
-<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="3fc5eae0-c8f6-4c08-98e9-8f83cc5712e2";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
+    <!-- Header -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-white text-xl font-bold">Real Estate Referrer</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Sélecteur de langue -->
+                    <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="ar">🇦🇪 العربية</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="hi">🇮🇳 हिंदी</option>
+                        <option value="ur">🇵🇰 اردو</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="tl">🇵🇭 Tagalog</option>
+                    </select>
+                    <a href="index.html" class="text-white/70 hover:text-white transition" data-i18n="privacy.nav.home">Accueil</a>
+                    <a href="how-it-works.html" class="text-white/70 hover:text-white transition" data-i18n="privacy.nav.howItWorks">Comment ça marche</a>
+                    <a href="terms.html" class="text-white/70 hover:text-white transition" data-i18n="privacy.nav.terms">CGU</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center">
+                <div class="text-5xl mb-4">🔒</div>
+                <h1 class="text-4xl md:text-5xl font-bold text-yellow-400 mb-4" data-i18n="privacy.title">Politique de confidentialité</h1>
+                <p class="text-xl text-blue-100 mb-2" data-i18n="privacy.subtitle">Protection de vos données personnelles - Conformité RGPD</p>
+                <p class="text-sm text-blue-200" data-i18n="privacy.lastUpdated">Dernière mise à jour : 28 octobre 2025</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Intro -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 mb-8">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center">
+                <span class="mr-3">📋</span>
+                <span data-i18n="privacy.intro.title">Introduction</span>
+            </h2>
+            <div class="text-blue-100 space-y-4">
+                <p data-i18n="privacy.intro.p1">La présente Politique de confidentialité décrit comment Karyne de Clercq Real Estate collecte, utilise, partage et protège vos informations personnelles.</p>
+                <p data-i18n="privacy.intro.p2">En utilisant notre service, vous acceptez les pratiques décrites dans cette politique.</p>
+                <p data-i18n="privacy.intro.p3">Nous nous engageons à protéger votre vie privée conformément au RGPD et aux lois des Émirats Arabes Unis.</p>
+            </div>
+        </div>
+
+        <!-- Section 1 -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 mb-8">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center">
+                <span class="mr-3">📊</span>
+                <span data-i18n="privacy.section1.title">1. Données collectées</span>
+            </h2>
+            <p class="text-blue-100 mb-4" data-i18n="privacy.section1.intro">Nous collectons les données suivantes :</p>
+            <ul class="text-blue-100 space-y-3">
+                <li class="flex items-start">
+                    <span class="text-blue-400 mr-2">→</span>
+                    <span data-i18n="privacy.section1.item1">Données d'inscription : nom, email, téléphone, mot de passe</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-blue-400 mr-2">→</span>
+                    <span data-i18n="privacy.section1.item2">Données des leads : informations clients, budget, type de propriété</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-blue-400 mr-2">→</span>
+                    <span data-i18n="privacy.section1.item3">Documents : contrats signés (PDF)</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-blue-400 mr-2">→</span>
+                    <span data-i18n="privacy.section1.item4">Transactions : prix de vente, commissions</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-blue-400 mr-2">→</span>
+                    <span data-i18n="privacy.section1.item5">Données techniques : IP, navigateur, langue</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 mb-8">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center">
+                <span class="mr-3">⚙️</span>
+                <span data-i18n="privacy.section2.title">2. Utilisation des données</span>
+            </h2>
+            <p class="text-blue-100 mb-4" data-i18n="privacy.section2.intro">Vos données sont utilisées pour :</p>
+            <ul class="text-blue-100 space-y-3">
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section2.item1">Gérer votre compte et vos leads</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section2.item2">Calculer et verser vos commissions</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section2.item3">Vous envoyer des notifications importantes</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section2.item4">Respecter la conformité RERA Dubai</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section2.item5">Améliorer notre service</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 mb-8">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center">
+                <span class="mr-3">🔗</span>
+                <span data-i18n="privacy.section3.title">3. Partage des données</span>
+            </h2>
+            <p class="text-blue-100 mb-4" data-i18n="privacy.section3.intro">Nous ne vendons jamais vos données. Partage limité :</p>
+            <ul class="text-blue-100 space-y-3">
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section3.item1">Avec l'agent immobilier pour traiter vos leads</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section3.item2">Autorités légales si requis par la loi (RERA)</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-green-400 mr-2">✓</span>
+                    <span data-i18n="privacy.section3.item3">Prestataires techniques (Vercel, Supabase)</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-red-400 mr-2">✗</span>
+                    <span data-i18n="privacy.section3.item4">Jamais vendu à des tiers marketing</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 4 -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-purple-500/30 mb-8">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4 flex items-center">
+                <span class="mr-3">⚖️</span>
+                <span data-i18n="privacy.section4.title">4. Vos droits RGPD</span>
+            </h2>
+            <p class="text-blue-100 mb-4" data-i18n="privacy.section4.intro">Vous avez le droit de :</p>
+            <ul class="text-blue-100 space-y-3">
+                <li class="flex items-start">
+                    <span class="text-purple-400 mr-2">👁️</span>
+                    <span data-i18n="privacy.section4.item1">Accéder à vos données</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-purple-400 mr-2">✏️</span>
+                    <span data-i18n="privacy.section4.item2">Rectifier vos informations</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-purple-400 mr-2">🗑️</span>
+                    <span data-i18n="privacy.section4.item3">Supprimer vos données</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-purple-400 mr-2">📥</span>
+                    <span data-i18n="privacy.section4.item4">Exporter vos données</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="text-purple-400 mr-2">✋</span>
+                    <span data-i18n="privacy.section4.item5">Vous opposer au traitement</span>
+                </li>
+            </ul>
+            <div class="mt-6 bg-blue-900/30 border border-blue-500/30 rounded-xl p-4">
+                <p class="text-blue-100 text-sm" data-i18n="privacy.section4.contact">Contactez contact@real-estate-referrer.com pour exercer vos droits (réponse sous 30 jours)</p>
+            </div>
+        </div>
+
+        <!-- Section 5 - Contact -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-green-500/30 mb-8">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-6 flex items-center">
+                <span class="mr-3">📞</span>
+                <span data-i18n="privacy.section5.title">5. Contact</span>
+            </h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-bold text-white mb-3" data-i18n="privacy.section5.responsible">Responsable du traitement</h4>
+                    <div class="text-blue-100 space-y-2">
+                        <p>👤 <strong>Karyne de Clercq</strong></p>
+                        <p>🏢 Real Estate Referrer</p>
+                        <p>📍 Dubai, UAE</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white mb-3" data-i18n="privacy.section5.coordinates">Nous contacter</h4>
+                    <div class="text-blue-100 space-y-2">
+                        <p>📧 contact@real-estate-referrer.com</p>
+                        <p>💬 <span data-i18n="privacy.section5.chat">Chat disponible sur le site</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 border-2 border-yellow-400">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="text-5xl mr-6 mb-4 md:mb-0">📧</div>
+                <div class="flex-1 text-center md:text-left">
+                    <h3 class="text-2xl font-bold text-white mb-2" data-i18n="privacy.cta.title">Des questions sur vos données ?</h3>
+                    <p class="text-blue-100 mb-4" data-i18n="privacy.cta.subtitle">N'hésitez pas à nous contacter. Réponse sous 30 jours maximum.</p>
+                    <a href="mailto:contact@real-estate-referrer.com" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-6 py-3 rounded-lg font-bold transition">
+                        <span data-i18n="privacy.cta.button">Nous contacter</span> →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="text-center mt-8">
+            <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg transition duration-300">
+                ← Retour à l'accueil
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-white/10 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="grid md:grid-cols-4 gap-8 mb-6">
+                <div>
+                    <h3 class="text-yellow-400 font-bold mb-4" data-i18n="privacy.footer.title">Real Estate Referrer</h3>
+                    <p class="text-blue-200 text-sm" data-i18n="privacy.footer.tagline">Programme d'apporteurs d'affaires immobiliers à Dubai</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4" data-i18n="privacy.footer.navigation">Navigation</h4>
+                    <ul class="space-y-2 text-sm text-blue-200">
+                        <li><a href="index.html" class="hover:text-white transition" data-i18n="privacy.footer.home">Accueil</a></li>
+                        <li><a href="how-it-works.html" class="hover:text-white transition" data-i18n="privacy.footer.howItWorks">Comment ça marche</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4" data-i18n="privacy.footer.legal">Légal</h4>
+                    <ul class="space-y-2 text-sm text-blue-200">
+                        <li><a href="terms.html" class="hover:text-white transition" data-i18n="privacy.footer.terms">CGU</a></li>
+                        <li><a href="privacy.html" class="text-yellow-400 hover:text-yellow-300 transition" data-i18n="privacy.footer.privacy">Confidentialité</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold mb-4" data-i18n="privacy.footer.contact">Contact</h4>
+                    <ul class="space-y-2 text-sm text-blue-200">
+                        <li>📧 contact@real-estate-referrer.com</li>
+                        <li>📍 Dubai, UAE</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-6 text-center text-sm text-blue-200">
+                <p data-i18n="privacy.footer.copyright">© 2025 Real Estate Referrer. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration i18next
+        (async () => {
+            await i18next
+                .use(i18nextHttpBackend)
+                .use(i18nextBrowserLanguageDetector)
+                .init({
+                    fallbackLng: 'fr',
+                    debug: false,
+                    load: 'languageOnly',
+                    ns: ['privacy'],
+                    defaultNS: 'privacy',
+                    backend: {
+                        loadPath: '/locales/{{lng}}/{{ns}}.json'
+                    },
+                    detection: {
+                        order: ['localStorage', 'navigator'],
+                        caches: ['localStorage']
+                    }
+                });
+            
+            // Mettre à jour le sélecteur avec la langue actuelle
+            const currentLang = localStorage.getItem('i18nextLng') || i18next.language || 'fr';
+            document.getElementById('languageSelector').value = currentLang.split('-')[0];
+            
+            updateContent();
+        })();
+
+        // Changement de langue
+        document.getElementById('languageSelector').addEventListener('change', async function(e) {
+            await i18next.changeLanguage(e.target.value);
+            localStorage.setItem('i18nextLng', e.target.value);
+            updateContent();
+        });
+
+        // Mise à jour des éléments avec data-i18n
+        function updateContent() {
+            document.documentElement.lang = i18next.language;
+            
+            document.querySelectorAll('[data-i18n]').forEach(function(element) {
+                const key = element.getAttribute('data-i18n');
+                const translation = i18next.t(key);
+                if (translation && translation !== key) {
+                    element.textContent = translation;
+                }
+            });
+            
+            document.getElementById('page-title').textContent = i18next.t('privacy.title') + ' - Real Estate Referrer';
+        }
+    </script>
+    <!-- Crisp Chat -->
+    <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="3fc5eae0-c8f6-4c08-98e9-8f83cc5712e2";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 </body>
 </html>
