@@ -6,7 +6,7 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.6.0 - Skyline background + badges traduits
+// Version: 3.7.0 - Style unifié slate/blue
 // Date: 1 décembre 2025
 // ============================================
 /**
@@ -18,13 +18,37 @@ export function renderLandingPage() {
     
     return `
         <div class="min-h-screen">
-            <header class="container mx-auto px-4 py-6">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
+            <!-- ✅ Header avec style unifié -->
+            <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
+                <div class="container mx-auto px-4 py-4">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
+                        
+                        <!-- Desktop Navigation -->
+                        <div class="hidden lg:flex items-center gap-3">
+                            <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                                <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
+                                <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
+                                <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
+                                <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
+                                <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
+                                <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
+                                <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
+                                <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
+                            </div>
+                            <a href="how-it-works.html" class="text-white/70 hover:text-white transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
+                            <button onclick="showLogin()" class="text-white/70 hover:text-white transition font-medium px-4 py-2">${t('nav.login')}</button>
+                            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
+                        </div>
+                        <!-- Mobile Menu Button -->
+                        <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl">
+                            <span id="menuIcon">☰</span>
+                        </button>
+                    </div>
                     
-                    <!-- Desktop Navigation -->
-                    <div class="hidden lg:flex items-center gap-3">
-                        <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                    <!-- Mobile Menu -->
+                    <div id="mobileMenu" class="hidden lg:hidden mt-4 bg-white/10 backdrop-blur-md rounded-xl p-4 space-y-3 border border-white/20">
+                        <div class="flex flex-wrap gap-2 justify-center pb-3 border-b border-white/20">
                             <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
                             <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
                             <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
@@ -34,40 +58,19 @@ export function renderLandingPage() {
                             <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
                             <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
                         </div>
-                        <a href="how-it-works.html" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
-                        <button onclick="showLogin()" class="text-white hover:text-yellow-400 transition font-medium px-4 py-2">${t('nav.login')}</button>
-                        <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
+                        <a href="how-it-works.html" class="block text-center text-white/70 hover:text-white transition font-medium py-2">${t('nav.how_it_works')}</a>
+                        <button onclick="showLogin(); toggleMobileMenu();" class="w-full text-center text-white/70 hover:text-white transition font-medium py-2">${t('nav.login')}</button>
+                        <button onclick="showSignup(); toggleMobileMenu();" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">${t('nav.signup')}</button>
                     </div>
-                    <!-- Mobile Menu Button -->
-                    <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl">
-                        <span id="menuIcon">☰</span>
-                    </button>
                 </div>
-                
-                <!-- Mobile Menu -->
-                <div id="mobileMenu" class="hidden lg:hidden mt-4 bg-gray-800/95 backdrop-blur-md rounded-xl p-4 space-y-3">
-                    <div class="flex flex-wrap gap-2 justify-center pb-3 border-b border-gray-700">
-                        <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
-                        <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
-                        <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
-                        <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
-                        <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
-                        <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
-                        <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
-                        <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
-                    </div>
-                    <a href="how-it-works.html" class="block text-center text-white hover:text-yellow-400 transition font-medium py-2">${t('nav.how_it_works')}</a>
-                    <button onclick="showLogin(); toggleMobileMenu();" class="w-full text-center text-white hover:text-yellow-400 transition font-medium py-2">${t('nav.login')}</button>
-                    <button onclick="showSignup(); toggleMobileMenu();" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">${t('nav.signup')}</button>
-                </div>
-            </header>
+            </nav>
             
             <main class="container mx-auto px-4 py-20">
                 <div class="text-center mb-12">
-                    <h2 class="text-5xl md:text-6xl font-bold mb-6">
+                    <h2 class="text-5xl md:text-6xl font-bold mb-6 text-yellow-400">
                         ${t('hero.title')}
                     </h2>
-                    <p class="text-xl text-gray-300 mb-8">
+                    <p class="text-xl text-blue-200 mb-8">
                         ${t('hero.subtitle')}
                     </p>
                     <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">
@@ -76,66 +79,68 @@ export function renderLandingPage() {
                 </div>
                 
                 <div class="grid md:grid-cols-3 gap-6 my-16">
-                    <div class="rounded-xl overflow-hidden shadow-2xl">
+                    <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10">
                         <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover">
                     </div>
-                    <div class="rounded-xl overflow-hidden shadow-2xl">
+                    <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10">
                         <img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" alt="Dubai Marina" class="w-full h-64 object-cover">
                     </div>
-                    <div class="rounded-xl overflow-hidden shadow-2xl">
+                    <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10">
                         <img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover">
                     </div>
                 </div>
                 
+                <!-- ✅ Stats avec style unifié -->
                 <div class="grid md:grid-cols-3 gap-8 mt-20">
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                        <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.commission_value')}</div>
-                        <div class="text-gray-300">${t('stats.commission_label')}</div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20">
+                        <div class="text-4xl font-bold text-yellow-400 mb-2">${t('stats.commission_value')}</div>
+                        <div class="text-blue-200">${t('stats.commission_label')}</div>
                     </div>
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                        <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.support_value')}</div>
-                        <div class="text-gray-300">${t('stats.support_label')}</div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20">
+                        <div class="text-4xl font-bold text-yellow-400 mb-2">${t('stats.support_value')}</div>
+                        <div class="text-blue-200">${t('stats.support_label')}</div>
                     </div>
-                    <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 text-center">
-                        <div class="text-4xl font-bold text-yellow-500 mb-2">${t('stats.timeline_value')}</div>
-                        <div class="text-gray-300">${t('stats.timeline_label')}</div>
+                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20">
+                        <div class="text-4xl font-bold text-yellow-400 mb-2">${t('stats.timeline_value')}</div>
+                        <div class="text-blue-200">${t('stats.timeline_label')}</div>
                     </div>
                 </div>
                 
-                <div class="mt-20 bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-12">
-                    <h3 class="text-3xl font-bold text-center mb-12">${t('gains.title')}</h3>
+                <!-- ✅ Section gains avec style unifié -->
+                <div class="mt-20 bg-white/10 backdrop-blur-md rounded-2xl p-12 border border-white/20">
+                    <h3 class="text-3xl font-bold text-center text-yellow-400 mb-12">${t('gains.title')}</h3>
                     <div class="grid md:grid-cols-2 gap-8">
-                        <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                            <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
-                            <div class="space-y-3 text-gray-300">
+                        <div class="bg-slate-800/50 rounded-xl p-8 border border-white/10">
+                            <div class="text-yellow-400 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
+                            <div class="space-y-3 text-blue-200">
                                 <div class="flex justify-between">
                                     <span>${t('gains.sale_example_1_property')}</span>
-                                    <span class="font-bold text-yellow-500">${t('gains.sale_example_1_commission')}</span>
+                                    <span class="font-bold text-yellow-400">${t('gains.sale_example_1_commission')}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span>${t('gains.sale_example_2_property')}</span>
-                                    <span class="font-bold text-yellow-500">${t('gains.sale_example_2_commission')}</span>
+                                    <span class="font-bold text-yellow-400">${t('gains.sale_example_2_commission')}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span>${t('gains.sale_example_3_property')}</span>
-                                    <span class="font-bold text-yellow-500">${t('gains.sale_example_3_commission')}</span>
+                                    <span class="font-bold text-yellow-400">${t('gains.sale_example_3_commission')}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="bg-gray-900 bg-opacity-50 rounded-xl p-8">
-                            <div class="text-yellow-500 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
-                            <div class="space-y-3 text-gray-300">
+                        <div class="bg-slate-800/50 rounded-xl p-8 border border-white/10">
+                            <div class="text-yellow-400 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
+                            <div class="space-y-3 text-blue-200">
                                 <div class="flex justify-between">
                                     <span>${t('gains.rental_example_1_property')}</span>
-                                    <span class="font-bold text-yellow-500">${t('gains.rental_example_1_commission')}</span>
+                                    <span class="font-bold text-yellow-400">${t('gains.rental_example_1_commission')}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span>${t('gains.rental_example_2_property')}</span>
-                                    <span class="font-bold text-yellow-500">${t('gains.rental_example_2_commission')}</span>
+                                    <span class="font-bold text-yellow-400">${t('gains.rental_example_2_commission')}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span>${t('gains.rental_example_3_property')}</span>
-                                    <span class="font-bold text-yellow-500">${t('gains.rental_example_3_commission')}</span>
+                                    <span class="font-bold text-yellow-400">${t('gains.rental_example_3_commission')}</span>
                                 </div>
                             </div>
                         </div>
@@ -143,31 +148,32 @@ export function renderLandingPage() {
                 </div>
             </main>
             
-            <footer class="bg-gray-900 bg-opacity-80 backdrop-blur-md mt-20">
+            <!-- ✅ Footer avec style unifié -->
+            <footer class="bg-slate-900 border-t border-white/10 mt-20">
                 <div class="container mx-auto px-4 py-12">
                     <div class="grid md:grid-cols-3 gap-8 mb-8">
                         <div>
                             <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.navigation_title')}</h3>
                             <ul class="space-y-2">
-                                <li><button onclick="backToHome()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.home')}</button></li>
-                                <li><a href="how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.how_it_works')}</a></li>
-                                <li><button onclick="showLogin()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.login')}</button></li>
-                                <li><button onclick="showSignup()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.signup')}</button></li>
+                                <li><button onclick="backToHome()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.home')}</button></li>
+                                <li><a href="how-it-works.html" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.how_it_works')}</a></li>
+                                <li><button onclick="showLogin()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.login')}</button></li>
+                                <li><button onclick="showSignup()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.signup')}</button></li>
                             </ul>
                         </div>
                         
                         <div>
                             <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.legal_title')}</h3>
                             <ul class="space-y-2">
-                                <li><a href="terms.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.terms')}</a></li>
-                                <li><a href="privacy.html" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.privacy')}</a></li>
-                                <li><button onclick="downloadContractTemplate()" class="text-gray-300 hover:text-yellow-400 transition">${t('common:footer.contract_template')}</button></li>
+                                <li><a href="terms.html" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.terms')}</a></li>
+                                <li><a href="privacy.html" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.privacy')}</a></li>
+                                <li><button onclick="downloadContractTemplate()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.contract_template')}</button></li>
                             </ul>
                         </div>
                         
                         <div>
                             <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.contact_title')}</h3>
-                            <ul class="space-y-3 text-gray-300">
+                            <ul class="space-y-3 text-blue-200">
                                 <li class="flex items-center gap-2">
                                     <span>📧</span>
                                     <a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a>
@@ -180,7 +186,7 @@ export function renderLandingPage() {
                         </div>
                     </div>
                     
-                    <div class="border-t border-gray-700 pt-6 text-center text-gray-400">
+                    <div class="border-t border-white/10 pt-6 text-center text-blue-300">
                         ${t('common:footer.copyright')}
                     </div>
                 </div>
@@ -307,20 +313,20 @@ export function renderAuthPage(mode) {
         
         const trans = twoFactorTranslations[currentLang] || twoFactorTranslations['en'];
         
-        // ✅ CORRIGÉ: Ajout des IDs verify2faBtn et error2fa
+        // ✅ CORRIGÉ: Style unifié + IDs verify2faBtn et error2fa
         return `
             <div class="min-h-screen flex items-center justify-center px-4">
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
-                    <button onclick="window.backTo2FASignup()" class="text-gray-400 hover:text-white mb-6 flex items-center">
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
+                    <button onclick="window.backTo2FASignup()" class="text-blue-200 hover:text-white mb-6 flex items-center">
                         ${trans.back_button}
                     </button>
                     
-                    <h2 class="text-3xl font-bold mb-2 text-center">${trans.title}</h2>
-                    <p class="text-center text-gray-400 mb-6">${trans.subtitle}</p>
+                    <h2 class="text-3xl font-bold mb-2 text-center text-yellow-400">${trans.title}</h2>
+                    <p class="text-center text-blue-200 mb-6">${trans.subtitle}</p>
                     
                     <form id="form2FA" class="space-y-6">
                         <div>
-                            <label class="block text-sm font-medium mb-2">
+                            <label class="block text-sm font-medium mb-2 text-blue-100">
                                 ${trans.code_label}
                             </label>
                             <input 
@@ -330,11 +336,11 @@ export function renderAuthPage(mode) {
                                 pattern="[0-9]{6}"
                                 maxlength="6"
                                 placeholder="000000"
-                                class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-yellow-500 text-center text-2xl tracking-widest font-mono"
+                                class="w-full px-4 py-3 bg-slate-800/50 text-white rounded-lg border border-white/20 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 text-center text-2xl tracking-widest font-mono"
                                 required
                                 autocomplete="one-time-code"
                             />
-                            <p class="mt-2 text-sm text-gray-400">
+                            <p class="mt-2 text-sm text-blue-300">
                                 ${trans.code_help}
                             </p>
                         </div>
@@ -356,7 +362,7 @@ export function renderAuthPage(mode) {
                                 type="button"
                                 id="resendBtn"
                                 onclick="window.resend2FACode()"
-                                class="text-yellow-500 hover:text-yellow-400 text-sm font-medium"
+                                class="text-yellow-400 hover:text-yellow-300 text-sm font-medium"
                             >
                                 ${trans.resend_code}
                             </button>
@@ -365,7 +371,7 @@ export function renderAuthPage(mode) {
                             <button 
                                 type="button"
                                 onclick="window.backTo2FASignup()"
-                                class="text-gray-400 hover:text-white text-sm"
+                                class="text-blue-300 hover:text-white text-sm"
                             >
                                 ${trans.back_to_signup}
                             </button>
@@ -382,14 +388,15 @@ export function renderAuthPage(mode) {
         linkAction = 'showLogin()';
     }
     
+    // ✅ Style unifié pour toutes les pages auth
     return `
         <div class="min-h-screen flex items-center justify-center px-4">
-            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-8 w-full max-w-md">
-                <button onclick="backToHome()" class="text-gray-400 hover:text-white mb-6 flex items-center">
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
+                <button onclick="backToHome()" class="text-blue-200 hover:text-white mb-6 flex items-center">
                     ← ${t('auth:back_home')}
                 </button>
                 
-                <h2 class="text-3xl font-bold mb-6 text-center">${title}</h2>
+                <h2 class="text-3xl font-bold mb-6 text-center text-yellow-400">${title}</h2>
                 
                 ${mode === 'login' || mode === 'signup' ? `
                     <!-- OAuth Buttons -->
@@ -417,10 +424,10 @@ export function renderAuthPage(mode) {
                     <!-- Separator -->
                     <div class="relative my-6">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-600"></div>
+                            <div class="w-full border-t border-white/20"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="px-4 bg-gray-800 text-gray-400">OR</span>
+                            <span class="px-4 bg-slate-900/50 text-blue-200 rounded">OR</span>
                         </div>
                     </div>
                 ` : ''}
@@ -428,7 +435,7 @@ export function renderAuthPage(mode) {
                 <form id="authForm" class="space-y-4">
                     ${mode === 'signup' ? `
                         <div>
-                            <label class="block mb-2 font-medium">${t('auth:name_label')}</label>
+                            <label class="block mb-2 font-medium text-blue-100">${t('auth:name_label')}</label>
                             <input 
                                 type="text" 
                                 id="name" 
@@ -436,18 +443,18 @@ export function renderAuthPage(mode) {
                                 minlength="2"
                                 maxlength="100"
                                 placeholder="${t('auth:full_name_placeholder')}"
-                                class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50"
                                 oninput="validateName()"
                             >
                             <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
                         </div>
                         
                         <div>
-                            <label class="block mb-2 font-medium">${t('auth:phone_label')}</label>
+                            <label class="block mb-2 font-medium text-blue-100">${t('auth:phone_label')}</label>
                             <div class="flex gap-2">
                                 <select 
                                     id="countryCode" 
-                                    class="w-32 px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                    class="w-32 px-3 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white"
                                 >
                                     <option value="+971">🇦🇪 +971</option>
                                     <option value="+33">🇫🇷 +33</option>
@@ -466,7 +473,7 @@ export function renderAuthPage(mode) {
                                     id="phone" 
                                     required 
                                     placeholder="${t('auth:phone_placeholder')}"
-                                    class="flex-1 px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                    class="flex-1 px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50"
                                     oninput="validatePhone()"
                                 >
                             </div>
@@ -480,13 +487,13 @@ export function renderAuthPage(mode) {
                     
                     ${mode !== 'change-password' ? `
                         <div>
-                            <label class="block mb-2 font-medium">${t('auth:email_label')}</label>
+                            <label class="block mb-2 font-medium text-blue-100">${t('auth:email_label')}</label>
                             <input 
                                 type="email" 
                                 id="email" 
                                 required 
                                 placeholder="${t('auth:email_placeholder')}"
-                                class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none transition-colors"
+                                class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50"
                                 ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}
                             >
                             ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
@@ -495,7 +502,7 @@ export function renderAuthPage(mode) {
                     
                     ${mode !== 'reset' ? `
                         <div>
-                            <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Nouveau mot de passe' : t('auth:password_label')}</label>
+                            <label class="block mb-2 font-medium text-blue-100">${mode === 'change-password' ? 'Nouveau mot de passe' : t('auth:password_label')}</label>
                             <div class="relative">
                                 <input 
                                     type="password" 
@@ -503,26 +510,26 @@ export function renderAuthPage(mode) {
                                     required 
                                     minlength="8" 
                                     placeholder="••••••••"
-                                    class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
+                                    class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-blue-300/50"
                                     ${mode === 'signup' || mode === 'change-password' ? 'oninput="validatePassword()"' : ''}
                                 >
                                 <button 
                                     type="button" 
                                     onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" 
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors"
                                 >
                                     <span class="text-xl">👁️</span>
                                 </button>
                             </div>
                             ${mode === 'signup' || mode === 'change-password' ? `
                                 <div class="mt-2">
-                                    <div class="flex items-center gap-2 text-xs text-gray-400">
-                                        <div id="passwordStrength" class="flex-1 h-1.5 bg-gray-600 rounded-full overflow-hidden">
+                                    <div class="flex items-center gap-2 text-xs text-blue-300">
+                                        <div id="passwordStrength" class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
                                             <div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300"></div>
                                         </div>
                                         <span id="passwordStrengthText" class="min-w-[60px]"></span>
                                     </div>
-                                    <div class="text-xs text-gray-400 mt-1.5 space-y-0.5">
+                                    <div class="text-xs text-blue-300 mt-1.5 space-y-0.5">
                                         <div id="req-length" class="flex items-center gap-1">
                                             <span class="w-3">•</span>
                                             <span>${t('auth:password_req_length')}</span>
@@ -541,7 +548,7 @@ export function renderAuthPage(mode) {
                                         </div>
                                     </div>
                                 </div>
-                            ` : '<div class="text-sm text-gray-400 mt-1">' + t('auth:password_hint') + '</div>'}
+                            ` : '<div class="text-sm text-blue-300 mt-1">' + t('auth:password_hint') + '</div>'}
                             <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
                             <div id="passwordStrength" class="hidden mt-2"></div>
                         </div>
@@ -549,7 +556,7 @@ export function renderAuthPage(mode) {
                     
                     ${mode === 'signup' || mode === 'change-password' ? `
                         <div>
-                            <label class="block mb-2 font-medium">${mode === 'change-password' ? 'Confirmer le nouveau mot de passe' : t('auth:confirm_password_label')}</label>
+                            <label class="block mb-2 font-medium text-blue-100">${mode === 'change-password' ? 'Confirmer le nouveau mot de passe' : t('auth:confirm_password_label')}</label>
                             <div class="relative">
                                 <input 
                                     type="password" 
@@ -557,13 +564,13 @@ export function renderAuthPage(mode) {
                                     required 
                                     minlength="8" 
                                     placeholder="••••••••"
-                                    class="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:border-yellow-500 focus:outline-none pr-12 transition-colors"
+                                    class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-blue-300/50"
                                     oninput="validateConfirmPassword()"
                                 >
                                 <button 
                                     type="button" 
                                     onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" 
-                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors"
                                 >
                                     <span class="text-xl">👁️</span>
                                 </button>
@@ -597,7 +604,7 @@ export function renderAuthPage(mode) {
                     </button>
                 </form>
                 
-                <p class="text-center mt-6 text-gray-400">
+                <p class="text-center mt-6 text-blue-200">
                     <button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">
                         ${linkText}
                     </button>
@@ -637,7 +644,7 @@ export function renderDashboard() {
     });
     
     if (!userProfile) {
-        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl">⏳ Chargement du profil...</div></div>';
+        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">⏳ Chargement du profil...</div></div>';
     }
     
     const isAdmin = userProfile.role === 'admin';
@@ -656,14 +663,16 @@ export function renderDashboard() {
     
     const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
     
+    // ✅ Style unifié pour le dashboard
     return `
         <div class="min-h-screen">
-            <header class="bg-gray-800 bg-opacity-50 backdrop-blur-md">
+            <!-- ✅ Header avec style unifié -->
+            <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
                 <div class="container mx-auto px-4 py-4">
                     <div class="flex justify-between items-center">
                         <h1 class="text-2xl font-bold text-yellow-400">${dashboardTitle}</h1>
                         <div class="flex items-center gap-4">
-                            <span class="text-gray-300">${userProfile.name}</span>
+                            <span class="text-blue-200">${userProfile.name}</span>
                             <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
                                 ${t('dashboard:logout')}
                             </button>
@@ -674,21 +683,21 @@ export function renderDashboard() {
             
             <main class="container mx-auto px-4 py-8">
                 ${!hasValidContract && !isAdmin ? `
-                    <div id="contractRequirement" class="mb-6 bg-gradient-to-r from-blue-900/50 to-yellow-900/50 border-2 border-yellow-500 p-8 rounded-xl shadow-2xl">
+                    <div id="contractRequirement" class="mb-6 bg-gradient-to-r from-blue-900/50 to-yellow-900/50 border-2 border-yellow-500 p-8 rounded-2xl shadow-2xl">
                         <div class="flex flex-col lg:flex-row gap-8">
                             <div class="flex-1">
                                 <h3 class="text-2xl font-bold text-yellow-400 mb-4">
                                     📝 ${t('dashboard:contract.required')}
                                 </h3>
                                 
-                                <div class="bg-white/10 rounded-lg p-4 mb-6">
+                                <div class="bg-white/10 rounded-xl p-4 mb-6 border border-white/10">
                                     <h4 class="font-bold text-white mb-3">
                                         ❓ ${t('dashboard:contract.what_is_it')}
                                     </h4>
-                                    <p class="text-gray-300 text-sm mb-3">
+                                    <p class="text-blue-200 text-sm mb-3">
                                         ${t('dashboard:contract.explanation')}
                                     </p>
-                                    <ul class="space-y-2 text-sm text-gray-300 ml-4">
+                                    <ul class="space-y-2 text-sm text-blue-200 ml-4">
                                         <li>✅ <strong>${t('dashboard:contract.benefit1_title')}</strong> ${t('dashboard:contract.benefit1_desc')}</li>
                                         <li>✅ <strong>${t('dashboard:contract.benefit2_title')}</strong> ${t('dashboard:contract.benefit2_desc')}</li>
                                         <li>✅ <strong>${t('dashboard:contract.benefit3_title')}</strong> ${t('dashboard:contract.benefit3_desc')}</li>
@@ -697,16 +706,16 @@ export function renderDashboard() {
                                     </ul>
                                 </div>
                                 <div class="grid md:grid-cols-2 gap-8">
-                                    <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 p-6 rounded-lg">
+                                    <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 p-6 rounded-xl">
                                         <div class="flex items-center gap-3 mb-4">
                                             <span class="text-4xl">✍️</span>
                                             <div>
                                                 <h4 class="font-bold text-green-300 text-lg">${t('dashboard:contract.electronic_signature')}</h4>
-                                                <p class="text-xs text-gray-400">${t('dashboard:contract.electronic_signature_intro')}</p>
+                                                <p class="text-xs text-blue-300">${t('dashboard:contract.electronic_signature_intro')}</p>
                                             </div>
                                         </div>
                                         
-                                        <ul class="space-y-2 text-sm text-gray-300 mb-4">
+                                        <ul class="space-y-2 text-sm text-blue-200 mb-4">
                                             <li class="flex items-center gap-2">
                                                 <span class="text-green-400">✓</span>
                                                 <span>${t('dashboard:contract.signature_feature_1')}</span>
@@ -737,7 +746,7 @@ export function renderDashboard() {
                 ` : ''}
                 
                 ${hasValidContract && !isAdmin ? `
-                    <div id="contractUploaded" class="mb-6 relative overflow-hidden bg-gradient-to-r from-green-900/50 to-blue-900/30 border border-green-500/50 p-6 rounded-xl shadow-lg">
+                    <div id="contractUploaded" class="mb-6 relative overflow-hidden bg-gradient-to-r from-green-900/50 to-blue-900/30 border border-green-500/50 p-6 rounded-2xl shadow-lg">
                         <!-- ✅ Skyline Dubai en arrière-plan subtil -->
                         <div class="absolute bottom-0 left-0 right-0 h-20 opacity-[0.07] pointer-events-none">
                             <svg viewBox="0 0 1200 100" preserveAspectRatio="none" class="w-full h-full text-white">
@@ -777,7 +786,7 @@ export function renderDashboard() {
                             <div class="text-4xl flex-shrink-0">✅</div>
                             <div class="flex-1">
                                 <h3 class="text-2xl font-bold text-green-300 mb-2">${t('dashboard:contract.signed_validated')}</h3>
-                                <p class="text-gray-300 mb-3">${t('dashboard:contract.can_add_leads')}</p>
+                                <p class="text-blue-200 mb-3">${t('dashboard:contract.can_add_leads')}</p>
                                 <div class="flex flex-wrap gap-2">
                                     <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full">💰 ${badges.buyers}</span>
                                     <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full">🏠 ${badges.others}</span>
@@ -801,47 +810,48 @@ export function renderDashboard() {
                     </div>
                 ` : ''}
                 
-                <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6 mb-8">
-                    <h2 class="text-2xl font-bold mb-4">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
+                <!-- ✅ Table leads avec style unifié -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20">
+                    <h2 class="text-2xl font-bold mb-4 text-yellow-400">${isAdmin ? t('dashboard:all_leads') : t('dashboard:my_leads')}</h2>
                     <div id="leadsTable" class="overflow-x-auto"></div>
                 </div>
             </main>
             
-            <!-- ✅ MODAL AJOUT LEAD avec commissions 25%/20% -->
+            <!-- ✅ MODAL AJOUT LEAD avec style unifié -->
             <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div class="bg-gray-800 rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                    <h3 class="text-2xl font-bold mb-6">${t('dashboard:add_lead')}</h3>
+                <div class="bg-slate-800/95 backdrop-blur-md rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/20">
+                    <h3 class="text-2xl font-bold mb-6 text-yellow-400">${t('dashboard:add_lead')}</h3>
                     
                     <form id="addLeadForm" onsubmit="event.preventDefault(); window.addLead(event);">
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-gray-300 mb-2">${t('dashboard:client_name')} *</label>
+                                <label class="block text-blue-200 mb-2">${t('dashboard:client_name')} *</label>
                                 <input type="text" id="clientName" required 
-                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                       class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                             
                             <div>
-                                <label class="block text-gray-300 mb-2">${t('dashboard:client_email')} *</label>
+                                <label class="block text-blue-200 mb-2">${t('dashboard:client_email')} *</label>
                                 <input type="email" id="clientEmail" required 
-                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                       class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                             
                             <div>
-                                <label class="block text-gray-300 mb-2">${t('dashboard:client_phone')} *</label>
+                                <label class="block text-blue-200 mb-2">${t('dashboard:client_phone')} *</label>
                                 <input type="tel" id="clientPhone" required 
-                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                       class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                             
                             <div>
-                                <label class="block text-gray-300 mb-2">${t('dashboard:budget')} (AED) *</label>
+                                <label class="block text-blue-200 mb-2">${t('dashboard:budget')} (AED) *</label>
                                 <input type="text" id="budget" required inputmode="numeric" placeholder="1,500,000"
-                                       class="w-full px-4 py-2 bg-gray-700 rounded-lg text-white border border-gray-600 focus:border-yellow-500 focus:outline-none">
+                                       class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                         </div>
                         
                         <!-- Type de lead avec commissions -->
                         <div class="mt-6">
-                            <label class="block text-gray-300 mb-3">${t('dashboard:lead_type')} *</label>
+                            <label class="block text-blue-200 mb-3">${t('dashboard:lead_type')} *</label>
                             
                             <div class="space-y-3">
                                 <!-- 🏆 ACHETEUR - MIS EN AVANT -->
@@ -860,33 +870,33 @@ export function renderDashboard() {
                                 </label>
                                 
                                 <!-- Autres types - Standard -->
-                                <label class="flex items-center p-3 bg-gray-700/50 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 transition">
+                                <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
                                     <input type="radio" name="leadTypeRadio" value="sale_seller" 
                                            onchange="document.getElementById('leadType').value='sale_seller'"
                                            class="w-4 h-4 text-yellow-500 mr-3">
                                     <div class="flex-1">
                                         <span class="text-white">${t('dashboard:sale_seller')}</span>
-                                        <span class="text-gray-400 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
+                                        <span class="text-blue-300 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
                                     </div>
                                 </label>
                                 
-                                <label class="flex items-center p-3 bg-gray-700/50 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 transition">
+                                <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
                                     <input type="radio" name="leadTypeRadio" value="rental_landlord" 
                                            onchange="document.getElementById('leadType').value='rental_landlord'"
                                            class="w-4 h-4 text-yellow-500 mr-3">
                                     <div class="flex-1">
                                         <span class="text-white">${t('dashboard:rental_landlord')}</span>
-                                        <span class="text-gray-400 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
+                                        <span class="text-blue-300 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
                                     </div>
                                 </label>
                                 
-                                <label class="flex items-center p-3 bg-gray-700/50 border border-gray-600 rounded-lg cursor-pointer hover:bg-gray-700 transition">
+                                <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
                                     <input type="radio" name="leadTypeRadio" value="rental_tenant" 
                                            onchange="document.getElementById('leadType').value='rental_tenant'"
                                            class="w-4 h-4 text-yellow-500 mr-3">
                                     <div class="flex-1">
                                         <span class="text-white">${t('dashboard:rental_tenant')}</span>
-                                        <span class="text-gray-400 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
+                                        <span class="text-blue-300 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span>
                                     </div>
                                 </label>
                             </div>
@@ -902,7 +912,7 @@ export function renderDashboard() {
                                        class="w-5 h-5 mt-0.5 text-blue-500 rounded border-gray-500 focus:ring-blue-500">
                                 <div>
                                     <span class="text-white font-medium">${t('dashboard:consent_checkbox_label')} *</span>
-                                    <p class="text-gray-400 text-sm mt-1">${t('dashboard:consent_checkbox_description')}</p>
+                                    <p class="text-blue-300 text-sm mt-1">${t('dashboard:consent_checkbox_description')}</p>
                                 </div>
                             </label>
                         </div>
@@ -914,7 +924,7 @@ export function renderDashboard() {
                                 ${t('dashboard:add')}
                             </button>
                             <button type="button" onclick="window.closeAddLeadModal()" 
-                                    class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition">
+                                    class="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition border border-white/20">
                                 ${t('dashboard:cancel')}
                             </button>
                         </div>
