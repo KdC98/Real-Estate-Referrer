@@ -9,12 +9,14 @@
     <script src="https://unpkg.com/i18next@23.7.6/dist/umd/i18next.min.js"></script>
     <script src="https://unpkg.com/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-    <nav class="bg-white shadow-lg">
+<!-- ✅ Style unifié : dégradé slate/blue -->
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
+    <!-- ✅ Nav avec style unifié -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-blue-600" data-i18n="dashboard_title">Tableau de bord Apporteur</h1>
+            <h1 class="text-2xl font-bold text-yellow-400" data-i18n="dashboard_title">Tableau de bord Apporteur</h1>
             <div class="flex items-center gap-4">
-                <select id="language-selector" class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <select id="language-selector" class="px-3 py-2 bg-slate-800/50 border border-white/20 rounded-lg focus:ring-2 focus:ring-yellow-500 text-white">
                     <option value="fr">🇫🇷 Français</option>
                     <option value="en">🇬🇧 English</option>
                     <option value="ar">🇦🇪 العربية</option>
@@ -24,7 +26,7 @@
                     <option value="zh">🇨🇳 中文</option>
                     <option value="tl">🇵🇭 Tagalog</option>
                 </select>
-                <button id="logout-btn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <button id="logout-btn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors">
                     <span data-i18n="logout">Déconnexion</span>
                 </button>
             </div>
@@ -32,77 +34,80 @@
     </nav>
 
     <div class="container mx-auto px-4 py-8">
-        <!-- BANNIÈRE D'AVERTISSEMENT CONTRAT -->
-        <div id="contract-warning" class="hidden mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-lg shadow-md">
+        <!-- ✅ BANNIÈRE D'AVERTISSEMENT CONTRAT avec style unifié -->
+        <div id="contract-warning" class="hidden mb-6 bg-red-500/20 border border-red-500/50 p-6 rounded-2xl backdrop-blur-md">
             <div class="flex items-start">
                 <div class="flex-shrink-0">
-                    <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
                 <div class="ml-3 flex-1">
-                    <h3 class="text-lg font-semibold text-red-800" data-i18n="contract_required">
+                    <h3 class="text-lg font-semibold text-red-300" data-i18n="contract_required">
                         Contrat requis
                     </h3>
-                    <p class="mt-1 text-sm text-red-700" data-i18n="contract_warning_message">
+                    <p class="mt-1 text-sm text-red-200" data-i18n="contract_warning_message">
                         Vous devez télécharger et signer le contrat d'apporteur d'affaires avant de pouvoir ajouter des leads.
                     </p>
                     <div class="mt-4">
-                        <a href="contract-upload.html" 
-                           class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-md transition-colors">
+                        <a href="contract-signature.html" 
+                           class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-medium rounded-lg transition-colors">
                             <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                             </svg>
-                            <span data-i18n="upload_contract_now">Uploader mon contrat maintenant</span>
+                            <span data-i18n="upload_contract_now">Signer mon contrat maintenant</span>
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">
-                <span data-i18n="welcome">Bienvenue</span>, <span id="user-name"></span>!
+        <!-- ✅ Card bienvenue avec style unifié -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 mb-8">
+            <h2 class="text-xl font-bold text-yellow-400 mb-4">
+                <span data-i18n="welcome">Bienvenue</span>, <span id="user-name" class="text-white"></span>!
             </h2>
 
+            <!-- ✅ Stats avec style unifié -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-lg">
-                    <h3 class="text-sm text-green-700 font-semibold mb-2" data-i18n="total_earnings">Gains totaux</h3>
-                    <p class="text-3xl font-bold text-green-600"><span id="total-earnings">0</span> AED</p>
+                <div class="bg-gradient-to-br from-green-900/50 to-green-800/30 p-6 rounded-xl border border-green-500/30">
+                    <h3 class="text-sm text-green-300 font-semibold mb-2" data-i18n="total_earnings">Gains totaux</h3>
+                    <p class="text-3xl font-bold text-green-400"><span id="total-earnings">0</span> AED</p>
                 </div>
-                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg">
-                    <h3 class="text-sm text-blue-700 font-semibold mb-2" data-i18n="active_leads">Leads actifs</h3>
-                    <p class="text-3xl font-bold text-blue-600" id="active-leads-count">0</p>
+                <div class="bg-gradient-to-br from-blue-900/50 to-blue-800/30 p-6 rounded-xl border border-blue-500/30">
+                    <h3 class="text-sm text-blue-300 font-semibold mb-2" data-i18n="active_leads">Leads actifs</h3>
+                    <p class="text-3xl font-bold text-blue-400" id="active-leads-count">0</p>
                 </div>
-                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-lg">
-                    <h3 class="text-sm text-purple-700 font-semibold mb-2" data-i18n="closed_sales">Ventes conclues</h3>
-                    <p class="text-3xl font-bold text-purple-600" id="closed-sales-count">0</p>
+                <div class="bg-gradient-to-br from-purple-900/50 to-purple-800/30 p-6 rounded-xl border border-purple-500/30">
+                    <h3 class="text-sm text-purple-300 font-semibold mb-2" data-i18n="closed_sales">Ventes conclues</h3>
+                    <p class="text-3xl font-bold text-purple-400" id="closed-sales-count">0</p>
                 </div>
             </div>
 
-            <button id="add-lead-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-all mb-6">
+            <button id="add-lead-btn" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg transition-all">
                 <span data-i18n="add_lead">Ajouter un lead</span>
             </button>
         </div>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4" data-i18n="my_leads">Mes leads</h2>
+        <!-- ✅ Table des leads avec style unifié -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+            <h2 class="text-xl font-bold text-yellow-400 mb-4" data-i18n="my_leads">Mes leads</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full">
                     <thead>
-                        <tr class="bg-gray-100">
-                            <th class="px-4 py-2 text-left" data-i18n="client_name">Nom du client</th>
-                            <th class="px-4 py-2 text-left" data-i18n="property_type">Type de propriété</th>
-                            <th class="px-4 py-2 text-left" data-i18n="budget">Budget</th>
-                            <th class="px-4 py-2 text-left" data-i18n="status">Statut</th>
-                            <th class="px-4 py-2 text-left" data-i18n="commission">Commission</th>
+                        <tr class="bg-slate-800/50 text-blue-200">
+                            <th class="px-4 py-3 text-left rounded-tl-lg" data-i18n="client_name">Nom du client</th>
+                            <th class="px-4 py-3 text-left" data-i18n="property_type">Type de propriété</th>
+                            <th class="px-4 py-3 text-left" data-i18n="budget">Budget</th>
+                            <th class="px-4 py-3 text-left" data-i18n="status">Statut</th>
+                            <th class="px-4 py-3 text-left rounded-tr-lg" data-i18n="commission">Commission</th>
                         </tr>
                     </thead>
-                    <tbody id="leads-table">
+                    <tbody id="leads-table" class="text-blue-100">
                         <tr>
-                            <td colspan="5" class="text-center py-8 text-gray-500">
+                            <td colspan="5" class="text-center py-8 text-blue-300">
                                 <p class="text-lg" data-i18n="no_leads">Aucun lead pour le moment</p>
-                                <p class="text-sm" data-i18n="start_adding">Commencez à ajouter des leads pour gagner des commissions !</p>
+                                <p class="text-sm text-blue-400" data-i18n="start_adding">Commencez à ajouter des leads pour gagner des commissions !</p>
                             </td>
                         </tr>
                     </tbody>
@@ -111,25 +116,26 @@
         </div>
     </div>
 
-    <div id="lead-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-lg p-8 max-w-md w-full">
-            <h2 class="text-2xl font-bold mb-4" data-i18n="add_lead">Ajouter un lead</h2>
+    <!-- ✅ Modal ajout lead avec style unifié -->
+    <div id="lead-form-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800/95 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-white/20">
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4" data-i18n="add_lead">Ajouter un lead</h2>
             <form id="lead-form">
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2" data-i18n="client_name">Nom du client</label>
-                    <input type="text" id="client-name" required class="w-full px-3 py-2 border rounded-lg">
+                    <label class="block text-sm font-medium text-blue-200 mb-2" data-i18n="client_name">Nom du client</label>
+                    <input type="text" id="client-name" required class="w-full px-4 py-2 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Email</label>
-                    <input type="email" id="client-email" required class="w-full px-3 py-2 border rounded-lg">
+                    <label class="block text-sm font-medium text-blue-200 mb-2">Email</label>
+                    <input type="email" id="client-email" required class="w-full px-4 py-2 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2">Téléphone</label>
-                    <input type="tel" id="client-phone" required class="w-full px-3 py-2 border rounded-lg">
+                    <label class="block text-sm font-medium text-blue-200 mb-2">Téléphone</label>
+                    <input type="tel" id="client-phone" required class="w-full px-4 py-2 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none">
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2" data-i18n="property_type">Type de propriété</label>
-                    <select id="property-type" required class="w-full px-3 py-2 border rounded-lg">
+                    <label class="block text-sm font-medium text-blue-200 mb-2" data-i18n="property_type">Type de propriété</label>
+                    <select id="property-type" required class="w-full px-4 py-2 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none">
                         <option value="apartment">Appartement</option>
                         <option value="villa">Villa</option>
                         <option value="townhouse">Townhouse</option>
@@ -137,14 +143,14 @@
                     </select>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-medium mb-2" data-i18n="budget">Budget (AED)</label>
-                    <input type="number" id="budget" required class="w-full px-3 py-2 border rounded-lg">
+                    <label class="block text-sm font-medium text-blue-200 mb-2" data-i18n="budget">Budget (AED)</label>
+                    <input type="number" id="budget" required class="w-full px-4 py-2 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none">
                 </div>
                 <div class="flex gap-4">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">
+                    <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
                         Soumettre
                     </button>
-                    <button type="button" id="cancel-lead" class="bg-gray-300 hover:bg-gray-400 px-6 py-2 rounded-lg">
+                    <button type="button" id="cancel-lead" class="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-lg transition border border-white/20">
                         Annuler
                     </button>
                 </div>
@@ -154,7 +160,7 @@
 
     <script>
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5MjkxNjEsImV4cCI6MjA0NDUwNTE2MX0.kHGJ6d1wMUFdL_JpRuZNJJ1u9hBfJVHQZnHxgDQ8oP0';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let hasValidContract = false;
@@ -199,30 +205,26 @@
             const { data: { user }, error } = await supabase.auth.getUser();
             
             if (error || !user) {
-                window.location.href = 'login.html';
+                window.location.href = '/';
                 return;
             }
 
             const { data: profile } = await supabase
                 .from('profiles')
-                .select('name, role')
+                .select('name, role, contract_status, contract_path')
                 .eq('id', user.id)
                 .single();
 
             if (profile && profile.role === 'admin') {
-                window.location.href = 'admin-dashboard.html';
+                window.location.href = '/';
                 return;
             }
 
             document.getElementById('user-name').textContent = profile?.name || user.email;
 
-            const { data: contractStatus } = await supabase
-                .from('contract_status')
-                .select('status')
-                .eq('user_id', user.id)
-                .single();
-
-            hasValidContract = contractStatus && contractStatus.status === 'approved';
+            // ✅ Vérification du contrat avec les champs corrects
+            hasValidContract = profile?.contract_path || 
+                              ['signed', 'validated', 'approved'].includes(profile?.contract_status);
 
             if (!hasValidContract) {
                 document.getElementById('contract-warning').classList.remove('hidden');
@@ -260,9 +262,9 @@
             if (leads.length === 0) {
                 tableBody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="text-center py-8 text-gray-500">
+                        <td colspan="5" class="text-center py-8 text-blue-300">
                             <p class="text-lg" data-i18n="no_leads">Aucun lead pour le moment</p>
-                            <p class="text-sm" data-i18n="start_adding">Commencez à ajouter des leads pour gagner des commissions !</p>
+                            <p class="text-sm text-blue-400" data-i18n="start_adding">Commencez à ajouter des leads pour gagner des commissions !</p>
                         </td>
                     </tr>
                 `;
@@ -272,24 +274,24 @@
 
             tableBody.innerHTML = leads.map(lead => {
                 const statusColors = {
-                    'nouveau': 'bg-blue-100 text-blue-800',
-                    'visite': 'bg-yellow-100 text-yellow-800',
-                    'offre': 'bg-orange-100 text-orange-800',
-                    'vendu': 'bg-green-100 text-green-800',
-                    'loué': 'bg-purple-100 text-purple-800'
+                    'nouveau': 'bg-blue-500/30 text-blue-300 border border-blue-500/50',
+                    'visite': 'bg-yellow-500/30 text-yellow-300 border border-yellow-500/50',
+                    'offre': 'bg-orange-500/30 text-orange-300 border border-orange-500/50',
+                    'vendu': 'bg-green-500/30 text-green-300 border border-green-500/50',
+                    'loué': 'bg-purple-500/30 text-purple-300 border border-purple-500/50'
                 };
 
                 return `
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="px-4 py-2">${lead.client_name}</td>
-                        <td class="px-4 py-2">${lead.property_type}</td>
-                        <td class="px-4 py-2">${lead.budget?.toLocaleString()} AED</td>
-                        <td class="px-4 py-2">
-                            <span class="px-2 py-1 rounded-full text-xs ${statusColors[lead.status] || 'bg-gray-100 text-gray-800'}">
+                    <tr class="border-b border-white/10 hover:bg-white/5 transition">
+                        <td class="px-4 py-3">${lead.client_name}</td>
+                        <td class="px-4 py-3">${lead.property_type}</td>
+                        <td class="px-4 py-3">${lead.budget?.toLocaleString()} AED</td>
+                        <td class="px-4 py-3">
+                            <span class="px-3 py-1 rounded-full text-xs ${statusColors[lead.status] || 'bg-slate-500/30 text-slate-300'}">
                                 ${lead.status}
                             </span>
                         </td>
-                        <td class="px-4 py-2 font-semibold">${(lead.referrer_commission || 0).toLocaleString()} AED</td>
+                        <td class="px-4 py-3 font-semibold text-yellow-400">${(lead.referrer_commission || 0).toLocaleString()} AED</td>
                     </tr>
                 `;
             }).join('');
@@ -297,7 +299,7 @@
 
         document.getElementById('add-lead-btn').addEventListener('click', (e) => {
             if (e.target.disabled) {
-                alert(i18next.t('contract_required_to_add_lead', 'Vous devez uploader votre contrat signé avant d\'ajouter des leads.'));
+                alert(i18next.t('contract_required_to_add_lead', 'Vous devez signer votre contrat avant d\'ajouter des leads.'));
                 return;
             }
             
@@ -341,7 +343,7 @@
 
         document.getElementById('logout-btn').addEventListener('click', async () => {
             await supabase.auth.signOut();
-            window.location.href = 'login.html';
+            window.location.href = '/';
         });
 
         document.addEventListener('DOMContentLoaded', async () => {
