@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - Real Estate Referrer</title>
+    <title data-i18n="page_title">Conditions Générales - Real Estate Referrer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -42,300 +45,323 @@
             <div class="flex justify-between items-center">
                 <a href="/" class="text-2xl font-bold text-yellow-400">Real Estate Referrer</a>
                 <nav class="flex items-center gap-4">
-                    <a href="/" class="text-gray-300 hover:text-yellow-400 transition">Home</a>
-                    <a href="/how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition">How it works</a>
-                    <a href="/privacy.html" class="text-gray-300 hover:text-yellow-400 transition">Privacy</a>
+                    <!-- Sélecteur de langue -->
+                    <select id="languageSelector" class="bg-gray-800 text-white px-3 py-2 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="ar">🇦🇪 العربية</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="hi">🇮🇳 हिंदी</option>
+                        <option value="ur">🇵🇰 اردو</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="tl">🇵🇭 Tagalog</option>
+                    </select>
+                    <a href="/" class="text-gray-300 hover:text-yellow-400 transition" data-i18n="nav.home">Accueil</a>
+                    <a href="/how-it-works.html" class="text-gray-300 hover:text-yellow-400 transition" data-i18n="nav.how">Comment ça marche</a>
+                    <a href="/privacy.html" class="text-gray-300 hover:text-yellow-400 transition" data-i18n="nav.privacy">Confidentialité</a>
                 </nav>
             </div>
         </div>
     </header>
+
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-12">
         <div class="max-w-4xl mx-auto">
             <!-- Title -->
             <div class="text-center mb-12">
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                    <span class="text-yellow-400">Terms of Service</span>
+                    <span class="text-yellow-400" data-i18n="title">Conditions Générales d'Utilisation</span>
                 </h1>
-                <p class="text-gray-400">Last updated: November 25, 2025</p>
+                <p class="text-gray-400" data-i18n="last_updated">Dernière mise à jour : 25 novembre 2025</p>
             </div>
+
             <!-- Content -->
-            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-2xl p-8 md:p-12 prose max-w-none">
-                
-                <!-- Introduction -->
-                <section>
-                    <h2>1. Introduction</h2>
-                    <p>Welcome to Real Estate Referrer ("Platform", "we", "us", or "our"). These Terms of Service ("Terms") govern your use of our referral program platform for real estate transactions in Dubai, United Arab Emirates.</p>
-                    <p>By creating an account or using our services, you agree to be bound by these Terms. If you do not agree, please do not use our Platform.</p>
-                </section>
-                <!-- Definitions -->
-                <section>
-                    <h2>2. Definitions</h2>
-                    <ul>
-                        <li><strong>Referrer / Business Introducer:</strong> An individual who registers on the Platform to refer potential clients (leads) to the real estate agent.</li>
-                        <li><strong>Lead:</strong> A potential client referred by a Referrer who is interested in buying, selling, renting, or leasing real estate in Dubai.</li>
-                        <li><strong>Qualified Lead:</strong> A lead with genuine interest, defined budget, complete contact information, and active timeline (0-6 months).</li>
-                        <li><strong>Agent:</strong> The licensed real estate professional operating under Solo Gate Real Estate (Alliance by EMAAR).</li>
-                        <li><strong>Commission:</strong> The payment due to the Referrer upon successful completion of a real estate transaction.</li>
-                        <li><strong>Transaction:</strong> A completed sale or rental agreement facilitated through a referred lead.</li>
-                    </ul>
-                </section>
-                <!-- Eligibility -->
-                <section>
-                    <h2>3. Eligibility & Registration</h2>
-                    <h3>3.1 Eligibility Requirements</h3>
-                    <p>To become a Referrer, you must:</p>
-                    <ul>
-                        <li>Be at least 18 years of age</li>
-                        <li>Provide accurate and complete registration information</li>
-                        <li>Have a valid phone number for SMS verification</li>
-                        <li>Sign the Business Introducer Agreement (electronically or physically)</li>
-                        <li>Not hold a real estate license in the UAE (unless disclosed)</li>
-                    </ul>
-                    
-                    <h3>3.2 Account Security</h3>
-                    <p>You are responsible for maintaining the confidentiality of your account credentials. You must immediately notify us of any unauthorized use of your account.</p>
-                    
-                    <h3>3.3 SMS Verification</h3>
-                    <p>We use SMS verification (2FA) to secure your account. Standard messaging rates may apply. By registering, you consent to receive SMS messages for verification purposes.</p>
-                </section>
-                <!-- Commission Structure -->
-                <section>
-                    <h2>4. Commission Structure</h2>
-                    <h3>4.1 Commission Rates</h3>
-                    <p>Referrers earn a commission based on the type of lead referred:</p>
-                    <ul>
-                        <li><strong>🏆 Buyer (Sale):</strong> <strong>25%</strong> of the agent's commission</li>
-                        <li><strong>Seller (Sale):</strong> 20% of the agent's commission</li>
-                        <li><strong>Landlord (Rental):</strong> 20% of the agent's commission</li>
-                        <li><strong>Tenant (Rental):</strong> 20% of the agent's commission</li>
-                    </ul>
-                    
-                    <h3>4.2 Commission Calculation Example</h3>
-                    <p><strong>For a property sale of 2,000,000 AED:</strong></p>
-                    <ul>
-                        <li>Total commission: 40,000 AED (2% of sale price)</li>
-                        <li>Agent's share: 20,000 AED (50%)</li>
-                        <li>Referrer commission (Buyer lead at 25%): <strong>5,000 AED</strong></li>
-                        <li>Referrer commission (Seller lead at 20%): <strong>4,000 AED</strong></li>
-                    </ul>
-                    
-                    <h3>4.3 Payment Terms</h3>
-                    <ul>
-                        <li>Commissions are paid within <strong>45-60 days</strong> after the transaction is completed and the agent receives payment</li>
-                        <li>Payment methods: Bank transfer (UAE or international)</li>
-                        <li>Minimum payout threshold: 500 AED</li>
-                        <li>The Referrer is responsible for any applicable taxes</li>
-                    </ul>
-                    
-                    <h3>4.4 Commission Eligibility</h3>
-                    <p>A commission is only due when:</p>
-                    <ul>
-                        <li>The lead was submitted through the Platform</li>
-                        <li>The lead was not previously registered by another Referrer</li>
-                        <li>The transaction is completed within 12 months of lead submission</li>
-                        <li>The agent receives their commission from the transaction</li>
-                    </ul>
-                </section>
-                <!-- Lead Submission -->
-                <section>
-                    <h2>5. Lead Submission & Protection</h2>
-                    <h3>5.1 Lead Requirements</h3>
-                    <p>Each lead must include:</p>
-                    <ul>
-                        <li>Client's full name</li>
-                        <li>Valid email address</li>
-                        <li>Valid phone number</li>
-                        <li>Type of lead (Buyer, Seller, Landlord, or Tenant)</li>
-                        <li>Approximate budget</li>
-                        <li><strong>Client's explicit consent to be contacted</strong></li>
-                    </ul>
-                    
-                    <h3>5.2 Client Consent (MANDATORY)</h3>
-                    <p><strong>IMPORTANT:</strong> You must obtain the client's explicit consent before submitting their information. By submitting a lead, you confirm that:</p>
-                    <ul>
-                        <li>The client knows they will be contacted by a real estate agent</li>
-                        <li>The client has agreed to share their contact information</li>
-                        <li>You have not misrepresented the purpose of collecting their information</li>
-                    </ul>
-                    <p>Submitting leads without proper consent is a violation of these Terms and GDPR regulations, and may result in immediate account termination.</p>
-                    
-                    <h3>5.3 Lead Protection</h3>
-                    <ul>
-                        <li>Leads are timestamped and attributed to the first Referrer who submits them</li>
-                        <li>Duplicate leads are automatically rejected</li>
-                        <li>Lead ownership is valid for 12 months from submission date</li>
-                        <li>You can track your lead status in real-time through your dashboard</li>
-                    </ul>
-                    
-                    <h3>5.4 Prohibited Practices</h3>
-                    <p>The following are strictly prohibited:</p>
-                    <ul>
-                        <li>Submitting fake or fabricated leads</li>
-                        <li>Submitting leads without the client's consent</li>
-                        <li>Direct solicitation or cold calling on behalf of the agent</li>
-                        <li>Misrepresenting yourself as a licensed real estate agent</li>
-                        <li>Submitting your own contact information as a lead</li>
-                        <li>Any activity that violates RERA regulations</li>
-                    </ul>
-                </section>
-                <!-- Referrer Obligations -->
-                <section>
-                    <h2>6. Referrer Obligations</h2>
-                    <p>As a Referrer, you agree to:</p>
-                    <ul>
-                        <li>Provide accurate information about yourself and your leads</li>
-                        <li>Obtain proper consent from clients before submission</li>
-                        <li>Not engage in any illegal or unethical marketing practices</li>
-                        <li>Respect the confidentiality of client information</li>
-                        <li>Not negotiate directly with clients on real estate matters</li>
-                        <li>Comply with all applicable UAE laws and RERA regulations</li>
-                        <li>Maintain the signed Business Introducer Agreement</li>
-                    </ul>
-                </section>
-                <!-- Agent Obligations -->
-                <section>
-                    <h2>7. Agent Obligations</h2>
-                    <p>The Agent commits to:</p>
-                    <ul>
-                        <li>Follow up on all qualified leads within 48 hours</li>
-                        <li>Provide transparent status updates through the Platform</li>
-                        <li>Pay commissions within the agreed timeframe</li>
-                        <li>Treat all referred clients professionally</li>
-                        <li>Not circumvent the Referrer's commission rights</li>
-                        <li>Maintain all required RERA licenses and permits</li>
-                    </ul>
-                </section>
-                <!-- Intellectual Property -->
-                <section>
-                    <h2>8. Intellectual Property</h2>
-                    <p>The Platform, including its design, features, and content, is owned by us and protected by intellectual property laws. You may not:</p>
-                    <ul>
-                        <li>Copy, modify, or distribute any part of the Platform</li>
-                        <li>Use our branding without written permission</li>
-                        <li>Reverse engineer or attempt to extract source code</li>
-                        <li>Use the Platform for any purpose other than its intended use</li>
-                    </ul>
-                </section>
-                <!-- Privacy & Data -->
-                <section>
-                    <h2>9. Privacy & Data Protection</h2>
-                    <p>Your use of the Platform is also governed by our <a href="/privacy.html" class="text-yellow-400 hover:text-yellow-300">Privacy Policy</a>. Key points include:</p>
-                    <ul>
-                        <li>We collect and process personal data in accordance with GDPR</li>
-                        <li>Client data is used solely for real estate transactions</li>
-                        <li>We do not sell personal data to third parties</li>
-                        <li>You have the right to access, correct, or delete your data</li>
-                        <li>Data is stored securely with encryption</li>
-                    </ul>
-                </section>
-                <!-- Termination -->
-                <section>
-                    <h2>10. Termination</h2>
-                    <h3>10.1 Termination by Referrer</h3>
-                    <p>You may terminate your account at any time by contacting us. Pending commissions for completed transactions will still be paid.</p>
-                    
-                    <h3>10.2 Termination by Us</h3>
-                    <p>We may suspend or terminate your account if you:</p>
-                    <ul>
-                        <li>Violate these Terms</li>
-                        <li>Submit fraudulent leads</li>
-                        <li>Engage in prohibited practices</li>
-                        <li>Fail to maintain the Business Introducer Agreement</li>
-                    </ul>
-                    
-                    <h3>10.3 Effect of Termination</h3>
-                    <p>Upon termination:</p>
-                    <ul>
-                        <li>Your access to the Platform will be revoked</li>
-                        <li>Pending qualified leads may still earn commission if converted within 90 days</li>
-                        <li>Unpaid commissions over 500 AED will be paid within 30 days</li>
-                    </ul>
-                </section>
-                <!-- Liability -->
-                <section>
-                    <h2>11. Limitation of Liability</h2>
-                    <p>To the maximum extent permitted by law:</p>
-                    <ul>
-                        <li>We are not liable for any indirect, incidental, or consequential damages</li>
-                        <li>Our total liability is limited to the commissions earned in the past 12 months</li>
-                        <li>We do not guarantee any specific income or number of conversions</li>
-                        <li>We are not responsible for client behavior or transaction outcomes</li>
-                    </ul>
-                </section>
-                <!-- RERA Compliance -->
-                <section>
-                    <h2>12. RERA Compliance</h2>
-                    <p>This Platform operates in compliance with the Real Estate Regulatory Agency (RERA) of Dubai. Important notes:</p>
-                    <ul>
-                        <li>Referrers act as business introducers, not licensed real estate agents</li>
-                        <li>All real estate activities are conducted by licensed professionals</li>
-                        <li>The Agent maintains all required RERA permits and licenses</li>
-                        <li>Referrers must not engage in activities requiring a real estate license</li>
-                    </ul>
-                </section>
-                <!-- Disputes -->
-                <section>
-                    <h2>13. Dispute Resolution</h2>
-                    <h3>13.1 Informal Resolution</h3>
-                    <p>We encourage you to contact us first to resolve any disputes amicably.</p>
-                    
-                    <h3>13.2 Governing Law</h3>
-                    <p>These Terms are governed by the laws of the United Arab Emirates, specifically the Emirate of Dubai.</p>
-                    
-                    <h3>13.3 Jurisdiction</h3>
-                    <p>Any disputes shall be subject to the exclusive jurisdiction of the courts of Dubai, UAE.</p>
-                </section>
-                <!-- Changes -->
-                <section>
-                    <h2>14. Changes to Terms</h2>
-                    <p>We may update these Terms from time to time. We will notify you of significant changes via:</p>
-                    <ul>
-                        <li>Email notification</li>
-                        <li>Platform notification</li>
-                        <li>Updated "Last modified" date</li>
-                    </ul>
-                    <p>Continued use of the Platform after changes constitutes acceptance of the new Terms.</p>
-                </section>
-                <!-- Contact -->
-                <section>
-                    <h2>15. Contact Information</h2>
-                    <p>For questions about these Terms, please contact us:</p>
-                    <ul>
-                        <li><strong>Email:</strong> contact@real-estate-referrer.com</li>
-                        <li><strong>Location:</strong> Dubai, United Arab Emirates</li>
-                        <li><strong>Agency:</strong> Solo Gate Real Estate (Alliance by EMAAR)</li>
-                    </ul>
-                </section>
-                <!-- Agreement -->
-                <section class="mt-12 p-6 bg-yellow-900/30 border border-yellow-500/50 rounded-xl">
-                    <h3 class="text-yellow-400 font-bold text-xl mb-4">📝 Agreement</h3>
-                    <p>By creating an account and using the Real Estate Referrer platform, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</p>
-                </section>
+            <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-2xl p-8 md:p-12 prose max-w-none" id="terms-content">
+                <!-- Le contenu sera chargé dynamiquement par i18next -->
             </div>
+
             <!-- Back to Home -->
             <div class="text-center mt-8">
-                <a href="/" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition">
-                    ← Back to Home
+                <a href="/" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-8 py-3 rounded-lg transition" data-i18n="back_home">
+                    ← Retour à l'accueil
                 </a>
             </div>
         </div>
     </main>
+
     <!-- Footer -->
     <footer class="bg-gray-900 bg-opacity-80 mt-20">
         <div class="container mx-auto px-4 py-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-gray-400">
-                    © 2025 Real Estate Referrer. All rights reserved.
+                <div class="text-gray-400" data-i18n="footer.copyright">
+                    © 2025 Real Estate Referrer. Tous droits réservés.
                 </div>
                 <div class="flex gap-6">
-                    <a href="/terms.html" class="text-yellow-400 hover:text-yellow-300 transition">Terms of Service</a>
-                    <a href="/privacy.html" class="text-gray-400 hover:text-yellow-400 transition">Privacy Policy</a>
-                    <a href="/how-it-works.html" class="text-gray-400 hover:text-yellow-400 transition">How it Works</a>
+                    <a href="/terms.html" class="text-yellow-400 hover:text-yellow-300 transition" data-i18n="footer.terms">CGU</a>
+                    <a href="/privacy.html" class="text-gray-400 hover:text-yellow-400 transition" data-i18n="footer.privacy">Confidentialité</a>
+                    <a href="/how-it-works.html" class="text-gray-400 hover:text-yellow-400 transition" data-i18n="footer.how">Comment ça marche</a>
                 </div>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Configuration i18next
+        (async () => {
+            await i18next
+                .use(i18nextHttpBackend)
+                .use(i18nextBrowserLanguageDetector)
+                .init({
+                    fallbackLng: 'fr',
+                    debug: false,
+                    load: 'languageOnly',
+                    ns: ['terms'],
+                    defaultNS: 'terms',
+                    backend: {
+                        loadPath: '/locales/{{lng}}/{{ns}}.json'
+                    },
+                    detection: {
+                        order: ['localStorage', 'navigator'],
+                        caches: ['localStorage']
+                    }
+                });
+            
+            // Mettre à jour le sélecteur avec la langue actuelle
+            const currentLang = localStorage.getItem('i18nextLng') || i18next.language || 'fr';
+            document.getElementById('languageSelector').value = currentLang.split('-')[0];
+            
+            updateContent();
+            loadTermsContent();
+        })();
+
+        // Changement de langue
+        document.getElementById('languageSelector').addEventListener('change', async function(e) {
+            await i18next.changeLanguage(e.target.value);
+            localStorage.setItem('i18nextLng', e.target.value);
+            updateContent();
+            loadTermsContent();
+        });
+
+        // Mise à jour des éléments avec data-i18n
+        function updateContent() {
+            document.documentElement.lang = i18next.language;
+            
+            document.querySelectorAll('[data-i18n]').forEach(function(element) {
+                const key = element.getAttribute('data-i18n');
+                const translation = i18next.t(key);
+                if (translation && translation !== key) {
+                    element.textContent = translation;
+                }
+            });
+        }
+
+        // Charger le contenu des CGU
+        function loadTermsContent() {
+            const t = (key) => i18next.t(key);
+            
+            document.getElementById('terms-content').innerHTML = `
+                <!-- Section 1 -->
+                <section>
+                    <h2>${t('section1.title')}</h2>
+                    <p>${t('section1.intro')}</p>
+                    <p>${t('section1.agreement')}</p>
+                </section>
+
+                <!-- Section 2 -->
+                <section>
+                    <h2>${t('section2.title')}</h2>
+                    <ul>
+                        <li><strong>${t('section2.referrer.term')}</strong> ${t('section2.referrer.definition')}</li>
+                        <li><strong>${t('section2.lead.term')}</strong> ${t('section2.lead.definition')}</li>
+                        <li><strong>${t('section2.qualified_lead.term')}</strong> ${t('section2.qualified_lead.definition')}</li>
+                        <li><strong>${t('section2.agent.term')}</strong> ${t('section2.agent.definition')}</li>
+                        <li><strong>${t('section2.commission.term')}</strong> ${t('section2.commission.definition')}</li>
+                        <li><strong>${t('section2.transaction.term')}</strong> ${t('section2.transaction.definition')}</li>
+                    </ul>
+                </section>
+
+                <!-- Section 3 -->
+                <section>
+                    <h2>${t('section3.title')}</h2>
+                    <h3>${t('section3.eligibility.title')}</h3>
+                    <p>${t('section3.eligibility.intro')}</p>
+                    <ul>
+                        ${(t('section3.eligibility.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>${t('section3.security.title')}</h3>
+                    <p>${t('section3.security.text')}</p>
+                    
+                    <h3>${t('section3.sms.title')}</h3>
+                    <p>${t('section3.sms.text')}</p>
+                </section>
+
+                <!-- Section 4 -->
+                <section>
+                    <h2>${t('section4.title')}</h2>
+                    <h3>${t('section4.rate.title')}</h3>
+                    <p>${t('section4.rate.text')} <strong>${t('section4.rate.percentage')}</strong> ${t('section4.rate.text2')}</p>
+                    <p><strong>${t('section4.rate.exampleTitle')}</strong></p>
+                    <ul>
+                        ${(t('section4.rate.exampleItems', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>${t('section4.payment.title')}</h3>
+                    <p>${t('section4.payment.text')}</p>
+                    
+                    <h3>${t('section4.method.title')}</h3>
+                    <p>${t('section4.method.text')}</p>
+                    
+                    <h3>${t('section4.nonPayment.title')}</h3>
+                    <p>${t('section4.nonPayment.intro')}</p>
+                    <ul>
+                        ${(t('section4.nonPayment.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 5 -->
+                <section>
+                    <h2>${t('section5.title')}</h2>
+                    <h3>${t('section5.requirements.title')}</h3>
+                    <p>${t('section5.requirements.intro')}</p>
+                    <ul>
+                        ${(t('section5.requirements.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>${t('section5.consent.title')}</h3>
+                    <p><strong>${t('section5.consent.important')}</strong> ${t('section5.consent.text')}</p>
+                    <ul>
+                        ${(t('section5.consent.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    <p>${t('section5.consent.warning')}</p>
+                    
+                    <h3>${t('section5.protection.title')}</h3>
+                    <ul>
+                        ${(t('section5.protection.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>${t('section5.prohibited.title')}</h3>
+                    <p>${t('section5.prohibited.intro')}</p>
+                    <ul>
+                        ${(t('section5.prohibited.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 6 -->
+                <section>
+                    <h2>${t('section6.title')}</h2>
+                    <p>${t('section6.intro')}</p>
+                    <ul>
+                        ${(t('section6.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 7 -->
+                <section>
+                    <h2>${t('section7.title')}</h2>
+                    <p>${t('section7.intro')}</p>
+                    <ul>
+                        ${(t('section7.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 8 -->
+                <section>
+                    <h2>${t('section8.title')}</h2>
+                    <p>${t('section8.intro')}</p>
+                    <ul>
+                        ${(t('section8.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 9 -->
+                <section>
+                    <h2>${t('section9.title')}</h2>
+                    <p>${t('section9.intro')} <a href="/privacy.html" class="text-yellow-400 hover:text-yellow-300">${t('section9.link')}</a>.</p>
+                    <ul>
+                        ${(t('section9.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 10 -->
+                <section>
+                    <h2>${t('section10.title')}</h2>
+                    <h3>${t('section10.byReferrer.title')}</h3>
+                    <p>${t('section10.byReferrer.text')}</p>
+                    
+                    <h3>${t('section10.byUs.title')}</h3>
+                    <p>${t('section10.byUs.intro')}</p>
+                    <ul>
+                        ${(t('section10.byUs.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    
+                    <h3>${t('section10.effect.title')}</h3>
+                    <p>${t('section10.effect.intro')}</p>
+                    <ul>
+                        ${(t('section10.effect.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 11 -->
+                <section>
+                    <h2>${t('section11.title')}</h2>
+                    <p>${t('section11.intro')}</p>
+                    <ul>
+                        ${(t('section11.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 12 -->
+                <section>
+                    <h2>${t('section12.title')}</h2>
+                    <p>${t('section12.intro')}</p>
+                    <ul>
+                        ${(t('section12.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </section>
+
+                <!-- Section 13 -->
+                <section>
+                    <h2>${t('section13.title')}</h2>
+                    <h3>${t('section13.informal.title')}</h3>
+                    <p>${t('section13.informal.text')}</p>
+                    
+                    <h3>${t('section13.law.title')}</h3>
+                    <p>${t('section13.law.text')}</p>
+                    
+                    <h3>${t('section13.jurisdiction.title')}</h3>
+                    <p>${t('section13.jurisdiction.text')}</p>
+                </section>
+
+                <!-- Section 14 -->
+                <section>
+                    <h2>${t('section14.title')}</h2>
+                    <p>${t('section14.intro')}</p>
+                    <ul>
+                        ${(t('section14.items', { returnObjects: true }) || []).map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    <p>${t('section14.continued')}</p>
+                </section>
+
+                <!-- Section 15 -->
+                <section>
+                    <h2>${t('section15.title')}</h2>
+                    <p>${t('section15.intro')}</p>
+                    <ul>
+                        <li><strong>${t('section15.email.label')}</strong> ${t('section15.email.value')}</li>
+                        <li><strong>${t('section15.location.label')}</strong> ${t('section15.location.value')}</li>
+                        <li><strong>${t('section15.agency.label')}</strong> ${t('section15.agency.value')}</li>
+                    </ul>
+                </section>
+
+                <!-- Agreement Box -->
+                <section class="mt-12 p-6 bg-yellow-900/30 border border-yellow-500/50 rounded-xl">
+                    <h3 class="text-yellow-400 font-bold text-xl mb-4">📝 ${t('agreement.title')}</h3>
+                    <p>${t('agreement.text')}</p>
+                </section>
+            `;
+        }
+    </script>
 <!-- Crisp Chat -->
 <script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="3fc5eae0-c8f6-4c08-98e9-8f83cc5712e2";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
 </body>
