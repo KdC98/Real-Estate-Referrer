@@ -1,94 +1,290 @@
 {
-  "dashboard_title": "Dashboard ng Referrer",
-  "welcome": "Maligayang pagdating",
-  "my_stats": "Aking mga Estadistika",
-  "total_earnings": "Kabuuang Kita",
-  "active_leads": "Mga Aktibong Lead",
-  "closed_sales": "Mga Nakumpletong Benta",
-  "add_lead": "Magdagdag ng Lead",
-  "my_leads": "Aking mga Lead",
-  "client_name": "Pangalan ng Kliyente",
-  "property_type": "Uri ng Ari-arian",
-  "budget": "Badyet",
-  "status": "Katayuan",
-  "commission": "Komisyon",
-  "no_leads": "Wala pang mga lead",
-  "start_adding": "Magsimulang magdagdag ng mga lead upang kumita ng komisyon",
-  "logout": "Mag-logout",
-  "contract_required": "Kailangan ang Kontrata",
-  "contract_warning_message": "Mangyaring i-download at pirmahan ang kasunduan ng referrer bago magdagdag ng mga lead",
-  "upload_contract_now": "I-upload ang Kontrata Ngayon",
-  "admin_title": "Dashboard ng Admin",
-  "referrer_title": "Dashboard ng Referrer",
-  "actions": "Mga Aksyon",
-  "add": "Idagdag",
-  "cancel": "Kanselahin",
-  "all_leads": "Lahat ng mga Lead",
-  "total_referrers": "Mga Aktibong Referrer",
-  "commissions_paid": "Mga Komisyong Binayaran",
-  "referrer": "Referrer",
-  "mark_sold": "Markahan bilang Nabenta",
-  "client_email": "Email ng Kliyente",
-  "client_phone": "Telepono ng Kliyente",
-  "select_type": "Pumili ng Uri",
-  "sale_buyer": "Benta - Mamimili",
-  "sale_seller": "Benta - Nagbebenta",
-  "rental_landlord": "Upa - May-ari",
-  "rental_tenant": "Upa - Nangungupahan",
-  "status_new": "Bago",
-  "status_nouveau": "Bago",
-  "status_visit": "Pagbisita",
-  "status_visite": "Pagbisita",
-  "status_offer": "Alok",
-  "status_offre": "Alok",
-  "status_sold": "Nabenta",
-  "status_vendu": "Nabenta",
-  "contract_uploaded_title": "Perpekto! Maaari ka nang magsimula!",
-  "contract_uploaded_message": "Natanggap na ang iyong kontrata at ibe-verify ng aming team sa loob ng susunod na 24-48 oras. Huwag mag-alala, maaari ka nang magsimulang magtrabaho at magdagdag ng iyong unang mga lead.",
-  "upload_instructions": "I-download, pirmahan at i-upload ang kontrata",
-  "download_contract_template": "I-download ang Template",
-  "submit_contract": "Isumite ang Kontrata",
-  "contract_required_to_add_lead": "Kailangan mong i-upload ang iyong pinirmahang kontrata bago magdagdag ng mga lead",
-  
-  "contract": {
-    "required": "Kailangan ang Kasunduan ng Business Referrer",
-    "what_is_it": "Ano ang kontratang ito?",
-    "explanation": "Ang kontratang ito ay nagpopormalisa ng ating propesyonal na pakikipagsosyo at ginagarantiyahan ang iyong mga karapatan:",
-    
-    "benefit1_title": "Garantisadong komisyon:",
-    "benefit1_desc": "20% sa bawat nakumpletong benta",
-    
-    "benefit2_title": "Proteksyon ng lead:",
-    "benefit2_desc": "Walang lead na maaaring \"nakawin\"",
-    
-    "benefit3_title": "Mabilis na bayad:",
-    "benefit3_desc": "Sa loob ng 45-60 araw pagkatapos ng transaksyon",
-    
-    "benefit4_title": "Buong transparency:",
-    "benefit4_desc": "Real-time na pagsubaybay sa iyong mga lead",
-    
-    "benefit5_title": "Pagsunod sa RERA:",
-    "benefit5_desc": "Paggalang sa mga regulasyon ng Dubai",
-    
-    "step1_title": "Hakbang 1: I-download",
-    "step1_desc": "I-download, i-print at pirmahan ang kontrata",
-    "download_button": "I-download ang PDF Template",
-    
-    "step2_title": "Hakbang 2: I-upload",
-    "step2_desc": "I-upload ang pinirmahang kontrata (PDF, max 10MB)",
-    "upload_button": "I-upload ang Pinirmahang Kontrata",
-    
-    "digital_tip": "Tip:",
-    "digital_coming": "Digital na pirma ay paparating na!",
-    
-    "electronic_signature": "Electronic na Pirma",
-    "electronic_signature_intro": "Bago: Pirmahan ang iyong kontrata online sa loob ng 2 minuto",
-    "signature_feature_1": "Pumirma gamit ang daliri o mouse",
-    "signature_feature_2": "Instant na pag-verify",
-    "signature_feature_3": "Legal na balido sa Dubai",
-    "signature_feature_4": "Walang kailangang i-download",
-    "sign_now_button": "Pirmahan ang aking kontrata ngayon",
-    "signed_validated": "Kontrata ay pinirmahan at na-verify",
-    "can_add_leads": "Maaari ka na ngayong magdagdag ng mga lead"
+  "page_title": "Mga Tuntunin ng Serbisyo - Real Estate Referrer",
+  "title": "Mga Tuntunin ng Serbisyo",
+  "last_updated": "Huling na-update: Nobyembre 25, 2025",
+  "back_home": "← Bumalik sa Home",
+  "nav": {
+    "home": "Home",
+    "how": "Paano ito gumagana",
+    "privacy": "Privacy"
+  },
+  "footer": {
+    "copyright": "© 2025 Real Estate Referrer. Lahat ng karapatan ay nakalaan.",
+    "terms": "Mga Tuntunin",
+    "privacy": "Privacy",
+    "how": "Paano ito gumagana"
+  },
+  "section1": {
+    "title": "1. Panimula",
+    "intro": "Maligayang pagdating sa Real Estate Referrer (\"Platform\", \"kami\", \"amin\"). Ang mga Tuntunin ng Serbisyo na ito (\"Mga Tuntunin\") ang namamahala sa iyong paggamit ng aming referral program platform para sa mga transaksyon sa real estate sa Dubai, United Arab Emirates.",
+    "agreement": "Sa paglikha ng account o paggamit ng aming mga serbisyo, sumasang-ayon kang sumunod sa mga Tuntuning ito. Kung hindi ka sumasang-ayon, mangyaring huwag gamitin ang aming Platform."
+  },
+  "section2": {
+    "title": "2. Mga Kahulugan",
+    "referrer": {
+      "term": "Referrer / Business Introducer:",
+      "definition": "Isang indibidwal na nagrehistro sa Platform upang mag-refer ng mga potensyal na kliyente (leads) sa real estate agent."
+    },
+    "lead": {
+      "term": "Lead:",
+      "definition": "Isang potensyal na kliyente na ni-refer ng Referrer na interesado sa pagbili, pagbebenta, pag-upa, o pagpapaupa ng real estate sa Dubai."
+    },
+    "qualified_lead": {
+      "term": "Qualified Lead:",
+      "definition": "Isang lead na may tunay na interes, tiyak na budget, kumpletong impormasyon sa pakikipag-ugnayan, at aktibong timeline (0-6 na buwan)."
+    },
+    "agent": {
+      "term": "Agent:",
+      "definition": "Ang lisensyadong propesyonal sa real estate na nagpapatakbo sa ilalim ng Solo Gate Real Estate (Alliance by EMAAR)."
+    },
+    "commission": {
+      "term": "Commission:",
+      "definition": "Ang bayad na dapat sa Referrer kapag matagumpay na nakumpleto ang isang transaksyon sa real estate."
+    },
+    "transaction": {
+      "term": "Transaction:",
+      "definition": "Isang nakumpletong kasunduan sa pagbebenta o pag-upa na na-facilitate sa pamamagitan ng ni-refer na lead."
+    }
+  },
+  "section3": {
+    "title": "3. Pagiging Kwalipikado at Pagpaparehistro",
+    "eligibility": {
+      "title": "3.1 Mga Kinakailangan para Maging Kwalipikado",
+      "intro": "Upang maging Referrer, dapat kang:",
+      "items": [
+        "Hindi bababa sa 18 taong gulang",
+        "Magbigay ng tumpak at kumpletong impormasyon sa pagpaparehistro",
+        "Magkaroon ng valid na numero ng telepono para sa SMS verification",
+        "Pumirma sa Business Introducer Agreement (elektroniko o pisikal)",
+        "Walang hawak na lisensya sa real estate sa UAE (maliban kung idineklara)"
+      ]
+    },
+    "security": {
+      "title": "3.2 Seguridad ng Account",
+      "text": "Ikaw ang responsable sa pagpapanatili ng pagiging kumpidensiyal ng iyong mga kredensyal sa account. Dapat mong ipaalam kaagad sa amin ang anumang hindi awtorisadong paggamit ng iyong account."
+    },
+    "sms": {
+      "title": "3.3 SMS Verification",
+      "text": "Gumagamit kami ng SMS verification (2FA) upang ma-secure ang iyong account. Maaaring mag-apply ang mga standard na singil sa pagmemensahe. Sa pagpaparehistro, pumapayag kang tumanggap ng mga SMS message para sa mga layunin ng verification."
+    }
+  },
+  "section4": {
+    "title": "4. Mga Commission",
+    "rate": {
+      "title": "4.1 Rate ng Commission",
+      "text": "Ang Referrer ay tumatanggap ng",
+      "percentage": "hanggang 25%",
+      "text2": "ng commission ng agent sa bawat nakumpletong transaksyon. Nag-iiba ang rate depende sa uri ng lead: 25% para sa Mga Buyer, 20% para sa iba (Mga Seller, Landlord, Tenant).",
+      "exampleTitle": "Mga halimbawa ng pagkalkula:",
+      "exampleItems": [
+        "🏆 BUYER (25%) - Pagbebenta ng 2,000,000 AED: Kabuuang commission 40,000 AED → Bahagi ng agent 20,000 AED → Referrer: 5,000 AED",
+        "🏆 BUYER (25%) - Pagbebenta ng 5,000,000 AED: Kabuuang commission 100,000 AED → Bahagi ng agent 50,000 AED → Referrer: 12,500 AED",
+        "SELLER (20%) - Pagbebenta ng 5,000,000 AED: Kabuuang commission 100,000 AED → Bahagi ng agent 50,000 AED → Referrer: 10,000 AED",
+        "RENTAL (20%) - Taunang upa 120,000 AED: Kabuuang commission 6,000 AED → Bahagi ng agent 3,000 AED → Referrer: 600 AED"
+      ]
+    },
+    "payment": {
+      "title": "4.2 Mga Tuntunin sa Pagbabayad",
+      "text": "Ang commission ay binabayaran sa loob ng 45-60 araw pagkatapos ng pagpirma ng kontrata sa pagbebenta (Title Deed) o sa loob ng 14 na araw pagkatapos ng pagpirma ng kontrata sa pag-upa (Tenancy Contract) at pagtanggap ng pondo ng agent."
+    },
+    "method": {
+      "title": "4.3 Paraan ng Pagbabayad",
+      "text": "Ang mga commission ay binabayaran sa pamamagitan ng bank transfer sa account na ibinigay ng referrer sa panahon ng pagpaparehistro."
+    },
+    "nonPayment": {
+      "title": "4.4 Mga Kaso ng Hindi Pagbabayad",
+      "intro": "Walang commission na dapat sa mga sumusunod na kaso:",
+      "items": [
+        "Ang ibinigay na lead ay kilala na ng agent bago ang iyong referral",
+        "Kinansela ng kliyente ang transaksyon o hindi itinuloy",
+        "Ang ibinigay na impormasyon ay mali o hindi kumpleto",
+        "Hindi nagbigay ng pahintulot ang kliyente na makipag-ugnayan"
+      ]
+    }
+  },
+  "section5": {
+    "title": "5. Pagsusumite at Proteksyon ng Lead",
+    "requirements": {
+      "title": "5.1 Mga Kinakailangan sa Lead",
+      "intro": "Bawat lead ay dapat maglaman ng:",
+      "items": [
+        "Buong pangalan ng kliyente",
+        "Valid na email address",
+        "Valid na numero ng telepono",
+        "Uri ng lead (Buyer, Seller, Landlord, o Tenant)",
+        "Tantyang budget",
+        "Malinaw na pahintulot ng kliyente na makipag-ugnayan"
+      ]
+    },
+    "consent": {
+      "title": "5.2 Pahintulot ng Kliyente (KINAKAILANGAN)",
+      "important": "MAHALAGA:",
+      "text": "Dapat kang makakuha ng malinaw na pahintulot ng kliyente bago isumite ang kanilang impormasyon. Sa pagsusumite ng lead, kinukumpirma mo na:",
+      "items": [
+        "Alam ng kliyente na makikipag-ugnayan sa kanila ang isang real estate agent",
+        "Sumang-ayon ang kliyente na ibahagi ang kanilang impormasyon sa pakikipag-ugnayan",
+        "Hindi mo pinalitan ang layunin ng pagkolekta ng kanilang impormasyon"
+      ],
+      "warning": "Ang pagsusumite ng mga lead nang walang wastong pahintulot ay paglabag sa mga Tuntuning ito at sa mga regulasyon ng GDPR, at maaaring magresulta sa agarang pagwawakas ng account."
+    },
+    "protection": {
+      "title": "5.3 Proteksyon ng Lead",
+      "items": [
+        "Ang mga lead ay may timestamp at inaatas sa unang Referrer na nagsumite",
+        "Awtomatikong tinatanggihan ang mga duplicate na lead",
+        "Ang pagmamay-ari ng lead ay valid sa loob ng 12 buwan mula sa petsa ng pagsusumite",
+        "Maaari mong subaybayan ang katayuan ng iyong lead sa real-time sa pamamagitan ng iyong dashboard"
+      ]
+    },
+    "prohibited": {
+      "title": "5.4 Mga Ipinagbabawal na Gawain",
+      "intro": "Ang mga sumusunod ay mahigpit na ipinagbabawal:",
+      "items": [
+        "Pagsusumite ng mga peke o gawa-gawang lead",
+        "Pagsusumite ng mga lead nang walang pahintulot ng kliyente",
+        "Direktang solicitation o cold calling sa ngalan ng agent",
+        "Pagpapanggap na ikaw ay isang lisensyadong real estate agent",
+        "Pagsusumite ng iyong sariling impormasyon sa pakikipag-ugnayan bilang lead",
+        "Anumang aktibidad na lumalabag sa mga regulasyon ng RERA"
+      ]
+    }
+  },
+  "section6": {
+    "title": "6. Mga Obligasyon ng Referrer",
+    "intro": "Bilang isang Referrer, sumasang-ayon kang:",
+    "items": [
+      "Magbigay ng tumpak na impormasyon tungkol sa iyong sarili at sa iyong mga lead",
+      "Makakuha ng wastong pahintulot mula sa mga kliyente bago isumite",
+      "Hindi makikisangkot sa anumang ilegal o hindi etikal na mga gawain sa marketing",
+      "Igalang ang pagiging kumpidensyal ng impormasyon ng kliyente",
+      "Hindi direktang makikipag-negosasyon sa mga kliyente sa mga bagay na may kinalaman sa real estate",
+      "Sumunod sa lahat ng naaangkop na batas ng UAE at mga regulasyon ng RERA",
+      "Panatilihin ang napirmahang Business Introducer Agreement"
+    ]
+  },
+  "section7": {
+    "title": "7. Mga Obligasyon ng Agent",
+    "intro": "Ang Agent ay nangangako na:",
+    "items": [
+      "Mag-follow up sa lahat ng qualified leads sa loob ng 48 oras",
+      "Magbigay ng mga transparent na status update sa pamamagitan ng Platform",
+      "Magbayad ng mga commission sa loob ng napagkasunduang timeframe",
+      "Tratuhin ang lahat ng ni-refer na kliyente nang propesyonal",
+      "Hindi i-bypass ang mga karapatan sa commission ng Referrer",
+      "Panatilihin ang lahat ng kinakailangang lisensya at permit ng RERA"
+    ]
+  },
+  "section8": {
+    "title": "8. Intellectual Property",
+    "intro": "Ang Platform, kasama ang disenyo, mga feature, at nilalaman nito, ay pagmamay-ari namin at protektado ng mga batas sa intellectual property. Hindi mo maaaring:",
+    "items": [
+      "Kopyahin, baguhin, o ipamahagi ang anumang bahagi ng Platform",
+      "Gamitin ang aming branding nang walang nakasulat na pahintulot",
+      "Mag-reverse engineer o subukang kunin ang source code",
+      "Gamitin ang Platform para sa anumang layunin maliban sa nilalayon nitong paggamit"
+    ]
+  },
+  "section9": {
+    "title": "9. Privacy at Data Protection",
+    "intro": "Ang iyong paggamit ng Platform ay pinapamahalaan din ng aming",
+    "link": "Patakaran sa Privacy",
+    "items": [
+      "Kinokolekta at pinoproseso namin ang personal na data alinsunod sa GDPR",
+      "Ginagamit lamang ang data ng kliyente para sa mga transaksyon sa real estate",
+      "Hindi namin ibinebenta ang personal na data sa mga third party",
+      "May karapatan kang i-access, itama, o burahin ang iyong data",
+      "Ang data ay ligtas na iniimbak na may encryption"
+    ]
+  },
+  "section10": {
+    "title": "10. Pagwawakas",
+    "byReferrer": {
+      "title": "10.1 Pagwawakas ng Referrer",
+      "text": "Maaari mong wakasan ang iyong account anumang oras sa pamamagitan ng pakikipag-ugnayan sa amin. Ang mga pending na commission para sa mga nakumpletong transaksyon ay babayaran pa rin."
+    },
+    "byUs": {
+      "title": "10.2 Pagwawakas Namin",
+      "intro": "Maaari naming suspindihin o wakasan ang iyong account kung ikaw ay:",
+      "items": [
+        "Lumabag sa mga Tuntuning ito",
+        "Nagsumite ng mga mapanlinlang na lead",
+        "Nakibahagi sa mga ipinagbabawal na gawain",
+        "Hindi napanatili ang Business Introducer Agreement"
+      ]
+    },
+    "effect": {
+      "title": "10.3 Epekto ng Pagwawakas",
+      "intro": "Sa pagwawakas:",
+      "items": [
+        "Ang iyong access sa Platform ay babawiin",
+        "Ang mga pending na qualified leads ay maaari pa ring kumita ng commission kung ma-convert sa loob ng 90 araw",
+        "Ang mga hindi pa nababayarang commission na higit sa 500 AED ay babayaran sa loob ng 30 araw"
+      ]
+    }
+  },
+  "section11": {
+    "title": "11. Limitasyon ng Pananagutan",
+    "intro": "Sa pinakamalaking lawak na pinahihintulutan ng batas:",
+    "items": [
+      "Hindi kami mananagot para sa anumang hindi direkta, hindi sinasadyang, o resulta ng mga pinsala",
+      "Ang aming kabuuang pananagutan ay limitado sa mga commission na nakuha sa nakalipas na 12 buwan",
+      "Hindi namin ginagarantiyahan ang anumang tiyak na kita o bilang ng mga conversion",
+      "Hindi kami responsable para sa pag-uugali ng kliyente o mga resulta ng transaksyon"
+    ]
+  },
+  "section12": {
+    "title": "12. Pagsunod sa RERA",
+    "intro": "Ang Platform na ito ay nagpapatakbo alinsunod sa Real Estate Regulatory Agency (RERA) ng Dubai. Mga mahalagang tala:",
+    "items": [
+      "Ang mga Referrer ay kumikilos bilang mga business introducer, hindi lisensyadong real estate agent",
+      "Lahat ng aktibidad sa real estate ay isinasagawa ng mga lisensyadong propesyonal",
+      "Pinapanatili ng Agent ang lahat ng kinakailangang permit at lisensya ng RERA",
+      "Ang mga Referrer ay hindi dapat makibahagi sa mga aktibidad na nangangailangan ng lisensya sa real estate"
+    ]
+  },
+  "section13": {
+    "title": "13. Resolusyon ng mga Alitan",
+    "informal": {
+      "title": "13.1 Hindi Pormal na Resolusyon",
+      "text": "Hinihikayat ka naming makipag-ugnayan muna sa amin upang maayos na malutas ang anumang alitan."
+    },
+    "law": {
+      "title": "13.2 Namamahalang Batas",
+      "text": "Ang mga Tuntuning ito ay pinapamahalaan ng mga batas ng United Arab Emirates, partikular ang Emirate ng Dubai."
+    },
+    "jurisdiction": {
+      "title": "13.3 Hurisdiksyon",
+      "text": "Ang anumang alitan ay sasailalim sa eksklusibong hurisdiksyon ng mga korte ng Dubai, UAE."
+    }
+  },
+  "section14": {
+    "title": "14. Mga Pagbabago sa mga Tuntunin",
+    "intro": "Maaari naming i-update ang mga Tuntuning ito paminsan-minsan. Ipapaalam namin sa iyo ang mga makabuluhang pagbabago sa pamamagitan ng:",
+    "items": [
+      "Notification sa email",
+      "Notification sa Platform",
+      "Na-update na petsa ng \"Huling binago\""
+    ],
+    "continued": "Ang patuloy na paggamit ng Platform pagkatapos ng mga pagbabago ay bumubuo ng pagtanggap sa mga bagong Tuntunin."
+  },
+  "section15": {
+    "title": "15. Impormasyon sa Pakikipag-ugnayan",
+    "intro": "Para sa mga tanong tungkol sa mga Tuntuning ito, mangyaring makipag-ugnayan sa amin:",
+    "email": {
+      "label": "Email:",
+      "value": "contact@real-estate-referrer.com"
+    },
+    "location": {
+      "label": "Lokasyon:",
+      "value": "Dubai, United Arab Emirates"
+    },
+    "agency": {
+      "label": "Ahensya:",
+      "value": "Solo Gate Real Estate (Alliance by EMAAR)"
+    }
+  },
+  "agreement": {
+    "title": "Kasunduan",
+    "text": "Sa paglikha ng account at paggamit ng Real Estate Referrer platform, kinikilala mo na nabasa, naunawaan, at sumasang-ayon kang sumunod sa mga Tuntunin ng Serbisyong ito."
   }
 }
