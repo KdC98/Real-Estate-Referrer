@@ -1,4 +1,74 @@
-"section4": {
+{
+  "page_title": "Conditions Générales - Real Estate Referrer",
+  "title": "Conditions Générales d'Utilisation",
+  "last_updated": "Dernière mise à jour : 25 novembre 2025",
+  "back_home": "← Retour à l'accueil",
+  "nav": {
+    "home": "Accueil",
+    "how": "Comment ça marche",
+    "privacy": "Confidentialité"
+  },
+  "footer": {
+    "copyright": "© 2025 Real Estate Referrer. Tous droits réservés.",
+    "terms": "CGU",
+    "privacy": "Confidentialité",
+    "how": "Comment ça marche"
+  },
+  "section1": {
+    "title": "1. Introduction",
+    "intro": "Bienvenue sur Real Estate Referrer (\"Plateforme\", \"nous\", \"notre\"). Ces Conditions Générales d'Utilisation (\"CGU\") régissent votre utilisation de notre programme de parrainage pour les transactions immobilières à Dubai, Émirats Arabes Unis.",
+    "agreement": "En créant un compte ou en utilisant nos services, vous acceptez d'être lié par ces CGU. Si vous n'êtes pas d'accord, veuillez ne pas utiliser notre Plateforme."
+  },
+  "section2": {
+    "title": "2. Définitions",
+    "referrer": {
+      "term": "Apporteur d'affaires :",
+      "definition": "Une personne qui s'inscrit sur la Plateforme pour référer des clients potentiels (leads) à l'agent immobilier."
+    },
+    "lead": {
+      "term": "Lead :",
+      "definition": "Un client potentiel référé par un Apporteur qui est intéressé par l'achat, la vente, la location ou la mise en location d'un bien immobilier à Dubai."
+    },
+    "qualified_lead": {
+      "term": "Lead qualifié :",
+      "definition": "Un lead avec un intérêt réel, un budget défini, des coordonnées complètes et un projet actif (0-6 mois)."
+    },
+    "agent": {
+      "term": "Agent :",
+      "definition": "Le professionnel immobilier agréé opérant sous Solo Gate Real Estate (Alliance by EMAAR)."
+    },
+    "commission": {
+      "term": "Commission :",
+      "definition": "Le paiement dû à l'Apporteur lors de la conclusion d'une transaction immobilière."
+    },
+    "transaction": {
+      "term": "Transaction :",
+      "definition": "Un contrat de vente ou de location finalisé suite à un lead référé."
+    }
+  },
+  "section3": {
+    "title": "3. Éligibilité et Inscription",
+    "eligibility": {
+      "title": "3.1 Conditions d'éligibilité",
+      "intro": "Pour devenir Apporteur, vous devez :",
+      "items": [
+        "Avoir au moins 18 ans",
+        "Fournir des informations d'inscription exactes et complètes",
+        "Avoir un numéro de téléphone valide pour la vérification SMS",
+        "Signer le Contrat d'Apporteur d'Affaires (électroniquement ou physiquement)",
+        "Ne pas détenir de licence immobilière aux EAU (sauf si déclaré)"
+      ]
+    },
+    "security": {
+      "title": "3.2 Sécurité du compte",
+      "text": "Vous êtes responsable de la confidentialité de vos identifiants de connexion. Vous devez nous informer immédiatement de toute utilisation non autorisée de votre compte."
+    },
+    "sms": {
+      "title": "3.3 Vérification SMS",
+      "text": "Nous utilisons la vérification SMS (2FA) pour sécuriser votre compte. Des frais de messagerie standard peuvent s'appliquer. En vous inscrivant, vous consentez à recevoir des SMS à des fins de vérification."
+    }
+  },
+  "section4": {
     "title": "4. Commissions",
     "rate": {
       "title": "4.1 Taux de commission",
@@ -32,3 +102,189 @@
       ]
     }
   },
+  "section5": {
+    "title": "5. Soumission et Protection des Leads",
+    "requirements": {
+      "title": "5.1 Informations requises",
+      "intro": "Chaque lead doit inclure :",
+      "items": [
+        "Nom complet du client",
+        "Adresse email valide",
+        "Numéro de téléphone valide",
+        "Type de lead (Acheteur, Vendeur, Propriétaire bailleur ou Locataire)",
+        "Budget approximatif",
+        "Consentement explicite du client pour être contacté"
+      ]
+    },
+    "consent": {
+      "title": "5.2 Consentement du client (OBLIGATOIRE)",
+      "important": "IMPORTANT :",
+      "text": "Vous devez obtenir le consentement explicite du client avant de soumettre ses informations. En soumettant un lead, vous confirmez que :",
+      "items": [
+        "Le client sait qu'il sera contacté par un agent immobilier",
+        "Le client a accepté de partager ses coordonnées",
+        "Vous n'avez pas déformé l'objectif de la collecte de ses informations"
+      ],
+      "warning": "Soumettre des leads sans consentement approprié constitue une violation de ces CGU et des réglementations RGPD, et peut entraîner la résiliation immédiate du compte."
+    },
+    "protection": {
+      "title": "5.3 Protection des leads",
+      "items": [
+        "Les leads sont horodatés et attribués au premier Apporteur qui les soumet",
+        "Les leads en double sont automatiquement rejetés",
+        "La propriété du lead est valable 12 mois à compter de la date de soumission",
+        "Vous pouvez suivre le statut de vos leads en temps réel via votre tableau de bord"
+      ]
+    },
+    "prohibited": {
+      "title": "5.4 Pratiques interdites",
+      "intro": "Les pratiques suivantes sont strictement interdites :",
+      "items": [
+        "Soumettre des leads faux ou fabriqués",
+        "Soumettre des leads sans le consentement du client",
+        "Démarchage direct ou appels à froid au nom de l'agent",
+        "Se faire passer pour un agent immobilier agréé",
+        "Soumettre vos propres coordonnées comme lead",
+        "Toute activité violant les réglementations RERA"
+      ]
+    }
+  },
+  "section6": {
+    "title": "6. Obligations de l'Apporteur",
+    "intro": "En tant qu'Apporteur, vous vous engagez à :",
+    "items": [
+      "Fournir des informations exactes sur vous-même et vos leads",
+      "Obtenir le consentement approprié des clients avant soumission",
+      "Ne pas vous engager dans des pratiques marketing illégales ou non éthiques",
+      "Respecter la confidentialité des informations clients",
+      "Ne pas négocier directement avec les clients sur des questions immobilières",
+      "Respecter toutes les lois applicables aux EAU et les réglementations RERA",
+      "Maintenir le Contrat d'Apporteur d'Affaires signé"
+    ]
+  },
+  "section7": {
+    "title": "7. Obligations de l'Agent",
+    "intro": "L'Agent s'engage à :",
+    "items": [
+      "Assurer le suivi de tous les leads qualifiés dans les 48 heures",
+      "Fournir des mises à jour de statut transparentes via la Plateforme",
+      "Payer les commissions dans les délais convenus",
+      "Traiter tous les clients référés de manière professionnelle",
+      "Ne pas contourner les droits de commission de l'Apporteur",
+      "Maintenir toutes les licences et permis RERA requis"
+    ]
+  },
+  "section8": {
+    "title": "8. Propriété Intellectuelle",
+    "intro": "La Plateforme, y compris son design, ses fonctionnalités et son contenu, nous appartient et est protégée par les lois sur la propriété intellectuelle. Vous ne pouvez pas :",
+    "items": [
+      "Copier, modifier ou distribuer toute partie de la Plateforme",
+      "Utiliser notre marque sans autorisation écrite",
+      "Faire de l'ingénierie inverse ou tenter d'extraire le code source",
+      "Utiliser la Plateforme à des fins autres que son utilisation prévue"
+    ]
+  },
+  "section9": {
+    "title": "9. Confidentialité et Protection des Données",
+    "intro": "Votre utilisation de la Plateforme est également régie par notre",
+    "link": "Politique de Confidentialité",
+    "items": [
+      "Nous collectons et traitons les données personnelles conformément au RGPD",
+      "Les données clients sont utilisées uniquement pour les transactions immobilières",
+      "Nous ne vendons pas de données personnelles à des tiers",
+      "Vous avez le droit d'accéder, de corriger ou de supprimer vos données",
+      "Les données sont stockées de manière sécurisée avec chiffrement"
+    ]
+  },
+  "section10": {
+    "title": "10. Résiliation",
+    "byReferrer": {
+      "title": "10.1 Résiliation par l'Apporteur",
+      "text": "Vous pouvez résilier votre compte à tout moment en nous contactant. Les commissions en attente pour les transactions terminées seront toujours payées."
+    },
+    "byUs": {
+      "title": "10.2 Résiliation par nous",
+      "intro": "Nous pouvons suspendre ou résilier votre compte si vous :",
+      "items": [
+        "Violez ces CGU",
+        "Soumettez des leads frauduleux",
+        "Vous engagez dans des pratiques interdites",
+        "Ne maintenez pas le Contrat d'Apporteur d'Affaires"
+      ]
+    },
+    "effect": {
+      "title": "10.3 Effet de la résiliation",
+      "intro": "En cas de résiliation :",
+      "items": [
+        "Votre accès à la Plateforme sera révoqué",
+        "Les leads qualifiés en attente peuvent toujours générer une commission s'ils sont convertis dans les 90 jours",
+        "Les commissions impayées supérieures à 500 AED seront payées dans les 30 jours"
+      ]
+    }
+  },
+  "section11": {
+    "title": "11. Limitation de Responsabilité",
+    "intro": "Dans les limites autorisées par la loi :",
+    "items": [
+      "Nous ne sommes pas responsables des dommages indirects, accessoires ou consécutifs",
+      "Notre responsabilité totale est limitée aux commissions gagnées au cours des 12 derniers mois",
+      "Nous ne garantissons aucun revenu spécifique ni nombre de conversions",
+      "Nous ne sommes pas responsables du comportement des clients ou des résultats des transactions"
+    ]
+  },
+  "section12": {
+    "title": "12. Conformité RERA",
+    "intro": "Cette Plateforme fonctionne conformément à la Real Estate Regulatory Agency (RERA) de Dubai. Points importants :",
+    "items": [
+      "Les Apporteurs agissent en tant qu'introducteurs d'affaires, pas en tant qu'agents immobiliers agréés",
+      "Toutes les activités immobilières sont menées par des professionnels agréés",
+      "L'Agent maintient tous les permis et licences RERA requis",
+      "Les Apporteurs ne doivent pas s'engager dans des activités nécessitant une licence immobilière"
+    ]
+  },
+  "section13": {
+    "title": "13. Résolution des Litiges",
+    "informal": {
+      "title": "13.1 Résolution amiable",
+      "text": "Nous vous encourageons à nous contacter d'abord pour résoudre tout litige à l'amiable."
+    },
+    "law": {
+      "title": "13.2 Droit applicable",
+      "text": "Ces CGU sont régies par les lois des Émirats Arabes Unis, en particulier l'Émirat de Dubai."
+    },
+    "jurisdiction": {
+      "title": "13.3 Juridiction",
+      "text": "Tout litige sera soumis à la juridiction exclusive des tribunaux de Dubai, EAU."
+    }
+  },
+  "section14": {
+    "title": "14. Modifications des CGU",
+    "intro": "Nous pouvons mettre à jour ces CGU de temps en temps. Nous vous informerons des changements significatifs via :",
+    "items": [
+      "Notification par email",
+      "Notification sur la Plateforme",
+      "Date de \"Dernière mise à jour\" actualisée"
+    ],
+    "continued": "L'utilisation continue de la Plateforme après les modifications constitue une acceptation des nouvelles CGU."
+  },
+  "section15": {
+    "title": "15. Coordonnées",
+    "intro": "Pour toute question concernant ces CGU, veuillez nous contacter :",
+    "email": {
+      "label": "Email :",
+      "value": "contact@real-estate-referrer.com"
+    },
+    "location": {
+      "label": "Localisation :",
+      "value": "Dubai, Émirats Arabes Unis"
+    },
+    "agency": {
+      "label": "Agence :",
+      "value": "Solo Gate Real Estate (Alliance by EMAAR)"
+    }
+  },
+  "agreement": {
+    "title": "Acceptation",
+    "text": "En créant un compte et en utilisant la plateforme Real Estate Referrer, vous reconnaissez avoir lu, compris et accepté d'être lié par ces Conditions Générales d'Utilisation."
+  }
+}
