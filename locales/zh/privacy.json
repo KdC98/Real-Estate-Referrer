@@ -1,20 +1,20 @@
 {
   "privacy": {
     "title": "隐私政策",
-    "subtitle": "保护您的个人数据 - GDPR 合规",
+    "subtitle": "保护您的个人数据 - 符合GDPR",
     "lastUpdated": "最后更新：2025年10月28日",
     
     "nav": {
       "home": "首页",
-      "howItWorks": "工作原理",
+      "howItWorks": "如何运作",
       "login": "登录"
     },
     
     "intro": {
       "title": "简介",
-      "p1": "本隐私政策描述了 Karyne de Clercq Real Estate 如何收集、使用、共享和保护您的个人信息。",
-      "p2": "使用我们的服务，即表示您接受本政策中描述的做法。",
-      "p3": "我们承诺根据GDPR和阿拉伯联合酋长国法律保护您的隐私。"
+      "p1": "本隐私政策描述了Karyne de Clercq Real Estate如何收集、使用、共享和保护您的个人信息。",
+      "p2": "使用我们的服务，即表示您同意本政策中描述的做法。",
+      "p3": "我们承诺按照GDPR和阿联酋法律保护您的隐私。"
     },
     
     "section1": {
@@ -31,9 +31,9 @@
       "title": "2. 数据使用",
       "intro": "您的数据用于：",
       "item1": "管理您的账户和潜在客户",
-      "item2": "计算和支付您的佣金",
+      "item2": "计算并支付您的佣金",
       "item3": "向您发送重要通知",
-      "item4": "遵守RERA迪拜法规",
+      "item4": "遵守迪拜RERA法规",
       "item5": "改进我们的服务"
     },
     
@@ -41,8 +41,8 @@
       "title": "3. 数据共享",
       "intro": "我们从不出售您的数据。有限共享：",
       "item1": "✓ 与房地产经纪人共享以处理您的潜在客户",
-      "item2": "✓ 如法律要求，与法律机构共享（RERA）",
-      "item3": "✓ 与技术提供商共享（Vercel、Supabase）",
+      "item2": "✓ 法律要求时与法律机构共享（RERA）",
+      "item3": "✓ 技术提供商（Vercel、Supabase）",
       "item4": "✗ 从不出售给营销第三方"
     },
     
@@ -54,13 +54,14 @@
       "item3": "删除您的数据",
       "item4": "导出您的数据",
       "item5": "反对处理",
-      "contact": "联系 privacy@real-estate-referrer.com 行使您的权利（30天内回复）"
+      "contact": "联系 contact@real-estate-referrer.com 行使您的权利（30天内回复）"
     },
     
     "section5": {
-      "title": "5. 联系我们",
+      "title": "5. 联系方式",
       "responsible": "数据控制者",
-      "coordinates": "联系信息"
+      "coordinates": "联系我们",
+      "chat": "网站上提供在线聊天"
     },
     
     "cta": {
@@ -74,7 +75,7 @@
       "tagline": "迪拜房地产推荐计划",
       "navigation": "导航",
       "home": "首页",
-      "howItWorks": "工作原理",
+      "howItWorks": "如何运作",
       "loginLink": "登录",
       "signup": "注册",
       "legal": "法律",
@@ -82,7 +83,8 @@
       "privacy": "隐私",
       "contract": "合同模板",
       "contact": "联系",
-      "copyright": "© 2025 Karyne de Clercq。版权所有。"
+      "chatAvailable": "在线聊天",
+      "copyright": "© 2025 Karyne de Clercq. 保留所有权利。"
     }
   }
 }
