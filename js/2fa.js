@@ -1,7 +1,7 @@
 // =====================================================
-// 2FA MODULE - Vérification SMS avec Spinner
-// Version: 2.3.3 - 30 novembre 2025
-// CORRIGÉ: Vérification code via BDD (pas Edge Function verify)
+// 2FA MODULE - Vérification SMS avec Spinner + Email Bienvenue
+// Version: 2.4.0 - 1er décembre 2025
+// AJOUT: Envoi email de bienvenue après création du compte
 // =====================================================
 
 // Fonction pour vérifier si un numéro de téléphone existe déjà
@@ -213,7 +213,7 @@ export async function verify2FACode(phone, code) {
 }
 
 // =====================================================
-// HANDLER 2FA SUBMIT - AVEC SPINNER
+// HANDLER 2FA SUBMIT - AVEC SPINNER + EMAIL BIENVENUE
 // =====================================================
 export async function handle2FASubmit(e) {
     e.preventDefault();
@@ -304,6 +304,36 @@ export async function handle2FASubmit(e) {
         }
         
         console.log('✅ Account created successfully:', signUpData);
+        
+        // =====================================================
+        // ✅ ENVOI EMAIL DE BIENVENUE (8 LANGUES)
+        // =====================================================
+        try {
+            console.log('📧 Sending welcome email...');
+            const currentLang = i18next?.language || 'fr';
+            
+            const emailResponse = await fetch(`${window.SUPABASE_URL}/functions/v1/send-welcome-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userName: pendingData.name,
+                    userEmail: pendingData.email,
+                    language: currentLang
+                })
+            });
+            
+            if (emailResponse.ok) {
+                console.log('✅ Welcome email sent successfully');
+            } else {
+                console.error('❌ Welcome email failed:', await emailResponse.text());
+            }
+        } catch (emailError) {
+            console.error('❌ Welcome email exception:', emailError);
+            // On continue quand même, l'email n'est pas bloquant
+        }
+        // =====================================================
         
         // Mettre à jour le profil avec phone_verified = true
         if (signUpData.user) {
