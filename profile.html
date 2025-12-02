@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Real Estate Referrer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
+    
+    <!-- Header -->
+    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-white text-xl font-bold">Real Estate Referrer</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <!-- Sélecteur de langue -->
+                    <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="ar">🇦🇪 العربية</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="hi">🇮🇳 हिंदी</option>
+                        <option value="ur">🇵🇰 اردو</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="tl">🇵🇭 Tagalog</option>
+                    </select>
+                    <a href="index.html" id="backToDashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.back_dashboard">Retour au dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        <!-- Titre -->
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="profile.title">
+                Mon Profil
+            </h1>
+            <p class="text-blue-200" data-i18n="profile.subtitle">
+                Gérez vos informations personnelles
+            </p>
+        </div>
+
+        <!-- Message de succès/erreur -->
+        <div id="messageContainer" class="hidden mb-6 p-4 rounded-xl text-center"></div>
+
+        <!-- Formulaire -->
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+            <form id="profileForm" class="space-y-6">
+                
+                <!-- Nom -->
+                <div>
+                    <label for="name" class="block text-white font-semibold mb-2" data-i18n="profile.name">
+                        Nom complet
+                    </label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Votre nom"
+                        data-i18n-placeholder="profile.name_placeholder"
+                    >
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label for="email" class="block text-white font-semibold mb-2" data-i18n="profile.email">
+                        Email
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="votre@email.com"
+                        data-i18n-placeholder="profile.email_placeholder"
+                    >
+                    <p class="text-yellow-400 text-sm mt-2" data-i18n="profile.email_warning">
+                        ⚠️ Modifier l'email changera aussi votre identifiant de connexion
+                    </p>
+                </div>
+
+                <!-- Téléphone -->
+                <div>
+                    <label for="phone" class="block text-white font-semibold mb-2" data-i18n="profile.phone">
+                        Téléphone
+                    </label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="+971 XX XXX XXXX"
+                        data-i18n-placeholder="profile.phone_placeholder"
+                    >
+                </div>
+
+                <!-- Adresse -->
+                <div>
+                    <label for="address" class="block text-white font-semibold mb-2" data-i18n="profile.address">
+                        Adresse
+                    </label>
+                    <textarea 
+                        id="address" 
+                        name="address"
+                        rows="2"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                        placeholder="Votre adresse complète"
+                        data-i18n-placeholder="profile.address_placeholder"
+                    ></textarea>
+                    <p class="text-blue-300 text-sm mt-2" data-i18n="profile.address_info">
+                        ℹ️ Utile pour le versement de vos commissions
+                    </p>
+                </div>
+
+                <!-- Langue préférée -->
+                <div>
+                    <label for="preferredLanguage" class="block text-white font-semibold mb-2" data-i18n="profile.preferred_language">
+                        Langue préférée pour les emails
+                    </label>
+                    <select 
+                        id="preferredLanguage" 
+                        name="preferred_language"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="en">🇬🇧 English</option>
+                        <option value="ar">🇦🇪 العربية</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="hi">🇮🇳 हिंदी</option>
+                        <option value="ur">🇵🇰 اردو</option>
+                        <option value="zh">🇨🇳 中文</option>
+                        <option value="tl">🇵🇭 Tagalog</option>
+                    </select>
+                </div>
+
+                <!-- Bouton sauvegarder -->
+                <div class="pt-4">
+                    <button 
+                        type="submit" 
+                        id="saveButton"
+                        class="w-full bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-900 font-bold py-4 px-6 rounded-xl hover:from-yellow-400 hover:to-yellow-300 transition duration-300 flex items-center justify-center"
+                    >
+                        <span id="saveButtonText" data-i18n="profile.save_button">Sauvegarder</span>
+                        <svg id="saveSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Section désabonnement -->
+        <div class="mt-8 bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10">
+            <h3 class="text-lg font-semibold text-white mb-3" data-i18n="profile.notifications_title">
+                Notifications par email
+            </h3>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-200" data-i18n="profile.notifications_description">
+                        Recevoir les emails de relance
+                    </p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="emailSubscribed" class="sr-only peer" checked>
+                    <div class="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                </label>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-white/10 py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-blue-200">
+                <p>&copy; 2025 Real Estate Referrer Dubai. <span data-i18n="footer.copyright">Tous droits réservés.</span></p>
+                <div class="mt-4 space-x-4">
+                    <a href="index.html" class="hover:text-white transition" data-i18n="footer.navigation_home">Accueil</a>
+                    <a href="how-it-works.html" class="hover:text-white transition" data-i18n="footer.navigation_how">Comment ça marche</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5ODI0NTUsImV4cCI6MjA0NDU1ODQ1NX0.FLYvXoFGxMGbWfnMfP_DqB7jvLctdXjeTT5snyjxKJI';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let currentUser = null;
+        let currentProfile = null;
+
+        // Vérifier l'authentification au chargement
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (!session) {
+                // Rediriger vers la page de connexion
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            currentUser = session.user;
+            await loadProfile();
+        }
+
+        // Charger le profil
+        async function loadProfile() {
+            const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('id', currentUser.id)
+                .single();
+            
+            if (error) {
+                console.error('Error loading profile:', error);
+                showMessage('Erreur lors du chargement du profil', 'error');
+                return;
+            }
+            
+            currentProfile = profile;
+            
+            // Remplir le formulaire
+            document.getElementById('name').value = profile.name || '';
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('phone').value = profile.phone || '';
+            document.getElementById('address').value = profile.address || '';
+            document.getElementById('preferredLanguage').value = profile.preferred_language || 'fr';
+            document.getElementById('emailSubscribed').checked = !profile.email_unsubscribed;
+        }
+
+        // Sauvegarder le profil
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const saveButton = document.getElementById('saveButton');
+            const saveButtonText = document.getElementById('saveButtonText');
+            const saveSpinner = document.getElementById('saveSpinner');
+            
+            // Afficher le spinner
+            saveButton.disabled = true;
+            saveButtonText.textContent = i18next.t('profile.saving') || 'Sauvegarde...';
+            saveSpinner.classList.remove('hidden');
+            
+            try {
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const address = document.getElementById('address').value.trim();
+                const preferredLanguage = document.getElementById('preferredLanguage').value;
+                const emailSubscribed = document.getElementById('emailSubscribed').checked;
+                
+                // Mettre à jour le profil
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({
+                        name: name,
+                        phone: phone,
+                        address: address,
+                        preferred_language: preferredLanguage,
+                        email_unsubscribed: !emailSubscribed
+                    })
+                    .eq('id', currentUser.id);
+                
+                if (profileError) {
+                    throw profileError;
+                }
+                
+                // Si l'email a changé, mettre à jour l'auth
+                if (email !== currentUser.email) {
+                    const { error: emailError } = await supabase.auth.updateUser({
+                        email: email
+                    });
+                    
+                    if (emailError) {
+                        throw emailError;
+                    }
+                    
+                    // Mettre à jour l'email dans le profil aussi
+                    await supabase
+                        .from('profiles')
+                        .update({ email: email })
+                        .eq('id', currentUser.id);
+                    
+                    showMessage(i18next.t('profile.email_confirmation_sent') || 'Un email de confirmation a été envoyé à votre nouvelle adresse', 'warning');
+                } else {
+                    showMessage(i18next.t('profile.save_success') || 'Profil mis à jour avec succès !', 'success');
+                }
+                
+                // Mettre à jour la langue du site si changée
+                if (preferredLanguage !== i18next.language) {
+                    await i18next.changeLanguage(preferredLanguage);
+                    localStorage.setItem('i18nextLng', preferredLanguage);
+                    document.getElementById('languageSelector').value = preferredLanguage;
+                    updateContent();
+                }
+                
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showMessage(error.message || 'Erreur lors de la sauvegarde', 'error');
+            } finally {
+                // Cacher le spinner
+                saveButton.disabled = false;
+                saveButtonText.textContent = i18next.t('profile.save_button') || 'Sauvegarder';
+                saveSpinner.classList.add('hidden');
+            }
+        });
+
+        // Afficher un message
+        function showMessage(text, type) {
+            const container = document.getElementById('messageContainer');
+            container.classList.remove('hidden', 'bg-green-500/20', 'bg-red-500/20', 'bg-yellow-500/20', 'text-green-400', 'text-red-400', 'text-yellow-400');
+            
+            if (type === 'success') {
+                container.classList.add('bg-green-500/20', 'text-green-400');
+            } else if (type === 'error') {
+                container.classList.add('bg-red-500/20', 'text-red-400');
+            } else if (type === 'warning') {
+                container.classList.add('bg-yellow-500/20', 'text-yellow-400');
+            }
+            
+            container.textContent = text;
+            
+            // Cacher après 5 secondes
+            setTimeout(() => {
+                container.classList.add('hidden');
+            }, 5000);
+        }
+
+        // ✅ CHARGEMENT I18NEXT
+        (async () => {
+            await i18next
+                .use(i18nextHttpBackend)
+                .use(i18nextBrowserLanguageDetector)
+                .init({
+                    fallbackLng: 'fr',
+                    debug: false,
+                    load: 'languageOnly',
+                    ns: ['profile'],
+                    defaultNS: 'profile',
+                    backend: {
+                        loadPath: '/locales/{{lng}}/{{ns}}.json'
+                    },
+                    detection: {
+                        order: ['localStorage', 'navigator'],
+                        caches: ['localStorage']
+                    }
+                });
+            
+            // Mettre à jour le sélecteur de langue
+            const savedLang = localStorage.getItem('i18nextLng') || 'fr';
+            document.getElementById('languageSelector').value = savedLang;
+            
+            updateContent();
+            
+            // Charger le profil après i18next
+            await checkAuth();
+        })();
+
+        // Changement de langue
+        document.getElementById('languageSelector').addEventListener('change', async function(e) {
+            await i18next.changeLanguage(e.target.value);
+            localStorage.setItem('i18nextLng', e.target.value);
+            updateContent();
+        });
+
+        // Fonction pour mettre à jour le contenu
+        function updateContent() {
+            document.documentElement.lang = i18next.language;
+            
+            document.querySelectorAll('[data-i18n]').forEach(function(element) {
+                const key = element.getAttribute('data-i18n');
+                const translation = i18next.t(key);
+                
+                if (translation && translation !== key) {
+                    element.textContent = translation;
+                }
+            });
+            
+            // Mettre à jour les placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(function(element) {
+                const key = element.getAttribute('data-i18n-placeholder');
+                const translation = i18next.t(key);
+                
+                if (translation && translation !== key) {
+                    element.placeholder = translation;
+                }
+            });
+        }
+    </script>
+    <!-- Crisp Chat -->
+    <script src="/js/crisp-chat.js"></script>
+</body>
+</html>
