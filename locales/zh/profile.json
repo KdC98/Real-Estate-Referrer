@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "返回仪表板"
+  },
+  "profile": {
+    "title": "我的资料",
+    "subtitle": "管理您的个人信息",
+    "name": "全名",
+    "name_placeholder": "您的姓名",
+    "email": "电子邮件",
+    "email_placeholder": "your@email.com",
+    "email_warning": "⚠️ 更改邮箱也会更改您的登录凭据",
+    "phone": "电话",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "地址",
+    "address_placeholder": "您的完整地址",
+    "address_info": "ℹ️ 用于佣金支付",
+    "preferred_language": "邮件首选语言",
+    "save_button": "保存",
+    "saving": "保存中...",
+    "save_success": "个人资料更新成功！",
+    "email_confirmation_sent": "确认邮件已发送到您的新地址",
+    "notifications_title": "邮件通知",
+    "notifications_description": "接收提醒邮件"
+  },
+  "footer": {
+    "copyright": "版权所有。",
+    "navigation_home": "首页",
+    "navigation_how": "如何运作"
+  }
+}
