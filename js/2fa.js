@@ -1,7 +1,7 @@
 // =====================================================
 // 2FA MODULE - Vérification SMS avec Spinner + Email Bienvenue
-// Version: 2.4.0 - 1er décembre 2025
-// AJOUT: Envoi email de bienvenue après création du compte
+// Version: 2.4.1 - 2 décembre 2025
+// CORRIGÉ: Logging amélioré pour debug email bienvenue
 // =====================================================
 
 // Fonction pour vérifier si un numéro de téléphone existe déjà
@@ -306,31 +306,60 @@ export async function handle2FASubmit(e) {
         console.log('✅ Account created successfully:', signUpData);
         
         // =====================================================
-        // ✅ ENVOI EMAIL DE BIENVENUE (8 LANGUES)
+        // ✅ ENVOI EMAIL DE BIENVENUE (8 LANGUES) - LOGGING AMÉLIORÉ
         // =====================================================
         try {
-            console.log('📧 Sending welcome email...');
-            const currentLang = i18next?.language || 'fr';
+            console.log('📧 ====== WELCOME EMAIL DEBUG ======');
+            console.log('📧 pendingData.name:', pendingData.name);
+            console.log('📧 pendingData.email:', pendingData.email);
+            console.log('📧 window.SUPABASE_URL:', window.SUPABASE_URL);
             
-            const emailResponse = await fetch(`${window.SUPABASE_URL}/functions/v1/send-welcome-email`, {
+            const currentLang = i18next?.language || 'fr';
+            console.log('📧 currentLang:', currentLang);
+            
+            // Vérifier que les données sont présentes
+            if (!pendingData.name || !pendingData.email) {
+                console.error('❌ Missing data for welcome email:', { name: pendingData.name, email: pendingData.email });
+                throw new Error('Missing name or email for welcome email');
+            }
+            
+            const emailPayload = {
+                userName: pendingData.name,
+                userEmail: pendingData.email,
+                language: currentLang
+            };
+            
+            console.log('📧 Email payload:', JSON.stringify(emailPayload));
+            
+            const emailUrl = `${window.SUPABASE_URL}/functions/v1/send-welcome-email`;
+            console.log('📧 Calling URL:', emailUrl);
+            
+            const emailResponse = await fetch(emailUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    userName: pendingData.name,
-                    userEmail: pendingData.email,
-                    language: currentLang
-                })
+                body: JSON.stringify(emailPayload)
             });
             
+            console.log('📧 Response status:', emailResponse.status);
+            console.log('📧 Response ok:', emailResponse.ok);
+            
+            const responseText = await emailResponse.text();
+            console.log('📧 Response body:', responseText);
+            
             if (emailResponse.ok) {
-                console.log('✅ Welcome email sent successfully');
+                console.log('✅ Welcome email sent successfully!');
             } else {
-                console.error('❌ Welcome email failed:', await emailResponse.text());
+                console.error('❌ Welcome email failed with status:', emailResponse.status);
+                console.error('❌ Error details:', responseText);
             }
+            
+            console.log('📧 ====== END WELCOME EMAIL DEBUG ======');
+            
         } catch (emailError) {
             console.error('❌ Welcome email exception:', emailError);
+            console.error('❌ Exception stack:', emailError.stack);
             // On continue quand même, l'email n'est pas bloquant
         }
         // =====================================================
