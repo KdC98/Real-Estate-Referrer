@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "Back to dashboard"
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your personal information",
+    "name": "Full name",
+    "name_placeholder": "Your name",
+    "email": "Email",
+    "email_placeholder": "your@email.com",
+    "email_warning": "⚠️ Changing email will also change your login credentials",
+    "phone": "Phone",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "Address",
+    "address_placeholder": "Your full address",
+    "address_info": "ℹ️ Useful for commission payments",
+    "preferred_language": "Preferred language for emails",
+    "save_button": "Save",
+    "saving": "Saving...",
+    "save_success": "Profile updated successfully!",
+    "email_confirmation_sent": "A confirmation email has been sent to your new address",
+    "notifications_title": "Email notifications",
+    "notifications_description": "Receive reminder emails"
+  },
+  "footer": {
+    "copyright": "All rights reserved.",
+    "navigation_home": "Home",
+    "navigation_how": "How it works"
+  }
+}
