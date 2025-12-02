@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Désabonnement - Real Estate Referrer</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
             background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
@@ -119,6 +120,9 @@
         // Configuration Supabase
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5ODI0NTUsImV4cCI6MjA0NDU1ODQ1NX0.FLYvXoFGxMGbWfnMfP_DqB7jvLctdXjeTT5snyjxKJI';
+        
+        // Initialiser Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         async function processUnsubscribe() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -142,21 +146,20 @@
             }
             
             try {
-                const response = await fetch(`${SUPABASE_URL}/functions/v1/unsubscribe`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    },
-                    body: JSON.stringify({ email, token, lang })
+                const { data, error } = await supabase.functions.invoke('unsubscribe', {
+                    body: { email, token, lang }
                 });
                 
-                const data = await response.json();
+                if (error) {
+                    console.error('Unsubscribe error:', error);
+                    showError(t.errorGeneric);
+                    return;
+                }
                 
-                if (response.ok && data.success) {
+                if (data && data.success) {
                     showSuccess(t);
                 } else {
-                    showError(data.error || t.errorGeneric);
+                    showError(data?.error || t.errorGeneric);
                 }
             } catch (error) {
                 console.error('Unsubscribe error:', error);
