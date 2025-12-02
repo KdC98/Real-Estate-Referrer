@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "Retour au dashboard"
+  },
+  "profile": {
+    "title": "Mon Profil",
+    "subtitle": "Gérez vos informations personnelles",
+    "name": "Nom complet",
+    "name_placeholder": "Votre nom",
+    "email": "Email",
+    "email_placeholder": "votre@email.com",
+    "email_warning": "⚠️ Modifier l'email changera aussi votre identifiant de connexion",
+    "phone": "Téléphone",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "Adresse",
+    "address_placeholder": "Votre adresse complète",
+    "address_info": "ℹ️ Utile pour le versement de vos commissions",
+    "preferred_language": "Langue préférée pour les emails",
+    "save_button": "Sauvegarder",
+    "saving": "Sauvegarde...",
+    "save_success": "Profil mis à jour avec succès !",
+    "email_confirmation_sent": "Un email de confirmation a été envoyé à votre nouvelle adresse",
+    "notifications_title": "Notifications par email",
+    "notifications_description": "Recevoir les emails de relance"
+  },
+  "footer": {
+    "copyright": "Tous droits réservés.",
+    "navigation_home": "Accueil",
+    "navigation_how": "Comment ça marche"
+  }
+}
