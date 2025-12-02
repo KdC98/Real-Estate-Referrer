@@ -313,6 +313,7 @@ export async function handle2FASubmit(e) {
             console.log('📧 pendingData.name:', pendingData.name);
             console.log('📧 pendingData.email:', pendingData.email);
             console.log('📧 window.SUPABASE_URL:', window.SUPABASE_URL);
+            console.log('📧 window.SUPABASE_ANON_KEY exists:', !!window.SUPABASE_ANON_KEY);
             
             const currentLang = i18next?.language || 'fr';
             console.log('📧 currentLang:', currentLang);
@@ -337,7 +338,8 @@ export async function handle2FASubmit(e) {
             const emailResponse = await fetch(emailUrl, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.SUPABASE_ANON_KEY}`
                 },
                 body: JSON.stringify(emailPayload)
             });
