@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "डैशबोर्ड पर वापस जाएं"
+  },
+  "profile": {
+    "title": "मेरी प्रोफ़ाइल",
+    "subtitle": "अपनी व्यक्तिगत जानकारी प्रबंधित करें",
+    "name": "पूरा नाम",
+    "name_placeholder": "आपका नाम",
+    "email": "ईमेल",
+    "email_placeholder": "your@email.com",
+    "email_warning": "⚠️ ईमेल बदलने से आपका लॉगिन भी बदल जाएगा",
+    "phone": "फ़ोन",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "पता",
+    "address_placeholder": "आपका पूरा पता",
+    "address_info": "ℹ️ कमीशन भुगतान के लिए उपयोगी",
+    "preferred_language": "ईमेल के लिए पसंदीदा भाषा",
+    "save_button": "सहेजें",
+    "saving": "सहेजा जा रहा है...",
+    "save_success": "प्रोफ़ाइल सफलतापूर्वक अपडेट!",
+    "email_confirmation_sent": "आपके नए पते पर पुष्टि ईमेल भेजा गया",
+    "notifications_title": "ईमेल सूचनाएं",
+    "notifications_description": "रिमाइंडर ईमेल प्राप्त करें"
+  },
+  "footer": {
+    "copyright": "सर्वाधिकार सुरक्षित।",
+    "navigation_home": "होम",
+    "navigation_how": "यह कैसे काम करता है"
+  }
+}
