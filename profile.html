@@ -9,8 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Import config.js for Supabase credentials -->
-    <script src="/js/config.js"></script>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
     
@@ -197,8 +195,12 @@
         </div>
     </footer>
 
-    <script>
-        // Use config from /js/config.js
+    <!-- Main script as ES6 module -->
+    <script type="module">
+        // Import config
+        import { SUPABASE_URL, SUPABASE_ANON_KEY } from '/js/config.js';
+        
+        // Initialize Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let currentUser = null;
@@ -341,43 +343,6 @@
             }, 5000);
         }
 
-        // ✅ CHARGEMENT I18NEXT
-        (async () => {
-            await i18next
-                .use(i18nextHttpBackend)
-                .use(i18nextBrowserLanguageDetector)
-                .init({
-                    fallbackLng: 'fr',
-                    debug: false,
-                    load: 'languageOnly',
-                    ns: ['profile'],
-                    defaultNS: 'profile',
-                    backend: {
-                        loadPath: '/locales/{{lng}}/{{ns}}.json'
-                    },
-                    detection: {
-                        order: ['localStorage', 'navigator'],
-                        caches: ['localStorage']
-                    }
-                });
-            
-            // Mettre à jour le sélecteur de langue
-            const savedLang = localStorage.getItem('i18nextLng') || 'fr';
-            document.getElementById('languageSelector').value = savedLang;
-            
-            updateContent();
-            
-            // Charger le profil après i18next
-            await checkAuth();
-        })();
-
-        // Changement de langue
-        document.getElementById('languageSelector').addEventListener('change', async function(e) {
-            await i18next.changeLanguage(e.target.value);
-            localStorage.setItem('i18nextLng', e.target.value);
-            updateContent();
-        });
-
         // Fonction pour mettre à jour le contenu
         function updateContent() {
             document.documentElement.lang = i18next.language;
@@ -401,9 +366,43 @@
                 }
             });
         }
+
+        // ✅ CHARGEMENT I18NEXT
+        await i18next
+            .use(i18nextHttpBackend)
+            .use(i18nextBrowserLanguageDetector)
+            .init({
+                fallbackLng: 'fr',
+                debug: false,
+                load: 'languageOnly',
+                ns: ['profile'],
+                defaultNS: 'profile',
+                backend: {
+                    loadPath: '/locales/{{lng}}/{{ns}}.json'
+                },
+                detection: {
+                    order: ['localStorage', 'navigator'],
+                    caches: ['localStorage']
+                }
+            });
+        
+        // Mettre à jour le sélecteur de langue
+        const savedLang = localStorage.getItem('i18nextLng') || 'fr';
+        document.getElementById('languageSelector').value = savedLang;
+        
+        updateContent();
+        
+        // Charger le profil après i18next
+        await checkAuth();
+
+        // Changement de langue
+        document.getElementById('languageSelector').addEventListener('change', async function(e) {
+            await i18next.changeLanguage(e.target.value);
+            localStorage.setItem('i18nextLng', e.target.value);
+            updateContent();
+        });
     </script>
     <!-- Crisp Chat -->
-    <script src="/js/config.js"></script>
     <script src="/js/crisp-chat.js"></script>
 </body>
 </html>
