@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "Вернуться в панель"
+  },
+  "profile": {
+    "title": "Мой профиль",
+    "subtitle": "Управление личной информацией",
+    "name": "Полное имя",
+    "name_placeholder": "Ваше имя",
+    "email": "Электронная почта",
+    "email_placeholder": "your@email.com",
+    "email_warning": "⚠️ Изменение email также изменит ваши данные для входа",
+    "phone": "Телефон",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "Адрес",
+    "address_placeholder": "Ваш полный адрес",
+    "address_info": "ℹ️ Полезно для выплаты комиссий",
+    "preferred_language": "Предпочитаемый язык для писем",
+    "save_button": "Сохранить",
+    "saving": "Сохранение...",
+    "save_success": "Профиль успешно обновлён!",
+    "email_confirmation_sent": "На ваш новый адрес отправлено письмо с подтверждением",
+    "notifications_title": "Email-уведомления",
+    "notifications_description": "Получать напоминания"
+  },
+  "footer": {
+    "copyright": "Все права защищены.",
+    "navigation_home": "Главная",
+    "navigation_how": "Как это работает"
+  }
+}
