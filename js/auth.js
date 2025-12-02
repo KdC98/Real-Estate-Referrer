@@ -1,6 +1,7 @@
 // ============================================
 // AUTHENTIFICATION & GESTION UTILISATEURS
 // Real Estate Referrer - Dubai
+// Version: 3.5.0 - Fix OAuth callback
 // ============================================
 
 import { MAX_PROFILE_LOAD_ATTEMPTS } from './config.js';
@@ -72,18 +73,24 @@ export async function loadUserProfile(user = null) {
 
         if (error && error.code !== 'PGRST116') {
             console.error('❌ Error loading profile:', error);
-            alert('Erreur lors du chargement du profil: ' + error.message);
             return false;
         }
 
         let profile = data;
         if (!profile) {
             console.log('📝 Profile does not exist, creating it...');
+            
+            // Extraire le nom depuis les metadata OAuth
+            const userName = targetUser.user_metadata?.full_name || 
+                           targetUser.user_metadata?.name || 
+                           targetUser.email?.split('@')[0] || 
+                           '';
+            
             const { data: newProfile, error: insertError } = await supabase
                 .from('profiles')
                 .upsert([{
                     id: targetUser.id,
-                    name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
+                    name: userName,
                     phone: targetUser.user_metadata?.phone || '',
                     email: targetUser.email,
                     role: 'referrer',
@@ -95,11 +102,11 @@ export async function loadUserProfile(user = null) {
 
             if (insertError) {
                 console.error('❌ Error creating profile:', insertError);
-                alert('Erreur lors de la création du profil: ' + insertError.message);
                 return false;
             }
 
             profile = newProfile;
+            console.log('✅ Profile created:', profile);
         }
 
         console.log('✅ Profile data retrieved:', profile);
@@ -114,7 +121,6 @@ export async function loadUserProfile(user = null) {
 
     } catch (err) {
         console.error('❌ Exception loading profile:', err);
-        alert('Exception lors du chargement du profil: ' + err.message);
         return false;
     }
 }
@@ -192,7 +198,7 @@ export async function handleAuth(mode) {
             setTempUserId(data.user.id);
             setTempUserProfile(profileData);
 
-            // 2FA désactivé - connexion directe
+            // Connexion directe
             console.log('✅ Signup complete - signing in user...');
             
             const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
@@ -311,75 +317,16 @@ export async function handleChangePassword() {
     }
 }
 
-// OAuth - Afficher popup d'avertissement
-export function showOAuthWarning(provider) {
-    const i18next = window.i18next;
-    const modal = document.getElementById('oauthWarningModal');
-    const providerName = provider === 'google' ? 'Google' : 'Apple';
-    const currentLang = i18next.language || 'fr';
-    
-    const translations = {
-        fr: {
-            security_info: "Information de sécurité",
-            redirect_message: "Vous allez être redirigé vers",
-            normal_secure: "C'est normal et sécurisé",
-            will_return: "Vous reviendrez ici après connexion",
-            continue_btn: "Continuer",
-            cancel_btn: "Annuler"
-        },
-        en: {
-            security_info: "Security Information",
-            redirect_message: "You will be redirected to",
-            normal_secure: "This is normal and secure",
-            will_return: "You will return here after sign in",
-            continue_btn: "Continue",
-            cancel_btn: "Cancel"
-        }
-    };
-    
-    const trans = translations[currentLang] || translations['fr'];
-    
-    modal.innerHTML = `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full border-2 border-yellow-500">
-                <div class="text-center mb-6">
-                    <div class="text-5xl mb-4">⚠️</div>
-                    <h3 class="text-2xl font-bold mb-4">${trans.security_info}</h3>
-                </div>
-                
-                <p class="text-gray-300 mb-6 leading-relaxed">
-                    ${trans.redirect_message} ${providerName}.
-                </p>
-                
-                <p class="text-gray-300 mb-6">
-                    <span class="text-green-400 font-semibold">✓ ${trans.normal_secure}</span><br>
-                    ${trans.will_return}
-                </p>
-                
-                <div class="flex gap-4">
-                    <button 
-                        onclick="window.proceedWithOAuth('${provider}')" 
-                        class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition"
-                    >
-                        ${trans.continue_btn}
-                    </button>
-                    <button 
-                        onclick="window.closeOAuthWarning()" 
-                        class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition"
-                    >
-                        ${trans.cancel_btn}
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    modal.classList.remove('hidden');
-}
+// ============================================
+// OAUTH - Google & Apple
+// ============================================
 
 export function closeOAuthWarning() {
     const modal = document.getElementById('oauthWarningModal');
-    modal.classList.add('hidden');
-    modal.innerHTML = '';
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.innerHTML = '';
+    }
 }
 
 export async function proceedWithOAuth(provider) {
@@ -388,6 +335,7 @@ export async function proceedWithOAuth(provider) {
     
     try {
         console.log(`🔐 Starting ${provider} Sign In...`);
+        
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: provider,
             options: {
@@ -405,12 +353,114 @@ export async function proceedWithOAuth(provider) {
 
 // Connexion Google
 export async function signInWithGoogle() {
-    showOAuthWarning('google');
+    const i18next = window.i18next;
+    const modal = document.getElementById('oauthWarningModal');
+    const currentLang = (i18next?.language || 'fr').substring(0, 2);
+    
+    const translations = {
+        fr: {
+            title: "Information de sécurité",
+            message: "Vous allez être redirigé vers notre service d'authentification sécurisé (Supabase) pour vous connecter avec Google.",
+            safe: "C'est normal et sécurisé.",
+            return: "Vous reviendrez automatiquement sur notre site après connexion.",
+            continue: "Continuer",
+            cancel: "Annuler"
+        },
+        en: {
+            title: "Security Information",
+            message: "You will be redirected to our secure authentication service (Supabase) to sign in with Google.",
+            safe: "This is normal and secure.",
+            return: "You will automatically return to our site after signing in.",
+            continue: "Continue",
+            cancel: "Cancel"
+        }
+    };
+    
+    const t = translations[currentLang] || translations['fr'];
+    
+    modal.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full border-2 border-yellow-500">
+                <div class="text-center mb-6">
+                    <div class="text-5xl mb-4">⚠️</div>
+                    <h3 class="text-2xl font-bold text-yellow-400">${t.title}</h3>
+                </div>
+                
+                <p class="text-gray-300 mb-4">${t.message}</p>
+                
+                <p class="text-gray-300 mb-6">
+                    <span class="text-green-400 font-semibold">✓ ${t.safe}</span><br>
+                    ${t.return}
+                </p>
+                
+                <div class="flex gap-4">
+                    <button onclick="window.proceedWithOAuth('google')" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                        ${t.continue}
+                    </button>
+                    <button onclick="window.closeOAuthWarning()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition">
+                        ${t.cancel}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    modal.classList.remove('hidden');
 }
 
 // Connexion Apple
 export async function signInWithApple() {
-    showOAuthWarning('apple');
+    const i18next = window.i18next;
+    const modal = document.getElementById('oauthWarningModal');
+    const currentLang = (i18next?.language || 'fr').substring(0, 2);
+    
+    const translations = {
+        fr: {
+            title: "Information de sécurité",
+            message: "Vous allez être redirigé vers notre service d'authentification sécurisé (Supabase) pour vous connecter avec Apple.",
+            safe: "C'est normal et sécurisé.",
+            return: "Vous reviendrez automatiquement sur notre site après connexion.",
+            continue: "Continuer",
+            cancel: "Annuler"
+        },
+        en: {
+            title: "Security Information",
+            message: "You will be redirected to our secure authentication service (Supabase) to sign in with Apple.",
+            safe: "This is normal and secure.",
+            return: "You will automatically return to our site after signing in.",
+            continue: "Continue",
+            cancel: "Cancel"
+        }
+    };
+    
+    const t = translations[currentLang] || translations['fr'];
+    
+    modal.innerHTML = `
+        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-800 rounded-xl p-8 max-w-md w-full border-2 border-yellow-500">
+                <div class="text-center mb-6">
+                    <div class="text-5xl mb-4">⚠️</div>
+                    <h3 class="text-2xl font-bold text-yellow-400">${t.title}</h3>
+                </div>
+                
+                <p class="text-gray-300 mb-4">${t.message}</p>
+                
+                <p class="text-gray-300 mb-6">
+                    <span class="text-green-400 font-semibold">✓ ${t.safe}</span><br>
+                    ${t.return}
+                </p>
+                
+                <div class="flex gap-4">
+                    <button onclick="window.proceedWithOAuth('apple')" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
+                        ${t.continue}
+                    </button>
+                    <button onclick="window.closeOAuthWarning()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 rounded-lg transition">
+                        ${t.cancel}
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    modal.classList.remove('hidden');
 }
 
 // Déconnexion
@@ -421,7 +471,7 @@ export async function logout() {
     try {
         console.log('🔓 Signing out from Supabase...');
         
-        supabase.auth.signOut();
+        await supabase.auth.signOut();
         
         console.log('🧹 Cleaning ALL session data...');
         localStorage.clear();
@@ -445,3 +495,12 @@ export async function logout() {
         window.location.href = window.location.origin;
     }
 }
+
+// ============================================
+// EXPOSER GLOBALEMENT
+// ============================================
+window.proceedWithOAuth = proceedWithOAuth;
+window.closeOAuthWarning = closeOAuthWarning;
+window.signInWithGoogle = signInWithGoogle;
+window.signInWithApple = signInWithApple;
+window.logout = logout;
