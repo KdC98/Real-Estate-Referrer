@@ -1,7 +1,7 @@
 // =====================================================
 // 2FA MODULE - Vérification SMS avec Spinner + Email Bienvenue
-// Version: 2.4.1 - 2 décembre 2025
-// CORRIGÉ: Logging amélioré pour debug email bienvenue
+// Version: 2.5.0 - 3 décembre 2025
+// CORRIGÉ: Message de succès traduit dans toutes les langues
 // =====================================================
 
 // Fonction pour vérifier si un numéro de téléphone existe déjà
@@ -213,6 +213,38 @@ export async function verify2FACode(phone, code) {
 }
 
 // =====================================================
+// HELPER: MESSAGE DE SUCCÈS MULTILINGUE
+// =====================================================
+function getSuccessMessage() {
+    // Essayer i18next d'abord
+    if (typeof i18next !== 'undefined' && i18next?.isInitialized && i18next?.t) {
+        const translated = i18next.t('auth:two_factor.success');
+        // Vérifier que ce n'est pas la clé elle-même (échec de traduction)
+        if (translated && translated !== 'auth:two_factor.success' && translated !== 'two_factor.success') {
+            console.log('✅ Using i18next translation:', translated);
+            return translated;
+        }
+    }
+    
+    // Fallback basé sur la langue stockée
+    const lang = localStorage.getItem('i18nextLng') || localStorage.getItem('selectedLanguage') || 'en';
+    console.log('⚠️ i18next not ready, using fallback for lang:', lang);
+    
+    const messages = {
+        'fr': '✅ Compte créé avec succès !',
+        'en': '✅ Account created successfully!',
+        'ar': '✅ تم إنشاء الحساب بنجاح!',
+        'ru': '✅ Аккаунт успешно создан!',
+        'zh': '✅ 账户创建成功！',
+        'hi': '✅ खाता सफलतापूर्वक बनाया गया!',
+        'ur': '✅ اکاؤنٹ کامیابی سے بنا دیا گیا!',
+        'tl': '✅ Matagumpay na nagawa ang account!'
+    };
+    
+    return messages[lang] || messages['en'];
+}
+
+// =====================================================
 // HANDLER 2FA SUBMIT - AVEC SPINNER + EMAIL BIENVENUE
 // =====================================================
 export async function handle2FASubmit(e) {
@@ -315,7 +347,7 @@ export async function handle2FASubmit(e) {
             console.log('📧 window.SUPABASE_URL:', window.SUPABASE_URL);
             console.log('📧 window.SUPABASE_ANON_KEY exists:', !!window.SUPABASE_ANON_KEY);
             
-            const currentLang = i18next?.language || 'fr';
+            const currentLang = i18next?.language || localStorage.getItem('i18nextLng') || 'fr';
             console.log('📧 currentLang:', currentLang);
             
             // Vérifier que les données sont présentes
@@ -404,10 +436,9 @@ export async function handle2FASubmit(e) {
         window.pendingSignupId = null;
         
         // =====================================================
-        // ✅ MESSAGE DE SUCCÈS TRADUIT
+        // ✅ MESSAGE DE SUCCÈS TRADUIT (CORRIGÉ v2.5.0)
         // =====================================================
-        const successMessage = i18next?.t('auth:two_factor.success') || '✅ Compte créé avec succès !';
-        alert(successMessage);
+        alert(getSuccessMessage());
         
         // Auto-login
         console.log('🔐 Auto-login after verification...');
@@ -473,7 +504,7 @@ export async function resend2FACode() {
             resendBtn.textContent = i18next?.t('auth:two_factor.sending') || 'Envoi...';
         }
         
-        const currentLang = i18next?.language || 'fr';
+        const currentLang = i18next?.language || localStorage.getItem('i18nextLng') || 'fr';
         
         // Récupérer les données du pending signup
         const { data: pending } = await window.supabase
