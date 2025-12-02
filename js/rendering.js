@@ -10,6 +10,17 @@
 // Date: 2 décembre 2025
 // ============================================
 /**
+ * Vérifie si le profil est complet (nom, téléphone, adresse)
+ * @param {object} profile - Le profil utilisateur
+ * @returns {boolean} true si complet
+ */
+export function isProfileComplete(profile) {
+    if (!profile) return false;
+    const hasName = profile.name && profile.name.trim().length > 0;
+    const hasPhone = profile.phone && profile.phone.trim().length > 0;
+    const hasAddress = profile.address && profile.address.trim().length > 0;
+    return hasName && hasPhone && hasAddress;
+}
  * Génère le HTML de la landing page
  * @returns {string} HTML de la landing page
  */
