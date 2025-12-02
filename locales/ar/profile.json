@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "العودة إلى لوحة التحكم"
+  },
+  "profile": {
+    "title": "ملفي الشخصي",
+    "subtitle": "إدارة معلوماتك الشخصية",
+    "name": "الاسم الكامل",
+    "name_placeholder": "اسمك",
+    "email": "البريد الإلكتروني",
+    "email_placeholder": "your@email.com",
+    "email_warning": "⚠️ تغيير البريد الإلكتروني سيغير أيضًا بيانات تسجيل الدخول",
+    "phone": "الهاتف",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "العنوان",
+    "address_placeholder": "عنوانك الكامل",
+    "address_info": "ℹ️ مفيد لدفع العمولات",
+    "preferred_language": "اللغة المفضلة للرسائل",
+    "save_button": "حفظ",
+    "saving": "جاري الحفظ...",
+    "save_success": "تم تحديث الملف الشخصي بنجاح!",
+    "email_confirmation_sent": "تم إرسال رسالة تأكيد إلى عنوانك الجديد",
+    "notifications_title": "إشعارات البريد الإلكتروني",
+    "notifications_description": "تلقي رسائل التذكير"
+  },
+  "footer": {
+    "copyright": "جميع الحقوق محفوظة.",
+    "navigation_home": "الرئيسية",
+    "navigation_how": "كيف يعمل"
+  }
+}
