@@ -6,9 +6,10 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.8.0 - Ajout bouton Mon Profil
+// Version: 3.9.0 - Blocage si profil incomplet
 // Date: 2 décembre 2025
 // ============================================
+
 /**
  * Vérifie si le profil est complet (nom, téléphone, adresse)
  * @param {object} profile - Le profil utilisateur
@@ -21,6 +22,8 @@ export function isProfileComplete(profile) {
     const hasAddress = profile.address && profile.address.trim().length > 0;
     return hasName && hasPhone && hasAddress;
 }
+
+/**
  * Génère le HTML de la landing page
  * @returns {string} HTML de la landing page
  */
