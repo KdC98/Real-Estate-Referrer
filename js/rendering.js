@@ -825,15 +825,38 @@ export function renderDashboard() {
                 
                 <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
                 
-                ${!isAdmin && hasValidContract ? `
+                ${!isAdmin ? `
                     <div class="mb-6">
-                        <button 
-                            id="addLeadBtn"
-                            onclick="showAddLeadForm()" 
-                            class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition"
-                        >
-                            ${t('dashboard:add_lead')}
-                        </button>
+                        ${(() => {
+                            const profileComplete = isProfileComplete(userProfile);
+                            const canAddLeads = profileComplete && hasValidContract;
+                            
+                            if (canAddLeads) {
+                                return `
+                                    <button 
+                                        id="addLeadBtn"
+                                        onclick="showAddLeadForm()" 
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition"
+                                    >
+                                        ${t('dashboard:add_lead')}
+                                    </button>
+                                `;
+                            } else {
+                                return `
+                                    <button 
+                                        id="addLeadBtn"
+                                        disabled
+                                        class="bg-gray-500 text-gray-300 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60"
+                                    >
+                                        🔒 ${t('dashboard:add_lead')}
+                                    </button>
+                                    <p class="text-sm text-orange-300 mt-2">
+                                        ${!profileComplete ? '⚠️ Complétez votre profil (nom, téléphone, adresse) pour soumettre des leads et recevoir vos commissions.' : ''}
+                                        ${!hasValidContract ? '📝 Signez votre contrat pour commencer.' : ''}
+                                    </p>
+                                `;
+                            }
+                        })()}
                     </div>
                 ` : ''}
                 
