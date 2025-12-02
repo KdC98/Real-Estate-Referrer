@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "Bumalik sa dashboard"
+  },
+  "profile": {
+    "title": "Aking Profile",
+    "subtitle": "Pamahalaan ang iyong personal na impormasyon",
+    "name": "Buong pangalan",
+    "name_placeholder": "Ang iyong pangalan",
+    "email": "Email",
+    "email_placeholder": "your@email.com",
+    "email_warning": "⚠️ Ang pagbabago ng email ay magbabago rin ng iyong login",
+    "phone": "Telepono",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "Address",
+    "address_placeholder": "Ang iyong buong address",
+    "address_info": "ℹ️ Kapaki-pakinabang para sa pagbabayad ng komisyon",
+    "preferred_language": "Gustong wika para sa mga email",
+    "save_button": "I-save",
+    "saving": "Nagse-save...",
+    "save_success": "Matagumpay na na-update ang profile!",
+    "email_confirmation_sent": "Nagpadala ng confirmation email sa iyong bagong address",
+    "notifications_title": "Mga notification sa email",
+    "notifications_description": "Tumanggap ng mga reminder email"
+  },
+  "footer": {
+    "copyright": "Lahat ng karapatan ay nakalaan.",
+    "navigation_home": "Home",
+    "navigation_how": "Paano ito gumagana"
+  }
+}
