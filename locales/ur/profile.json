@@ -1,0 +1,31 @@
+{
+  "header": {
+    "back_dashboard": "ڈیش بورڈ پر واپس جائیں"
+  },
+  "profile": {
+    "title": "میری پروفائل",
+    "subtitle": "اپنی ذاتی معلومات کا نظم کریں",
+    "name": "پورا نام",
+    "name_placeholder": "آپ کا نام",
+    "email": "ای میل",
+    "email_placeholder": "your@email.com",
+    "email_warning": "⚠️ ای میل تبدیل کرنے سے آپ کا لاگ ان بھی بدل جائے گا",
+    "phone": "فون",
+    "phone_placeholder": "+971 XX XXX XXXX",
+    "address": "پتہ",
+    "address_placeholder": "آپ کا مکمل پتہ",
+    "address_info": "ℹ️ کمیشن کی ادائیگی کے لیے مفید",
+    "preferred_language": "ای میلز کے لیے ترجیحی زبان",
+    "save_button": "محفوظ کریں",
+    "saving": "محفوظ ہو رہا ہے...",
+    "save_success": "پروفائل کامیابی سے اپ ڈیٹ!",
+    "email_confirmation_sent": "آپ کے نئے پتے پر تصدیقی ای میل بھیجی گئی",
+    "notifications_title": "ای میل اطلاعات",
+    "notifications_description": "یاد دہانی ای میلز حاصل کریں"
+  },
+  "footer": {
+    "copyright": "جملہ حقوق محفوظ ہیں۔",
+    "navigation_home": "ہوم",
+    "navigation_how": "یہ کیسے کام کرتا ہے"
+  }
+}
