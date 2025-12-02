@@ -6,23 +6,9 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.9.0 - Blocage lead si profil incomplet
+// Version: 3.8.0 - Ajout bouton Mon Profil
 // Date: 2 décembre 2025
 // ============================================
-
-/**
- * Vérifie si le profil est complet (nom, téléphone, adresse)
- * @param {object} profile - Le profil utilisateur
- * @returns {boolean} true si complet
- */
-export function isProfileComplete(profile) {
-    if (!profile) return false;
-    const name = profile.name?.trim();
-    const phone = profile.phone?.trim();
-    const address = profile.address?.trim();
-    return !!(name && phone && address);
-}
-
 /**
  * Génère le HTML de la landing page
  * @returns {string} HTML de la landing page
@@ -208,7 +194,6 @@ export function renderLandingPage() {
         </div>
     `;
 }
-
 /**
  * Génère le HTML des pages d'authentification
  * @param {string} mode - Mode: 'login', 'signup', 'reset', 'change-password', '2fa'
@@ -628,7 +613,6 @@ export function renderAuthPage(mode) {
         </div>
     `;
 }
-
 /**
  * Génère le HTML du dashboard (admin ou referrer)
  * @returns {string} HTML du dashboard
@@ -664,51 +648,6 @@ export function renderDashboard() {
     };
     const myProfileText = profileTranslations[currentLang] || profileTranslations['en'];
     
-    // ✅ v3.9.0 - Traductions bannière profil incomplet (8 langues)
-    const incompleteProfileTranslations = {
-        fr: {
-            title: '⚠️ Profil incomplet',
-            message: 'Veuillez compléter votre profil (nom, téléphone, adresse) pour pouvoir soumettre des leads et recevoir vos commissions.',
-            button: 'Compléter mon profil'
-        },
-        en: {
-            title: '⚠️ Incomplete profile',
-            message: 'Please complete your profile (name, phone, address) to submit leads and receive your commissions.',
-            button: 'Complete my profile'
-        },
-        ar: {
-            title: '⚠️ الملف الشخصي غير مكتمل',
-            message: 'يرجى إكمال ملفك الشخصي (الاسم، الهاتف، العنوان) لتقديم العملاء المحتملين واستلام عمولاتك.',
-            button: 'أكمل ملفي الشخصي'
-        },
-        ru: {
-            title: '⚠️ Профиль не заполнен',
-            message: 'Пожалуйста, заполните свой профиль (имя, телефон, адрес), чтобы отправлять лиды и получать комиссии.',
-            button: 'Заполнить профиль'
-        },
-        hi: {
-            title: '⚠️ अधूरी प्रोफ़ाइल',
-            message: 'लीड सबमिट करने और अपना कमीशन प्राप्त करने के लिए कृपया अपनी प्रोफ़ाइल (नाम, फ़ोन, पता) पूरी करें।',
-            button: 'मेरी प्रोफ़ाइल पूरी करें'
-        },
-        ur: {
-            title: '⚠️ نامکمل پروفائل',
-            message: 'لیڈز جمع کرانے اور اپنا کمیشن حاصل کرنے کے لیے براہ کرم اپنا پروفائل (نام، فون، پتہ) مکمل کریں۔',
-            button: 'میرا پروفائل مکمل کریں'
-        },
-        zh: {
-            title: '⚠️ 资料不完整',
-            message: '请完善您的资料（姓名、电话、地址）以提交线索并领取佣金。',
-            button: '完善我的资料'
-        },
-        tl: {
-            title: '⚠️ Hindi kumpleto ang profile',
-            message: 'Pakikumpleto ang iyong profile (pangalan, telepono, address) para makapag-submit ng leads at matanggap ang iyong komisyon.',
-            button: 'Kumpletuhin ang profile'
-        }
-    };
-    const incompleteProfileText = incompleteProfileTranslations[currentLang] || incompleteProfileTranslations['en'];
-    
     console.log('🧭 DEBUG renderDashboard called', {
         userProfile,
         role: userProfile?.role,
@@ -723,9 +662,6 @@ export function renderDashboard() {
     
     const isAdmin = userProfile.role === 'admin';
     
-    // ✅ v3.9.0 - Vérification profil complet
-    const profileComplete = isProfileComplete(userProfile);
-    
     // Vérification contrat - accepte signed, validated, approved
     const hasValidContract = userProfile.contract_path || 
                             userProfile.contract_file_url || 
@@ -735,14 +671,10 @@ export function renderDashboard() {
         contract_path: userProfile.contract_path,
         contract_file_url: userProfile.contract_file_url,
         contract_status: userProfile.contract_status,
-        hasValidContract: hasValidContract,
-        profileComplete: profileComplete
+        hasValidContract: hasValidContract
     });
     
     const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
-    
-    // ✅ v3.9.0 - Peut ajouter des leads seulement si profil complet ET contrat signé
-    const canAddLeads = profileComplete && hasValidContract;
     
     // ✅ Style unifié pour le dashboard
     return `
@@ -753,7 +685,7 @@ export function renderDashboard() {
                     <div class="flex justify-between items-center">
                         <h1 class="text-2xl font-bold text-yellow-400">${dashboardTitle}</h1>
                         <div class="flex items-center gap-4">
-                            <span class="text-yellow-400 font-medium hidden md:inline">${userProfile.name || ''}</span>
+                            <span class="text-yellow-400 font-medium hidden md:inline">${userProfile.name}</span>
                             <a href="profile.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                                 ${myProfileText}
                             </a>
@@ -766,23 +698,6 @@ export function renderDashboard() {
             </header>
             
             <main class="container mx-auto px-4 py-8">
-                
-                ${!profileComplete && !isAdmin ? `
-                    <!-- ✅ v3.9.0 - BANNIÈRE PROFIL INCOMPLET -->
-                    <div id="incompleteProfileBanner" class="mb-6 bg-gradient-to-r from-orange-600 to-yellow-500 text-white p-6 rounded-2xl shadow-lg">
-                        <div class="flex flex-col md:flex-row items-center gap-4">
-                            <div class="text-4xl">⚠️</div>
-                            <div class="flex-1 text-center md:text-left">
-                                <h3 class="text-xl font-bold mb-1">${incompleteProfileText.title}</h3>
-                                <p class="text-white/90">${incompleteProfileText.message}</p>
-                            </div>
-                            <a href="profile.html" class="bg-white text-orange-600 font-bold px-6 py-3 rounded-lg hover:bg-gray-100 transition flex-shrink-0">
-                                ${incompleteProfileText.button}
-                            </a>
-                        </div>
-                    </div>
-                ` : ''}
-                
                 ${!hasValidContract && !isAdmin ? `
                     <div id="contractRequirement" class="mb-6 bg-gradient-to-r from-blue-900/50 to-yellow-900/50 border-2 border-yellow-500 p-8 rounded-2xl shadow-2xl">
                         <div class="flex flex-col lg:flex-row gap-8">
@@ -899,31 +814,15 @@ export function renderDashboard() {
                 
                 <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
                 
-                ${!isAdmin ? `
+                ${!isAdmin && hasValidContract ? `
                     <div class="mb-6">
-                        ${canAddLeads ? `
-                            <!-- ✅ Bouton actif -->
-                            <button 
-                                id="addLeadBtn"
-                                onclick="showAddLeadForm()" 
-                                class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition"
-                            >
-                                ${t('dashboard:add_lead')}
-                            </button>
-                        ` : `
-                            <!-- ✅ v3.9.0 - Bouton désactivé avec tooltip -->
-                            <button 
-                                id="addLeadBtn"
-                                disabled
-                                class="bg-gray-500 text-gray-300 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60"
-                                title="${!profileComplete ? incompleteProfileText.message : t('dashboard:contract.required')}"
-                            >
-                                🔒 ${t('dashboard:add_lead')}
-                            </button>
-                            <p class="text-yellow-400 text-sm mt-2">
-                                ${!profileComplete ? '👆 ' + incompleteProfileText.button : '📝 ' + t('dashboard:contract.required')}
-                            </p>
-                        `}
+                        <button 
+                            id="addLeadBtn"
+                            onclick="showAddLeadForm()" 
+                            class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition"
+                        >
+                            ${t('dashboard:add_lead')}
+                        </button>
                     </div>
                 ` : ''}
                 
