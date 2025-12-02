@@ -6,8 +6,8 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.7.0 - Style unifié slate/blue
-// Date: 1 décembre 2025
+// Version: 3.8.0 - Ajout bouton Mon Profil
+// Date: 2 décembre 2025
 // ============================================
 /**
  * Génère le HTML de la landing page
@@ -635,6 +635,19 @@ export function renderDashboard() {
     };
     const badges = badgeTranslations[currentLang] || badgeTranslations['en'];
     
+    // ✅ Traductions du bouton Mon Profil (8 langues)
+    const profileTranslations = {
+        fr: 'Mon Profil',
+        en: 'My Profile',
+        ar: 'ملفي الشخصي',
+        ru: 'Мой профиль',
+        hi: 'मेरी प्रोफ़ाइल',
+        ur: 'میری پروفائل',
+        zh: '我的资料',
+        tl: 'Aking Profile'
+    };
+    const myProfileText = profileTranslations[currentLang] || profileTranslations['en'];
+    
     console.log('🧭 DEBUG renderDashboard called', {
         userProfile,
         role: userProfile?.role,
@@ -666,13 +679,16 @@ export function renderDashboard() {
     // ✅ Style unifié pour le dashboard
     return `
         <div class="min-h-screen">
-            <!-- ✅ Header avec style unifié -->
+            <!-- ✅ Header avec style unifié + BOUTON MON PROFIL -->
             <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
                 <div class="container mx-auto px-4 py-4">
                     <div class="flex justify-between items-center">
                         <h1 class="text-2xl font-bold text-yellow-400">${dashboardTitle}</h1>
                         <div class="flex items-center gap-4">
-                            <span class="text-blue-200">${userProfile.name}</span>
+                            <span class="text-yellow-400 font-medium hidden md:inline">${userProfile.name}</span>
+                            <a href="profile.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                                ${myProfileText}
+                            </a>
                             <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">
                                 ${t('dashboard:logout')}
                             </button>
