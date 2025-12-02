@@ -1,20 +1,19 @@
 // ============================================
 // POINT D'ENTRÉE PRINCIPAL DE L'APPLICATION
+// Version: 3.5.0 - Fix OAuth
 // ============================================
 
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
-import { initTranslations, changeLanguage, oauthTranslations } from './translations.js';
+import { initTranslations, changeLanguage } from './translations.js';
 import { 
     setCurrentUser, 
     setUserProfile, 
-    setIs2FAMode,
     setIsPasswordRecoveryMode,
-    send2FACode,
-    verify2FACode,
     loadUserProfile,
     logout,
-    showOAuthWarning,
+    signInWithGoogle,
+    signInWithApple,
     closeOAuthWarning,
     proceedWithOAuth
 } from './auth.js';
@@ -31,7 +30,6 @@ import {
     togglePasswordVisibility, 
     prefillTestData,
     downloadContractTemplate,
-    checkPhoneExists,
     getQueryParams
 } from './utils.js';
 import { 
@@ -113,7 +111,7 @@ import { loadDashboardContent, handleContractUpload } from './dashboard.js';
     // ============================================
     
     window.changeLanguage = changeLanguage;
-    window.logout = () => logout(supabase);
+    window.logout = logout;
     window.toggleMobileMenu = toggleMobileMenu;
     window.togglePasswordVisibility = togglePasswordVisibility;
     window.prefillTestData = prefillTestData;
@@ -129,69 +127,59 @@ import { loadDashboardContent, handleContractUpload } from './dashboard.js';
     
     // Leads
     window.showAddLeadForm = showAddLeadForm;
-    window.updateLeadStatus = (leadId, status) => updateLeadStatus(supabase, leadId, status, () => loadDashboardContent(supabase));
-    window.markAsSold = (leadId) => markAsSold(supabase, leadId, () => loadDashboardContent(supabase));
+    window.updateLeadStatus = (leadId, status) => updateLeadStatus(supabase, leadId, status, () => loadDashboardContent());
+    window.markAsSold = (leadId) => markAsSold(supabase, leadId, () => loadDashboardContent());
     
-    // OAuth
-    window.signInWithGoogle = () => showOAuthWarning('google', oauthTranslations, i18next);
-    window.signInWithApple = () => showOAuthWarning('apple', oauthTranslations, i18next);
+    // OAuth - IMPORTANT: utiliser les fonctions de auth.js directement
+    window.signInWithGoogle = signInWithGoogle;
+    window.signInWithApple = signInWithApple;
     window.closeOAuthWarning = closeOAuthWarning;
-    window.proceedWithOAuth = (provider) => proceedWithOAuth(supabase, provider);
-    
-    // 2FA
-    window.handle2FASubmit = async (event) => {
-        event.preventDefault();
-        const code = document.getElementById('code2fa').value;
-        const isValid = await verify2FACode(supabase, code);
-        if (isValid) {
-            render();
-        } else {
-            alert('Code invalide ou expiré');
-        }
-    };
-    
-    window.resend2FACode = async () => {
-        // À implémenter avec tempUserId
-        alert('Code renvoyé !');
-    };
+    window.proceedWithOAuth = proceedWithOAuth;
     
     // ============================================
-    // FONCTION RENDER (SIMPLIFIÉE)
+    // FONCTION RENDER
     // ============================================
     
     async function render() {
         console.log('🎨 RENDER called, currentPage:', currentPage);
         
-        // Le HTML reste dans index.html
-        // On attache juste les event listeners ici
-        
         if (currentPage === 'dashboard') {
-            await loadDashboardContent(supabase);
+            await loadDashboardContent();
             handleContractUpload(supabase, SUPABASE_URL, render);
-            handleAddLeadForm(supabase, () => loadDashboardContent(supabase));
+            handleAddLeadForm(supabase, () => loadDashboardContent());
         }
     }
     
     window.render = render;
     
     // ============================================
-    // GESTION AUTH STATE
+    // GESTION AUTH STATE - CORRIGÉ POUR OAUTH
     // ============================================
     
     supabase.auth.onAuthStateChange(async (event, session) => {
-        console.log('🔔 Auth state changed:', event);
+        console.log('🔔 Auth state changed:', event, session?.user?.email);
         
         const user = session?.user || null;
         setCurrentUser(user);
         
         if (user) {
-            console.log('👤 User authenticated, loading profile...');
-            const profileLoaded = await loadUserProfile(supabase, user);
+            console.log('👤 User authenticated:', user.email);
+            console.log('📝 Loading profile...');
+            
+            // IMPORTANT: loadUserProfile utilise window.supabase
+            const profileLoaded = await loadUserProfile(user);
             
             if (profileLoaded) {
+                console.log('✅ Profile loaded, showing dashboard');
                 currentPage = 'dashboard';
                 window.currentPage = 'dashboard';
+            } else {
+                console.error('❌ Failed to load profile');
             }
+        } else {
+            console.log('👤 No user, showing landing');
+            currentPage = 'landing';
+            window.currentPage = 'landing';
         }
         
         render();
@@ -205,10 +193,15 @@ import { loadDashboardContent, handleContractUpload } from './dashboard.js';
     const { data: { session } } = await supabase.auth.getSession();
     
     if (session?.user) {
+        console.log('✅ Found existing session for:', session.user.email);
         setCurrentUser(session.user);
-        await loadUserProfile(supabase, session.user);
-        currentPage = 'dashboard';
-        window.currentPage = 'dashboard';
+        const profileLoaded = await loadUserProfile(session.user);
+        if (profileLoaded) {
+            currentPage = 'dashboard';
+            window.currentPage = 'dashboard';
+        }
+    } else {
+        console.log('ℹ️ No existing session');
     }
     
     render();
