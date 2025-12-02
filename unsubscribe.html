@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Désabonnement - Real Estate Referrer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-5">
+    <div id="content" class="bg-white/10 border border-white/20 rounded-3xl p-10 max-w-lg text-center">
+        <!-- Loading state -->
+        <div id="loading">
+            <div class="text-6xl mb-5">⏳</div>
+            <h1 class="text-yellow-400 text-2xl font-bold mb-5">Traitement en cours...</h1>
+            <p class="text-blue-200 text-lg">Veuillez patienter</p>
+        </div>
+        
+        <!-- Success state (hidden by default) -->
+        <div id="success" class="hidden">
+            <div class="text-6xl mb-5">✅</div>
+            <h1 class="text-yellow-400 text-2xl font-bold mb-5" id="successTitle">Désabonnement confirmé</h1>
+            <p class="text-blue-200 text-lg mb-5" id="successMessage">Vous ne recevrez plus d'emails de relance de Real Estate Referrer.</p>
+            <p class="text-slate-400 text-sm mb-8" id="successNote">Vous continuerez à recevoir les emails importants concernant vos commissions et votre compte.</p>
+            <a href="https://real-estate-referrer.com" class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-800 font-bold py-4 px-10 rounded-xl text-lg" id="successButton">Retour au site</a>
+        </div>
+        
+        <!-- Error state (hidden by default) -->
+        <div id="error" class="hidden">
+            <div class="text-6xl mb-5">❌</div>
+            <h1 class="text-red-400 text-2xl font-bold mb-5">Erreur</h1>
+            <p class="text-blue-200 text-lg mb-8" id="errorMessage">Une erreur est survenue.</p>
+            <a href="https://real-estate-referrer.com" class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-800 font-bold py-4 px-10 rounded-xl text-lg">Retour au site</a>
+        </div>
+    </div>
+
+    <script>
+        // Traductions
+        const translations = {
+            fr: {
+                title: "Désabonnement confirmé",
+                message: "Vous ne recevrez plus d'emails de relance de Real Estate Referrer.",
+                note: "Vous continuerez à recevoir les emails importants concernant vos commissions et votre compte.",
+                button: "Retour au site",
+                errorInvalid: "Lien invalide. Paramètres manquants.",
+                errorToken: "Lien invalide ou expiré.",
+                errorGeneric: "Une erreur est survenue. Veuillez réessayer."
+            },
+            en: {
+                title: "Unsubscribed successfully",
+                message: "You will no longer receive reminder emails from Real Estate Referrer.",
+                note: "You will continue to receive important emails about your commissions and account.",
+                button: "Back to website",
+                errorInvalid: "Invalid link. Missing parameters.",
+                errorToken: "Invalid or expired link.",
+                errorGeneric: "An error occurred. Please try again."
+            },
+            ar: {
+                title: "تم إلغاء الاشتراك",
+                message: "لن تتلقى بعد الآن رسائل تذكير من Real Estate Referrer.",
+                note: "ستستمر في تلقي رسائل البريد الإلكتروني المهمة حول عمولاتك وحسابك.",
+                button: "العودة إلى الموقع",
+                errorInvalid: "رابط غير صالح. معلمات مفقودة.",
+                errorToken: "رابط غير صالح أو منتهي الصلاحية.",
+                errorGeneric: "حدث خطأ. يرجى المحاولة مرة أخرى."
+            },
+            ru: {
+                title: "Вы отписались",
+                message: "Вы больше не будете получать напоминания от Real Estate Referrer.",
+                note: "Вы продолжите получать важные письма о ваших комиссиях и аккаунте.",
+                button: "Вернуться на сайт",
+                errorInvalid: "Недействительная ссылка. Отсутствуют параметры.",
+                errorToken: "Недействительная или просроченная ссылка.",
+                errorGeneric: "Произошла ошибка. Попробуйте еще раз."
+            },
+            hi: {
+                title: "सदस्यता समाप्त",
+                message: "अब आपको Real Estate Referrer से रिमाइंडर ईमेल नहीं मिलेंगे।",
+                note: "आपको अपने कमीशन और खाते के बारे में महत्वपूर्ण ईमेल मिलते रहेंगे।",
+                button: "वेबसाइट पर वापस जाएं",
+                errorInvalid: "अमान्य लिंक। पैरामीटर गायब हैं।",
+                errorToken: "अमान्य या समाप्त लिंक।",
+                errorGeneric: "एक त्रुटि हुई। कृपया पुनः प्रयास करें।"
+            },
+            ur: {
+                title: "ان سبسکرائب ہو گیا",
+                message: "اب آپ کو Real Estate Referrer سے یاد دہانی ای میلز نہیں ملیں گی۔",
+                note: "آپ کو اپنے کمیشن اور اکاؤنٹ کے بارے میں اہم ای میلز ملتی رہیں گی۔",
+                button: "ویب سائٹ پر واپس جائیں",
+                errorInvalid: "غلط لنک۔ پیرامیٹرز غائب ہیں۔",
+                errorToken: "غلط یا ختم شدہ لنک۔",
+                errorGeneric: "ایک خرابی ہوئی۔ براہ کرم دوبارہ کوشش کریں۔"
+            },
+            zh: {
+                title: "退订成功",
+                message: "您将不再收到 Real Estate Referrer 的提醒邮件。",
+                note: "您将继续收到有关佣金和账户的重要邮件。",
+                button: "返回网站",
+                errorInvalid: "无效链接。缺少参数。",
+                errorToken: "无效或过期的链接。",
+                errorGeneric: "发生错误。请重试。"
+            },
+            tl: {
+                title: "Nag-unsubscribe na",
+                message: "Hindi ka na makakatanggap ng reminder emails mula sa Real Estate Referrer.",
+                note: "Patuloy kang makakatanggap ng mahahalagang emails tungkol sa iyong komisyon at account.",
+                button: "Bumalik sa website",
+                errorInvalid: "Invalid na link. Kulang ang parameters.",
+                errorToken: "Invalid o expired na link.",
+                errorGeneric: "May naganap na error. Pakisubukan ulit."
+            }
+        };
+
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg5ODI0NTUsImV4cCI6MjA0NDU1ODQ1NX0.FLYvXoFGxMGbWfnMfP_DqB7jvLctdXjeTT5snyjxKJI';
+
+        async function processUnsubscribe() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            const token = urlParams.get('token');
+            const lang = urlParams.get('lang') || 'fr';
+            
+            const t = translations[lang] || translations['fr'];
+            
+            // Validation des paramètres
+            if (!email || !token) {
+                showError(t.errorInvalid);
+                return;
+            }
+            
+            // Vérification du token
+            const expectedToken = btoa(email).replace(/[^a-zA-Z0-9]/g, '').substring(0, 20);
+            if (token !== expectedToken) {
+                showError(t.errorToken);
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/functions/v1/unsubscribe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ email, token, lang })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showSuccess(t);
+                } else {
+                    showError(data.error || t.errorGeneric);
+                }
+            } catch (error) {
+                console.error('Unsubscribe error:', error);
+                showError(t.errorGeneric);
+            }
+        }
+        
+        function showSuccess(t) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('successTitle').textContent = t.title;
+            document.getElementById('successMessage').textContent = t.message;
+            document.getElementById('successNote').textContent = t.note;
+            document.getElementById('successButton').textContent = t.button;
+            document.getElementById('success').classList.remove('hidden');
+        }
+        
+        function showError(message) {
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('errorMessage').textContent = message;
+            document.getElementById('error').classList.remove('hidden');
+        }
+        
+        // Lancer le processus au chargement
+        processUnsubscribe();
+    </script>
+</body>
+</html>
