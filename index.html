@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.7.0 - Fix OAuth single render -->
+    <!-- Version: 3.7.0 - Fix OAuth one-click login -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -34,7 +34,7 @@
             .use(i18nextBrowserLanguageDetector)
             .init({
                 fallbackLng: 'fr',
-                debug: true,
+                debug: false,
                 load: 'languageOnly',
                 ns: ['translation', 'auth', 'dashboard', 'common'],
                 defaultNS: 'translation',
@@ -135,13 +135,6 @@
             }
         };
         
-        // ============================================
-        // ✅ PROTECTION CONTRE LES RE-RENDERS (v3.7.0)
-        // ============================================
-        let isRendering = false;
-        let lastRenderedState = null;
-        let isLoadingProfile = false;
-        
         let currentUser = null;
         let userProfile = null;
         let profileLoadAttempts = 0;
@@ -161,6 +154,10 @@
         let pendingSignupId = null;
         let globalIsUploading = false;
         let contractJustSigned = false;
+        
+        // ✅ v3.7.0: Protection contre les renders multiples
+        let isRendering = false;
+        let lastAuthEvent = null;
 
         window.currentUser = null;
         window.userProfile = null;
@@ -545,13 +542,6 @@
                 return false;
             }
 
-            // ✅ Protection contre les appels multiples
-            if (isLoadingProfile) {
-                console.log('⏳ Profile already loading, skipping...');
-                return false;
-            }
-            isLoadingProfile = true;
-
             try {
                 console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
 
@@ -563,7 +553,6 @@
 
                 if (error && error.code !== 'PGRST116') {
                     console.error('❌ Error loading profile:', error);
-                    isLoadingProfile = false;
                     return false;
                 }
 
@@ -571,7 +560,7 @@
                 if (!profile) {
                     console.log('📝 Profile does not exist, creating it...');
                     
-                    // Extraire le nom depuis les metadata OAuth
+                    // ✅ Extraire le nom depuis les metadata OAuth (Google/Apple)
                     const userName = targetUser.user_metadata?.full_name || 
                                    targetUser.user_metadata?.name || 
                                    targetUser.email?.split('@')[0] || 
@@ -593,7 +582,6 @@
 
                     if (insertError) {
                         console.error('❌ Error creating profile:', insertError);
-                        isLoadingProfile = false;
                         return false;
                     }
 
@@ -610,12 +598,10 @@
                 userProfile = profile;
                 window.userProfile = profile;
                 console.log('✅ userProfile set:', userProfile);
-                isLoadingProfile = false;
                 return true;
 
             } catch (err) {
                 console.error('❌ Exception loading profile:', err);
-                isLoadingProfile = false;
                 return false;
             }
         }
@@ -660,33 +646,14 @@
             }
         }
         
-        // ============================================
-        // ✅ RENDER AVEC PROTECTION ANTI-DUPLICATES (v3.7.0)
-        // ============================================
-        async function render(force = false) {
-            // Créer un état unique pour comparer
-            const currentState = JSON.stringify({
-                hasUser: !!currentUser,
-                hasProfile: !!userProfile,
-                page: currentPage,
-                is2FA: is2FAMode,
-                isRecovery: isPasswordRecoveryMode
-            });
-            
-            // Protection contre les renders identiques
-            if (!force && currentState === lastRenderedState) {
-                console.log('⏭️ Same state, skipping render');
-                return;
-            }
-            
-            // Protection contre les renders simultanés
-            if (isRendering && !force) {
+        async function render() {
+            // ✅ v3.7.0: Protection contre les renders simultanés
+            if (isRendering) {
                 console.log('⏳ Render already in progress, skipping...');
                 return;
             }
             
             isRendering = true;
-            lastRenderedState = currentState;
             
             console.log('🎨 RENDER called');
             console.log('- currentUser:', !!currentUser);
@@ -874,7 +841,7 @@
                                 alert('✅ Contrat uploadé avec succès !');
                                 await loadUserProfile();
                                 globalIsUploading = false;
-                                render(true);
+                                render();
                             } catch (error) {
                                 console.error('❌ Upload exception:', error);
                                 errorDiv.textContent = error.message;
@@ -904,18 +871,18 @@
                     supabase.auth.signOut();
                     currentPage = 'landing';
                     isRendering = false;
-                    render(true);
+                    render();
                     return;
                 }
                 
                 console.log(`⏳ User connected but no profile, waiting... (attempt ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})`);
                 app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement de votre profil... (tentative ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')</div></div></div>';
                 
-                setTimeout(() => {
-                    loadUserProfile().then(() => render(true));
-                }, profileLoadAttempts * 1000);
-                
                 isRendering = false;
+                
+                setTimeout(() => {
+                    loadUserProfile().then(() => render());
+                }, profileLoadAttempts * 1000);
                 return;
             } else if (currentPage === 'auth-login') {
                 console.log('🔐 Rendering login page');
@@ -994,7 +961,7 @@
             window.pendingSignupId = null;
             currentPage = 'auth-signup';
             window.currentPage = 'auth-signup';
-            render(true);
+            render();
         };
         
         window.renderLandingPage = RENDERING.renderLandingPage;
@@ -1006,18 +973,25 @@
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement...</div></div></div>';
         
         // ============================================
-        // ✅ AUTH STATE CHANGE - CORRIGÉ (v3.7.0)
+        // ✅ v3.7.0: AUTH STATE CHANGE - FIX OAUTH
         // ============================================
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
             
-            // Ignorer pendant l'inscription
+            // ✅ Ignorer les événements pendant le signup en cours
             if (isSignupInProgress && event !== 'SIGNED_IN') {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
             }
             
-            // Gestion du mode recovery
+            // ✅ Ignorer les événements dupliqués
+            if (event === lastAuthEvent && event === 'TOKEN_REFRESHED') {
+                console.log('⏭️ Skipping duplicate TOKEN_REFRESHED event');
+                return;
+            }
+            lastAuthEvent = event;
+            
+            // ✅ Gestion PASSWORD_RECOVERY
             if (event === 'PASSWORD_RECOVERY') {
                 console.log('🔑 Password recovery detected - blocking auto-login');
                 isPasswordRecoveryMode = true;
@@ -1025,7 +999,7 @@
                 window.currentPage = 'change-password';
                 currentUser = session?.user || null;
                 window.currentUser = currentUser;
-                render(true);
+                render();
                 return;
             }
             
@@ -1034,55 +1008,48 @@
                 return;
             }
             
-            // ✅ CORRIGÉ: Ignorer TOKEN_REFRESHED si déjà sur le dashboard
-            if (event === 'TOKEN_REFRESHED' && currentPage === 'dashboard' && userProfile) {
-                console.log('⏭️ Ignoring TOKEN_REFRESHED, already on dashboard');
-                return;
-            }
-            
             currentUser = session?.user || null;
             window.currentUser = currentUser;
             
+            // ✅ Vérification email confirmé
             if (currentUser && !currentUser.email_confirmed_at) {
                 console.warn('⚠️ Email not confirmed, signing out');
                 await supabase.auth.signOut();
                 currentUser = null;
                 window.currentUser = null;
-                render(true);
+                render();
                 return;
             }
             
+            // ✅ v3.7.0 FIX: Charger le profil ET ATTENDRE avant de render
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
                 
-                // ✅ CORRIGÉ: Attendre le chargement du profil AVANT de render
-                const profileLoaded = await loadUserProfile(currentUser);
-                
-                if (!profileLoaded) {
-                    console.error('❌ Failed to load profile, signing out');
-                    await supabase.auth.signOut();
-                    currentUser = null;
-                    window.currentUser = null;
-                    userProfile = null;
-                    window.userProfile = null;
+                try {
+                    const profileLoaded = await loadUserProfile(currentUser);
+                    
+                    if (!profileLoaded) {
+                        console.error('❌ Failed to load profile, signing out');
+                        await supabase.auth.signOut();
+                        currentUser = null;
+                        window.currentUser = null;
+                        userProfile = null;
+                        window.userProfile = null;
+                    }
+                } catch (err) {
+                    console.error('❌ Exception loading profile:', err);
                 }
                 
-                // ✅ CORRIGÉ: Un seul render APRÈS le chargement du profil
-                render(true);
-                return; // ✅ IMPORTANT: Ne pas continuer vers le render() en bas
+                // ✅ Render APRÈS le chargement du profil
+                render();
             } else {
-                // Pas d'utilisateur connecté
-                userProfile = null;
-                window.userProfile = null;
-                currentPage = 'landing';
-                window.currentPage = 'landing';
+                // Pas de user, render la landing page
+                render();
             }
-            
-            render(true);
         });
         
         // ============================================
-        // ✅ CHARGEMENT INITIAL - CORRIGÉ (v3.7.0)
+        // CHARGEMENT INITIAL
         // ============================================
         console.log('🔍 Getting initial session...');
         
@@ -1091,7 +1058,6 @@
             
             if (error) {
                 console.warn('⚠️ Session error (ignoring):', error.message);
-                // Continue sans bloquer
             }
 
             currentUser = session?.user || null;
@@ -1104,7 +1070,7 @@
                 sessionStorage.clear();
                 currentUser = null;
                 window.currentUser = null;
-                await render(true);
+                render();
                 return;
             }
 
@@ -1124,13 +1090,12 @@
                 }
             }
         } catch (err) {
-            console.error('❌ Critical error during init:', err);
+            console.error('❌ Critical error getting session:', err);
         }
 
-        // Premier render
-        await render(true);
+        render();
         
-        // Confirmation contrat signé
+        // ✅ Confirmation visuelle si contrat signé
         setTimeout(() => {
             if (window.contractJustSigned && currentUser && userProfile) {
                 const confirmationDiv = document.createElement('div');
@@ -1150,8 +1115,6 @@
                 window.contractJustSigned = false;
             }
         }, 2000);
-        
-        console.log('🚀 Application initialized successfully (v3.7.0)');
     })();
     </script>
 <!-- Crisp Chat -->
