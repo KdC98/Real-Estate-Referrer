@@ -11,1113 +11,1036 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.7.0 - Fix OAuth one-click login -->
+    <!-- Version: 3.7.1 - Fix OAuth one-click login (clean rebuild) -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
     <div id="oauthWarningModal" class="hidden"></div>
     <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-    import { SUPABASE_URL, SUPABASE_ANON_KEY } from '/js/config.js';
-    import * as VALIDATION from '/js/validation.js';
-    window.VALIDATION = VALIDATION;
-    import * as UTILS from '/js/utils.js';
-    import * as AUTH from '/js/auth.js';
-    import * as DASHBOARD from '/js/dashboard.js';
-    import * as LEADS from '/js/leads.js';
-    import * as TFA from './js/2fa.js';
-    import * as RENDERING from './js/rendering.js';
-    
-    (async () => {
-        await i18next
-            .use(i18nextHttpBackend)
-            .use(i18nextBrowserLanguageDetector)
-            .init({
-                fallbackLng: 'fr',
-                debug: false,
-                load: 'languageOnly',
-                ns: ['translation', 'auth', 'dashboard', 'common'],
-                defaultNS: 'translation',
-                backend: {
-                    loadPath: '/locales/{{lng}}/{{ns}}.json'
-                },
-                detection: {
-                    order: ['localStorage', 'navigator'],
-                    caches: ['localStorage']
-                }
-            });
-        console.log('🌐 Loading translations...');
-        await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
-        console.log('✅ All translations loaded!');
-        const t = (key) => i18next.t(key);
-        
-        async function changeLanguage(langCode) {
-            try {
-                await i18next.changeLanguage(langCode);
-                localStorage.setItem('i18nextLng', langCode);
-                window.location.reload();
-            } catch (error) {
-                console.error('Erreur changement de langue:', error);
-            }
-        }
-        window.changeLanguage = changeLanguage;
-        
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        window.supabase = supabase;
-        window.SUPABASE_URL = SUPABASE_URL;
-        window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
-        
-        // ✅ TRADUCTIONS OAUTH (8 LANGUES)
-        const oauthTranslations = {
-            fr: {
-                security_info: "Information de sécurité",
-                redirect_message: "Vous allez être redirigé vers notre service d'authentification sécurisé <strong>(Supabase)</strong> pour vous connecter avec",
-                normal_secure: "C'est normal et sécurisé.",
-                will_return: "Vous reviendrez automatiquement sur notre site après connexion.",
-                continue_btn: "Continuer",
-                cancel_btn: "Annuler"
-            },
-            en: {
-                security_info: "Security Information",
-                redirect_message: "You will be redirected to our secure authentication service <strong>(Supabase)</strong> to sign in with",
-                normal_secure: "This is normal and secure.",
-                will_return: "You will automatically return to our site after signing in.",
-                continue_btn: "Continue",
-                cancel_btn: "Cancel"
-            },
-            ar: {
-                security_info: "معلومات الأمان",
-                redirect_message: "سيتم إعادة توجيهك إلى خدمة المصادقة الآمنة <strong>(Supabase)</strong> لتسجيل الدخول باستخدام",
-                normal_secure: "هذا طبيعي وآمن.",
-                will_return: "ستعود تلقائياً إلى موقعنا بعد تسجيل الدخول.",
-                continue_btn: "متابعة",
-                cancel_btn: "إلغاء"
-            },
-            ru: {
-                security_info: "Информация о безопасности",
-                redirect_message: "Вы будете перенаправлены на нашу защищенную службу аутентификации <strong>(Supabase)</strong> для входа через",
-                normal_secure: "Это нормально и безопасно.",
-                will_return: "Вы автоматически вернетесь на наш сайт после входа.",
-                continue_btn: "Продолжить",
-                cancel_btn: "Отмена"
-            },
-            hi: {
-                security_info: "सुरक्षा जानकारी",
-                redirect_message: "आपको हमारी सुरक्षित प्रमाणीकरण सेवा <strong>(Supabase)</strong> पर पुनर्निर्देशित किया जाएगा",
-                normal_secure: "यह सामान्य और सुरक्षित है।",
-                will_return: "साइन इन करने के बाद आप स्वचालित रूप से हमारी साइट पर लौट आएंगे।",
-                continue_btn: "जारी रखें",
-                cancel_btn: "रद्द करें"
-            },
-            ur: {
-                security_info: "سیکیورٹی کی معلومات",
-                redirect_message: "آپ کو ہماری محفوظ تصدیق خدمت <strong>(Supabase)</strong> پر بھیجا جائے گا",
-                normal_secure: "یہ نارمل اور محفوظ ہے۔",
-                will_return: "سائن ان کے بعد آپ خود بخود ہماری سائٹ پر واپس آ جائیں گے۔",
-                continue_btn: "جاری رکھیں",
-                cancel_btn: "منسوخ کریں"
-            },
-            zh: {
-                security_info: "安全信息",
-                redirect_message: "您将被重定向到我们的安全认证服务<strong>(Supabase)</strong>以使用以下方式登录",
-                normal_secure: "这是正常且安全的。",
-                will_return: "登录后您将自动返回我们的网站。",
-                continue_btn: "继续",
-                cancel_btn: "取消"
-            },
-            tl: {
-                security_info: "Impormasyon sa Seguridad",
-                redirect_message: "Ire-redirect ka sa aming secure authentication service <strong>(Supabase)</strong> para mag-sign in gamit ang",
-                normal_secure: "Ito ay normal at secure.",
-                will_return: "Awtomatikong babalik ka sa aming site pagkatapos mag-sign in.",
-                continue_btn: "Magpatuloy",
-                cancel_btn: "Kanselahin"
-            }
-        };
-        
-        let currentUser = null;
-        let userProfile = null;
-        let profileLoadAttempts = 0;
-        const MAX_PROFILE_LOAD_ATTEMPTS = 10;
-        let currentPage = 'landing';
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+        import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
+        import * as VALIDATION from './js/validation.js';
+        window.VALIDATION = VALIDATION;
+        import * as UTILS from './js/utils.js';
+        import * as AUTH from './js/auth.js';
+        import * as DASHBOARD from './js/dashboard.js';
+        import * as LEADS from './js/leads.js';
+        import * as TFA from './js/2fa.js';
+        import * as RENDERING from './js/rendering.js';
 
-        window.setCurrentPage = function(newPage) {
-            console.log('📍 setCurrentPage called:', newPage);
-            currentPage = newPage;
-            window.currentPage = newPage;
-        };
-        
-        let isPasswordRecoveryMode = false;
-        let is2FAMode = false;
-        let isSignupInProgress = false;
-        let tempPhone = null;
-        let pendingSignupId = null;
-        let globalIsUploading = false;
-        let contractJustSigned = false;
-        
-        // ✅ v3.7.0: Protection contre les renders multiples
-        let isRendering = false;
-        let lastAuthEvent = null;
-
-        window.currentUser = null;
-        window.userProfile = null;
-        window.currentPage = 'landing';
-        window.contractJustSigned = false;
-        window.tempPhone = null;
-        window.pendingSignupId = null;
-        
-        window.setIs2FAMode = function(value) {
-            is2FAMode = value;
-            window.is2FAMode = value;
-        };
-        
-        window.setTempPhone = function(phone) {
-            tempPhone = phone;
-            window.tempPhone = phone;
-        };
-        
-        window.setPendingSignupId = function(id) {
-            pendingSignupId = id;
-            window.pendingSignupId = id;
-        };
-        
-        function getQueryParams() {
-            const params = {};
-            const search = window.location.search.substring(1);
-            if (!search) return params;
+        (async () => {
+            console.log('🚀 App starting v3.7.1...');
             
-            for (const part of search.split('&')) {
-                const [key, value] = part.split('=');
-                params[decodeURIComponent(key)] = decodeURIComponent(value || '');
-            }
-            return params;
-        }
-
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('action') === 'signup') {
-            currentPage = 'auth-signup';
-            window.currentPage = 'auth-signup';
-        }
-        
-        function prefillTestData() {
-            if (document.getElementById('name')) {
-                document.getElementById('name').value = 'Test User';
-                document.getElementById('countryCode').value = '+33';
-                document.getElementById('phone').value = '612345678';
-                document.getElementById('email').value = 'karyne@itooki.fr';
-                document.getElementById('password').value = 'Test1234';
-                document.getElementById('confirmPassword').value = 'Test1234';
-                VALIDATION.validateName();
-                VALIDATION.validatePhone();
-                VALIDATION.validateEmail();
-                VALIDATION.validatePassword();
-                VALIDATION.validateConfirmPassword();
-                console.log('✅ Données de test pré-remplies');
-            }
-        }
-
-        function handleAuth(mode) {
-            console.log('🔧 handleAuth called for mode:', mode);
-            const form = document.getElementById('authForm');
-            const errorDiv = document.getElementById('authError');
-            
-            if (errorDiv) {
-                errorDiv.textContent = '';
-                errorDiv.classList.add('hidden');
-            }
-            if (!form) {
-                console.error('❌ Form not found');
-                return;
-            }
-            console.log('✅ Form found, attaching handler');
-            
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                console.log('📤 Form submitted for', mode);
-                errorDiv.classList.add('hidden');
-                
-                const email = document.getElementById('email').value.trim();
-                const password = document.getElementById('password')?.value;
-                
-                try {
-                    if (mode === 'signup') {
-                        console.log('📝 Processing signup with 2FA');
-                        const name = document.getElementById('name').value.trim();
-                        const phone = document.getElementById('phone').value.trim();
-                        const countryCode = document.getElementById('countryCode').value;
-                        const confirmPassword = document.getElementById('confirmPassword').value;
-                        const fullPhone = countryCode + phone;
-                        
-                        if (!VALIDATION.validateName(name)) throw new Error('Nom invalide');
-                        if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Numéro de téléphone invalide');
-                        if (!VALIDATION.validateEmail(email)) throw new Error('Email invalide');
-                        if (!VALIDATION.validatePassword(password)) throw new Error('Mot de passe invalide');
-                        if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
-    
-                        console.log('🔍 Checking if phone exists:', fullPhone);
-                        const phoneCheck = await TFA.checkPhoneExists(fullPhone);
-                        
-                        if (phoneCheck.exists) {
-                            const message = `Ce numéro de téléphone est déjà utilisé${phoneCheck.userName ? ' par ' + phoneCheck.userName : ''}`;
-                            
-                            if (errorDiv) {
-                                errorDiv.textContent = message;
-                                errorDiv.classList.remove('hidden');
-                            }
-                            
-                            const submitButton = document.getElementById('submitButton');
-                            if (submitButton) {
-                                submitButton.disabled = false;
-                                submitButton.textContent = t('auth:signup_button');
-                            }
-                            
-                            console.log('❌ Phone already exists, blocking signup');
-                            return;
-                        }
-                        
-                        const submitButton = document.getElementById('submitButton');
-                        const originalButtonContent = submitButton.innerHTML;
-                        submitButton.disabled = true;
-                        submitButton.style.opacity = '0.7';
-                        submitButton.style.cursor = 'wait';
-                        submitButton.innerHTML = `
-                            <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-gray-900 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            Envoi du code SMS...
-                        `;
-                        
-                        isSignupInProgress = true;
-                        console.log('🔒 Signup in progress - sending SMS first');
-                        
-                        try {
-                            console.log('📱 Sending SMS code BEFORE creating account...');
-                            const currentLang = i18next.language || 'fr';
-                            
-                            const pendingSignupData = {
-                                email: email,
-                                password: password,
-                                name: name,
-                                phone: fullPhone
-                            };
-                            
-                            const smsResult = await TFA.send2FACode(fullPhone, currentLang, pendingSignupData);
-                            
-                            if (!smsResult.success) {
-                                throw new Error('Erreur lors de l\'envoi du SMS');
-                            }
-                            
-                            console.log('✅ SMS sent successfully');
-                            
-                            tempPhone = fullPhone;
-                            window.tempPhone = fullPhone;
-                            
-                            is2FAMode = true;
-                            window.is2FAMode = true;
-                            isSignupInProgress = false;
-                            
-                            console.log('✅ 2FA mode activated, showing keyboard');
-                            render();
-                            
-                        } catch (error) {
-                            console.error('❌ Error sending SMS:', error);
-                            isSignupInProgress = false;
-                            
-                            submitButton.disabled = false;
-                            submitButton.style.opacity = '1';
-                            submitButton.style.cursor = 'pointer';
-                            submitButton.innerHTML = originalButtonContent;
-                            
-                            let errorMessage = error.message;
-                            
-                            if (error.message.includes('wait')) {
-                                errorMessage = error.message;
-                            } else if (error.message.includes('maximum')) {
-                                errorMessage = error.message;
-                            }
-                            
-                            if (errorDiv) {
-                                errorDiv.textContent = errorMessage;
-                                errorDiv.classList.remove('hidden');
-                            }
-                            
-                            throw error;
-                        }
-                        
-                    } else if (mode === 'login') {
-                        console.log('🔐 Processing login');
-                        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                        if (error) throw error;
-                        console.log('✅ Login successful');
-                    }
-                } catch (error) {
-                    console.error('❌ Auth error:', error);
-                    let errorMessage = error.message;
-                    
-                    if (error.message.includes('Invalid login credentials')) {
-                        errorMessage = 'Email ou mot de passe incorrect';
-                    } else if (error.message.includes('Email not confirmed')) {
-                        errorMessage = 'Veuillez confirmer votre email avant de vous connecter';
-                    } else if (error.message.includes('User already registered')) {
-                        errorMessage = 'Cet email est déjà utilisé';
-                    } else if (error.message.includes('Password should be at least')) {
-                        errorMessage = 'Le mot de passe doit contenir au moins 8 caractères';
-                    }
-                    
-                    errorDiv.textContent = errorMessage;
-                    errorDiv.classList.remove('hidden');
-                    
-                    if (mode === 'signup') {
-                        const submitButton = document.getElementById('submitButton');
-                        submitButton.disabled = false;
-                        submitButton.textContent = t('auth:signup_button');
-                    }
-                }
-            };
-        }
-        
-        async function handleReset() {
-            const form = document.getElementById('authForm');
-            const errorDiv = document.getElementById('authError');
-            
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                errorDiv.classList.add('hidden');
-                
-                const email = document.getElementById('email').value;
-                try {
-                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                        redirectTo: window.location.origin
-                    });
-                    
-                    if (error) throw error;
-                    
-                    alert(t('auth:reset_email_sent'));
-                    UTILS.showLogin();
-                } catch (error) {
-                    console.error('Reset error:', error);
-                    errorDiv.textContent = error.message;
-                    errorDiv.classList.remove('hidden');
-                }
-            };
-        }
-        
-        function showOAuthWarning(provider) {
-            const modal = document.getElementById('oauthWarningModal');
-            const providerName = provider === 'google' ? 'Google' : 'Apple';
-            const currentLang = i18next.language || 'fr';
-            const trans = oauthTranslations[currentLang] || oauthTranslations['fr'];
-            
-            modal.innerHTML = `
-                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-yellow-500/50">
-                        <div class="text-center mb-6">
-                            <div class="text-5xl mb-4">⚠️</div>
-                            <h3 class="text-2xl font-bold mb-4 text-yellow-400">${trans.security_info}</h3>
-                        </div>
-                        
-                        <p class="text-blue-200 mb-6 leading-relaxed">
-                            ${trans.redirect_message} ${providerName}.
-                        </p>
-                        
-                        <p class="text-blue-200 mb-6">
-                            <span class="text-green-400 font-semibold">✓ ${trans.normal_secure}</span><br>
-                            ${trans.will_return}
-                        </p>
-                        
-                        <div class="flex gap-4">
-                            <button 
-                                onclick="proceedWithOAuth('${provider}')" 
-                                class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition"
-                            >
-                                ${trans.continue_btn}
-                            </button>
-                            <button 
-                                onclick="closeOAuthWarning()" 
-                                class="flex-1 bg-white/20 hover:bg-white/30 text-white font-bold py-3 rounded-lg transition border border-white/20"
-                            >
-                                ${trans.cancel_btn}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            modal.classList.remove('hidden');
-        }
-        
-        function closeOAuthWarning() {
-            const modal = document.getElementById('oauthWarningModal');
-            modal.classList.add('hidden');
-            modal.innerHTML = '';
-        }
-        
-        async function proceedWithOAuth(provider) {
-            closeOAuthWarning();
-            
-            try {
-                console.log(`🔐 Starting ${provider} Sign In...`);
-                const { data, error } = await supabase.auth.signInWithOAuth({
-                    provider: provider,
-                    options: {
-                        redirectTo: window.location.origin
+            await i18next
+                .use(i18nextHttpBackend)
+                .use(i18nextBrowserLanguageDetector)
+                .init({
+                    fallbackLng: 'fr',
+                    debug: false,
+                    load: 'languageOnly',
+                    ns: ['translation', 'auth', 'dashboard', 'common'],
+                    defaultNS: 'translation',
+                    backend: {
+                        loadPath: '/locales/{{lng}}/{{ns}}.json'
+                    },
+                    detection: {
+                        order: ['localStorage', 'navigator'],
+                        caches: ['localStorage']
                     }
                 });
-                
-                if (error) throw error;
-                console.log(`✅ ${provider} redirect initiated`);
-            } catch (error) {
-                console.error(`❌ ${provider} Sign In error:`, error);
-                alert(`Erreur lors de la connexion avec ${provider}: ` + error.message);
-            }
-        }
-        
-        async function signInWithGoogle() {
-            showOAuthWarning('google');
-        }
-        
-        async function signInWithApple() {
-            showOAuthWarning('apple');
-        }
-        
-        async function handleChangePassword() {
-            const form = document.getElementById('authForm');
-            const errorDiv = document.getElementById('authError');
-            
-            form.onsubmit = async (e) => {
-                e.preventDefault();
-                errorDiv.classList.add('hidden');
-                
-                const newPassword = document.getElementById('newPassword').value;
-                const confirmPassword = document.getElementById('confirmNewPassword').value;
-                
-                if (newPassword !== confirmPassword) {
-                    errorDiv.textContent = 'Les mots de passe ne correspondent pas';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-                if (newPassword.length < 8) {
-                    errorDiv.textContent = 'Le mot de passe doit contenir au moins 8 caractères';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-                if (!/[a-zA-Z]/.test(newPassword)) {
-                    errorDiv.textContent = 'Le mot de passe doit contenir au moins une lettre';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-                if (!/[0-9]/.test(newPassword)) {
-                    errorDiv.textContent = 'Le mot de passe doit contenir au moins un chiffre';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-                
+            console.log('🌐 Loading translations...');
+            await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
+            console.log('✅ All translations loaded!');
+            const t = (key) => i18next.t(key);
+
+            async function changeLanguage(langCode) {
                 try {
-                    console.log('🔑 Updating password...');
-                    const { error } = await supabase.auth.updateUser({ 
-                        password: newPassword 
-                    });
-                    
-                    if (error) throw error;
-                    
-                    console.log('✅ Password updated successfully');
-                    isPasswordRecoveryMode = false;
-                    alert('✅ Mot de passe changé avec succès !');
-                    await supabase.auth.signOut();
-                    UTILS.showLogin();
+                    await i18next.changeLanguage(langCode);
+                    localStorage.setItem('i18nextLng', langCode);
+                    window.location.reload();
                 } catch (error) {
-                    console.error('❌ Change password error:', error);
-                    errorDiv.textContent = error.message;
-                    errorDiv.classList.remove('hidden');
+                    console.error('Erreur changement de langue:', error);
+                }
+            }
+            window.changeLanguage = changeLanguage;
+
+            const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            window.supabase = supabase;
+            window.SUPABASE_URL = SUPABASE_URL;
+            window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+
+            const oauthTranslations = {
+                fr: {
+                    security_info: "Information de sécurité",
+                    redirect_message: "Vous allez être redirigé vers notre service d'authentification sécurisé <strong>(Supabase)</strong> pour vous connecter avec",
+                    normal_secure: "C'est normal et sécurisé.",
+                    will_return: "Vous reviendrez automatiquement sur notre site après connexion.",
+                    continue_btn: "Continuer",
+                    cancel_btn: "Annuler"
+                },
+                en: {
+                    security_info: "Security Information",
+                    redirect_message: "You will be redirected to our secure authentication service <strong>(Supabase)</strong> to sign in with",
+                    normal_secure: "This is normal and secure.",
+                    will_return: "You will automatically return to our site after signing in.",
+                    continue_btn: "Continue",
+                    cancel_btn: "Cancel"
+                },
+                ar: {
+                    security_info: "معلومات الأمان",
+                    redirect_message: "سيتم إعادة توجيهك إلى خدمة المصادقة الآمنة <strong>(Supabase)</strong> لتسجيل الدخول باستخدام",
+                    normal_secure: "هذا طبيعي وآمن.",
+                    will_return: "ستعود تلقائياً إلى موقعنا بعد تسجيل الدخول.",
+                    continue_btn: "متابعة",
+                    cancel_btn: "إلغاء"
+                },
+                ru: {
+                    security_info: "Информация о безопасности",
+                    redirect_message: "Вы будете перенаправлены на нашу защищенную службу аутентификации <strong>(Supabase)</strong> для входа через",
+                    normal_secure: "Это нормально и безопасно.",
+                    will_return: "Вы автоматически вернетесь на наш сайт после входа.",
+                    continue_btn: "Продолжить",
+                    cancel_btn: "Отмена"
+                },
+                hi: {
+                    security_info: "सुरक्षा जानकारी",
+                    redirect_message: "आपको हमारी सुरक्षित प्रमाणीकरण सेवा <strong>(Supabase)</strong> पर पुनर्निर्देशित किया जाएगा",
+                    normal_secure: "यह सामान्य और सुरक्षित है।",
+                    will_return: "साइन इन करने के बाद आप स्वचालित रूप से हमारी साइट पर लौट आएंगे।",
+                    continue_btn: "जारी रखें",
+                    cancel_btn: "रद्द करें"
+                },
+                ur: {
+                    security_info: "سیکیورٹی کی معلومات",
+                    redirect_message: "آپ کو ہماری محفوظ تصدیق خدمت <strong>(Supabase)</strong> پر بھیجا جائے گا",
+                    normal_secure: "یہ نارمل اور محفوظ ہے۔",
+                    will_return: "سائن ان کے بعد آپ خود بخود ہماری سائٹ پر واپس آ جائیں گے۔",
+                    continue_btn: "جاری رکھیں",
+                    cancel_btn: "منسوخ کریں"
+                },
+                zh: {
+                    security_info: "安全信息",
+                    redirect_message: "您将被重定向到我们的安全认证服务<strong>(Supabase)</strong>以使用以下方式登录",
+                    normal_secure: "这是正常且安全的。",
+                    will_return: "登录后您将自动返回我们的网站。",
+                    continue_btn: "继续",
+                    cancel_btn: "取消"
+                },
+                tl: {
+                    security_info: "Impormasyon sa Seguridad",
+                    redirect_message: "Ire-redirect ka sa aming secure authentication service <strong>(Supabase)</strong> para mag-sign in gamit ang",
+                    normal_secure: "Ito ay normal at secure.",
+                    will_return: "Awtomatikong babalik ka sa aming site pagkatapos mag-sign in.",
+                    continue_btn: "Magpatuloy",
+                    cancel_btn: "Kanselahin"
                 }
             };
-        }
-        
-        async function loadUserProfile(user = null) {
-            const targetUser = user || currentUser;
-            console.log('🔍 loadUserProfile called for user:', targetUser?.id);
 
-            if (!targetUser || !targetUser.id) {
-                console.error('❌ No user provided to loadUserProfile');
-                return false;
+            let currentUser = null;
+            let userProfile = null;
+            let profileLoadAttempts = 0;
+            const MAX_PROFILE_LOAD_ATTEMPTS = 10;
+            let currentPage = 'landing';
+
+            window.setCurrentPage = function(newPage) {
+                console.log('📍 setCurrentPage called:', newPage);
+                currentPage = newPage;
+                window.currentPage = newPage;
+            };
+
+            let isPasswordRecoveryMode = false;
+            let is2FAMode = false;
+            let isSignupInProgress = false;
+            let tempPhone = null;
+            let pendingSignupId = null;
+            let globalIsUploading = false;
+            let contractJustSigned = false;
+
+            let isRendering = false;
+            let lastAuthEvent = null;
+
+            window.currentUser = null;
+            window.userProfile = null;
+            window.currentPage = 'landing';
+            window.contractJustSigned = false;
+            window.tempPhone = null;
+            window.pendingSignupId = null;
+
+            window.setIs2FAMode = function(value) {
+                is2FAMode = value;
+                window.is2FAMode = value;
+            };
+
+            window.setTempPhone = function(phone) {
+                tempPhone = phone;
+                window.tempPhone = phone;
+            };
+
+            window.setPendingSignupId = function(id) {
+                pendingSignupId = id;
+                window.pendingSignupId = id;
+            };
+
+            function getQueryParams() {
+                const params = {};
+                const search = window.location.search.substring(1);
+                if (!search) return params;
+
+                for (const part of search.split('&')) {
+                    const [key, value] = part.split('=');
+                    params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+                }
+                return params;
             }
 
-            try {
-                console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('action') === 'signup') {
+                currentPage = 'auth-signup';
+                window.currentPage = 'auth-signup';
+            }
 
-                const { data, error } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', targetUser.id)
-                    .maybeSingle();
+            function prefillTestData() {
+                if (document.getElementById('name')) {
+                    document.getElementById('name').value = 'Test User';
+                    document.getElementById('countryCode').value = '+33';
+                    document.getElementById('phone').value = '612345678';
+                    document.getElementById('email').value = 'karyne@itooki.fr';
+                    document.getElementById('password').value = 'Test1234';
+                    document.getElementById('confirmPassword').value = 'Test1234';
+                    VALIDATION.validateName();
+                    VALIDATION.validatePhone();
+                    VALIDATION.validateEmail();
+                    VALIDATION.validatePassword();
+                    VALIDATION.validateConfirmPassword();
+                    console.log('✅ Données de test pré-remplies');
+                }
+            }
 
-                if (error && error.code !== 'PGRST116') {
-                    console.error('❌ Error loading profile:', error);
+            function handleAuth(mode) {
+                console.log('🔧 handleAuth called for mode:', mode);
+                const form = document.getElementById('authForm');
+                const errorDiv = document.getElementById('authError');
+
+                if (errorDiv) {
+                    errorDiv.textContent = '';
+                    errorDiv.classList.add('hidden');
+                }
+                if (!form) {
+                    console.error('❌ Form not found');
+                    return;
+                }
+                console.log('✅ Form found, attaching handler');
+
+                form.onsubmit = async (e) => {
+                    e.preventDefault();
+                    console.log('📤 Form submitted for', mode);
+                    errorDiv.classList.add('hidden');
+
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password')?.value;
+
+                    try {
+                        if (mode === 'signup') {
+                            console.log('📝 Processing signup with 2FA');
+                            const name = document.getElementById('name').value.trim();
+                            const phone = document.getElementById('phone').value.trim();
+                            const countryCode = document.getElementById('countryCode').value;
+                            const confirmPassword = document.getElementById('confirmPassword').value;
+                            const fullPhone = countryCode + phone;
+
+                            if (!VALIDATION.validateName(name)) throw new Error('Nom invalide');
+                            if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Numéro de téléphone invalide');
+                            if (!VALIDATION.validateEmail(email)) throw new Error('Email invalide');
+                            if (!VALIDATION.validatePassword(password)) throw new Error('Mot de passe invalide');
+                            if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
+
+                            console.log('🔍 Checking if phone exists:', fullPhone);
+                            const phoneCheck = await TFA.checkPhoneExists(fullPhone);
+
+                            if (phoneCheck.exists) {
+                                const message = 'Ce numéro de téléphone est déjà utilisé' + (phoneCheck.userName ? ' par ' + phoneCheck.userName : '');
+
+                                if (errorDiv) {
+                                    errorDiv.textContent = message;
+                                    errorDiv.classList.remove('hidden');
+                                }
+
+                                const submitButton = document.getElementById('submitButton');
+                                if (submitButton) {
+                                    submitButton.disabled = false;
+                                    submitButton.textContent = t('auth:signup_button');
+                                }
+
+                                console.log('❌ Phone already exists, blocking signup');
+                                return;
+                            }
+
+                            const submitButton = document.getElementById('submitButton');
+                            const originalButtonContent = submitButton.innerHTML;
+                            submitButton.disabled = true;
+                            submitButton.style.opacity = '0.7';
+                            submitButton.style.cursor = 'wait';
+                            submitButton.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-gray-900 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Envoi du code SMS...';
+
+                            isSignupInProgress = true;
+                            console.log('🔒 Signup in progress - sending SMS first');
+
+                            try {
+                                console.log('📱 Sending SMS code BEFORE creating account...');
+                                const currentLang = i18next.language || 'fr';
+
+                                const pendingSignupData = {
+                                    email: email,
+                                    password: password,
+                                    name: name,
+                                    phone: fullPhone
+                                };
+
+                                const smsResult = await TFA.send2FACode(fullPhone, currentLang, pendingSignupData);
+
+                                if (!smsResult.success) {
+                                    throw new Error('Erreur lors de l\'envoi du SMS');
+                                }
+
+                                console.log('✅ SMS sent successfully');
+
+                                tempPhone = fullPhone;
+                                window.tempPhone = fullPhone;
+
+                                is2FAMode = true;
+                                window.is2FAMode = true;
+                                isSignupInProgress = false;
+
+                                console.log('✅ 2FA mode activated, showing keyboard');
+                                render();
+
+                            } catch (error) {
+                                console.error('❌ Error sending SMS:', error);
+                                isSignupInProgress = false;
+
+                                submitButton.disabled = false;
+                                submitButton.style.opacity = '1';
+                                submitButton.style.cursor = 'pointer';
+                                submitButton.innerHTML = originalButtonContent;
+
+                                let errorMessage = error.message;
+
+                                if (error.message.includes('wait')) {
+                                    errorMessage = error.message;
+                                } else if (error.message.includes('maximum')) {
+                                    errorMessage = error.message;
+                                }
+
+                                if (errorDiv) {
+                                    errorDiv.textContent = errorMessage;
+                                    errorDiv.classList.remove('hidden');
+                                }
+
+                                throw error;
+                            }
+
+                        } else if (mode === 'login') {
+                            console.log('🔐 Processing login');
+                            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                            if (error) throw error;
+                            console.log('✅ Login successful');
+                        }
+                    } catch (error) {
+                        console.error('❌ Auth error:', error);
+                        let errorMessage = error.message;
+
+                        if (error.message.includes('Invalid login credentials')) {
+                            errorMessage = 'Email ou mot de passe incorrect';
+                        } else if (error.message.includes('Email not confirmed')) {
+                            errorMessage = 'Veuillez confirmer votre email avant de vous connecter';
+                        } else if (error.message.includes('User already registered')) {
+                            errorMessage = 'Cet email est déjà utilisé';
+                        } else if (error.message.includes('Password should be at least')) {
+                            errorMessage = 'Le mot de passe doit contenir au moins 8 caractères';
+                        }
+
+                        errorDiv.textContent = errorMessage;
+                        errorDiv.classList.remove('hidden');
+
+                        if (mode === 'signup') {
+                            const submitButton = document.getElementById('submitButton');
+                            submitButton.disabled = false;
+                            submitButton.textContent = t('auth:signup_button');
+                        }
+                    }
+                };
+            }
+
+            async function handleReset() {
+                const form = document.getElementById('authForm');
+                const errorDiv = document.getElementById('authError');
+
+                form.onsubmit = async (e) => {
+                    e.preventDefault();
+                    errorDiv.classList.add('hidden');
+
+                    const email = document.getElementById('email').value;
+                    try {
+                        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                            redirectTo: window.location.origin
+                        });
+
+                        if (error) throw error;
+
+                        alert(t('auth:reset_email_sent'));
+                        UTILS.showLogin();
+                    } catch (error) {
+                        console.error('Reset error:', error);
+                        errorDiv.textContent = error.message;
+                        errorDiv.classList.remove('hidden');
+                    }
+                };
+            }
+
+            function showOAuthWarning(provider) {
+                const modal = document.getElementById('oauthWarningModal');
+                const providerName = provider === 'google' ? 'Google' : 'Apple';
+                const currentLang = i18next.language || 'fr';
+                const trans = oauthTranslations[currentLang] || oauthTranslations['fr'];
+
+                modal.innerHTML = '<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"><div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-yellow-500/50"><div class="text-center mb-6"><div class="text-5xl mb-4">⚠️</div><h3 class="text-2xl font-bold mb-4 text-yellow-400">' + trans.security_info + '</h3></div><p class="text-blue-200 mb-6 leading-relaxed">' + trans.redirect_message + ' ' + providerName + '.</p><p class="text-blue-200 mb-6"><span class="text-green-400 font-semibold">✓ ' + trans.normal_secure + '</span><br>' + trans.will_return + '</p><div class="flex gap-4"><button onclick="proceedWithOAuth(\'' + provider + '\')" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">' + trans.continue_btn + '</button><button onclick="closeOAuthWarning()" class="flex-1 bg-white/20 hover:bg-white/30 text-white font-bold py-3 rounded-lg transition border border-white/20">' + trans.cancel_btn + '</button></div></div></div>';
+                modal.classList.remove('hidden');
+            }
+
+            function closeOAuthWarning() {
+                const modal = document.getElementById('oauthWarningModal');
+                modal.classList.add('hidden');
+                modal.innerHTML = '';
+            }
+
+            async function proceedWithOAuth(provider) {
+                closeOAuthWarning();
+
+                try {
+                    console.log('🔐 Starting ' + provider + ' Sign In...');
+                    const { data, error } = await supabase.auth.signInWithOAuth({
+                        provider: provider,
+                        options: {
+                            redirectTo: window.location.origin
+                        }
+                    });
+
+                    if (error) throw error;
+                    console.log('✅ ' + provider + ' redirect initiated');
+                } catch (error) {
+                    console.error('❌ ' + provider + ' Sign In error:', error);
+                    alert('Erreur lors de la connexion avec ' + provider + ': ' + error.message);
+                }
+            }
+
+            async function signInWithGoogle() {
+                showOAuthWarning('google');
+            }
+
+            async function signInWithApple() {
+                showOAuthWarning('apple');
+            }
+
+            async function handleChangePassword() {
+                const form = document.getElementById('authForm');
+                const errorDiv = document.getElementById('authError');
+
+                form.onsubmit = async (e) => {
+                    e.preventDefault();
+                    errorDiv.classList.add('hidden');
+
+                    const newPassword = document.getElementById('newPassword').value;
+                    const confirmPassword = document.getElementById('confirmNewPassword').value;
+
+                    if (newPassword !== confirmPassword) {
+                        errorDiv.textContent = 'Les mots de passe ne correspondent pas';
+                        errorDiv.classList.remove('hidden');
+                        return;
+                    }
+                    if (newPassword.length < 8) {
+                        errorDiv.textContent = 'Le mot de passe doit contenir au moins 8 caractères';
+                        errorDiv.classList.remove('hidden');
+                        return;
+                    }
+                    if (!/[a-zA-Z]/.test(newPassword)) {
+                        errorDiv.textContent = 'Le mot de passe doit contenir au moins une lettre';
+                        errorDiv.classList.remove('hidden');
+                        return;
+                    }
+                    if (!/[0-9]/.test(newPassword)) {
+                        errorDiv.textContent = 'Le mot de passe doit contenir au moins un chiffre';
+                        errorDiv.classList.remove('hidden');
+                        return;
+                    }
+
+                    try {
+                        console.log('🔑 Updating password...');
+                        const { error } = await supabase.auth.updateUser({
+                            password: newPassword
+                        });
+
+                        if (error) throw error;
+
+                        console.log('✅ Password updated successfully');
+                        isPasswordRecoveryMode = false;
+                        alert('✅ Mot de passe changé avec succès !');
+                        await supabase.auth.signOut();
+                        UTILS.showLogin();
+                    } catch (error) {
+                        console.error('❌ Change password error:', error);
+                        errorDiv.textContent = error.message;
+                        errorDiv.classList.remove('hidden');
+                    }
+                };
+            }
+
+            async function loadUserProfile(user = null) {
+                const targetUser = user || currentUser;
+                console.log('🔍 loadUserProfile called for user:', targetUser?.id);
+
+                if (!targetUser || !targetUser.id) {
+                    console.error('❌ No user provided to loadUserProfile');
                     return false;
                 }
 
-                let profile = data;
-                if (!profile) {
-                    console.log('📝 Profile does not exist, creating it...');
-                    
-                    // ✅ Extraire le nom depuis les metadata OAuth (Google/Apple)
-                    const userName = targetUser.user_metadata?.full_name || 
-                                   targetUser.user_metadata?.name || 
-                                   targetUser.email?.split('@')[0] || 
-                                   '';
-                    
-                    const { data: newProfile, error: insertError } = await supabase
-                        .from('profiles')
-                        .upsert([{
-                            id: targetUser.id,
-                            name: userName,
-                            phone: targetUser.user_metadata?.phone || '',
-                            email: targetUser.email,
-                            role: 'referrer',
-                            contract_status: 'pending',
-                            phone_verified: false
-                        }], { onConflict: 'id' })
-                        .select()
-                        .single();
+                try {
+                    console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
 
-                    if (insertError) {
-                        console.error('❌ Error creating profile:', insertError);
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', targetUser.id)
+                        .maybeSingle();
+
+                    if (error && error.code !== 'PGRST116') {
+                        console.error('❌ Error loading profile:', error);
                         return false;
                     }
 
-                    profile = newProfile;
-                    console.log('✅ Profile created:', profile);
+                    let profile = data;
+                    if (!profile) {
+                        console.log('📝 Profile does not exist, creating it...');
+
+                        const userName = targetUser.user_metadata?.full_name ||
+                            targetUser.user_metadata?.name ||
+                            targetUser.email?.split('@')[0] ||
+                            '';
+
+                        const { data: newProfile, error: insertError } = await supabase
+                            .from('profiles')
+                            .upsert([{
+                                id: targetUser.id,
+                                name: userName,
+                                phone: targetUser.user_metadata?.phone || '',
+                                email: targetUser.email,
+                                role: 'referrer',
+                                contract_status: 'pending',
+                                phone_verified: false
+                            }], { onConflict: 'id' })
+                            .select()
+                            .single();
+
+                        if (insertError) {
+                            console.error('❌ Error creating profile:', insertError);
+                            return false;
+                        }
+
+                        profile = newProfile;
+                        console.log('✅ Profile created:', profile);
+                    }
+
+                    console.log('✅ Profile data retrieved:', profile);
+
+                    if (profile && profile.contract_status) {
+                        profile.contract_status = profile.contract_status.trim().replace(/\*+/g, '');
+                    }
+
+                    userProfile = profile;
+                    window.userProfile = profile;
+                    console.log('✅ userProfile set:', userProfile);
+                    return true;
+
+                } catch (err) {
+                    console.error('❌ Exception loading profile:', err);
+                    return false;
                 }
-
-                console.log('✅ Profile data retrieved:', profile);
-
-                if (profile && profile.contract_status) {
-                    profile.contract_status = profile.contract_status.trim().replace(/\*+/g, '');
-                }
-
-                userProfile = profile;
-                window.userProfile = profile;
-                console.log('✅ userProfile set:', userProfile);
-                return true;
-
-            } catch (err) {
-                console.error('❌ Exception loading profile:', err);
-                return false;
             }
-        }
-        window.loadUserProfile = loadUserProfile;
-        
-        async function logout() {
-            console.log('🚪 Logout called');
-            
-            try {
-                console.log('🔓 Signing out from Supabase...');
-                supabase.auth.signOut();
-                
-                console.log('🧹 Cleaning ALL session data...');
-                localStorage.clear();
-                sessionStorage.clear();
-                
-                currentUser = null;
-                userProfile = null;
-                currentPage = 'landing';
-                isPasswordRecoveryMode = false;
-                is2FAMode = false;
-                tempPhone = null;
-                pendingSignupId = null;
-                globalIsUploading = false;
-                
-                window.currentUser = null;
-                window.userProfile = null;
-                window.currentPage = 'landing';
-                window.tempPhone = null;
-                window.pendingSignupId = null;
-                
-                console.log('✅ Local state cleaned');
-                console.log('🔄 Reloading page NOW...');
-                window.location.href = window.location.origin;
-                
-            } catch (error) {
-                console.error('❌ Logout exception:', error);
-                console.log('🚨 Forcing logout despite error...');
-                localStorage.clear();
-                sessionStorage.clear();
-                window.location.href = window.location.origin;
-            }
-        }
-        
-        async function render() {
-            // ✅ v3.7.0: Protection contre les renders simultanés
-            if (isRendering) {
-                console.log('⏳ Render already in progress, skipping...');
-                return;
-            }
-            
-            isRendering = true;
-            
-            console.log('🎨 RENDER called');
-            console.log('- currentUser:', !!currentUser);
-            console.log('- userProfile:', !!userProfile);
-            console.log('- currentPage:', currentPage);
-            console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
-            console.log('- is2FAMode:', is2FAMode);
-            console.log('- isSignupInProgress:', isSignupInProgress);
-            
-            if (contractJustSigned && currentUser && userProfile) {
-                console.log('🎉 Contract just signed! Reloading profile and showing confirmation');
-                
-                contractJustSigned = false;
-                window.contractJustSigned = false;
+            window.loadUserProfile = loadUserProfile;
+
+            async function logout() {
+                console.log('🚪 Logout called');
 
                 try {
-                    await loadUserProfile(currentUser);
-                } catch (e) {
-                    console.error('Erreur lors du rechargement du profil après signature:', e);
+                    console.log('🔓 Signing out from Supabase...');
+                    supabase.auth.signOut();
+
+                    console.log('🧹 Cleaning ALL session data...');
+                    localStorage.clear();
+                    sessionStorage.clear();
+
+                    currentUser = null;
+                    userProfile = null;
+                    currentPage = 'landing';
+                    isPasswordRecoveryMode = false;
+                    is2FAMode = false;
+                    tempPhone = null;
+                    pendingSignupId = null;
+                    globalIsUploading = false;
+
+                    window.currentUser = null;
+                    window.userProfile = null;
+                    window.currentPage = 'landing';
+                    window.tempPhone = null;
+                    window.pendingSignupId = null;
+
+                    console.log('✅ Local state cleaned');
+                    console.log('🔄 Reloading page NOW...');
+                    window.location.href = window.location.origin;
+
+                } catch (error) {
+                    console.error('❌ Logout exception:', error);
+                    console.log('🚨 Forcing logout despite error...');
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    window.location.href = window.location.origin;
+                }
+            }
+
+            async function render() {
+                if (isRendering) {
+                    console.log('⏳ Render already in progress, skipping...');
+                    return;
                 }
 
-                setTimeout(() => {
-                    const confirmationDiv = document.createElement('div');
-                    confirmationDiv.innerHTML = `
-                        <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce">
-                            <div class="flex items-center gap-3">
-                                <span class="text-3xl">✅</span>
-                                <div>
-                                    <div class="font-bold">Contrat signé avec succès !</div>
-                                    <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    document.body.appendChild(confirmationDiv);
+                isRendering = true;
+
+                console.log('🎨 RENDER called');
+                console.log('- currentUser:', !!currentUser);
+                console.log('- userProfile:', !!userProfile);
+                console.log('- currentPage:', currentPage);
+                console.log('- isPasswordRecoveryMode:', isPasswordRecoveryMode);
+                console.log('- is2FAMode:', is2FAMode);
+                console.log('- isSignupInProgress:', isSignupInProgress);
+
+                if (contractJustSigned && currentUser && userProfile) {
+                    console.log('🎉 Contract just signed! Reloading profile and showing confirmation');
+
+                    contractJustSigned = false;
+                    window.contractJustSigned = false;
+
+                    try {
+                        await loadUserProfile(currentUser);
+                    } catch (e) {
+                        console.error('Erreur lors du rechargement du profil après signature:', e);
+                    }
 
                     setTimeout(() => {
-                        confirmationDiv.remove();
-                    }, 5000);
-                }, 500);
-            }
-            
-            const app = document.getElementById('app');
-            
-            // ✅ MODE 2FA
-            if (is2FAMode) {
-                console.log('📱 2FA mode active - showing 2FA form');
-                app.innerHTML = RENDERING.renderAuthPage('2fa');
-                
-                const form2FA = document.getElementById('form2FA');
-                if (form2FA) {
-                    form2FA.onsubmit = TFA.handle2FASubmit;
-                    console.log('✅ 2FA form handler attached immediately');
+                        const confirmationDiv = document.createElement('div');
+                        confirmationDiv.innerHTML = '<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce"><div class="flex items-center gap-3"><span class="text-3xl">✅</span><div><div class="font-bold">Contrat signé avec succès !</div><div class="text-sm">Vous pouvez maintenant ajouter des leads</div></div></div></div>';
+                        document.body.appendChild(confirmationDiv);
+
+                        setTimeout(() => {
+                            confirmationDiv.remove();
+                        }, 5000);
+                    }, 500);
                 }
-                document.getElementById('code2fa')?.focus();
-                isRendering = false;
-                return;
-            }
-            
-            if (isPasswordRecoveryMode && currentPage === 'change-password') {
-                console.log('🔑 Password recovery mode - showing change password form');
-                app.innerHTML = RENDERING.renderAuthPage('change-password');
-                setTimeout(() => handleChangePassword(), 500);
-                isRendering = false;
-                return;
-            }
-            
-            if (currentUser && userProfile) {
-                console.log('✅ User connected with profile, showing dashboard');
-                currentPage = 'dashboard';
-                window.currentPage = 'dashboard';
-                app.innerHTML = RENDERING.renderDashboard();
-                await DASHBOARD.loadDashboardContent();
-                
-                if (userProfile.role !== 'admin') {
-                    const contractForm = document.getElementById('contractForm');
-                    if (contractForm) {
-                        console.log('✅ Contract form found, attaching submit handler');
-                        
-                        contractForm.addEventListener('submit', async (e) => {
-                            e.preventDefault();
-                            
-                            if (globalIsUploading) {
-                                console.log('⚠️ Upload already in progress, ignoring duplicate submit');
-                                return;
-                            }
-                            
-                            globalIsUploading = true;
-                            console.log('📄 Starting contract upload...');
-                            
-                            const submitBtn = document.getElementById('contractSubmitBtn');
-                            const errorDiv = document.getElementById('uploadError');
-                            const progressDiv = document.getElementById('uploadProgress');
-                            const originalText = submitBtn.textContent;
-                            
-                            submitBtn.disabled = true;
-                            submitBtn.textContent = 'Upload en cours...';
-                            errorDiv.classList.add('hidden');
-                            progressDiv.classList.remove('hidden');
-                            progressDiv.textContent = '⏳ Préparation du fichier...';
-                            
-                            try {
-                                const fileInput = document.getElementById('contractFile');
-                                const file = fileInput.files[0];
-                                
-                                if (!file) {
-                                    throw new Error('Veuillez sélectionner un fichier');
-                                }
-                                if (file.type !== 'application/pdf') {
-                                    throw new Error('Seuls les fichiers PDF sont acceptés');
-                                }
-                                const maxSize = 10 * 1024 * 1024;
-                                if (file.size > maxSize) {
-                                    throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
-                                }
-                                
-                                console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
-                                
-                                progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
-                                
-                                const fileName = `${currentUser.id}_${Date.now()}_${file.name}`;
-                                console.log('📄 Uploading to Storage with name:', fileName);
-                                
-                                const { data: { session } } = await supabase.auth.getSession();
-                                if (!session) {
-                                    throw new Error('Session expirée, veuillez vous reconnecter');
-                                }
-                                
-                                const uploadUrl = `${SUPABASE_URL}/storage/v1/object/contracts/${fileName}`;
-                                console.log('🚀 Uploading via REST API to:', uploadUrl);
-                                
-                                const uploadResponse = await fetch(uploadUrl, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Authorization': `Bearer ${session.access_token}`,
-                                        'Content-Type': file.type,
-                                        'x-upsert': 'false'
-                                    },
-                                    body: file
-                                });
-                                
-                                if (!uploadResponse.ok) {
-                                    const errorText = await uploadResponse.text();
-                                    console.error('❌ Upload failed:', uploadResponse.status, errorText);
-                                    throw new Error(`Erreur d'upload: ${uploadResponse.status} - ${errorText}`);
-                                }
-                                
-                                const uploadData = await uploadResponse.json();
-                                console.log('✅ File uploaded successfully to Storage');
-                                console.log('📝 Upload response:', uploadData);
-                                
-                                progressDiv.textContent = '⏳ Mise à jour de votre profil...';
-                                
-                                const { error: updateError } = await supabase.from('profiles').update({
-                                    contract_path: fileName,
-                                    contract_status: 'signed',
-                                    contract_file_url: fileName
-                                }).eq('id', currentUser.id);
-                                
-                                if (updateError) {
-                                    console.error('❌ Error updating profile:', updateError);
-                                    throw new Error(`Erreur de mise à jour : ${updateError.message}`);
-                                }
-                                
-                                console.log('✅ Profile updated successfully with contract_path:', fileName);
-                                
-                                try {
-                                    console.log('📧 Sending email notification...');
-                                    const { data: emailData, error: emailError } = await supabase.functions.invoke('send-email-notification', {
-                                        body: {
-                                            referrerName: userProfile.name || 'Inconnu',
-                                            referrerEmail: currentUser.email,
-                                            contractPath: fileName
-                                        }
-                                    });
-                                    if (emailError) {
-                                        console.error('❌ Email notification error:', emailError);
-                                    } else {
-                                        console.log('✅ Email notification sent:', emailData);
-                                    }
-                                } catch (emailErr) {
-                                    console.error('❌ Email notification exception:', emailErr);
-                                }
-                                
-                                alert('✅ Contrat uploadé avec succès !');
-                                await loadUserProfile();
-                                globalIsUploading = false;
-                                render();
-                            } catch (error) {
-                                console.error('❌ Upload exception:', error);
-                                errorDiv.textContent = error.message;
-                                errorDiv.classList.remove('hidden');
-                                progressDiv.classList.add('hidden');
-                            } finally {
-                                submitBtn.disabled = false;
-                                submitBtn.textContent = originalText;
-                                globalIsUploading = false;
-                            }
-                        });
-                    } else {
-                        console.log('ℹ️ Contract form not found (contract already uploaded or admin user)');
+
+                const app = document.getElementById('app');
+
+                if (is2FAMode) {
+                    console.log('📱 2FA mode active - showing 2FA form');
+                    app.innerHTML = RENDERING.renderAuthPage('2fa');
+
+                    const form2FA = document.getElementById('form2FA');
+                    if (form2FA) {
+                        form2FA.onsubmit = TFA.handle2FASubmit;
+                        console.log('✅ 2FA form handler attached immediately');
                     }
-                } else {
-                    console.log('ℹ️ Admin user - no contract form needed');
-                }
-                
-                isRendering = false;
-                return;
-            } else if (currentUser && !userProfile) {
-                profileLoadAttempts++;
-                
-                if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
-                    console.error('❌ Failed to load profile after max attempts');
-                    profileLoadAttempts = 0;
-                    supabase.auth.signOut();
-                    currentPage = 'landing';
+                    document.getElementById('code2fa')?.focus();
                     isRendering = false;
+                    return;
+                }
+
+                if (isPasswordRecoveryMode && currentPage === 'change-password') {
+                    console.log('🔑 Password recovery mode - showing change password form');
+                    app.innerHTML = RENDERING.renderAuthPage('change-password');
+                    setTimeout(() => handleChangePassword(), 500);
+                    isRendering = false;
+                    return;
+                }
+
+                if (currentUser && userProfile) {
+                    console.log('✅ User connected with profile, showing dashboard');
+                    currentPage = 'dashboard';
+                    window.currentPage = 'dashboard';
+                    app.innerHTML = RENDERING.renderDashboard();
+                    await DASHBOARD.loadDashboardContent();
+
+                    if (userProfile.role !== 'admin') {
+                        const contractForm = document.getElementById('contractForm');
+                        if (contractForm) {
+                            console.log('✅ Contract form found, attaching submit handler');
+
+                            contractForm.addEventListener('submit', async (e) => {
+                                e.preventDefault();
+
+                                if (globalIsUploading) {
+                                    console.log('⚠️ Upload already in progress, ignoring duplicate submit');
+                                    return;
+                                }
+
+                                globalIsUploading = true;
+                                console.log('📄 Starting contract upload...');
+
+                                const submitBtn = document.getElementById('contractSubmitBtn');
+                                const errorDiv = document.getElementById('uploadError');
+                                const progressDiv = document.getElementById('uploadProgress');
+                                const originalText = submitBtn.textContent;
+
+                                submitBtn.disabled = true;
+                                submitBtn.textContent = 'Upload en cours...';
+                                errorDiv.classList.add('hidden');
+                                progressDiv.classList.remove('hidden');
+                                progressDiv.textContent = '⏳ Préparation du fichier...';
+
+                                try {
+                                    const fileInput = document.getElementById('contractFile');
+                                    const file = fileInput.files[0];
+
+                                    if (!file) {
+                                        throw new Error('Veuillez sélectionner un fichier');
+                                    }
+                                    if (file.type !== 'application/pdf') {
+                                        throw new Error('Seuls les fichiers PDF sont acceptés');
+                                    }
+                                    const maxSize = 10 * 1024 * 1024;
+                                    if (file.size > maxSize) {
+                                        throw new Error('Le fichier est trop volumineux. Taille maximum : 10MB');
+                                    }
+
+                                    console.log('📄 File validated:', file.name, 'Size:', file.size, 'bytes');
+
+                                    progressDiv.textContent = '⏳ Téléchargement vers le serveur...';
+
+                                    const fileName = currentUser.id + '_' + Date.now() + '_' + file.name;
+                                    console.log('📄 Uploading to Storage with name:', fileName);
+
+                                    const { data: { session } } = await supabase.auth.getSession();
+                                    if (!session) {
+                                        throw new Error('Session expirée, veuillez vous reconnecter');
+                                    }
+
+                                    const uploadUrl = SUPABASE_URL + '/storage/v1/object/contracts/' + fileName;
+                                    console.log('🚀 Uploading via REST API to:', uploadUrl);
+
+                                    const uploadResponse = await fetch(uploadUrl, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Authorization': 'Bearer ' + session.access_token,
+                                            'Content-Type': file.type,
+                                            'x-upsert': 'false'
+                                        },
+                                        body: file
+                                    });
+
+                                    if (!uploadResponse.ok) {
+                                        const errorText = await uploadResponse.text();
+                                        console.error('❌ Upload failed:', uploadResponse.status, errorText);
+                                        throw new Error('Erreur d\'upload: ' + uploadResponse.status + ' - ' + errorText);
+                                    }
+
+                                    const uploadData = await uploadResponse.json();
+                                    console.log('✅ File uploaded successfully to Storage');
+                                    console.log('📝 Upload response:', uploadData);
+
+                                    progressDiv.textContent = '⏳ Mise à jour de votre profil...';
+
+                                    const { error: updateError } = await supabase.from('profiles').update({
+                                        contract_path: fileName,
+                                        contract_status: 'signed',
+                                        contract_file_url: fileName
+                                    }).eq('id', currentUser.id);
+
+                                    if (updateError) {
+                                        console.error('❌ Error updating profile:', updateError);
+                                        throw new Error('Erreur de mise à jour : ' + updateError.message);
+                                    }
+
+                                    console.log('✅ Profile updated successfully with contract_path:', fileName);
+
+                                    try {
+                                        console.log('📧 Sending email notification...');
+                                        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-email-notification', {
+                                            body: {
+                                                referrerName: userProfile.name || 'Inconnu',
+                                                referrerEmail: currentUser.email,
+                                                contractPath: fileName
+                                            }
+                                        });
+                                        if (emailError) {
+                                            console.error('❌ Email notification error:', emailError);
+                                        } else {
+                                            console.log('✅ Email notification sent:', emailData);
+                                        }
+                                    } catch (emailErr) {
+                                        console.error('❌ Email notification exception:', emailErr);
+                                    }
+
+                                    alert('✅ Contrat uploadé avec succès !');
+                                    await loadUserProfile();
+                                    globalIsUploading = false;
+                                    render();
+                                } catch (error) {
+                                    console.error('❌ Upload exception:', error);
+                                    errorDiv.textContent = error.message;
+                                    errorDiv.classList.remove('hidden');
+                                    progressDiv.classList.add('hidden');
+                                } finally {
+                                    submitBtn.disabled = false;
+                                    submitBtn.textContent = originalText;
+                                    globalIsUploading = false;
+                                }
+                            });
+                        } else {
+                            console.log('ℹ️ Contract form not found (contract already uploaded or admin user)');
+                        }
+                    } else {
+                        console.log('ℹ️ Admin user - no contract form needed');
+                    }
+
+                    isRendering = false;
+                    return;
+                } else if (currentUser && !userProfile) {
+                    profileLoadAttempts++;
+
+                    if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
+                        console.error('❌ Failed to load profile after max attempts');
+                        profileLoadAttempts = 0;
+                        supabase.auth.signOut();
+                        currentPage = 'landing';
+                        isRendering = false;
+                        render();
+                        return;
+                    }
+
+                    console.log('⏳ User connected but no profile, waiting... (attempt ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')');
+                    app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement de votre profil... (tentative ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')</div></div></div>';
+
+                    isRendering = false;
+
+                    setTimeout(() => {
+                        loadUserProfile().then(() => render());
+                    }, profileLoadAttempts * 1000);
+                    return;
+                } else if (currentPage === 'auth-login') {
+                    console.log('🔐 Rendering login page');
+                    app.innerHTML = RENDERING.renderAuthPage('login');
+                    setTimeout(() => {
+                        console.log('⏱️ Attempting to attach login handler');
+                        handleAuth('login');
+                    }, 500);
+                } else if (currentPage === 'auth-signup') {
+                    console.log('📝 Rendering signup page');
+                    app.innerHTML = RENDERING.renderAuthPage('signup');
+                    setTimeout(() => {
+                        console.log('⏱️ Attempting to attach signup handler');
+                        handleAuth('signup');
+
+                        if (window.VALIDATION && window.VALIDATION.attachPasswordValidation) {
+                            window.VALIDATION.attachPasswordValidation();
+                            console.log('✅ Password validation attached in signup render');
+                        }
+                    }, 500);
+                } else if (currentPage === 'auth-reset') {
+                    console.log('🔑 Rendering reset page');
+                    app.innerHTML = RENDERING.renderAuthPage('reset');
+                    setTimeout(() => handleReset(), 500);
+                } else if (currentPage === 'change-password') {
+                    console.log('🔑 Rendering change password page');
+                    app.innerHTML = RENDERING.renderAuthPage('change-password');
+                    setTimeout(() => handleChangePassword(), 500);
+                } else {
+                    console.log('🏠 Rendering landing page');
+                    app.innerHTML = RENDERING.renderLandingPage();
+                }
+
+                isRendering = false;
+            }
+
+            window.showAddLeadForm = LEADS.showAddLeadForm;
+            window.closeAddLeadModal = LEADS.closeAddLeadModal;
+            window.addLead = LEADS.addLead;
+            window.updateLeadStatus = LEADS.updateLeadStatus;
+            window.markAsSold = LEADS.markAsSold;
+            window.renderAddLeadModal = LEADS.renderAddLeadModal;
+            window.togglePasswordVisibility = VALIDATION.togglePasswordVisibility;
+            window.validateName = VALIDATION.validateName;
+            window.validatePhone = VALIDATION.validatePhone;
+            window.validateEmail = VALIDATION.validateEmail;
+            window.validatePassword = VALIDATION.validatePassword;
+            window.validateConfirmPassword = VALIDATION.validateConfirmPassword;
+            window.checkFormValidity = VALIDATION.checkFormValidity;
+            window.prefillTestData = UTILS.prefillTestData;
+            window.render = render;
+            window.loadDashboardContent = DASHBOARD.loadDashboardContent;
+            window.handleChangePassword = handleChangePassword;
+            window.downloadContractTemplate = UTILS.downloadContractTemplate;
+            window.checkPhoneExists = TFA.checkPhoneExists;
+            window.handle2FASubmit = TFA.handle2FASubmit;
+            window.resend2FACode = TFA.resend2FACode;
+            window.signInWithGoogle = signInWithGoogle;
+            window.signInWithApple = signInWithApple;
+            window.showOAuthWarning = showOAuthWarning;
+            window.closeOAuthWarning = closeOAuthWarning;
+            window.proceedWithOAuth = proceedWithOAuth;
+            window.toggleMobileMenu = UTILS.toggleMobileMenu;
+            window.showLogin = UTILS.showLogin;
+            window.showSignup = UTILS.showSignup;
+            window.showReset = UTILS.showReset;
+            window.backToHome = UTILS.backToHome;
+
+            window.backTo2FASignup = function() {
+                console.log('🔙 Back to signup from 2FA');
+                is2FAMode = false;
+                window.is2FAMode = false;
+                tempPhone = null;
+                window.tempPhone = null;
+                pendingSignupId = null;
+                window.pendingSignupId = null;
+                currentPage = 'auth-signup';
+                window.currentPage = 'auth-signup';
+                render();
+            };
+
+            window.renderLandingPage = RENDERING.renderLandingPage;
+            window.renderAuthPage = RENDERING.renderAuthPage;
+            window.renderDashboard = RENDERING.renderDashboard;
+            window.logout = logout;
+
+            console.log('⏳ Displaying initial loader');
+            document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement...</div></div></div>';
+
+            supabase.auth.onAuthStateChange(async (event, session) => {
+                console.log('🔔 Auth state changed:', event);
+
+                if (isSignupInProgress && event !== 'SIGNED_IN') {
+                    console.log('⚠️ Ignoring event during signup process:', event);
+                    return;
+                }
+
+                if (event === lastAuthEvent && event === 'TOKEN_REFRESHED') {
+                    console.log('⏭️ Skipping duplicate TOKEN_REFRESHED event');
+                    return;
+                }
+                lastAuthEvent = event;
+
+                if (event === 'PASSWORD_RECOVERY') {
+                    console.log('🔑 Password recovery detected - blocking auto-login');
+                    isPasswordRecoveryMode = true;
+                    currentPage = 'change-password';
+                    window.currentPage = 'change-password';
+                    currentUser = session?.user || null;
+                    window.currentUser = currentUser;
                     render();
                     return;
                 }
-                
-                console.log(`⏳ User connected but no profile, waiting... (attempt ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})`);
-                app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement de votre profil... (tentative ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')</div></div></div>';
-                
-                isRendering = false;
-                
-                setTimeout(() => {
-                    loadUserProfile().then(() => render());
-                }, profileLoadAttempts * 1000);
-                return;
-            } else if (currentPage === 'auth-login') {
-                console.log('🔐 Rendering login page');
-                app.innerHTML = RENDERING.renderAuthPage('login');
-                setTimeout(() => {
-                    console.log('⏱️ Attempting to attach login handler');
-                    handleAuth('login');
-                }, 500);
-            } else if (currentPage === 'auth-signup') {
-                console.log('📝 Rendering signup page');
-                app.innerHTML = RENDERING.renderAuthPage('signup');
-                setTimeout(() => {
-                    console.log('⏱️ Attempting to attach signup handler');
-                    handleAuth('signup');
-                    
-                    if (window.VALIDATION && window.VALIDATION.attachPasswordValidation) {
-                        window.VALIDATION.attachPasswordValidation();
-                        console.log('✅ Password validation attached in signup render');
-                    }
-                }, 500);
-            } else if (currentPage === 'auth-reset') {
-                console.log('🔑 Rendering reset page');
-                app.innerHTML = RENDERING.renderAuthPage('reset');
-                setTimeout(() => handleReset(), 500);
-            } else if (currentPage === 'change-password') {
-                console.log('🔑 Rendering change password page');
-                app.innerHTML = RENDERING.renderAuthPage('change-password');
-                setTimeout(() => handleChangePassword(), 500);
-            } else {
-                console.log('🏠 Rendering landing page');
-                app.innerHTML = RENDERING.renderLandingPage();
-            }
-            
-            isRendering = false;
-        }
-        
-        window.showAddLeadForm = LEADS.showAddLeadForm;
-        window.closeAddLeadModal = LEADS.closeAddLeadModal;
-        window.addLead = LEADS.addLead;
-        window.updateLeadStatus = LEADS.updateLeadStatus;
-        window.markAsSold = LEADS.markAsSold;
-        window.renderAddLeadModal = LEADS.renderAddLeadModal;
-        window.togglePasswordVisibility = VALIDATION.togglePasswordVisibility;
-        window.validateName = VALIDATION.validateName;
-        window.validatePhone = VALIDATION.validatePhone;
-        window.validateEmail = VALIDATION.validateEmail;
-        window.validatePassword = VALIDATION.validatePassword;
-        window.validateConfirmPassword = VALIDATION.validateConfirmPassword;
-        window.checkFormValidity = VALIDATION.checkFormValidity;
-        window.prefillTestData = UTILS.prefillTestData;
-        window.render = render;
-        window.loadDashboardContent = DASHBOARD.loadDashboardContent;
-        window.handleChangePassword = handleChangePassword;
-        window.downloadContractTemplate = UTILS.downloadContractTemplate;
-        window.checkPhoneExists = TFA.checkPhoneExists;
-        window.handle2FASubmit = TFA.handle2FASubmit;
-        window.resend2FACode = TFA.resend2FACode;
-        window.signInWithGoogle = signInWithGoogle;
-        window.signInWithApple = signInWithApple;
-        window.showOAuthWarning = showOAuthWarning;
-        window.closeOAuthWarning = closeOAuthWarning;
-        window.proceedWithOAuth = proceedWithOAuth;
-        window.toggleMobileMenu = UTILS.toggleMobileMenu;
-        window.showLogin = UTILS.showLogin;
-        window.showSignup = UTILS.showSignup;
-        window.showReset = UTILS.showReset;
-        window.backToHome = UTILS.backToHome;
-        
-        window.backTo2FASignup = function() {
-            console.log('🔙 Back to signup from 2FA');
-            is2FAMode = false;
-            window.is2FAMode = false;
-            tempPhone = null;
-            window.tempPhone = null;
-            pendingSignupId = null;
-            window.pendingSignupId = null;
-            currentPage = 'auth-signup';
-            window.currentPage = 'auth-signup';
-            render();
-        };
-        
-        window.renderLandingPage = RENDERING.renderLandingPage;
-        window.renderAuthPage = RENDERING.renderAuthPage;
-        window.renderDashboard = RENDERING.renderDashboard;
-        window.logout = logout;
-        
-        console.log('⏳ Displaying initial loader');
-        document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement...</div></div></div>';
-        
-        // ============================================
-        // ✅ v3.7.0: AUTH STATE CHANGE - FIX OAUTH
-        // ============================================
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            console.log('🔔 Auth state changed:', event);
-            
-            // ✅ Ignorer les événements pendant le signup en cours
-            if (isSignupInProgress && event !== 'SIGNED_IN') {
-                console.log('⚠️ Ignoring event during signup process:', event);
-                return;
-            }
-            
-            // ✅ Ignorer les événements dupliqués
-            if (event === lastAuthEvent && event === 'TOKEN_REFRESHED') {
-                console.log('⏭️ Skipping duplicate TOKEN_REFRESHED event');
-                return;
-            }
-            lastAuthEvent = event;
-            
-            // ✅ Gestion PASSWORD_RECOVERY
-            if (event === 'PASSWORD_RECOVERY') {
-                console.log('🔑 Password recovery detected - blocking auto-login');
-                isPasswordRecoveryMode = true;
-                currentPage = 'change-password';
-                window.currentPage = 'change-password';
+
+                if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
+                    console.log('⚠️ Ignoring event during password recovery:', event);
+                    return;
+                }
+
                 currentUser = session?.user || null;
                 window.currentUser = currentUser;
-                render();
-                return;
-            }
-            
-            if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
-                console.log('⚠️ Ignoring event during password recovery:', event);
-                return;
-            }
-            
-            currentUser = session?.user || null;
-            window.currentUser = currentUser;
-            
-            // ✅ Vérification email confirmé
-            if (currentUser && !currentUser.email_confirmed_at) {
-                console.warn('⚠️ Email not confirmed, signing out');
-                await supabase.auth.signOut();
-                currentUser = null;
-                window.currentUser = null;
-                render();
-                return;
-            }
-            
-            // ✅ v3.7.0 FIX: Charger le profil ET ATTENDRE avant de render
-            if (currentUser) {
-                console.log('👤 User authenticated, loading profile...');
-                
-                try {
-                    const profileLoaded = await loadUserProfile(currentUser);
-                    
-                    if (!profileLoaded) {
-                        console.error('❌ Failed to load profile, signing out');
-                        await supabase.auth.signOut();
-                        currentUser = null;
-                        window.currentUser = null;
-                        userProfile = null;
-                        window.userProfile = null;
-                    }
-                } catch (err) {
-                    console.error('❌ Exception loading profile:', err);
+
+                if (currentUser && !currentUser.email_confirmed_at) {
+                    console.warn('⚠️ Email not confirmed, signing out');
+                    await supabase.auth.signOut();
+                    currentUser = null;
+                    window.currentUser = null;
+                    render();
+                    return;
                 }
-                
-                // ✅ Render APRÈS le chargement du profil
-                render();
-            } else {
-                // Pas de user, render la landing page
-                render();
-            }
-        });
-        
-        // ============================================
-        // CHARGEMENT INITIAL
-        // ============================================
-        console.log('🔍 Getting initial session...');
-        
-        try {
-            const { data: { session }, error } = await supabase.auth.getSession();
-            
-            if (error) {
-                console.warn('⚠️ Session error (ignoring):', error.message);
-            }
 
-            currentUser = session?.user || null;
-            window.currentUser = currentUser;
+                if (currentUser) {
+                    console.log('👤 User authenticated, loading profile...');
 
-            if (currentUser && !currentUser.email_confirmed_at) {
-                console.warn('⚠️ Email not confirmed on init, cleaning session');
-                await supabase.auth.signOut();
-                localStorage.clear();
-                sessionStorage.clear();
-                currentUser = null;
-                window.currentUser = null;
-                render();
-                return;
-            }
+                    try {
+                        const profileLoaded = await loadUserProfile(currentUser);
 
-            if (currentUser) {
-                console.log('👤 Session found, loading profile...');
-                const profileLoaded = await loadUserProfile(currentUser);
+                        if (!profileLoaded) {
+                            console.error('❌ Failed to load profile, signing out');
+                            await supabase.auth.signOut();
+                            currentUser = null;
+                            window.currentUser = null;
+                            userProfile = null;
+                            window.userProfile = null;
+                        }
+                    } catch (err) {
+                        console.error('❌ Exception loading profile:', err);
+                    }
 
-                if (!profileLoaded) {
-                    console.error('❌ Failed to load profile on init, signing out');
+                    render();
+                } else {
+                    render();
+                }
+            });
+
+            console.log('🔍 Getting initial session...');
+
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+
+                if (error) {
+                    console.warn('⚠️ Session error (ignoring):', error.message);
+                }
+
+                currentUser = session?.user || null;
+                window.currentUser = currentUser;
+
+                if (currentUser && !currentUser.email_confirmed_at) {
+                    console.warn('⚠️ Email not confirmed on init, cleaning session');
                     await supabase.auth.signOut();
                     localStorage.clear();
                     sessionStorage.clear();
                     currentUser = null;
                     window.currentUser = null;
-                    userProfile = null;
-                    window.userProfile = null;
+                    render();
+                    return;
                 }
-            }
-        } catch (err) {
-            console.error('❌ Critical error getting session:', err);
-        }
 
-        render();
-        
-        // ✅ Confirmation visuelle si contrat signé
-        setTimeout(() => {
-            if (window.contractJustSigned && currentUser && userProfile) {
-                const confirmationDiv = document.createElement('div');
-                confirmationDiv.innerHTML = `
-                    <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50">
-                        <div class="flex items-center gap-3">
-                            <span class="text-3xl">✅</span>
-                            <div>
-                                <div class="font-bold">Contrat signé avec succès !</div>
-                                <div class="text-sm">Vous pouvez maintenant ajouter des leads</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(confirmationDiv);
-                setTimeout(() => confirmationDiv.remove(), 5000);
-                window.contractJustSigned = false;
+                if (currentUser) {
+                    console.log('👤 Session found, loading profile...');
+                    const profileLoaded = await loadUserProfile(currentUser);
+
+                    if (!profileLoaded) {
+                        console.error('❌ Failed to load profile on init, signing out');
+                        await supabase.auth.signOut();
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        currentUser = null;
+                        window.currentUser = null;
+                        userProfile = null;
+                        window.userProfile = null;
+                    }
+                }
+            } catch (err) {
+                console.error('❌ Critical error getting session:', err);
             }
-        }, 2000);
-    })();
+
+            render();
+
+            setTimeout(() => {
+                if (window.contractJustSigned && currentUser && userProfile) {
+                    const confirmationDiv = document.createElement('div');
+                    confirmationDiv.innerHTML = '<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50"><div class="flex items-center gap-3"><span class="text-3xl">✅</span><div><div class="font-bold">Contrat signé avec succès !</div><div class="text-sm">Vous pouvez maintenant ajouter des leads</div></div></div></div>';
+                    document.body.appendChild(confirmationDiv);
+                    setTimeout(() => confirmationDiv.remove(), 5000);
+                    window.contractJustSigned = false;
+                }
+            }, 2000);
+        })();
     </script>
-<!-- Crisp Chat -->
-<script src="/js/crisp-chat.js"></script>
+    <script src="./js/crisp-chat.js"></script>
 </body>
 </html>
