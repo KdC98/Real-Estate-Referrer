@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Style unifié : dégradé slate/blue comme how-it-works.html -->
+    <!-- Version: 3.7.0 - Fix OAuth single render -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -134,6 +134,13 @@
                 cancel_btn: "Kanselahin"
             }
         };
+        
+        // ============================================
+        // ✅ PROTECTION CONTRE LES RE-RENDERS (v3.7.0)
+        // ============================================
+        let isRendering = false;
+        let lastRenderedState = null;
+        let isLoadingProfile = false;
         
         let currentUser = null;
         let userProfile = null;
@@ -538,6 +545,13 @@
                 return false;
             }
 
+            // ✅ Protection contre les appels multiples
+            if (isLoadingProfile) {
+                console.log('⏳ Profile already loading, skipping...');
+                return false;
+            }
+            isLoadingProfile = true;
+
             try {
                 console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
 
@@ -549,18 +563,25 @@
 
                 if (error && error.code !== 'PGRST116') {
                     console.error('❌ Error loading profile:', error);
-                    alert('Erreur lors du chargement du profil: ' + error.message);
+                    isLoadingProfile = false;
                     return false;
                 }
 
                 let profile = data;
                 if (!profile) {
                     console.log('📝 Profile does not exist, creating it...');
+                    
+                    // Extraire le nom depuis les metadata OAuth
+                    const userName = targetUser.user_metadata?.full_name || 
+                                   targetUser.user_metadata?.name || 
+                                   targetUser.email?.split('@')[0] || 
+                                   '';
+                    
                     const { data: newProfile, error: insertError } = await supabase
                         .from('profiles')
                         .upsert([{
                             id: targetUser.id,
-                            name: targetUser.user_metadata?.name || targetUser.email.split('@')[0],
+                            name: userName,
                             phone: targetUser.user_metadata?.phone || '',
                             email: targetUser.email,
                             role: 'referrer',
@@ -572,11 +593,12 @@
 
                     if (insertError) {
                         console.error('❌ Error creating profile:', insertError);
-                        alert('Erreur lors de la création du profil: ' + insertError.message);
+                        isLoadingProfile = false;
                         return false;
                     }
 
                     profile = newProfile;
+                    console.log('✅ Profile created:', profile);
                 }
 
                 console.log('✅ Profile data retrieved:', profile);
@@ -588,11 +610,12 @@
                 userProfile = profile;
                 window.userProfile = profile;
                 console.log('✅ userProfile set:', userProfile);
+                isLoadingProfile = false;
                 return true;
 
             } catch (err) {
                 console.error('❌ Exception loading profile:', err);
-                alert('Exception lors du chargement du profil: ' + err.message);
+                isLoadingProfile = false;
                 return false;
             }
         }
@@ -637,7 +660,34 @@
             }
         }
         
-        async function render() {
+        // ============================================
+        // ✅ RENDER AVEC PROTECTION ANTI-DUPLICATES (v3.7.0)
+        // ============================================
+        async function render(force = false) {
+            // Créer un état unique pour comparer
+            const currentState = JSON.stringify({
+                hasUser: !!currentUser,
+                hasProfile: !!userProfile,
+                page: currentPage,
+                is2FA: is2FAMode,
+                isRecovery: isPasswordRecoveryMode
+            });
+            
+            // Protection contre les renders identiques
+            if (!force && currentState === lastRenderedState) {
+                console.log('⏭️ Same state, skipping render');
+                return;
+            }
+            
+            // Protection contre les renders simultanés
+            if (isRendering && !force) {
+                console.log('⏳ Render already in progress, skipping...');
+                return;
+            }
+            
+            isRendering = true;
+            lastRenderedState = currentState;
+            
             console.log('🎨 RENDER called');
             console.log('- currentUser:', !!currentUser);
             console.log('- userProfile:', !!userProfile);
@@ -681,19 +731,18 @@
             
             const app = document.getElementById('app');
             
-            // ✅ MODE 2FA - CORRIGÉ: Handler attaché IMMÉDIATEMENT (pas de setTimeout)
+            // ✅ MODE 2FA
             if (is2FAMode) {
                 console.log('📱 2FA mode active - showing 2FA form');
                 app.innerHTML = RENDERING.renderAuthPage('2fa');
                 
-                // ✅ Attacher le handler IMMÉDIATEMENT
                 const form2FA = document.getElementById('form2FA');
                 if (form2FA) {
                     form2FA.onsubmit = TFA.handle2FASubmit;
                     console.log('✅ 2FA form handler attached immediately');
                 }
-                // Auto-focus sur le champ code
                 document.getElementById('code2fa')?.focus();
+                isRendering = false;
                 return;
             }
             
@@ -701,6 +750,7 @@
                 console.log('🔑 Password recovery mode - showing change password form');
                 app.innerHTML = RENDERING.renderAuthPage('change-password');
                 setTimeout(() => handleChangePassword(), 500);
+                isRendering = false;
                 return;
             }
             
@@ -824,7 +874,7 @@
                                 alert('✅ Contrat uploadé avec succès !');
                                 await loadUserProfile();
                                 globalIsUploading = false;
-                                render();
+                                render(true);
                             } catch (error) {
                                 console.error('❌ Upload exception:', error);
                                 errorDiv.textContent = error.message;
@@ -842,6 +892,9 @@
                 } else {
                     console.log('ℹ️ Admin user - no contract form needed');
                 }
+                
+                isRendering = false;
+                return;
             } else if (currentUser && !userProfile) {
                 profileLoadAttempts++;
                 
@@ -850,7 +903,8 @@
                     profileLoadAttempts = 0;
                     supabase.auth.signOut();
                     currentPage = 'landing';
-                    render();
+                    isRendering = false;
+                    render(true);
                     return;
                 }
                 
@@ -858,8 +912,10 @@
                 app.innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement de votre profil... (tentative ' + profileLoadAttempts + '/' + MAX_PROFILE_LOAD_ATTEMPTS + ')</div></div></div>';
                 
                 setTimeout(() => {
-                    loadUserProfile().then(() => render());
+                    loadUserProfile().then(() => render(true));
                 }, profileLoadAttempts * 1000);
+                
+                isRendering = false;
                 return;
             } else if (currentPage === 'auth-login') {
                 console.log('🔐 Rendering login page');
@@ -892,6 +948,8 @@
                 console.log('🏠 Rendering landing page');
                 app.innerHTML = RENDERING.renderLandingPage();
             }
+            
+            isRendering = false;
         }
         
         window.showAddLeadForm = LEADS.showAddLeadForm;
@@ -936,7 +994,7 @@
             window.pendingSignupId = null;
             currentPage = 'auth-signup';
             window.currentPage = 'auth-signup';
-            render();
+            render(true);
         };
         
         window.renderLandingPage = RENDERING.renderLandingPage;
@@ -947,14 +1005,19 @@
         console.log('⏳ Displaying initial loader');
         document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement...</div></div></div>';
         
+        // ============================================
+        // ✅ AUTH STATE CHANGE - CORRIGÉ (v3.7.0)
+        // ============================================
         supabase.auth.onAuthStateChange(async (event, session) => {
             console.log('🔔 Auth state changed:', event);
             
+            // Ignorer pendant l'inscription
             if (isSignupInProgress && event !== 'SIGNED_IN') {
                 console.log('⚠️ Ignoring event during signup process:', event);
                 return;
             }
             
+            // Gestion du mode recovery
             if (event === 'PASSWORD_RECOVERY') {
                 console.log('🔑 Password recovery detected - blocking auto-login');
                 isPasswordRecoveryMode = true;
@@ -962,12 +1025,18 @@
                 window.currentPage = 'change-password';
                 currentUser = session?.user || null;
                 window.currentUser = currentUser;
-                render();
+                render(true);
                 return;
             }
             
             if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') {
                 console.log('⚠️ Ignoring event during password recovery:', event);
+                return;
+            }
+            
+            // ✅ CORRIGÉ: Ignorer TOKEN_REFRESHED si déjà sur le dashboard
+            if (event === 'TOKEN_REFRESHED' && currentPage === 'dashboard' && userProfile) {
+                console.log('⏭️ Ignoring TOKEN_REFRESHED, already on dashboard');
                 return;
             }
             
@@ -979,39 +1048,50 @@
                 await supabase.auth.signOut();
                 currentUser = null;
                 window.currentUser = null;
+                render(true);
+                return;
             }
             
             if (currentUser) {
                 console.log('👤 User authenticated, loading profile...');
                 
-                loadUserProfile(currentUser).then(profileLoaded => {
-                    if (!profileLoaded) {
-                        console.error('❌ Failed to load profile, signing out');
-                        supabase.auth.signOut();
-                        currentUser = null;
-                        window.currentUser = null;
-                        userProfile = null;
-                        window.userProfile = null;
-                    }
-                    render();
-                }).catch(err => {
-                    console.error('❌ Exception loading profile:', err);
-                    render();
-                });
+                // ✅ CORRIGÉ: Attendre le chargement du profil AVANT de render
+                const profileLoaded = await loadUserProfile(currentUser);
+                
+                if (!profileLoaded) {
+                    console.error('❌ Failed to load profile, signing out');
+                    await supabase.auth.signOut();
+                    currentUser = null;
+                    window.currentUser = null;
+                    userProfile = null;
+                    window.userProfile = null;
+                }
+                
+                // ✅ CORRIGÉ: Un seul render APRÈS le chargement du profil
+                render(true);
+                return; // ✅ IMPORTANT: Ne pas continuer vers le render() en bas
+            } else {
+                // Pas d'utilisateur connecté
+                userProfile = null;
+                window.userProfile = null;
+                currentPage = 'landing';
+                window.currentPage = 'landing';
             }
             
-            render();
+            render(true);
         });
         
+        // ============================================
+        // ✅ CHARGEMENT INITIAL - CORRIGÉ (v3.7.0)
+        // ============================================
         console.log('🔍 Getting initial session...');
         
-        supabase.auth.getSession().then(async ({ data: { session }, error }) => {
+        try {
+            const { data: { session }, error } = await supabase.auth.getSession();
+            
             if (error) {
-                console.error('❌ Session error:', error);
-                currentUser = null;
-                window.currentUser = null;
-                render();
-                return;
+                console.warn('⚠️ Session error (ignoring):', error.message);
+                // Continue sans bloquer
             }
 
             currentUser = session?.user || null;
@@ -1024,7 +1104,7 @@
                 sessionStorage.clear();
                 currentUser = null;
                 window.currentUser = null;
-                render();
+                await render(true);
                 return;
             }
 
@@ -1043,12 +1123,14 @@
                     window.userProfile = null;
                 }
             }
+        } catch (err) {
+            console.error('❌ Critical error during init:', err);
+        }
 
-            render();
-        });
-
-        render();
+        // Premier render
+        await render(true);
         
+        // Confirmation contrat signé
         setTimeout(() => {
             if (window.contractJustSigned && currentUser && userProfile) {
                 const confirmationDiv = document.createElement('div');
@@ -1068,6 +1150,8 @@
                 window.contractJustSigned = false;
             }
         }, 2000);
+        
+        console.log('🚀 Application initialized successfully (v3.7.0)');
     })();
     </script>
 <!-- Crisp Chat -->
