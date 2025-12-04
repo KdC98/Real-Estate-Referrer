@@ -6,8 +6,8 @@
 // - Pages d'authentification
 // - Dashboard (admin et referrer)
 // ============================================
-// Version: 3.9.0 - Blocage si profil incomplet
-// Date: 2 décembre 2025
+// Version: 3.10.0 - RGPD email opt-in checkbox
+// Date: 4 décembre 2025
 // ============================================
 
 /**
@@ -215,8 +215,46 @@ export function renderLandingPage() {
  */
 export function renderAuthPage(mode) {
     const t = (key) => window.i18next.t(key);
+    const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
     
     let title, subtitle, formContent, buttonText, linkText, linkAction;
+    
+    // ✅ v3.10.0: Traductions RGPD opt-in email (8 langues)
+    const emailOptInTranslations = {
+        fr: {
+            label: "J'accepte de recevoir des notifications par email",
+            description: "Mises à jour sur vos leads, commissions et opportunités. Vous pourrez vous désabonner à tout moment."
+        },
+        en: {
+            label: "I agree to receive email notifications",
+            description: "Updates about your leads, commissions and opportunities. You can unsubscribe at any time."
+        },
+        ar: {
+            label: "أوافق على تلقي إشعارات البريد الإلكتروني",
+            description: "تحديثات حول العملاء المحتملين والعمولات والفرص. يمكنك إلغاء الاشتراك في أي وقت."
+        },
+        ru: {
+            label: "Я согласен получать уведомления по электронной почте",
+            description: "Обновления о ваших лидах, комиссиях и возможностях. Вы можете отписаться в любое время."
+        },
+        hi: {
+            label: "मैं ईमेल सूचनाएं प्राप्त करने के लिए सहमत हूं",
+            description: "आपके लीड्स, कमीशन और अवसरों के बारे में अपडेट। आप किसी भी समय सदस्यता समाप्त कर सकते हैं।"
+        },
+        ur: {
+            label: "میں ای میل نوٹیفیکیشنز حاصل کرنے پر راضی ہوں",
+            description: "آپ کے لیڈز، کمیشنز اور مواقع کے بارے میں اپڈیٹس۔ آپ کسی بھی وقت ان سبسکرائب کر سکتے ہیں۔"
+        },
+        zh: {
+            label: "我同意接收电子邮件通知",
+            description: "关于您的线索、佣金和机会的更新。您可以随时取消订阅。"
+        },
+        tl: {
+            label: "Sumasang-ayon akong tumanggap ng mga email notification",
+            description: "Mga update tungkol sa iyong leads, commissions at opportunities. Maaari kang mag-unsubscribe anumang oras."
+        }
+    };
+    const emailOptIn = emailOptInTranslations[currentLang] || emailOptInTranslations['en'];
     
     // Configuration selon le mode
     if (mode === 'login') {
@@ -239,7 +277,6 @@ export function renderAuthPage(mode) {
     else if (mode === '2fa') {
         const tempPhone = window.tempPhone || '';
         const maskedPhone = tempPhone ? (tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4)) : '***';
-        const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
         
         // ✅ Traductions directes pour éviter les problèmes d'interpolation
         const twoFactorTranslations = {
@@ -595,6 +632,23 @@ export function renderAuthPage(mode) {
                                 <span>${t('auth:password_validation.passwords_match')}</span>
                             </div>
                             <div id="passwordMatchIndicator" class="hidden mt-2"></div>
+                        </div>
+                    ` : ''}
+                    
+                    ${mode === 'signup' ? `
+                        <!-- ✅ v3.10.0: RGPD Email Opt-in Checkbox -->
+                        <div class="mt-4 p-4 bg-slate-800/30 border border-white/10 rounded-xl">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    id="emailOptIn"
+                                    class="w-5 h-5 mt-0.5 text-yellow-500 bg-slate-700 border-gray-500 rounded focus:ring-yellow-500 focus:ring-2"
+                                >
+                                <div>
+                                    <span class="text-white font-medium">${emailOptIn.label}</span>
+                                    <p class="text-blue-300 text-sm mt-1">${emailOptIn.description}</p>
+                                </div>
+                            </label>
                         </div>
                     ` : ''}
                     
