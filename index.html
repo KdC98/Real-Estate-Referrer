@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.7.4 - Fix OAuth: don't clean hash before Supabase reads it -->
+    <!-- Version: 3.7.5 - RGPD email opt-in support -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -297,11 +297,16 @@
                                 console.log('📱 Sending SMS code BEFORE creating account...');
                                 const currentLang = i18next.language || 'fr';
 
+                                // ✅ v3.7.5: Capture email opt-in pour RGPD
+                                const emailOptIn = document.getElementById('emailOptIn')?.checked || false;
+                                console.log('📧 Email opt-in preference:', emailOptIn);
+
                                 const pendingSignupData = {
                                     email: email,
                                     password: password,
                                     name: name,
-                                    phone: fullPhone
+                                    phone: fullPhone,
+                                    email_opt_in: emailOptIn
                                 };
 
                                 const smsResult = await TFA.send2FACode(fullPhone, currentLang, pendingSignupData);
