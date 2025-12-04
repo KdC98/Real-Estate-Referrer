@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.7.3 - Fix OAuth one-click with return detection -->
+    <!-- Version: 3.7.4 - Fix OAuth: don't clean hash before Supabase reads it -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,13 +29,13 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.7.3...');
+            console.log('🚀 App starting v3.7.4...');
             
-            // ✅ v3.7.3: Détecter retour OAuth AVANT tout
+            // ✅ v3.7.4: Détecter retour OAuth MAIS NE PAS toucher au hash!
             const hashParams = window.location.hash;
             const isOAuthReturn = hashParams.includes('access_token') || hashParams.includes('error');
             if (isOAuthReturn) {
-                console.log('🔄 OAuth return detected in URL hash');
+                console.log('🔄 OAuth return detected - letting Supabase handle tokens');
             }
             
             await i18next
@@ -925,7 +925,7 @@
             window.renderDashboard = RENDERING.renderDashboard;
             window.logout = logout;
 
-            // ✅ v3.7.3: Afficher loader avec message approprié
+            // ✅ v3.7.4: Afficher loader avec message approprié
             if (isOAuthReturn) {
                 console.log('⏳ Displaying OAuth return loader');
                 document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4 animate-spin">🔄</div><div class="text-xl text-blue-200">Connexion en cours...</div><div class="text-sm text-blue-300 mt-2">Veuillez patienter</div></div></div>';
@@ -934,7 +934,7 @@
                 document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement...</div></div></div>';
             }
 
-            // ✅ v3.7.3: onAuthStateChange gère TOUT le flux d'authentification
+            // ✅ v3.7.4: onAuthStateChange gère TOUT le flux d'authentification
             supabase.auth.onAuthStateChange(async (event, session) => {
                 console.log('🔔 Auth state changed:', event, session ? 'with session' : 'no session');
 
@@ -997,19 +997,24 @@
                     }
                 }
 
-                // ✅ v3.7.3: Marquer le chargement initial comme terminé
+                // ✅ v3.7.4: Nettoyer le hash APRÈS que Supabase ait traité les tokens
+                if (window.location.hash && window.location.hash.includes('access_token')) {
+                    console.log('🧹 Cleaning URL hash after auth processing');
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }
+                }
+
                 initialLoadComplete = true;
                 console.log('✅ Auth state change handled, calling render...');
                 render();
             });
 
-            // ✅ v3.7.3: Si retour OAuth, NE PAS appeler getSession() - laisser onAuthStateChange gérer
+            // ✅ v3.7.4: Si retour OAuth, NE PAS appeler getSession() - laisser onAuthStateChange gérer
             if (isOAuthReturn) {
                 console.log('🔄 OAuth return: waiting for onAuthStateChange to handle session...');
-                // Nettoyer le hash de l'URL pour éviter les problèmes au refresh
-                if (window.history && window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                }
+                // NE PAS nettoyer le hash ici - Supabase en a besoin!
+                // Le hash sera nettoyé dans onAuthStateChange après traitement
             } else {
                 // Pas de retour OAuth, charger la session normalement
                 console.log('🔍 Getting initial session...');
