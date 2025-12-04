@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.7.1 - Fix OAuth one-click login (clean rebuild) -->
+    <!-- Version: 3.7.3 - Fix OAuth one-click with return detection -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,14 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.7.1...');
+            console.log('🚀 App starting v3.7.3...');
+            
+            // ✅ v3.7.3: Détecter retour OAuth AVANT tout
+            const hashParams = window.location.hash;
+            const isOAuthReturn = hashParams.includes('access_token') || hashParams.includes('error');
+            if (isOAuthReturn) {
+                console.log('🔄 OAuth return detected in URL hash');
+            }
             
             await i18next
                 .use(i18nextHttpBackend)
@@ -158,6 +165,7 @@
 
             let isRendering = false;
             let lastAuthEvent = null;
+            let initialLoadComplete = false;
 
             window.currentUser = null;
             window.userProfile = null;
@@ -917,11 +925,18 @@
             window.renderDashboard = RENDERING.renderDashboard;
             window.logout = logout;
 
-            console.log('⏳ Displaying initial loader');
-            document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement...</div></div></div>';
+            // ✅ v3.7.3: Afficher loader avec message approprié
+            if (isOAuthReturn) {
+                console.log('⏳ Displaying OAuth return loader');
+                document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4 animate-spin">🔄</div><div class="text-xl text-blue-200">Connexion en cours...</div><div class="text-sm text-blue-300 mt-2">Veuillez patienter</div></div></div>';
+            } else {
+                console.log('⏳ Displaying initial loader');
+                document.getElementById('app').innerHTML = '<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement...</div></div></div>';
+            }
 
+            // ✅ v3.7.3: onAuthStateChange gère TOUT le flux d'authentification
             supabase.auth.onAuthStateChange(async (event, session) => {
-                console.log('🔔 Auth state changed:', event);
+                console.log('🔔 Auth state changed:', event, session ? 'with session' : 'no session');
 
                 if (isSignupInProgress && event !== 'SIGNED_IN') {
                     console.log('⚠️ Ignoring event during signup process:', event);
@@ -967,6 +982,7 @@
 
                     try {
                         const profileLoaded = await loadUserProfile(currentUser);
+                        console.log('📋 Profile load result:', profileLoaded);
 
                         if (!profileLoaded) {
                             console.error('❌ Failed to load profile, signing out');
@@ -979,56 +995,72 @@
                     } catch (err) {
                         console.error('❌ Exception loading profile:', err);
                     }
-
-                    render();
-                } else {
-                    render();
                 }
+
+                // ✅ v3.7.3: Marquer le chargement initial comme terminé
+                initialLoadComplete = true;
+                console.log('✅ Auth state change handled, calling render...');
+                render();
             });
 
-            console.log('🔍 Getting initial session...');
-
-            try {
-                const { data: { session }, error } = await supabase.auth.getSession();
-
-                if (error) {
-                    console.warn('⚠️ Session error (ignoring):', error.message);
+            // ✅ v3.7.3: Si retour OAuth, NE PAS appeler getSession() - laisser onAuthStateChange gérer
+            if (isOAuthReturn) {
+                console.log('🔄 OAuth return: waiting for onAuthStateChange to handle session...');
+                // Nettoyer le hash de l'URL pour éviter les problèmes au refresh
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
                 }
+            } else {
+                // Pas de retour OAuth, charger la session normalement
+                console.log('🔍 Getting initial session...');
 
-                currentUser = session?.user || null;
-                window.currentUser = currentUser;
+                try {
+                    const { data: { session }, error } = await supabase.auth.getSession();
+                    console.log('📋 Session result:', session ? 'User found: ' + session.user.email : 'No user');
 
-                if (currentUser && !currentUser.email_confirmed_at) {
-                    console.warn('⚠️ Email not confirmed on init, cleaning session');
-                    await supabase.auth.signOut();
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    currentUser = null;
-                    window.currentUser = null;
-                    render();
-                    return;
-                }
+                    if (error) {
+                        console.warn('⚠️ Session error (ignoring):', error.message);
+                    }
 
-                if (currentUser) {
-                    console.log('👤 Session found, loading profile...');
-                    const profileLoaded = await loadUserProfile(currentUser);
+                    currentUser = session?.user || null;
+                    window.currentUser = currentUser;
 
-                    if (!profileLoaded) {
-                        console.error('❌ Failed to load profile on init, signing out');
+                    if (currentUser && !currentUser.email_confirmed_at) {
+                        console.warn('⚠️ Email not confirmed on init, cleaning session');
                         await supabase.auth.signOut();
                         localStorage.clear();
                         sessionStorage.clear();
                         currentUser = null;
                         window.currentUser = null;
-                        userProfile = null;
-                        window.userProfile = null;
+                        render();
+                        return;
                     }
-                }
-            } catch (err) {
-                console.error('❌ Critical error getting session:', err);
-            }
 
-            render();
+                    if (currentUser) {
+                        console.log('👤 Session found, loading profile...');
+                        const profileLoaded = await loadUserProfile(currentUser);
+                        console.log('📋 Profile loaded:', profileLoaded);
+
+                        if (!profileLoaded) {
+                            console.error('❌ Failed to load profile on init, signing out');
+                            await supabase.auth.signOut();
+                            localStorage.clear();
+                            sessionStorage.clear();
+                            currentUser = null;
+                            window.currentUser = null;
+                            userProfile = null;
+                            window.userProfile = null;
+                        }
+                    }
+                } catch (err) {
+                    console.error('❌ Critical error getting session:', err);
+                }
+
+                initialLoadComplete = true;
+                console.log('🏠 Calling initial render...');
+                render();
+                console.log('✅ Initial render complete');
+            }
 
             setTimeout(() => {
                 if (window.contractJustSigned && currentUser && userProfile) {
