@@ -1,7 +1,7 @@
 // =====================================================
 // 2FA MODULE - Vérification SMS avec Spinner + Email Bienvenue
-// Version: 2.5.0 - 3 décembre 2025
-// CORRIGÉ: Message de succès traduit dans toutes les langues
+// Version: 2.6.0 - 4 décembre 2025
+// AJOUT: Support RGPD email_opt_in
 // =====================================================
 
 // Fonction pour vérifier si un numéro de téléphone existe déjà
@@ -46,6 +46,8 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
         // ✅ ÉTAPE 1: Sauvegarder le pending signup
         if (pendingSignupData) {
             console.log('💾 Saving pending signup data...');
+            // ✅ v2.6.0: Log email_opt_in pour debug RGPD
+            console.log('📧 Email opt-in preference:', pendingSignupData.email_opt_in || false);
             
             const expiresAt = new Date();
             expiresAt.setMinutes(expiresAt.getMinutes() + 10);
@@ -69,12 +71,14 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
                 
                 const newAttempts = lastAttempt > hourAgo ? existing.attempts + 1 : 1;
                 
+                // ✅ v2.6.0: Inclure email_opt_in dans l'update
                 const { error: updateError } = await supabase
                     .from('pending_signups')
                     .update({
                         email: pendingSignupData.email,
                         password: pendingSignupData.password,
                         name: pendingSignupData.name,
+                        email_opt_in: pendingSignupData.email_opt_in || false,
                         attempts: newAttempts,
                         last_attempt: new Date().toISOString(),
                         expires_at: expiresAt.toISOString()
@@ -88,6 +92,7 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
                     window.pendingSignupId = existing.id;
                 }
             } else {
+                // ✅ v2.6.0: Inclure email_opt_in dans l'insert
                 const { data: newPending, error: insertError } = await supabase
                     .from('pending_signups')
                     .insert({
@@ -95,6 +100,7 @@ export async function send2FACode(phone, lang = 'fr', pendingSignupData = null) 
                         email: pendingSignupData.email,
                         password: pendingSignupData.password,
                         name: pendingSignupData.name,
+                        email_opt_in: pendingSignupData.email_opt_in || false,
                         attempts: 1,
                         last_attempt: new Date().toISOString(),
                         expires_at: expiresAt.toISOString()
@@ -189,7 +195,7 @@ export async function verify2FACode(phone, code) {
             .update({ verified: true })
             .eq('id', verificationData.id);
         
-        // Récupérer les données du pending signup
+        // Récupérer les données du pending signup (inclut email_opt_in)
         const { data: pending, error: fetchError } = await supabase
             .from('pending_signups')
             .select('*')
@@ -200,6 +206,9 @@ export async function verify2FACode(phone, code) {
             console.error('❌ Could not fetch pending signup:', fetchError);
             return { success: false, error: 'Données d\'inscription non trouvées' };
         }
+        
+        // ✅ v2.6.0: Log email_opt_in récupéré
+        console.log('📧 Retrieved email_opt_in from pending:', pending.email_opt_in);
         
         return { 
             success: true, 
@@ -245,7 +254,7 @@ function getSuccessMessage() {
 }
 
 // =====================================================
-// HANDLER 2FA SUBMIT - AVEC SPINNER + EMAIL BIENVENUE
+// HANDLER 2FA SUBMIT - AVEC SPINNER + EMAIL BIENVENUE + RGPD
 // =====================================================
 export async function handle2FASubmit(e) {
     e.preventDefault();
@@ -316,6 +325,9 @@ export async function handle2FASubmit(e) {
         console.log('✅ Code verified, creating account...');
         
         const pendingData = verifyResult.pendingData;
+        
+        // ✅ v2.6.0: Log email_opt_in avant création compte
+        console.log('📧 Creating account with email_opt_in:', pendingData.email_opt_in || false);
         
         // Créer le compte Supabase
         const { data: signUpData, error: signUpError } = await window.supabase.auth.signUp({
@@ -398,8 +410,12 @@ export async function handle2FASubmit(e) {
         }
         // =====================================================
         
-        // Mettre à jour le profil avec phone_verified = true
+        // =====================================================
+        // ✅ v2.6.0: PROFIL AVEC email_opt_in POUR RGPD
+        // =====================================================
         if (signUpData.user) {
+            console.log('📧 Saving profile with email_opt_in:', pendingData.email_opt_in || false);
+            
             const { error: profileError } = await window.supabase
                 .from('profiles')
                 .upsert({
@@ -409,15 +425,17 @@ export async function handle2FASubmit(e) {
                     email: pendingData.email,
                     role: 'referrer',
                     phone_verified: true,
-                    contract_status: 'pending'
+                    contract_status: 'pending',
+                    email_opt_in: pendingData.email_opt_in || false
                 }, { onConflict: 'id' });
             
             if (profileError) {
                 console.error('❌ Profile update error:', profileError);
             } else {
-                console.log('✅ Profile updated with phone_verified = true');
+                console.log('✅ Profile updated with phone_verified = true AND email_opt_in =', pendingData.email_opt_in || false);
             }
         }
+        // =====================================================
         
         // Supprimer le pending signup
         await window.supabase
@@ -506,7 +524,7 @@ export async function resend2FACode() {
         
         const currentLang = i18next?.language || localStorage.getItem('i18nextLng') || 'fr';
         
-        // Récupérer les données du pending signup
+        // Récupérer les données du pending signup (inclut email_opt_in)
         const { data: pending } = await window.supabase
             .from('pending_signups')
             .select('*')
@@ -517,11 +535,12 @@ export async function resend2FACode() {
             throw new Error('Données d\'inscription non trouvées. Veuillez recommencer.');
         }
         
-        // Renvoyer le code via Edge Function
+        // Renvoyer le code via Edge Function (avec email_opt_in préservé)
         const result = await send2FACode(phone, currentLang, {
             email: pending.email,
             password: pending.password,
-            name: pending.name
+            name: pending.name,
+            email_opt_in: pending.email_opt_in || false
         });
         
         if (result.success) {
