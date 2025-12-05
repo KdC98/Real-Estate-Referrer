@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.12.2 - Fix OAuth first-time login -->
+    <!-- Version: 3.12.4 - Fix OAuth simple wait -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.12.2...');
+            console.log('🚀 App starting v3.12.4...');
             
             // ✅ v3.12.0: Détecter retour OAuth de manière robuste
             const hashParams = window.location.hash;
@@ -1086,81 +1086,41 @@
                 render();
             });
 
-            // ✅ v3.12.2: Initialisation - traiter OAuth immédiatement si hash présent
+            // ✅ v3.12.4: Si retour OAuth, attendre 1 seconde pour laisser Supabase traiter le hash
             if (isOAuthReturn) {
-                console.log('🔄 OAuth return: processing tokens from URL...');
-                
-                // Extraire les tokens du hash et les traiter
-                try {
-                    // Supabase devrait détecter automatiquement le hash, mais on force avec getSession
-                    // après un court délai pour laisser le listener s'initialiser
-                    setTimeout(async () => {
-                        if (!currentUser) {
-                            console.log('⏰ Checking session after OAuth return...');
-                            const { data: { session }, error } = await supabase.auth.getSession();
-                            
-                            if (error) {
-                                console.error('❌ OAuth session error:', error);
-                            }
-                            
-                            if (session && session.user) {
-                                console.log('✅ Session found:', session.user.email);
-                                currentUser = session.user;
-                                window.currentUser = currentUser;
-                                
-                                const profileLoaded = await loadUserProfile(currentUser);
-                                if (profileLoaded) {
-                                    // Nettoyer l'URL
-                                    if (window.history && window.history.replaceState) {
-                                        window.history.replaceState(null, '', window.location.pathname);
-                                    }
-                                    render();
-                                } else {
-                                    console.error('❌ Failed to load profile');
-                                    render();
-                                }
-                            } else {
-                                console.log('❌ No session after OAuth - redirecting to home');
-                                // Nettoyer l'URL
-                                if (window.history && window.history.replaceState) {
-                                    window.history.replaceState(null, '', window.location.pathname);
-                                }
-                                render();
-                            }
-                        }
-                    }, 500);
-                } catch (err) {
-                    console.error('❌ OAuth processing error:', err);
-                    render();
-                }
-            } else {
-                // Pas de retour OAuth, charger la session normalement
-                console.log('🔍 Getting initial session...');
-                try {
-                    const { data: { session }, error } = await supabase.auth.getSession();
-                    console.log('📋 Session result:', session ? 'User found: ' + session.user.email : 'No user');
-
-                    if (error) {
-                        console.warn('⚠️ Session error (ignoring):', error.message);
-                    }
-
-                    currentUser = session?.user || null;
-                    window.currentUser = currentUser;
-
-                    if (currentUser) {
-                        console.log('👤 Session found, loading profile...');
-                        const profileLoaded = await loadUserProfile(currentUser);
-                        console.log('📋 Profile loaded:', profileLoaded);
-                    }
-                } catch (err) {
-                    console.error('❌ Critical error getting session:', err);
-                }
-
-                initialLoadComplete = true;
-                console.log('🏠 Calling initial render...');
-                render();
-                console.log('✅ Initial render complete');
+                console.log('🔄 OAuth return - waiting 1 second for Supabase to process hash...');
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                console.log('✅ Wait complete, continuing...');
             }
+
+            // Charger la session
+            console.log('🔍 Getting session...');
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession();
+                console.log('📋 Session result:', session ? 'User found: ' + session.user.email : 'No user');
+
+                if (error) {
+                    console.warn('⚠️ Session error:', error.message);
+                }
+
+                currentUser = session?.user || null;
+                window.currentUser = currentUser;
+
+                if (currentUser) {
+                    console.log('👤 User found, loading profile...');
+                    await loadUserProfile(currentUser);
+                    
+                    // Nettoyer l'URL OAuth
+                    if (isOAuthReturn && window.history && window.history.replaceState) {
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }
+                }
+            } catch (err) {
+                console.error('❌ Session error:', err);
+            }
+
+            initialLoadComplete = true;
+            render();
 
         })();
     </script>
