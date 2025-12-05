@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.12.0 - Fix OAuth session robuste -->
+    <!-- Version: 3.12.1 - Fix OAuth sans options PKCE -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.12.0...');
+            console.log('🚀 App starting v3.12.1...');
             
             // ✅ v3.12.0: Détecter retour OAuth de manière robuste
             const hashParams = window.location.hash;
@@ -92,15 +92,8 @@
             }
             window.changeLanguage = changeLanguage;
 
-            // ✅ v3.12.0: Créer le client Supabase avec options pour OAuth
-            const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                auth: {
-                    detectSessionInUrl: true,
-                    flowType: 'pkce',
-                    autoRefreshToken: true,
-                    persistSession: true
-                }
-            });
+            // ✅ v3.12.1: Client Supabase simple (sans options PKCE problématiques)
+            const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             window.supabase = supabase;
             window.SUPABASE_URL = SUPABASE_URL;
             window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
