@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.12.1 - Fix OAuth sans options PKCE -->
+    <!-- Version: 3.12.2 - Fix OAuth first-time login -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.12.1...');
+            console.log('🚀 App starting v3.12.2...');
             
             // ✅ v3.12.0: Détecter retour OAuth de manière robuste
             const hashParams = window.location.hash;
@@ -1086,39 +1086,53 @@
                 render();
             });
 
-            // ✅ v3.12.0: Initialisation - attendre un peu pour OAuth
+            // ✅ v3.12.2: Initialisation - traiter OAuth immédiatement si hash présent
             if (isOAuthReturn) {
-                console.log('🔄 OAuth return: waiting for Supabase to process tokens...');
-                // Attendre que Supabase traite les tokens (via onAuthStateChange)
-                // Si rien ne se passe après 5 secondes, essayer getSession()
-                setTimeout(async () => {
-                    if (!currentUser) {
-                        console.log('⏰ OAuth timeout - trying getSession()...');
-                        try {
+                console.log('🔄 OAuth return: processing tokens from URL...');
+                
+                // Extraire les tokens du hash et les traiter
+                try {
+                    // Supabase devrait détecter automatiquement le hash, mais on force avec getSession
+                    // après un court délai pour laisser le listener s'initialiser
+                    setTimeout(async () => {
+                        if (!currentUser) {
+                            console.log('⏰ Checking session after OAuth return...');
                             const { data: { session }, error } = await supabase.auth.getSession();
+                            
                             if (error) {
                                 console.error('❌ OAuth session error:', error);
                             }
+                            
                             if (session && session.user) {
-                                console.log('✅ Session found via getSession():', session.user.email);
+                                console.log('✅ Session found:', session.user.email);
                                 currentUser = session.user;
                                 window.currentUser = currentUser;
-                                await loadUserProfile(currentUser);
-                                render();
+                                
+                                const profileLoaded = await loadUserProfile(currentUser);
+                                if (profileLoaded) {
+                                    // Nettoyer l'URL
+                                    if (window.history && window.history.replaceState) {
+                                        window.history.replaceState(null, '', window.location.pathname);
+                                    }
+                                    render();
+                                } else {
+                                    console.error('❌ Failed to load profile');
+                                    render();
+                                }
                             } else {
-                                console.log('❌ No session found after OAuth');
+                                console.log('❌ No session after OAuth - redirecting to home');
                                 // Nettoyer l'URL
                                 if (window.history && window.history.replaceState) {
                                     window.history.replaceState(null, '', window.location.pathname);
                                 }
                                 render();
                             }
-                        } catch (err) {
-                            console.error('❌ Critical error getting OAuth session:', err);
-                            render();
                         }
-                    }
-                }, 2000);
+                    }, 500);
+                } catch (err) {
+                    console.error('❌ OAuth processing error:', err);
+                    render();
+                }
             } else {
                 // Pas de retour OAuth, charger la session normalement
                 console.log('🔍 Getting initial session...');
