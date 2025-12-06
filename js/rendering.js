@@ -277,19 +277,19 @@ export function renderProfileCompletionModal() {
     const countryOptions = countries.map(c => 
         `<option value="${c.code}">${c.name}</option>`
     ).join('');
-    
-     `
-        <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 max-w-lg w-full border-2 border-yellow-500/50 shadow-2xl">
+
+    return `
+        <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100] overflow-y-auto">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 md:p-8 max-w-xl w-full border-2 border-yellow-500/50 shadow-2xl my-4 max-h-[95vh] overflow-y-auto">
                 <!-- Header -->
-                <div class="text-center mb-6">
-                    <div class="text-6xl mb-4">👤</div>
+                <div class="text-center mb-5">
+                    <div class="text-5xl mb-3">👤</div>
                     <h2 class="text-2xl font-bold text-yellow-400 mb-2">${t.title}</h2>
-                    <p class="text-blue-200">${t.subtitle}</p>
+                    <p class="text-blue-200 text-sm">${t.subtitle}</p>
                 </div>
                 
                 <!-- Notice -->
-                <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 mb-6">
+                <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 mb-5">
                     <p class="text-yellow-300 text-sm text-center">
                         ⚠️ ${t.required_notice}
                     </p>
@@ -299,30 +299,22 @@ export function renderProfileCompletionModal() {
                 <form id="profileCompletionForm" class="space-y-4">
                     <!-- Nom -->
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-2">
-                            ${t.name_label} *
-                        </label>
-                        <input 
-                            type="text" 
-                            id="completionName" 
-                            value="${existingName}"
-                            required
-                            minlength="2"
-                            placeholder="${t.name_placeholder}"
-                            class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition"
-                        >
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.name_label} *</label>
+                        <input type="text" id="completionName" value="${existingName}" required minlength="2" placeholder="${t.name_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                    </div>
+                    
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.email_label} *</label>
+                        <input type="email" id="completionEmail" value="${isAppleRelay ? '' : existingEmail}" required placeholder="${t.email_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        <p class="text-xs text-blue-300 mt-1">📧 ${t.email_help}</p>
                     </div>
                     
                     <!-- Téléphone -->
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-2">
-                            ${t.phone_label} *
-                        </label>
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.phone_label} *</label>
                         <div class="flex gap-2">
-                            <select 
-                                id="completionCountryCode" 
-                                class="w-28 px-3 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none"
-                            >
+                            <select id="completionCountryCode" class="w-24 px-2 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none text-sm">
                                 <option value="+971">🇦🇪 +971</option>
                                 <option value="+33">🇫🇷 +33</option>
                                 <option value="+44">🇬🇧 +44</option>
@@ -335,49 +327,53 @@ export function renderProfileCompletionModal() {
                                 <option value="+20">🇪🇬 +20</option>
                                 <option value="+1">🇺🇸 +1</option>
                             </select>
-                            <input 
-                                type="tel" 
-                                id="completionPhone" 
-                                value="${existingPhone.replace(/^\+\d+/, '')}"
-                                required
-                                placeholder="${t.phone_placeholder}"
-                                class="flex-1 px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition"
-                            >
+                            <input type="tel" id="completionPhone" value="${existingPhone.replace(/^\\+\\d+/, '')}" required placeholder="${t.phone_placeholder}" class="flex-1 px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                         </div>
                     </div>
                     
-                    <!-- Adresse -->
+                    <!-- Adresse Ligne 1 -->
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-2">
-                            ${t.address_label} *
-                        </label>
-                        <textarea 
-                            id="completionAddress" 
-                            required
-                            rows="2"
-                            placeholder="${t.address_placeholder}"
-                            class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition resize-none"
-                        >${existingAddress}</textarea>
-                        <p class="text-xs text-blue-300 mt-1">📍 ${t.address_help}</p>
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.address_line1_label} *</label>
+                        <input type="text" id="completionAddressLine1" required placeholder="${t.address_line1_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     
-                    <!-- Error message -->
+                    <!-- Adresse Ligne 2 -->
+                    <div>
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.address_line2_label}</label>
+                        <input type="text" id="completionAddressLine2" placeholder="${t.address_line2_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                    </div>
+                    
+                    <!-- Ville + Code postal -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-blue-100 mb-1">${t.city_label} *</label>
+                            <input type="text" id="completionCity" required placeholder="${t.city_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-blue-100 mb-1">${t.postal_code_label}</label>
+                            <input type="text" id="completionPostalCode" placeholder="${t.postal_code_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        </div>
+                    </div>
+                    
+                    <!-- Pays -->
+                    <div>
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.country_label} *</label>
+                        <select id="completionCountry" required class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                            <option value="">${t.select_country}</option>
+                            ${countryOptions}
+                        </select>
+                    </div>
+                    
+                    <!-- Error -->
                     <div id="completionError" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg text-sm"></div>
                     
-                    <!-- Submit button -->
-                    <button 
-                        type="submit"
-                        id="completionSubmitBtn"
-                        class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-4 rounded-lg transition transform hover:scale-[1.02] mt-6"
-                    >
-                        ${t.submit_button} →
-                    </button>
+                    <!-- Submit -->
+                    <button type="submit" id="completionSubmitBtn" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-4 rounded-lg transition transform hover:scale-[1.02] mt-4">${t.submit_button} →</button>
                 </form>
             </div>
         </div>
     `;
 }
-
 /**
  * Génère le HTML de la landing page
  * @s {string} HTML de la landing page
