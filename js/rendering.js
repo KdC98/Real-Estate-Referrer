@@ -7,27 +7,27 @@
 // - Dashboard (admin et referrer)
 // - Modal complétion profil OAuth
 // ============================================
-// Version: 3.11.0 - OAuth profile completion modal
-// Date: 5 décembre 2025
+// Version: 3.12.0 - OAuth profile completion with full address
+// Date: 6 décembre 2025
 // ============================================
 
 /**
  * Vérifie si le profil est complet (nom, téléphone, adresse)
  * @param {object} profile - Le profil utilisateur
- * @s {boolean} true si complet
+ * @returns {boolean} true si complet
  */
 export function isProfileComplete(profile) {
-    if (!profile)  false;
+    if (!profile) return false;
     const hasName = profile.name && profile.name.trim().length > 0;
     const hasPhone = profile.phone && profile.phone.trim().length > 0;
     const hasAddress = profile.address && profile.address.trim().length > 0;
     const hasEmail = profile.email && profile.email.trim().length > 0 && !profile.email.includes('privaterelay.appleid.com');
-     hasName && hasPhone && hasAddress && hasEmail;
+    return hasName && hasPhone && hasAddress && hasEmail;
 }
 
 /**
  * Génère le HTML du modal de complétion de profil (pour OAuth)
- * @s {string} HTML du modal
+ * @returns {string} HTML du modal
  */
 export function renderProfileCompletionModal() {
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
@@ -327,7 +327,7 @@ export function renderProfileCompletionModal() {
                                 <option value="+20">🇪🇬 +20</option>
                                 <option value="+1">🇺🇸 +1</option>
                             </select>
-                            <input type="tel" id="completionPhone" value="${existingPhone.replace(/^\\+\\d+/, '')}" required placeholder="${t.phone_placeholder}" class="flex-1 px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                            <input type="tel" id="completionPhone" value="${existingPhone.replace(/^\+\d+/, '')}" required placeholder="${t.phone_placeholder}" class="flex-1 px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                         </div>
                     </div>
                     
@@ -374,14 +374,15 @@ export function renderProfileCompletionModal() {
         </div>
     `;
 }
+
 /**
  * Génère le HTML de la landing page
- * @s {string} HTML de la landing page
+ * @returns {string} HTML de la landing page
  */
 export function renderLandingPage() {
     const t = (key) => window.i18next.t(key);
     
-return `
+    return `
         <div class="min-h-screen">
             <!-- ✅ Header avec style unifié -->
             <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
@@ -559,10 +560,11 @@ return `
         </div>
     `;
 }
+
 /**
  * Génère le HTML des pages d'authentification
  * @param {string} mode - Mode: 'login', 'signup', 'reset', 'change-password', '2fa'
- * @s {string} HTML de la page d'authentification
+ * @returns {string} HTML de la page d'authentification
  */
 export function renderAuthPage(mode) {
     const t = (key) => window.i18next.t(key);
@@ -716,7 +718,7 @@ export function renderAuthPage(mode) {
         const trans = twoFactorTranslations[currentLang] || twoFactorTranslations['en'];
         
         // ✅ CORRIGÉ: Style unifié + IDs verify2faBtn et error2fa
-         `
+        return `
             <div class="min-h-screen flex items-center justify-center px-4">
                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
                     <button onclick="window.backTo2FASignup()" class="text-blue-200 hover:text-white mb-6 flex items-center">
@@ -791,7 +793,7 @@ export function renderAuthPage(mode) {
     }
     
     // ✅ Style unifié pour toutes les pages auth
-     `
+    return `
         <div class="min-h-screen flex items-center justify-center px-4">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
                 <button onclick="backToHome()" class="text-blue-200 hover:text-white mb-6 flex items-center">
@@ -1032,9 +1034,10 @@ export function renderAuthPage(mode) {
         </div>
     `;
 }
+
 /**
  * Génère le HTML du dashboard (admin ou referrer)
- * @s {string} HTML du dashboard
+ * @returns {string} HTML du dashboard
  */
 export function renderDashboard() {
     const t = (key) => window.i18next.t(key);
@@ -1076,7 +1079,7 @@ export function renderDashboard() {
     });
     
     if (!userProfile) {
-         '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">⏳ Chargement du profil...</div></div>';
+        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">⏳ Chargement du profil...</div></div>';
     }
     
     const isAdmin = userProfile.role === 'admin';
@@ -1095,8 +1098,103 @@ export function renderDashboard() {
     
     const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
     
+    // Vérifier si le profil est complet
+    const profileComplete = isProfileComplete(userProfile);
+    const canAddLeads = profileComplete && hasValidContract;
+    
+    // Générer le HTML du bouton/bloc d'ajout de leads
+    let addLeadSection = '';
+    if (!isAdmin) {
+        if (canAddLeads) {
+            addLeadSection = `
+                <button 
+                    id="addLeadBtn"
+                    onclick="showAddLeadForm()" 
+                    class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition"
+                >
+                    ${t('dashboard:add_lead')}
+                </button>
+            `;
+        } else {
+            const stepContractDone = hasValidContract;
+            const stepProfileDone = profileComplete;
+            
+            addLeadSection = `
+                <div class="bg-gradient-to-r from-orange-500/20 to-red-500/20 border-2 border-orange-500 rounded-2xl p-6 mb-6 shadow-lg">
+                    <div class="flex items-start gap-4">
+                        <div class="text-5xl">🚨</div>
+                        <div class="flex-1">
+                            <h3 class="text-2xl font-bold text-orange-400 mb-2">
+                                Complétez votre inscription pour gagner des commissions !
+                            </h3>
+                            <p class="text-white mb-4">
+                                Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, 
+                                vous devez compléter ces 2 étapes :
+                            </p>
+                            
+                            <div class="space-y-3">
+                                <!-- Étape 1: Contrat -->
+                                <div class="flex items-center gap-3 p-3 rounded-lg ${stepContractDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
+                                    <div class="text-3xl">${stepContractDone ? '✅' : '❌'}</div>
+                                    <div class="flex-1">
+                                        <div class="font-bold ${stepContractDone ? 'text-green-400' : 'text-red-400'}">
+                                            Étape 1 : Signer le contrat d'apporteur
+                                        </div>
+                                        <div class="text-sm text-blue-200">
+                                            ${stepContractDone ? 'Contrat signé ✓' : 'Obligatoire pour recevoir vos paiements'}
+                                        </div>
+                                    </div>
+                                    ${!stepContractDone ? `
+                                        <a href="/contract-signature.html" 
+                                           class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded-lg transition text-sm">
+                                            Signer maintenant →
+                                        </a>
+                                    ` : ''}
+                                </div>
+                                
+                                <!-- Étape 2: Profil -->
+                                <div class="flex items-center gap-3 p-3 rounded-lg ${stepProfileDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
+                                    <div class="text-3xl">${stepProfileDone ? '✅' : '❌'}</div>
+                                    <div class="flex-1">
+                                        <div class="font-bold ${stepProfileDone ? 'text-green-400' : 'text-red-400'}">
+                                            Étape 2 : Compléter votre profil
+                                        </div>
+                                        <div class="text-sm text-blue-200">
+                                            ${stepProfileDone ? 'Profil complet ✓' : 'Nom, téléphone et adresse requis pour les paiements'}
+                                        </div>
+                                    </div>
+                                    ${!stepProfileDone ? `
+                                        <a href="profile.html" 
+                                           class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">
+                                            Compléter →
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg">
+                                <p class="text-yellow-300 text-sm">
+                                    💡 <strong>Pourquoi ces étapes ?</strong> Le contrat protège vos commissions et votre profil complet 
+                                    nous permet de vous payer. Sans ces informations, nous ne pourrons pas vous verser vos gains !
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button 
+                    id="addLeadBtn"
+                    disabled
+                    class="bg-gray-500 text-gray-300 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60"
+                >
+                    🔒 ${t('dashboard:add_lead')} (Complétez les étapes ci-dessus)
+                </button>
+            `;
+        }
+    }
+    
     // ✅ Style unifié pour le dashboard
-     `
+    return `
         <div class="min-h-screen">
             <!-- ✅ Header avec style unifié + BOUTON MON PROFIL -->
             <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
@@ -1233,102 +1331,7 @@ export function renderDashboard() {
                 
                 <div id="stats" class="grid md:grid-cols-4 gap-6 mb-8"></div>
                 
-                ${!isAdmin ? `
-                    <div class="mb-6">
-                        ${(() => {
-                            const profileComplete = isProfileComplete(userProfile);
-                            const canAddLeads = profileComplete && hasValidContract;
-                            
-                            if (canAddLeads) {
-                                 `
-                                    <button 
-                                        id="addLeadBtn"
-                                        onclick="showAddLeadForm()" 
-                                        class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition"
-                                    >
-                                        ${t('dashboard:add_lead')}
-                                    </button>
-                                `;
-                            } else {
-                                // ✅ v3.10.0: Bloc d'avertissement TRÈS VISIBLE
-                                const stepContractDone = hasValidContract;
-                                const stepProfileDone = profileComplete;
-                                
-                                 `
-                                    <div class="bg-gradient-to-r from-orange-500/20 to-red-500/20 border-2 border-orange-500 rounded-2xl p-6 mb-6 shadow-lg">
-                                        <div class="flex items-start gap-4">
-                                            <div class="text-5xl">🚨</div>
-                                            <div class="flex-1">
-                                                <h3 class="text-2xl font-bold text-orange-400 mb-2">
-                                                    Complétez votre inscription pour gagner des commissions !
-                                                </h3>
-                                                <p class="text-white mb-4">
-                                                    Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, 
-                                                    vous devez compléter ces 2 étapes :
-                                                </p>
-                                                
-                                                <div class="space-y-3">
-                                                    <!-- Étape 1: Contrat -->
-                                                    <div class="flex items-center gap-3 p-3 rounded-lg ${stepContractDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
-                                                        <div class="text-3xl">${stepContractDone ? '✅' : '❌'}</div>
-                                                        <div class="flex-1">
-                                                            <div class="font-bold ${stepContractDone ? 'text-green-400' : 'text-red-400'}">
-                                                                Étape 1 : Signer le contrat d'apporteur
-                                                            </div>
-                                                            <div class="text-sm text-blue-200">
-                                                                ${stepContractDone ? 'Contrat signé ✓' : 'Obligatoire pour recevoir vos paiements'}
-                                                            </div>
-                                                        </div>
-                                                        ${!stepContractDone ? `
-                                                            <a href="/contract-signature.html" 
-                                                               class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded-lg transition text-sm">
-                                                                Signer maintenant →
-                                                            </a>
-                                                        ` : ''}
-                                                    </div>
-                                                    
-                                                    <!-- Étape 2: Profil -->
-                                                    <div class="flex items-center gap-3 p-3 rounded-lg ${stepProfileDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
-                                                        <div class="text-3xl">${stepProfileDone ? '✅' : '❌'}</div>
-                                                        <div class="flex-1">
-                                                            <div class="font-bold ${stepProfileDone ? 'text-green-400' : 'text-red-400'}">
-                                                                Étape 2 : Compléter votre profil
-                                                            </div>
-                                                            <div class="text-sm text-blue-200">
-                                                                ${stepProfileDone ? 'Profil complet ✓' : 'Nom, téléphone et adresse requis pour les paiements'}
-                                                            </div>
-                                                        </div>
-                                                        ${!stepProfileDone ? `
-                                                            <a href="profile.html" 
-                                                               class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">
-                                                                Compléter →
-                                                            </a>
-                                                        ` : ''}
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg">
-                                                    <p class="text-yellow-300 text-sm">
-                                                        💡 <strong>Pourquoi ces étapes ?</strong> Le contrat protège vos commissions et votre profil complet 
-                                                        nous permet de vous payer. Sans ces informations, nous ne pourrons pas vous verser vos gains !
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <button 
-                                        id="addLeadBtn"
-                                        disabled
-                                        class="bg-gray-500 text-gray-300 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60"
-                                    >
-                                        🔒 ${t('dashboard:add_lead')} (Complétez les étapes ci-dessus)
-                                    </button>
-                                `;
-                            }
-                        })()}
-                    </div>
-                ` : ''}
+                ${!isAdmin ? `<div class="mb-6">${addLeadSection}</div>` : ''}
                 
                 <!-- ✅ Table leads avec style unifié -->
                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-8 border border-white/20">
