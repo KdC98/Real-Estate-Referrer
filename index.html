@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.12.5 - Fix OAuth let onAuthStateChange handle -->
+    <!-- Version: 3.14.0 - Format adresse UAE (sans code postal) -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.12.5...');
+            console.log('🚀 App starting v3.14.0...');
             
             // ✅ v3.12.0: Détecter retour OAuth de manière robuste
             const hashParams = window.location.hash;
@@ -667,16 +667,17 @@
                     return;
                 }
 
-                // ✅ v3.12.0: Utilisateur connecté avec profil
+                // ✅ v3.14.0: Utilisateur connecté avec profil
                 if (currentUser && userProfile) {
                     console.log('✅ User connected with profile');
                     
-                    // Vérifier si le profil est complet (nom, téléphone, adresse)
+                    // Vérifier si le profil est complet (nom, téléphone, adresse, email)
                     const isComplete = RENDERING.isProfileComplete(userProfile);
                     console.log('📋 Profile complete check:', isComplete, {
                         name: !!userProfile.name,
                         phone: !!userProfile.phone,
-                        address: !!userProfile.address
+                        address: !!userProfile.address,
+                        email: !!userProfile.email
                     });
                     
                     // Si profil incomplet et pas admin → afficher modal de complétion
@@ -688,10 +689,11 @@
                         // Afficher le dashboard AVEC le modal par-dessus
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
-                        // Attacher le handler du formulaire
+                        // ✅ v3.14.0: Attacher le handler du formulaire - FORMAT UAE
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
                             if (form) {
+                                console.log('✅ Profile completion form handler attached');
                                 form.onsubmit = async (e) => {
                                     e.preventDefault();
                                     console.log('📝 Profile completion form submitted');
@@ -705,31 +707,71 @@
                                     errorDiv.classList.add('hidden');
                                     
                                     try {
-                                        const name = document.getElementById('completionName').value.trim();
-                                        const countryCode = document.getElementById('completionCountryCode').value;
-                                        const phone = document.getElementById('completionPhone').value.trim();
-                                        const address = document.getElementById('completionAddress').value.trim();
+                                        // ✅ v3.14.0: Format UAE - Récupérer les champs
+                                        const nameEl = document.getElementById('completionName');
+                                        const emailEl = document.getElementById('completionEmail');
+                                        const countryCodeEl = document.getElementById('completionCountryCode');
+                                        const phoneEl = document.getElementById('completionPhone');
+                                        const addressEl = document.getElementById('completionAddress');
+                                        const areaEl = document.getElementById('completionArea');
+                                        const emirateEl = document.getElementById('completionEmirate');
+                                        const makaniEl = document.getElementById('completionMakani');
                                         
+                                        const name = nameEl?.value?.trim() || '';
+                                        const email = emailEl?.value?.trim() || '';
+                                        const countryCode = countryCodeEl?.value || '+971';
+                                        const phone = phoneEl?.value?.trim() || '';
+                                        const address = addressEl?.value?.trim() || '';
+                                        const area = areaEl?.value?.trim() || '';
+                                        const emirate = emirateEl?.value || '';
+                                        const makani = makaniEl?.value?.trim() || '';
+                                        
+                                        console.log('📋 Form values:', { name, email, phone, address, area, emirate, makani });
+                                        
+                                        // Validations
                                         if (!name || name.length < 2) {
                                             throw new Error('Le nom doit contenir au moins 2 caractères');
+                                        }
+                                        if (!email || !email.includes('@')) {
+                                            throw new Error('Adresse email invalide');
+                                        }
+                                        if (email.includes('@privaterelay.appleid.com')) {
+                                            throw new Error('Veuillez entrer votre vraie adresse email, pas le relay Apple');
                                         }
                                         if (!phone || phone.length < 6) {
                                             throw new Error('Numéro de téléphone invalide');
                                         }
-                                        if (!address || address.length < 5) {
-                                            throw new Error('Adresse trop courte');
+                                        if (!address || address.length < 3) {
+                                            throw new Error('Adresse trop courte (bâtiment, rue)');
+                                        }
+                                        if (!area || area.length < 2) {
+                                            throw new Error('Zone/Quartier requis');
+                                        }
+                                        if (!emirate) {
+                                            throw new Error('Émirat requis');
+                                        }
+                                        // Makani optionnel mais si fourni, doit être 10 chiffres
+                                        if (makani && !/^\d{10}$/.test(makani)) {
+                                            throw new Error('Le numéro Makani doit contenir exactement 10 chiffres');
                                         }
                                         
                                         const fullPhone = countryCode + phone.replace(/^0+/, '');
                                         
-                                        console.log('💾 Updating profile with:', { name, phone: fullPhone, address });
+                                        // Construire l'adresse complète au format UAE
+                                        let fullAddress = `${address}, ${area}, ${emirate}`;
+                                        if (makani) {
+                                            fullAddress += ` (Makani: ${makani})`;
+                                        }
+                                        
+                                        console.log('💾 Updating profile with:', { name, email, phone: fullPhone, address: fullAddress });
                                         
                                         const { error: updateError } = await supabase
                                             .from('profiles')
                                             .update({
                                                 name: name,
+                                                email: email,
                                                 phone: fullPhone,
-                                                address: address
+                                                address: fullAddress
                                             })
                                             .eq('id', currentUser.id);
                                         
@@ -776,7 +818,6 @@
                                         submitBtn.textContent = originalText;
                                     }
                                 };
-                                console.log('✅ Profile completion form handler attached');
                             }
                         }, 100);
                         
