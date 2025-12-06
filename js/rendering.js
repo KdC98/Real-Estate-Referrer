@@ -14,20 +14,20 @@
 /**
  * Vérifie si le profil est complet (nom, téléphone, adresse)
  * @param {object} profile - Le profil utilisateur
- * @returns {boolean} true si complet
+ * @s {boolean} true si complet
  */
 export function isProfileComplete(profile) {
-    if (!profile) return false;
+    if (!profile)  false;
     const hasName = profile.name && profile.name.trim().length > 0;
     const hasPhone = profile.phone && profile.phone.trim().length > 0;
     const hasAddress = profile.address && profile.address.trim().length > 0;
     const hasEmail = profile.email && profile.email.trim().length > 0 && !profile.email.includes('privaterelay.appleid.com');
-    return hasName && hasPhone && hasAddress && hasEmail;
+     hasName && hasPhone && hasAddress && hasEmail;
 }
 
 /**
  * Génère le HTML du modal de complétion de profil (pour OAuth)
- * @returns {string} HTML du modal
+ * @s {string} HTML du modal
  */
 export function renderProfileCompletionModal() {
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
@@ -39,11 +39,21 @@ export function renderProfileCompletionModal() {
             subtitle: "Pour recevoir vos commissions, nous avons besoin de quelques informations",
             name_label: "Nom complet",
             name_placeholder: "Votre nom complet",
+            email_label: "Email",
+            email_placeholder: "votre@email.com",
+            email_help: "Utilisé pour les notifications et paiements",
             phone_label: "Numéro de téléphone",
             phone_placeholder: "Ex: 501234567",
-            address_label: "Adresse complète",
-            address_placeholder: "Votre adresse pour les paiements",
-            address_help: "Nécessaire pour l'envoi des paiements",
+            address_line1_label: "Adresse (ligne 1)",
+            address_line1_placeholder: "Numéro et nom de rue",
+            address_line2_label: "Adresse (ligne 2)",
+            address_line2_placeholder: "Appartement, bâtiment... (optionnel)",
+            city_label: "Ville",
+            city_placeholder: "Votre ville",
+            postal_code_label: "Code postal",
+            postal_code_placeholder: "Code postal",
+            country_label: "Pays",
+            select_country: "-- Sélectionnez --",
             submit_button: "Enregistrer et continuer",
             required_notice: "Ces informations sont obligatoires pour recevoir vos commissions"
         },
@@ -52,11 +62,21 @@ export function renderProfileCompletionModal() {
             subtitle: "To receive your commissions, we need some information",
             name_label: "Full name",
             name_placeholder: "Your full name",
+            email_label: "Email",
+            email_placeholder: "your@email.com",
+            email_help: "Used for notifications and payments",
             phone_label: "Phone number",
             phone_placeholder: "Ex: 501234567",
-            address_label: "Full address",
-            address_placeholder: "Your address for payments",
-            address_help: "Required for payment delivery",
+            address_line1_label: "Address (line 1)",
+            address_line1_placeholder: "Street number and name",
+            address_line2_label: "Address (line 2)",
+            address_line2_placeholder: "Apartment, building... (optional)",
+            city_label: "City",
+            city_placeholder: "Your city",
+            postal_code_label: "Postal code",
+            postal_code_placeholder: "Postal code",
+            country_label: "Country",
+            select_country: "-- Select --",
             submit_button: "Save and continue",
             required_notice: "This information is required to receive your commissions"
         },
@@ -65,11 +85,21 @@ export function renderProfileCompletionModal() {
             subtitle: "لتلقي عمولاتك، نحتاج إلى بعض المعلومات",
             name_label: "الاسم الكامل",
             name_placeholder: "اسمك الكامل",
+            email_label: "البريد الإلكتروني",
+            email_placeholder: "your@email.com",
+            email_help: "يستخدم للإشعارات والمدفوعات",
             phone_label: "رقم الهاتف",
-            phone_placeholder: "مثال: 501234567",
-            address_label: "العنوان الكامل",
-            address_placeholder: "عنوانك للدفعات",
-            address_help: "مطلوب لإرسال المدفوعات",
+            phone_placeholder: "مثال: ٥٠١٢٣٤٥٦٧",
+            address_line1_label: "العنوان (السطر ١)",
+            address_line1_placeholder: "رقم واسم الشارع",
+            address_line2_label: "العنوان (السطر ٢)",
+            address_line2_placeholder: "شقة، مبنى... (اختياري)",
+            city_label: "المدينة",
+            city_placeholder: "مدينتك",
+            postal_code_label: "الرمز البريدي",
+            postal_code_placeholder: "الرمز البريدي",
+            country_label: "الدولة",
+            select_country: "-- اختر --",
             submit_button: "حفظ ومتابعة",
             required_notice: "هذه المعلومات مطلوبة لتلقي عمولاتك"
         },
@@ -78,11 +108,21 @@ export function renderProfileCompletionModal() {
             subtitle: "Для получения комиссионных нам нужна некоторая информация",
             name_label: "Полное имя",
             name_placeholder: "Ваше полное имя",
+            email_label: "Электронная почта",
+            email_placeholder: "your@email.com",
+            email_help: "Используется для уведомлений и платежей",
             phone_label: "Номер телефона",
             phone_placeholder: "Пример: 501234567",
-            address_label: "Полный адрес",
-            address_placeholder: "Ваш адрес для платежей",
-            address_help: "Необходим для отправки платежей",
+            address_line1_label: "Адрес (строка 1)",
+            address_line1_placeholder: "Номер и название улицы",
+            address_line2_label: "Адрес (строка 2)",
+            address_line2_placeholder: "Квартира, здание... (необязательно)",
+            city_label: "Город",
+            city_placeholder: "Ваш город",
+            postal_code_label: "Почтовый индекс",
+            postal_code_placeholder: "Почтовый индекс",
+            country_label: "Страна",
+            select_country: "-- Выберите --",
             submit_button: "Сохранить и продолжить",
             required_notice: "Эта информация необходима для получения комиссионных"
         },
@@ -91,11 +131,21 @@ export function renderProfileCompletionModal() {
             subtitle: "अपना कमीशन प्राप्त करने के लिए, हमें कुछ जानकारी चाहिए",
             name_label: "पूरा नाम",
             name_placeholder: "आपका पूरा नाम",
+            email_label: "ईमेल",
+            email_placeholder: "your@email.com",
+            email_help: "सूचनाओं और भुगतान के लिए उपयोग किया जाता है",
             phone_label: "फ़ोन नंबर",
             phone_placeholder: "उदा: 501234567",
-            address_label: "पूरा पता",
-            address_placeholder: "भुगतान के लिए आपका पता",
-            address_help: "भुगतान भेजने के लिए आवश्यक",
+            address_line1_label: "पता (पंक्ति 1)",
+            address_line1_placeholder: "सड़क का नंबर और नाम",
+            address_line2_label: "पता (पंक्ति 2)",
+            address_line2_placeholder: "अपार्टमेंट, बिल्डिंग... (वैकल्पिक)",
+            city_label: "शहर",
+            city_placeholder: "आपका शहर",
+            postal_code_label: "पिन कोड",
+            postal_code_placeholder: "पिन कोड",
+            country_label: "देश",
+            select_country: "-- चुनें --",
             submit_button: "सहेजें और जारी रखें",
             required_notice: "अपना कमीशन प्राप्त करने के लिए यह जानकारी आवश्यक है"
         },
@@ -104,11 +154,21 @@ export function renderProfileCompletionModal() {
             subtitle: "اپنا کمیشن حاصل کرنے کے لیے، ہمیں کچھ معلومات درکار ہیں",
             name_label: "پورا نام",
             name_placeholder: "آپ کا پورا نام",
+            email_label: "ای میل",
+            email_placeholder: "your@email.com",
+            email_help: "نوٹیفیکیشنز اور ادائیگیوں کے لیے استعمال ہوتا ہے",
             phone_label: "فون نمبر",
             phone_placeholder: "مثال: 501234567",
-            address_label: "مکمل پتہ",
-            address_placeholder: "ادائیگیوں کے لیے آپ کا پتہ",
-            address_help: "ادائیگی بھیجنے کے لیے ضروری ہے",
+            address_line1_label: "پتہ (لائن 1)",
+            address_line1_placeholder: "گلی کا نمبر اور نام",
+            address_line2_label: "پتہ (لائن 2)",
+            address_line2_placeholder: "اپارٹمنٹ، عمارت... (اختیاری)",
+            city_label: "شہر",
+            city_placeholder: "آپ کا شہر",
+            postal_code_label: "پوسٹل کوڈ",
+            postal_code_placeholder: "پوسٹل کوڈ",
+            country_label: "ملک",
+            select_country: "-- منتخب کریں --",
             submit_button: "محفوظ کریں اور جاری رکھیں",
             required_notice: "اپنا کمیشن حاصل کرنے کے لیے یہ معلومات ضروری ہیں"
         },
@@ -117,11 +177,21 @@ export function renderProfileCompletionModal() {
             subtitle: "为了接收您的佣金，我们需要一些信息",
             name_label: "全名",
             name_placeholder: "您的全名",
+            email_label: "电子邮件",
+            email_placeholder: "your@email.com",
+            email_help: "用于通知和付款",
             phone_label: "电话号码",
             phone_placeholder: "例如: 501234567",
-            address_label: "完整地址",
-            address_placeholder: "您的付款地址",
-            address_help: "付款发送所需",
+            address_line1_label: "地址（第1行）",
+            address_line1_placeholder: "街道号码和名称",
+            address_line2_label: "地址（第2行）",
+            address_line2_placeholder: "公寓、建筑物...（可选）",
+            city_label: "城市",
+            city_placeholder: "您的城市",
+            postal_code_label: "邮政编码",
+            postal_code_placeholder: "邮政编码",
+            country_label: "国家",
+            select_country: "-- 选择 --",
             submit_button: "保存并继续",
             required_notice: "此信息是接收佣金所必需的"
         },
@@ -130,11 +200,21 @@ export function renderProfileCompletionModal() {
             subtitle: "Para matanggap ang iyong mga komisyon, kailangan namin ng ilang impormasyon",
             name_label: "Buong pangalan",
             name_placeholder: "Ang iyong buong pangalan",
+            email_label: "Email",
+            email_placeholder: "your@email.com",
+            email_help: "Ginagamit para sa mga notification at bayad",
             phone_label: "Numero ng telepono",
             phone_placeholder: "Hal: 501234567",
-            address_label: "Kumpletong address",
-            address_placeholder: "Ang iyong address para sa mga bayad",
-            address_help: "Kinakailangan para sa pagpapadala ng bayad",
+            address_line1_label: "Address (linya 1)",
+            address_line1_placeholder: "Numero at pangalan ng kalye",
+            address_line2_label: "Address (linya 2)",
+            address_line2_placeholder: "Apartment, building... (opsyonal)",
+            city_label: "Lungsod",
+            city_placeholder: "Ang iyong lungsod",
+            postal_code_label: "Postal code",
+            postal_code_placeholder: "Postal code",
+            country_label: "Bansa",
+            select_country: "-- Pumili --",
             submit_button: "I-save at magpatuloy",
             required_notice: "Ang impormasyong ito ay kinakailangan para matanggap ang iyong mga komisyon"
         }
@@ -144,11 +224,61 @@ export function renderProfileCompletionModal() {
     
     // Pré-remplir avec les données existantes si disponibles
     const profile = window.userProfile || {};
-    const existingName = profile.name || '';
+    const user = window.currentUser || {};
+    const existingName = profile.name || user.user_metadata?.full_name || user.user_metadata?.name || '';
+    const existingEmail = profile.email || user.email || '';
     const existingPhone = profile.phone || '';
-    const existingAddress = profile.address || '';
     
-    return `
+    // Détecter si c'est un email relay Apple (masqué)
+    const isAppleRelay = existingEmail.includes('privaterelay.appleid.com');
+    
+    // Liste des pays (les plus courants pour Dubai en premier)
+    const countries = [
+        { code: 'AE', name: 'United Arab Emirates / الإمارات' },
+        { code: 'SA', name: 'Saudi Arabia / السعودية' },
+        { code: 'FR', name: 'France' },
+        { code: 'GB', name: 'United Kingdom' },
+        { code: 'US', name: 'United States' },
+        { code: 'IN', name: 'India / भारत' },
+        { code: 'PK', name: 'Pakistan / پاکستان' },
+        { code: 'PH', name: 'Philippines' },
+        { code: 'CN', name: 'China / 中国' },
+        { code: 'RU', name: 'Russia / Россия' },
+        { code: 'EG', name: 'Egypt / مصر' },
+        { code: 'LB', name: 'Lebanon / لبنان' },
+        { code: 'JO', name: 'Jordan / الأردن' },
+        { code: 'KW', name: 'Kuwait / الكويت' },
+        { code: 'QA', name: 'Qatar / قطر' },
+        { code: 'BH', name: 'Bahrain / البحرين' },
+        { code: 'OM', name: 'Oman / عمان' },
+        { code: 'DE', name: 'Germany' },
+        { code: 'IT', name: 'Italy' },
+        { code: 'ES', name: 'Spain' },
+        { code: 'NL', name: 'Netherlands' },
+        { code: 'BE', name: 'Belgium' },
+        { code: 'CH', name: 'Switzerland' },
+        { code: 'CA', name: 'Canada' },
+        { code: 'AU', name: 'Australia' },
+        { code: 'SG', name: 'Singapore' },
+        { code: 'MY', name: 'Malaysia' },
+        { code: 'ID', name: 'Indonesia' },
+        { code: 'TH', name: 'Thailand' },
+        { code: 'JP', name: 'Japan / 日本' },
+        { code: 'KR', name: 'South Korea / 한국' },
+        { code: 'BR', name: 'Brazil' },
+        { code: 'MX', name: 'Mexico' },
+        { code: 'ZA', name: 'South Africa' },
+        { code: 'NG', name: 'Nigeria' },
+        { code: 'MA', name: 'Morocco / المغرب' },
+        { code: 'TN', name: 'Tunisia / تونس' },
+        { code: 'DZ', name: 'Algeria / الجزائر' }
+    ];
+    
+    const countryOptions = countries.map(c => 
+        `<option value="${c.code}">${c.name}</option>`
+    ).join('');
+    
+     `
         <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100]">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 max-w-lg w-full border-2 border-yellow-500/50 shadow-2xl">
                 <!-- Header -->
@@ -250,12 +380,12 @@ export function renderProfileCompletionModal() {
 
 /**
  * Génère le HTML de la landing page
- * @returns {string} HTML de la landing page
+ * @s {string} HTML de la landing page
  */
 export function renderLandingPage() {
     const t = (key) => window.i18next.t(key);
     
-    return `
+     `
         <div class="min-h-screen">
             <!-- ✅ Header avec style unifié -->
             <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
@@ -436,7 +566,7 @@ export function renderLandingPage() {
 /**
  * Génère le HTML des pages d'authentification
  * @param {string} mode - Mode: 'login', 'signup', 'reset', 'change-password', '2fa'
- * @returns {string} HTML de la page d'authentification
+ * @s {string} HTML de la page d'authentification
  */
 export function renderAuthPage(mode) {
     const t = (key) => window.i18next.t(key);
@@ -590,7 +720,7 @@ export function renderAuthPage(mode) {
         const trans = twoFactorTranslations[currentLang] || twoFactorTranslations['en'];
         
         // ✅ CORRIGÉ: Style unifié + IDs verify2faBtn et error2fa
-        return `
+         `
             <div class="min-h-screen flex items-center justify-center px-4">
                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
                     <button onclick="window.backTo2FASignup()" class="text-blue-200 hover:text-white mb-6 flex items-center">
@@ -665,7 +795,7 @@ export function renderAuthPage(mode) {
     }
     
     // ✅ Style unifié pour toutes les pages auth
-    return `
+     `
         <div class="min-h-screen flex items-center justify-center px-4">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
                 <button onclick="backToHome()" class="text-blue-200 hover:text-white mb-6 flex items-center">
@@ -908,7 +1038,7 @@ export function renderAuthPage(mode) {
 }
 /**
  * Génère le HTML du dashboard (admin ou referrer)
- * @returns {string} HTML du dashboard
+ * @s {string} HTML du dashboard
  */
 export function renderDashboard() {
     const t = (key) => window.i18next.t(key);
@@ -950,7 +1080,7 @@ export function renderDashboard() {
     });
     
     if (!userProfile) {
-        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">⏳ Chargement du profil...</div></div>';
+         '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">⏳ Chargement du profil...</div></div>';
     }
     
     const isAdmin = userProfile.role === 'admin';
@@ -970,7 +1100,7 @@ export function renderDashboard() {
     const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
     
     // ✅ Style unifié pour le dashboard
-    return `
+     `
         <div class="min-h-screen">
             <!-- ✅ Header avec style unifié + BOUTON MON PROFIL -->
             <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
@@ -1114,7 +1244,7 @@ export function renderDashboard() {
                             const canAddLeads = profileComplete && hasValidContract;
                             
                             if (canAddLeads) {
-                                return `
+                                 `
                                     <button 
                                         id="addLeadBtn"
                                         onclick="showAddLeadForm()" 
@@ -1128,7 +1258,7 @@ export function renderDashboard() {
                                 const stepContractDone = hasValidContract;
                                 const stepProfileDone = profileComplete;
                                 
-                                return `
+                                 `
                                     <div class="bg-gradient-to-r from-orange-500/20 to-red-500/20 border-2 border-orange-500 rounded-2xl p-6 mb-6 shadow-lg">
                                         <div class="flex items-start gap-4">
                                             <div class="text-5xl">🚨</div>
