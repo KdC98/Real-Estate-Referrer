@@ -21,7 +21,8 @@ export function isProfileComplete(profile) {
     const hasName = profile.name && profile.name.trim().length > 0;
     const hasPhone = profile.phone && profile.phone.trim().length > 0;
     const hasAddress = profile.address && profile.address.trim().length > 0;
-    return hasName && hasPhone && hasAddress;
+    const hasEmail = profile.email && profile.email.trim().length > 0 && !profile.email.includes('privaterelay.appleid.com');
+    return hasName && hasPhone && hasAddress && hasEmail;
 }
 
 /**
