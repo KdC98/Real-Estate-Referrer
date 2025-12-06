@@ -381,7 +381,7 @@ export function renderProfileCompletionModal() {
 export function renderLandingPage() {
     const t = (key) => window.i18next.t(key);
     
-     `
+return `
         <div class="min-h-screen">
             <!-- ✅ Header avec style unifié -->
             <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
