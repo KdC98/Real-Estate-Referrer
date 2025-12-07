@@ -7,7 +7,7 @@
 // - Dashboard (admin et referrer)
 // - Modal complétion profil OAuth
 // ============================================
-// Version: 3.14.0 - Format adresse UAE (sans code postal)
+// Version: 3.14.1 - Format adresse UAE simplifié
 // Date: 6 décembre 2025
 // ============================================
 
@@ -27,13 +27,13 @@ export function isProfileComplete(profile) {
 
 /**
  * Génère le HTML du modal de complétion de profil (pour OAuth)
- * ✅ v3.14.0 - Format d'adresse UAE (sans code postal)
+ * ✅ v3.14.1 - Format d'adresse UAE simplifié (sans Makani)
  * @returns {string} HTML du modal
  */
 export function renderProfileCompletionModal() {
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
     
-    // ✅ Traductions 8 langues - Format UAE
+    // ✅ Traductions 8 langues - Format UAE simplifié
     const translations = {
         fr: {
             title: "Complétez votre profil",
@@ -51,9 +51,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "Ex: Jumeirah, Downtown, Al Quoz",
             emirate_label: "Émirat",
             select_emirate: "-- Sélectionnez --",
-            makani_label: "Numéro Makani",
-            makani_placeholder: "Code 10 chiffres (optionnel)",
-            makani_help: "Code GPS unique (voir label sur votre bâtiment)",
             submit_button: "Enregistrer et continuer",
             required_notice: "Ces informations sont nécessaires pour recevoir vos commissions"
         },
@@ -73,9 +70,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "Ex: Jumeirah, Downtown, Al Quoz",
             emirate_label: "Emirate",
             select_emirate: "-- Select --",
-            makani_label: "Makani Number",
-            makani_placeholder: "10-digit code (optional)",
-            makani_help: "Unique GPS code (see label on your building)",
             submit_button: "Save and continue",
             required_notice: "This information is required to receive your commissions"
         },
@@ -95,9 +89,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "مثال: جميرا، داون تاون، القوز",
             emirate_label: "الإمارة",
             select_emirate: "-- اختر --",
-            makani_label: "رقم مكاني",
-            makani_placeholder: "رمز من ١٠ أرقام (اختياري)",
-            makani_help: "رمز GPS الفريد (انظر الملصق على مبناك)",
             submit_button: "حفظ والمتابعة",
             required_notice: "هذه المعلومات مطلوبة لتلقي عمولاتك"
         },
@@ -117,9 +108,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "Пример: Jumeirah, Downtown, Al Quoz",
             emirate_label: "Эмират",
             select_emirate: "-- Выберите --",
-            makani_label: "Номер Makani",
-            makani_placeholder: "10-значный код (необязательно)",
-            makani_help: "Уникальный GPS-код (см. табличку на здании)",
             submit_button: "Сохранить и продолжить",
             required_notice: "Эта информация необходима для получения комиссий"
         },
@@ -139,9 +127,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "उदा: Jumeirah, Downtown, Al Quoz",
             emirate_label: "अमीरात",
             select_emirate: "-- चुनें --",
-            makani_label: "मकानी नंबर",
-            makani_placeholder: "10 अंकों का कोड (वैकल्पिक)",
-            makani_help: "अद्वितीय GPS कोड (अपनी इमारत पर लेबल देखें)",
             submit_button: "सहेजें और जारी रखें",
             required_notice: "अपना कमीशन प्राप्त करने के लिए यह जानकारी आवश्यक है"
         },
@@ -161,9 +146,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "مثال: Jumeirah, Downtown, Al Quoz",
             emirate_label: "امارات",
             select_emirate: "-- منتخب کریں --",
-            makani_label: "مکانی نمبر",
-            makani_placeholder: "10 ہندسوں کا کوڈ (اختیاری)",
-            makani_help: "منفرد GPS کوڈ (اپنی عمارت پر لیبل دیکھیں)",
             submit_button: "محفوظ کریں اور جاری رکھیں",
             required_notice: "اپنا کمیشن حاصل کرنے کے لیے یہ معلومات ضروری ہیں"
         },
@@ -183,9 +165,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "例如: Jumeirah, Downtown, Al Quoz",
             emirate_label: "酋长国",
             select_emirate: "-- 选择 --",
-            makani_label: "Makani 号码",
-            makani_placeholder: "10位数代码（可选）",
-            makani_help: "唯一GPS代码（见建筑物标签）",
             submit_button: "保存并继续",
             required_notice: "此信息是接收佣金所必需的"
         },
@@ -205,9 +184,6 @@ export function renderProfileCompletionModal() {
             area_placeholder: "Hal: Jumeirah, Downtown, Al Quoz",
             emirate_label: "Emirate",
             select_emirate: "-- Pumili --",
-            makani_label: "Makani Number",
-            makani_placeholder: "10-digit code (opsyonal)",
-            makani_help: "Natatanging GPS code (tingnan ang label sa building)",
             submit_button: "I-save at magpatuloy",
             required_notice: "Ang impormasyong ito ay kinakailangan para matanggap ang iyong mga komisyon"
         }
@@ -313,13 +289,6 @@ export function renderProfileCompletionModal() {
                             <option value="">${t.select_emirate}</option>
                             ${emirateOptions}
                         </select>
-                    </div>
-                    
-                    <!-- Numéro Makani (optionnel) -->
-                    <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.makani_label}</label>
-                        <input type="text" id="completionMakani" pattern="[0-9]{10}" maxlength="10" placeholder="${t.makani_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
-                        <p class="text-xs text-blue-300 mt-1">📍 ${t.makani_help}</p>
                     </div>
                     
                     <!-- Error -->
