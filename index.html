@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.14.0 - Format adresse UAE (sans code postal) -->
+    <!-- Version: 3.14.1 - Format adresse UAE simplifié -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -715,7 +715,6 @@
                                         const addressEl = document.getElementById('completionAddress');
                                         const areaEl = document.getElementById('completionArea');
                                         const emirateEl = document.getElementById('completionEmirate');
-                                        const makaniEl = document.getElementById('completionMakani');
                                         
                                         const name = nameEl?.value?.trim() || '';
                                         const email = emailEl?.value?.trim() || '';
@@ -724,9 +723,8 @@
                                         const address = addressEl?.value?.trim() || '';
                                         const area = areaEl?.value?.trim() || '';
                                         const emirate = emirateEl?.value || '';
-                                        const makani = makaniEl?.value?.trim() || '';
                                         
-                                        console.log('📋 Form values:', { name, email, phone, address, area, emirate, makani });
+                                        console.log('📋 Form values:', { name, email, phone, address, area, emirate });
                                         
                                         // Validations
                                         if (!name || name.length < 2) {
@@ -750,18 +748,11 @@
                                         if (!emirate) {
                                             throw new Error('Émirat requis');
                                         }
-                                        // Makani optionnel mais si fourni, doit être 10 chiffres
-                                        if (makani && !/^\d{10}$/.test(makani)) {
-                                            throw new Error('Le numéro Makani doit contenir exactement 10 chiffres');
-                                        }
                                         
                                         const fullPhone = countryCode + phone.replace(/^0+/, '');
                                         
                                         // Construire l'adresse complète au format UAE
-                                        let fullAddress = `${address}, ${area}, ${emirate}`;
-                                        if (makani) {
-                                            fullAddress += ` (Makani: ${makani})`;
-                                        }
+                                        const fullAddress = `${address}, ${area}, ${emirate}`;
                                         
                                         console.log('💾 Updating profile with:', { name, email, phone: fullPhone, address: fullAddress });
                                         
