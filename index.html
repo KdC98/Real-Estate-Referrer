@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.15.1 - Ne pas nettoyer session si utilisateur connecté -->
+    <!-- Version: 3.15.2 - Retry automatique profil + timeout sécurité -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.15.1...');
+            console.log('🚀 App starting v3.15.2...');
             
             // ✅ v3.15.0: Nettoyer les données de session corrompues au démarrage
             function cleanCorruptedSession() {
@@ -95,6 +95,24 @@
                         </div>
                     </div>
                 `;
+                
+                // ✅ v3.15.2: Timeout de sécurité - forcer render après 8 secondes max
+                setTimeout(() => {
+                    if (document.getElementById('app').innerHTML.includes('Validation du contrat') || 
+                        document.getElementById('app').innerHTML.includes('Connexion en cours')) {
+                        console.warn('⏰ Timeout reached, forcing render...');
+                        if (window.currentUser && !window.userProfile) {
+                            console.log('🔄 User exists but no profile, loading...');
+                            window.loadUserProfile(window.currentUser).then(() => {
+                                window.render();
+                            }).catch(() => {
+                                window.render();
+                            });
+                        } else {
+                            window.render();
+                        }
+                    }
+                }, 8000);
             }
 
             // Initialiser i18next
@@ -1154,10 +1172,26 @@
                         const profileLoaded = await loadUserProfile(currentUser);
                         console.log('📋 Profile load result:', profileLoaded);
                         if (!profileLoaded) {
-                            console.error('❌ Failed to load profile');
+                            console.error('❌ Failed to load profile, retrying...');
+                            // ✅ v3.15.2: Retry automatique après 1 seconde
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            const retryResult = await loadUserProfile(currentUser);
+                            console.log('📋 Profile retry result:', retryResult);
                         }
                     } catch (err) {
                         console.error('❌ Exception loading profile:', err);
+                        // ✅ v3.15.2: Retry même en cas d'erreur
+                        try {
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                            await loadUserProfile(currentUser);
+                        } catch (retryErr) {
+                            console.error('❌ Retry also failed:', retryErr);
+                        }
+                    }
+                    
+                    // ✅ v3.15.2: Vérification finale - forcer render même si profil manquant
+                    if (!userProfile && currentUser) {
+                        console.warn('⚠️ Profile still missing after retries, forcing render...');
                     }
                 }
 
