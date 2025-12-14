@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.15.0 - Gestion robuste des erreurs de session -->
+    <!-- Version: 3.15.1 - Ne pas nettoyer session si utilisateur connecté -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.15.0...');
+            console.log('🚀 App starting v3.15.1...');
             
             // ✅ v3.15.0: Nettoyer les données de session corrompues au démarrage
             function cleanCorruptedSession() {
@@ -1227,12 +1227,22 @@
                 render();
             }
             
-            // ✅ v3.15.0: Capturer les erreurs globales de Promise
+            // ✅ v3.15.1: Capturer les erreurs globales de Promise - SEULEMENT si pas connecté
             window.addEventListener('unhandledrejection', (event) => {
                 if (event.reason && event.reason.message && event.reason.message.includes('Invalid data')) {
-                    console.warn('🧹 Caught Invalid data error, cleaning session...');
-                    cleanCorruptedSession();
-                    // Ne pas empêcher l'erreur d'être loggée, mais éviter le crash
+                    // ✅ v3.15.1: Ne PAS nettoyer si l'utilisateur est déjà connecté !
+                    if (currentUser) {
+                        console.warn('⚠️ Invalid data error ignored (user is logged in)');
+                        event.preventDefault();
+                        return;
+                    }
+                    // Nettoyer seulement si pas de session active
+                    if (!initialLoadComplete) {
+                        console.warn('🧹 Caught Invalid data error during init, cleaning session...');
+                        cleanCorruptedSession();
+                    } else {
+                        console.warn('⚠️ Invalid data error after init, ignoring...');
+                    }
                     event.preventDefault();
                 }
             });
