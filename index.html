@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.15.6 - Correction ordre déclaration variables -->
+    <!-- Version: 3.15.7 - Fallback OAuth après 3 secondes -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.15.6...');
+            console.log('🚀 App starting v3.15.7...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -68,6 +68,29 @@
                         </div>
                     </div>
                 `;
+                
+                // ✅ v3.15.7: Fallback - vérifier manuellement la session après 3 secondes
+                setTimeout(async () => {
+                    console.log('⏰ OAuth fallback: checking session manually...');
+                    try {
+                        const { data: { session } } = await supabase.auth.getSession();
+                        if (session && session.user) {
+                            console.log('✅ OAuth fallback: session found!', session.user.email);
+                            // Forcer le traitement
+                            if (!window.currentUser) {
+                                window.currentUser = session.user;
+                                await window.loadUserProfile(session.user);
+                                window.render();
+                            }
+                        } else {
+                            console.log('❌ OAuth fallback: no session found, redirecting to home');
+                            window.location.href = window.location.origin;
+                        }
+                    } catch (err) {
+                        console.error('❌ OAuth fallback error:', err);
+                        window.location.href = window.location.origin;
+                    }
+                }, 3000);
             }
 
             // Initialiser i18next
