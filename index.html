@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.15.7 - Fallback OAuth après 3 secondes -->
+    <!-- Version: 3.15.8 - Traitement INITIAL_SESSION avec session OAuth -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.15.7...');
+            console.log('🚀 App starting v3.15.8...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -69,28 +69,16 @@
                     </div>
                 `;
                 
-                // ✅ v3.15.7: Fallback - vérifier manuellement la session après 3 secondes
-                setTimeout(async () => {
-                    console.log('⏰ OAuth fallback: checking session manually...');
-                    try {
-                        const { data: { session } } = await supabase.auth.getSession();
-                        if (session && session.user) {
-                            console.log('✅ OAuth fallback: session found!', session.user.email);
-                            // Forcer le traitement
-                            if (!window.currentUser) {
-                                window.currentUser = session.user;
-                                await window.loadUserProfile(session.user);
-                                window.render();
-                            }
-                        } else {
-                            console.log('❌ OAuth fallback: no session found, redirecting to home');
-                            window.location.href = window.location.origin;
-                        }
-                    } catch (err) {
-                        console.error('❌ OAuth fallback error:', err);
+                // ✅ v3.15.8: Fallback amélioré - attendre 5s puis forcer le rechargement propre
+                setTimeout(() => {
+                    // Si on est toujours sur le loader, c'est que ça n'a pas marché
+                    if (document.getElementById('app').innerHTML.includes('Connexion en cours')) {
+                        console.log('⏰ OAuth fallback: still on loader after 5s');
+                        console.log('🔄 Forcing clean page reload without OAuth params...');
+                        // Recharger la page proprement - la session devrait être dans localStorage
                         window.location.href = window.location.origin;
                     }
-                }, 3000);
+                }, 5000);
             }
 
             // Initialiser i18next
@@ -1105,10 +1093,16 @@
             supabase.auth.onAuthStateChange(async (event, session) => {
                 console.log('🔔 Auth state changed:', event, session ? 'with session' : 'no session');
 
-                // ✅ v3.12.5: Ignorer INITIAL_SESSION lors du retour OAuth (attendre SIGNED_IN)
-                if (isOAuthReturn && event === 'INITIAL_SESSION' && !session) {
-                    console.log('⏳ OAuth return: ignoring INITIAL_SESSION, waiting for SIGNED_IN...');
-                    return;
+                // ✅ v3.15.8: Pour OAuth, ignorer INITIAL_SESSION seulement si pas de session
+                // Si on a une session dans INITIAL_SESSION, on la traite !
+                if (isOAuthReturn && event === 'INITIAL_SESSION') {
+                    if (session) {
+                        console.log('✅ OAuth INITIAL_SESSION with session - processing!');
+                        // Continuer le traitement normal
+                    } else {
+                        console.log('⏳ OAuth return: INITIAL_SESSION without session, waiting for SIGNED_IN...');
+                        return;
+                    }
                 }
 
                 if (isSignupInProgress && event !== 'SIGNED_IN') {
