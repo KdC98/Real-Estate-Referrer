@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.15.5 - Correction appel fonction supprimée -->
+    <!-- Version: 3.15.6 - Correction ordre déclaration variables -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,9 +29,9 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.15.5...');
+            console.log('🚀 App starting v3.15.6...');
             
-            // ✅ v3.15.4: Détecter retour après signature de contrat - traiter différemment d'OAuth
+            // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
             const isContractSignedReturn = urlParams.get('signed') !== null;
             
@@ -49,15 +49,12 @@
                 }
             }
             
-            // ✅ v3.15.3: Pour le retour contrat, juste marquer le flag et continuer normalement
-            if (isContractSignedReturn && !isOAuthReturn) {
-                console.log('📝 Contract signed return - will show confirmation after load');
-                contractJustSigned = true;
-                window.contractJustSigned = true;
-            }
-            
             if (isOAuthReturn) {
                 console.log('🔄 OAuth return detected');
+            }
+            
+            if (isContractSignedReturn) {
+                console.log('📝 Contract signed return detected');
             }
             
             // ✅ v3.15.4: Afficher loader SEULEMENT pour OAuth
