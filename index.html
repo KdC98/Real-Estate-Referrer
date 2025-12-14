@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.15.2 - Retry automatique profil + timeout sécurité -->
+    <!-- Version: 3.15.3 - Séparation retour contrat vs OAuth -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,7 +29,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.15.2...');
+            console.log('🚀 App starting v3.15.3...');
             
             // ✅ v3.15.0: Nettoyer les données de session corrompues au démarrage
             function cleanCorruptedSession() {
@@ -58,7 +58,7 @@
                 }
             }
             
-            // ✅ v3.15.0: Détecter retour après signature de contrat
+            // ✅ v3.15.3: Détecter retour après signature de contrat - traiter différemment d'OAuth
             const urlParams = new URLSearchParams(window.location.search);
             const isContractSignedReturn = urlParams.get('signed') !== null;
             
@@ -68,7 +68,7 @@
                                   hashParams.includes('error') || 
                                   urlParams.get('code') !== null;
             
-            // ✅ v3.15.0: Nettoyer l'URL des paramètres de retour pour éviter les boucles
+            // ✅ v3.15.3: Nettoyer l'URL immédiatement
             if (isContractSignedReturn || isOAuthReturn) {
                 console.log('🔄 Return detected, cleaning URL...');
                 if (window.history && window.history.replaceState) {
@@ -76,43 +76,47 @@
                 }
             }
             
+            // ✅ v3.15.3: Pour le retour contrat, juste marquer le flag et continuer normalement
+            if (isContractSignedReturn && !isOAuthReturn) {
+                console.log('📝 Contract signed return - will show confirmation after load');
+                contractJustSigned = true;
+                window.contractJustSigned = true;
+            }
+            
             if (isOAuthReturn) {
                 console.log('🔄 OAuth return detected');
             }
             
-            if (isContractSignedReturn) {
-                console.log('📝 Contract signed return detected');
-            }
-            
-            // ✅ v3.15.0: Afficher loader immédiatement
-            if (isOAuthReturn || isContractSignedReturn) {
+            // ✅ v3.15.3: Afficher loader SEULEMENT pour OAuth (pas pour retour contrat)
+            if (isOAuthReturn) {
                 document.getElementById('app').innerHTML = `
                     <div class="min-h-screen flex items-center justify-center">
                         <div class="text-center">
                             <div class="text-6xl mb-4 animate-spin">🔄</div>
-                            <div class="text-xl text-blue-200">${isContractSignedReturn ? 'Validation du contrat...' : 'Connexion en cours...'}</div>
+                            <div class="text-xl text-blue-200">Connexion en cours...</div>
                             <div class="text-sm text-blue-300 mt-2">Veuillez patienter</div>
                         </div>
                     </div>
                 `;
                 
-                // ✅ v3.15.2: Timeout de sécurité - forcer render après 8 secondes max
+                // ✅ v3.15.3: Si bloqué trop longtemps, nettoyer et recharger
                 setTimeout(() => {
-                    if (document.getElementById('app').innerHTML.includes('Validation du contrat') || 
-                        document.getElementById('app').innerHTML.includes('Connexion en cours')) {
-                        console.warn('⏰ Timeout reached, forcing render...');
-                        if (window.currentUser && !window.userProfile) {
-                            console.log('🔄 User exists but no profile, loading...');
-                            window.loadUserProfile(window.currentUser).then(() => {
-                                window.render();
-                            }).catch(() => {
-                                window.render();
-                            });
-                        } else {
-                            window.render();
+                    if (document.getElementById('app').innerHTML.includes('Connexion en cours')) {
+                        console.warn('⏰ OAuth timeout - forcing clean reload...');
+                        const keysToRemove = [];
+                        for (let i = 0; i < localStorage.length; i++) {
+                            const key = localStorage.key(i);
+                            if (key && key.startsWith('sb-') && key.includes('-auth-token')) {
+                                keysToRemove.push(key);
+                            }
                         }
+                        keysToRemove.forEach(key => {
+                            console.log('🧹 Removing stuck session:', key);
+                            localStorage.removeItem(key);
+                        });
+                        window.location.href = window.location.origin;
                     }
-                }, 8000);
+                }, 10000);
             }
 
             // Initialiser i18next
