@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.16.0 - Désactivation Realtime pour éviter Invalid data -->
+    <!-- Version: 3.16.1 - Realtime complètement désactivé -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -30,7 +30,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.16.0...');
+            console.log('🚀 App starting v3.16.1...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -117,15 +117,16 @@
             }
             window.changeLanguage = changeLanguage;
 
-            // ✅ v3.16.0: Client Supabase avec Realtime désactivé pour éviter l'erreur "Invalid data"
+            // ✅ v3.16.1: Client Supabase avec Realtime complètement désactivé
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                realtime: {
-                    params: {
-                        eventsPerSecond: 0
-                    }
+                realtime: false,
+                db: {
+                    schema: 'public'
                 },
-                global: {
-                    headers: {}
+                auth: {
+                    autoRefreshToken: true,
+                    persistSession: true,
+                    detectSessionInUrl: true
                 }
             });
             window.supabase = supabase;
