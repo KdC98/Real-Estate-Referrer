@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.16.1 - Realtime complètement désactivé -->
+    <!-- Version: 3.16.2 - Timeout sur loadUserProfile + profil minimal en fallback -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -30,7 +30,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.16.1...');
+            console.log('🚀 App starting v3.16.2...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -528,7 +528,7 @@
                 };
             }
 
-            // ✅ v3.15.0: Fonction loadUserProfile avec gestion d'erreur robuste
+            // ✅ v3.16.2: Fonction loadUserProfile avec timeout pour éviter blocage
             async function loadUserProfile(user = null) {
                 const targetUser = user || currentUser;
                 console.log('🔍 loadUserProfile called for user:', targetUser?.id);
@@ -538,13 +538,22 @@
                     return false;
                 }
 
+                // ✅ v3.16.2: Timeout de 5 secondes pour éviter blocage
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Profile load timeout')), 5000)
+                );
+
                 try {
                     console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
-                    const { data, error } = await supabase
+                    
+                    const queryPromise = supabase
                         .from('profiles')
                         .select('*')
                         .eq('id', targetUser.id)
                         .maybeSingle();
+                    
+                    // Race entre la requête et le timeout
+                    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
                     if (error && error.code !== 'PGRST116') {
                         console.error('❌ Error loading profile:', error);
@@ -560,7 +569,7 @@
                             targetUser.email?.split('@')[0] ||
                             '';
 
-                        const { data: newProfile, error: insertError } = await supabase
+                        const createPromise = supabase
                             .from('profiles')
                             .upsert([{
                                 id: targetUser.id,
@@ -573,6 +582,8 @@
                             }], { onConflict: 'id' })
                             .select()
                             .single();
+
+                        const { data: newProfile, error: insertError } = await Promise.race([createPromise, timeoutPromise]);
 
                         if (insertError) {
                             console.error('❌ Error creating profile:', insertError);
@@ -594,7 +605,20 @@
                     console.log('✅ userProfile set:', userProfile);
                     return true;
                 } catch (err) {
-                    console.error('❌ Exception loading profile:', err);
+                    console.error('❌ Exception loading profile:', err.message);
+                    // ✅ v3.16.2: En cas de timeout, créer un profil minimal
+                    if (err.message === 'Profile load timeout') {
+                        console.log('⚠️ Timeout - creating minimal profile');
+                        userProfile = {
+                            id: targetUser.id,
+                            name: targetUser.user_metadata?.full_name || targetUser.email?.split('@')[0] || 'User',
+                            email: targetUser.email,
+                            role: 'referrer',
+                            contract_status: 'pending'
+                        };
+                        window.userProfile = userProfile;
+                        return true;
+                    }
                     return false;
                 }
             }
