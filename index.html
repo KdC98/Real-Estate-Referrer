@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.16.2 - Timeout sur loadUserProfile + profil minimal en fallback -->
+    <!-- Version: 3.16.3 - Ne pas nettoyer URL OAuth avant traitement Supabase -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -30,7 +30,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.16.2...');
+            console.log('🚀 App starting v3.16.3...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -42,16 +42,17 @@
                                   hashParams.includes('error') || 
                                   urlParams.get('code') !== null;
             
-            // ✅ v3.15.3: Nettoyer l'URL immédiatement
-            if (isContractSignedReturn || isOAuthReturn) {
-                console.log('🔄 Return detected, cleaning URL...');
+            // ✅ v3.16.3: Ne nettoyer l'URL que pour le retour contrat, PAS pour OAuth
+            // Supabase a besoin du hash pour récupérer la session OAuth
+            if (isContractSignedReturn && !isOAuthReturn) {
+                console.log('🔄 Contract return detected, cleaning URL...');
                 if (window.history && window.history.replaceState) {
                     window.history.replaceState(null, '', window.location.pathname);
                 }
             }
             
             if (isOAuthReturn) {
-                console.log('🔄 OAuth return detected');
+                console.log('🔄 OAuth return detected - keeping hash for Supabase');
             }
             
             if (isContractSignedReturn) {
@@ -70,14 +71,13 @@
                     </div>
                 `;
                 
-                // ✅ v3.15.8: Fallback amélioré - attendre 5s puis forcer le rechargement propre
+                // ✅ v3.16.3: Fallback - recharger après 8s si toujours bloqué
                 setTimeout(() => {
-                    // Si on est toujours sur le loader, c'est que ça n'a pas marché
                     if (document.getElementById('app').innerHTML.includes('Connexion en cours')) {
-                        console.log('⏰ OAuth fallback: still on loader after 5s');
-                        console.log('🔄 Forcing clean page reload without OAuth params...');
-                        // Recharger la page proprement - la session devrait être dans localStorage
-                        window.location.href = window.location.origin;
+                        console.log('⏰ OAuth fallback: still on loader after 8s');
+                        // Nettoyer l'URL et recharger
+                        window.history.replaceState(null, '', window.location.pathname);
+                        window.location.reload();
                     }
                 }, 5000);
             }
