@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.15.3 - Séparation retour contrat vs OAuth -->
+    <!-- Version: 3.15.4 - Version simplifiée sans nettoyage automatique -->
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -29,36 +29,9 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.15.3...');
+            console.log('🚀 App starting v3.15.4...');
             
-            // ✅ v3.15.0: Nettoyer les données de session corrompues au démarrage
-            function cleanCorruptedSession() {
-                try {
-                    const keys = Object.keys(localStorage);
-                    for (const key of keys) {
-                        if (key.startsWith('sb-') && key.includes('-auth-token')) {
-                            const value = localStorage.getItem(key);
-                            if (value) {
-                                try {
-                                    const parsed = JSON.parse(value);
-                                    // Vérifier si la session est valide
-                                    if (!parsed || !parsed.access_token || !parsed.user) {
-                                        console.warn('🧹 Removing invalid session data:', key);
-                                        localStorage.removeItem(key);
-                                    }
-                                } catch (e) {
-                                    console.warn('🧹 Removing corrupted session data:', key);
-                                    localStorage.removeItem(key);
-                                }
-                            }
-                        }
-                    }
-                } catch (e) {
-                    console.warn('⚠️ Error cleaning session:', e);
-                }
-            }
-            
-            // ✅ v3.15.3: Détecter retour après signature de contrat - traiter différemment d'OAuth
+            // ✅ v3.15.4: Détecter retour après signature de contrat - traiter différemment d'OAuth
             const urlParams = new URLSearchParams(window.location.search);
             const isContractSignedReturn = urlParams.get('signed') !== null;
             
@@ -87,7 +60,7 @@
                 console.log('🔄 OAuth return detected');
             }
             
-            // ✅ v3.15.3: Afficher loader SEULEMENT pour OAuth (pas pour retour contrat)
+            // ✅ v3.15.4: Afficher loader SEULEMENT pour OAuth
             if (isOAuthReturn) {
                 document.getElementById('app').innerHTML = `
                     <div class="min-h-screen flex items-center justify-center">
@@ -98,25 +71,6 @@
                         </div>
                     </div>
                 `;
-                
-                // ✅ v3.15.3: Si bloqué trop longtemps, nettoyer et recharger
-                setTimeout(() => {
-                    if (document.getElementById('app').innerHTML.includes('Connexion en cours')) {
-                        console.warn('⏰ OAuth timeout - forcing clean reload...');
-                        const keysToRemove = [];
-                        for (let i = 0; i < localStorage.length; i++) {
-                            const key = localStorage.key(i);
-                            if (key && key.startsWith('sb-') && key.includes('-auth-token')) {
-                                keysToRemove.push(key);
-                            }
-                        }
-                        keysToRemove.forEach(key => {
-                            console.log('🧹 Removing stuck session:', key);
-                            localStorage.removeItem(key);
-                        });
-                        window.location.href = window.location.origin;
-                    }
-                }, 10000);
             }
 
             // Initialiser i18next
@@ -1175,27 +1129,8 @@
                     try {
                         const profileLoaded = await loadUserProfile(currentUser);
                         console.log('📋 Profile load result:', profileLoaded);
-                        if (!profileLoaded) {
-                            console.error('❌ Failed to load profile, retrying...');
-                            // ✅ v3.15.2: Retry automatique après 1 seconde
-                            await new Promise(resolve => setTimeout(resolve, 1000));
-                            const retryResult = await loadUserProfile(currentUser);
-                            console.log('📋 Profile retry result:', retryResult);
-                        }
                     } catch (err) {
                         console.error('❌ Exception loading profile:', err);
-                        // ✅ v3.15.2: Retry même en cas d'erreur
-                        try {
-                            await new Promise(resolve => setTimeout(resolve, 1000));
-                            await loadUserProfile(currentUser);
-                        } catch (retryErr) {
-                            console.error('❌ Retry also failed:', retryErr);
-                        }
-                    }
-                    
-                    // ✅ v3.15.2: Vérification finale - forcer render même si profil manquant
-                    if (!userProfile && currentUser) {
-                        console.warn('⚠️ Profile still missing after retries, forcing render...');
                     }
                 }
 
@@ -1218,7 +1153,7 @@
                 render();
             });
 
-            // ✅ v3.15.0: Chargement initial avec gestion d'erreur robuste
+            // ✅ v3.15.4: Chargement initial simple
             async function initializeApp() {
                 if (isOAuthReturn) {
                     console.log('🔄 OAuth return - waiting for onAuthStateChange to handle session...');
@@ -1231,59 +1166,28 @@
                     
                     if (error) {
                         console.warn('⚠️ Session error:', error.message);
-                        // ✅ v3.15.0: Si erreur "Invalid data", nettoyer et continuer
-                        if (error.message && error.message.includes('Invalid')) {
-                            console.log('🧹 Invalid session detected, cleaning up...');
-                            cleanCorruptedSession();
-                            currentUser = null;
-                            window.currentUser = null;
-                            userProfile = null;
-                            window.userProfile = null;
-                        }
-                    } else {
-                        console.log('📋 Session result:', session ? 'User found: ' + session.user.email : 'No user');
-                        currentUser = session?.user || null;
-                        window.currentUser = currentUser;
+                        // Ne rien faire, laisser continuer
+                    }
+                    
+                    console.log('📋 Session result:', session ? 'User found: ' + session.user.email : 'No user');
+                    currentUser = session?.user || null;
+                    window.currentUser = currentUser;
 
-                        if (currentUser) {
-                            console.log('👤 User found, loading profile...');
-                            await loadUserProfile(currentUser);
-                        }
+                    if (currentUser) {
+                        console.log('👤 User found, loading profile...');
+                        await loadUserProfile(currentUser);
                     }
                 } catch (err) {
                     console.error('❌ Session error:', err);
-                    // ✅ v3.15.0: Nettoyer en cas d'erreur
-                    if (err.message && err.message.includes('Invalid')) {
-                        console.log('🧹 Cleaning corrupted session after error...');
-                        cleanCorruptedSession();
-                    }
-                    currentUser = null;
-                    window.currentUser = null;
+                    // Ne rien nettoyer, juste continuer
                 }
 
                 initialLoadComplete = true;
                 render();
             }
             
-            // ✅ v3.15.1: Capturer les erreurs globales de Promise - SEULEMENT si pas connecté
-            window.addEventListener('unhandledrejection', (event) => {
-                if (event.reason && event.reason.message && event.reason.message.includes('Invalid data')) {
-                    // ✅ v3.15.1: Ne PAS nettoyer si l'utilisateur est déjà connecté !
-                    if (currentUser) {
-                        console.warn('⚠️ Invalid data error ignored (user is logged in)');
-                        event.preventDefault();
-                        return;
-                    }
-                    // Nettoyer seulement si pas de session active
-                    if (!initialLoadComplete) {
-                        console.warn('🧹 Caught Invalid data error during init, cleaning session...');
-                        cleanCorruptedSession();
-                    } else {
-                        console.warn('⚠️ Invalid data error after init, ignoring...');
-                    }
-                    event.preventDefault();
-                }
-            });
+            // ✅ v3.15.4: NE PAS intercepter les erreurs - laisser Supabase gérer
+            // L'erreur "Invalid data" est cosmétique et ne doit pas affecter le fonctionnement
             
             // Lancer l'initialisation
             await initializeApp();
