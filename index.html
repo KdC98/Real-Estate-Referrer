@@ -11,7 +11,75 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    <!-- Version: 3.16.3 - Ne pas nettoyer URL OAuth avant traitement Supabase -->
+    
+    <!-- Tom Select pour dropdown pays searchable -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    
+    <!-- Version: 3.17.0 - Tom Select dropdown pays searchable -->
+    
+    <style>
+    /* Tom Select - Thème sombre Dubai */
+    .ts-wrapper.country-select .ts-control {
+        background: rgba(51, 65, 85, 0.5) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 0.5rem !important;
+        color: white !important;
+        padding: 0.5rem 0.75rem !important;
+        min-height: 44px !important;
+        font-size: 0.875rem !important;
+    }
+    .ts-wrapper.country-select .ts-control:focus,
+    .ts-wrapper.country-select.focus .ts-control {
+        border-color: #eab308 !important;
+        box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3) !important;
+    }
+    .ts-wrapper.country-select .ts-control input {
+        color: white !important;
+    }
+    .ts-wrapper.country-select .ts-control input::placeholder {
+        color: rgba(191, 219, 254, 0.5) !important;
+    }
+    .ts-wrapper.country-select .ts-dropdown {
+        background: #1e293b !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 0.5rem !important;
+        margin-top: 4px !important;
+        max-height: 300px !important;
+        overflow-y: auto !important;
+    }
+    .ts-wrapper.country-select .ts-dropdown .option {
+        color: white !important;
+        padding: 10px 12px !important;
+        cursor: pointer !important;
+    }
+    .ts-wrapper.country-select .ts-dropdown .option:hover,
+    .ts-wrapper.country-select .ts-dropdown .option.active {
+        background: rgba(234, 179, 8, 0.2) !important;
+        color: #fbbf24 !important;
+    }
+    .ts-wrapper.country-select .ts-dropdown .option.selected {
+        background: rgba(234, 179, 8, 0.3) !important;
+    }
+    .ts-wrapper.country-select .ts-dropdown .optgroup-header {
+        color: #94a3b8 !important;
+        font-size: 0.75rem !important;
+        padding: 8px 12px 4px !important;
+        background: transparent !important;
+    }
+    .ts-wrapper.country-select .item {
+        color: white !important;
+        background: transparent !important;
+    }
+    .ts-wrapper.country-select .ts-control > .item {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    /* Fix pour le placeholder */
+    .ts-wrapper.country-select.single .ts-control:after {
+        border-color: #94a3b8 transparent transparent transparent !important;
+    }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -30,7 +98,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.16.3...');
+            console.log('🚀 App starting v3.17.0...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -254,6 +322,65 @@
                 window.currentPage = 'auth-signup';
             }
 
+            // ✅ v3.17.0: Fonction pour initialiser Tom Select sur les dropdowns pays
+            function initCountrySelects() {
+                setTimeout(() => {
+                    // Modal de complétion profil
+                    const completionSelect = document.getElementById('completionCountryCode');
+                    if (completionSelect && !completionSelect.tomselect) {
+                        console.log('🌍 Initializing Tom Select for completionCountryCode');
+                        new TomSelect('#completionCountryCode', {
+                            create: false,
+                            sortField: { field: 'text', direction: 'asc' },
+                            maxOptions: 200,
+                            placeholder: 'Rechercher un pays...',
+                            allowEmptyOption: false,
+                            render: {
+                                option: function(data, escape) {
+                                    return '<div class="option">' + escape(data.text) + '</div>';
+                                },
+                                item: function(data, escape) {
+                                    // Afficher format court: 🇦🇪 +971
+                                    const match = data.text.match(/^(.+?) (.+?) \((.+?)\)$/);
+                                    if (match) {
+                                        return '<div class="item">' + match[1] + ' ' + match[3] + '</div>';
+                                    }
+                                    return '<div class="item">' + escape(data.text) + '</div>';
+                                }
+                            },
+                            wrapperClass: 'ts-wrapper country-select'
+                        });
+                    }
+                    
+                    // Formulaire d'inscription
+                    const signupSelect = document.getElementById('countryCode');
+                    if (signupSelect && !signupSelect.tomselect) {
+                        console.log('🌍 Initializing Tom Select for countryCode');
+                        new TomSelect('#countryCode', {
+                            create: false,
+                            sortField: { field: 'text', direction: 'asc' },
+                            maxOptions: 200,
+                            placeholder: 'Rechercher un pays...',
+                            allowEmptyOption: false,
+                            render: {
+                                option: function(data, escape) {
+                                    return '<div class="option">' + escape(data.text) + '</div>';
+                                },
+                                item: function(data, escape) {
+                                    const match = data.text.match(/^(.+?) (.+?) \((.+?)\)$/);
+                                    if (match) {
+                                        return '<div class="item">' + match[1] + ' ' + match[3] + '</div>';
+                                    }
+                                    return '<div class="item">' + escape(data.text) + '</div>';
+                                }
+                            },
+                            wrapperClass: 'ts-wrapper country-select'
+                        });
+                    }
+                }, 200);
+            }
+            window.initCountrySelects = initCountrySelects;
+
             // Fonction de gestion de l'authentification
             function handleAuth(mode) {
                 console.log('🔧 handleAuth called for mode:', mode);
@@ -271,6 +398,11 @@
                 }
 
                 console.log('✅ Form found, attaching handler');
+                
+                // ✅ v3.17.0: Initialiser Tom Select pour le signup
+                if (mode === 'signup') {
+                    initCountrySelects();
+                }
 
                 form.onsubmit = async (e) => {
                     e.preventDefault();
@@ -285,7 +417,9 @@
                             console.log('📝 Processing signup with 2FA');
                             const name = document.getElementById('name').value.trim();
                             const phone = document.getElementById('phone').value.trim();
-                            const countryCode = document.getElementById('countryCode').value;
+                            // ✅ v3.17.0: Récupérer la valeur via Tom Select ou fallback
+                            const countryCodeEl = document.getElementById('countryCode');
+                            const countryCode = countryCodeEl.tomselect ? countryCodeEl.tomselect.getValue() : countryCodeEl.value;
                             const confirmPassword = document.getElementById('confirmPassword').value;
                             const fullPhone = countryCode + phone;
 
@@ -757,6 +891,9 @@
                         // Afficher le dashboard AVEC le modal par-dessus
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
+                        // ✅ v3.17.0: Initialiser Tom Select pour le modal
+                        initCountrySelects();
+                        
                         // ✅ v3.14.0: Attacher le handler du formulaire - FORMAT UAE
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
@@ -786,13 +923,14 @@
                                         
                                         const name = nameEl?.value?.trim() || '';
                                         const email = emailEl?.value?.trim() || '';
-                                        const countryCode = countryCodeEl?.value || '+971';
+                                        // ✅ v3.17.0: Récupérer via Tom Select
+                                        const countryCode = countryCodeEl.tomselect ? countryCodeEl.tomselect.getValue() : (countryCodeEl?.value || '+971');
                                         const phone = phoneEl?.value?.trim() || '';
                                         const address = addressEl?.value?.trim() || '';
                                         const area = areaEl?.value?.trim() || '';
                                         const emirate = emirateEl?.value || '';
                                         
-                                        console.log('📋 Form values:', { name, email, phone, address, area, emirate });
+                                        console.log('📋 Form values:', { name, email, phone, countryCode, address, area, emirate });
                                         
                                         // Validations
                                         if (!name || name.length < 2) {
