@@ -329,13 +329,15 @@ function initPhoneInput(inputId, initialNumber = '') {
     if (phoneInputInstances[inputId]) phoneInputInstances[inputId].destroy();
     console.log('📱 Initializing intl-tel-input for:', inputId);
     const iti = window.intlTelInput(input, {
-        initialCountry: "ae",
-        preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
-        separateDialCode: true,
-        countrySearch: true,
-        showFlags: true,
-        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
-    });
+    initialCountry: "ae",
+    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+    separateDialCode: true,
+    countrySearch: true,
+    showFlags: true,
+    dropdownContainer: document.body,
+    useFullscreenPopup: false,
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+});
     phoneInputInstances[inputId] = iti;
     if (initialNumber) iti.setNumber(initialNumber);
     return iti;
