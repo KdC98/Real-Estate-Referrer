@@ -884,7 +884,7 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                                         if (email.includes('@privaterelay.appleid.com')) {
                                             throw new Error('Veuillez entrer votre vraie adresse email, pas le relay Apple');
                                         }
-                                        if (!phone || phone.length < 6) {
+                                    if (!fullPhone || fullPhone.length < 8) {
                                             throw new Error('Numéro de téléphone invalide');
                                         }
                                         if (!address || address.length < 3) {
@@ -896,9 +896,7 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                                         if (!emirate) {
                                             throw new Error('Émirat requis');
                                         }
-                                        
-                                        const fullPhone = countryCode + phone.replace(/^0+/, '');
-                                        
+                                          
                                         // Construire l'adresse complète au format UAE
                                         const fullAddress = `${address}, ${area}, ${emirate}`;
                                         
