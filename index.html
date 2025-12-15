@@ -13,73 +13,51 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
     
     <!-- Tom Select pour dropdown pays searchable -->
-    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+    <!-- intl-tel-input pour téléphone international -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
     <!-- Version: 3.17.0 - Tom Select dropdown pays searchable -->
     
     <style>
-    /* Tom Select - Thème sombre Dubai */
-    .ts-wrapper.country-select .ts-control {
-        background: rgba(51, 65, 85, 0.5) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 0.5rem !important;
-        color: white !important;
-        padding: 0.5rem 0.75rem !important;
-        min-height: 44px !important;
-        font-size: 0.875rem !important;
-    }
-    .ts-wrapper.country-select .ts-control:focus,
-    .ts-wrapper.country-select.focus .ts-control {
-        border-color: #eab308 !important;
-        box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3) !important;
-    }
-    .ts-wrapper.country-select .ts-control input {
-        color: white !important;
-    }
-    .ts-wrapper.country-select .ts-control input::placeholder {
-        color: rgba(191, 219, 254, 0.5) !important;
-    }
-    .ts-wrapper.country-select .ts-dropdown {
-        background: #1e293b !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 0.5rem !important;
-        margin-top: 4px !important;
-        max-height: 300px !important;
-        overflow-y: auto !important;
-    }
-    .ts-wrapper.country-select .ts-dropdown .option {
-        color: white !important;
-        padding: 10px 12px !important;
-        cursor: pointer !important;
-    }
-    .ts-wrapper.country-select .ts-dropdown .option:hover,
-    .ts-wrapper.country-select .ts-dropdown .option.active {
-        background: rgba(234, 179, 8, 0.2) !important;
-        color: #fbbf24 !important;
-    }
-    .ts-wrapper.country-select .ts-dropdown .option.selected {
-        background: rgba(234, 179, 8, 0.3) !important;
-    }
-    .ts-wrapper.country-select .ts-dropdown .optgroup-header {
-        color: #94a3b8 !important;
-        font-size: 0.75rem !important;
-        padding: 8px 12px 4px !important;
-        background: transparent !important;
-    }
-    .ts-wrapper.country-select .item {
-        color: white !important;
-        background: transparent !important;
-    }
-    .ts-wrapper.country-select .ts-control > .item {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    /* Fix pour le placeholder */
-    .ts-wrapper.country-select.single .ts-control:after {
-        border-color: #94a3b8 transparent transparent transparent !important;
-    }
-    </style>
+/* intl-tel-input - Thème sombre Dubai */
+.iti { width: 100% !important; }
+.iti__tel-input {
+    width: 100% !important;
+    padding: 0.75rem 1rem 0.75rem 90px !important;
+    background: rgba(51, 65, 85, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 0.5rem !important;
+    color: white !important;
+}
+.iti__tel-input:focus {
+    border-color: #eab308 !important;
+    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3) !important;
+    outline: none !important;
+}
+.iti__tel-input::placeholder { color: rgba(191, 219, 254, 0.5) !important; }
+.iti__selected-country {
+    background: rgba(51, 65, 85, 0.8) !important;
+    border-radius: 0.5rem 0 0 0.5rem !important;
+}
+.iti__selected-dial-code { color: white !important; }
+.iti__arrow { border-top-color: white !important; }
+.iti__dropdown-content {
+    background: #1e293b !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 0.5rem !important;
+}
+.iti__search-input {
+    background: rgba(51, 65, 85, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+}
+.iti__search-input::placeholder { color: rgba(191, 219, 254, 0.5) !important; }
+.iti__country { color: white !important; }
+.iti__country:hover { background: rgba(234, 179, 8, 0.2) !important; }
+.iti__dial-code { color: #94a3b8 !important; }
+.iti--container { z-index: 9999 !important; }
+</style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
@@ -322,65 +300,31 @@
                 window.currentPage = 'auth-signup';
             }
 
-            // ✅ v3.17.0: Fonction pour initialiser Tom Select sur les dropdowns pays
-            function initCountrySelects() {
-                setTimeout(() => {
-                    // Modal de complétion profil
-                    const completionSelect = document.getElementById('completionCountryCode');
-                    if (completionSelect && !completionSelect.tomselect) {
-                        console.log('🌍 Initializing Tom Select for completionCountryCode');
-                        new TomSelect('#completionCountryCode', {
-                            create: false,
-                            sortField: { field: 'text', direction: 'asc' },
-                            maxOptions: 200,
-                            placeholder: 'Rechercher un pays...',
-                            allowEmptyOption: false,
-                            render: {
-                                option: function(data, escape) {
-                                    return '<div class="option">' + escape(data.text) + '</div>';
-                                },
-                                item: function(data, escape) {
-                                    // Afficher format court: 🇦🇪 +971
-                                    const match = data.text.match(/^(.+?) (.+?) \((.+?)\)$/);
-                                    if (match) {
-                                        return '<div class="item">' + match[1] + ' ' + match[3] + '</div>';
-                                    }
-                                    return '<div class="item">' + escape(data.text) + '</div>';
-                                }
-                            },
-                            wrapperClass: 'ts-wrapper country-select'
-                        });
-                    }
-                    
-                    // Formulaire d'inscription
-                    const signupSelect = document.getElementById('countryCode');
-                    if (signupSelect && !signupSelect.tomselect) {
-                        console.log('🌍 Initializing Tom Select for countryCode');
-                        new TomSelect('#countryCode', {
-                            create: false,
-                            sortField: { field: 'text', direction: 'asc' },
-                            maxOptions: 200,
-                            placeholder: 'Rechercher un pays...',
-                            allowEmptyOption: false,
-                            render: {
-                                option: function(data, escape) {
-                                    return '<div class="option">' + escape(data.text) + '</div>';
-                                },
-                                item: function(data, escape) {
-                                    const match = data.text.match(/^(.+?) (.+?) \((.+?)\)$/);
-                                    if (match) {
-                                        return '<div class="item">' + match[1] + ' ' + match[3] + '</div>';
-                                    }
-                                    return '<div class="item">' + escape(data.text) + '</div>';
-                                }
-                            },
-                            wrapperClass: 'ts-wrapper country-select'
-                        });
-                    }
-                }, 200);
-            }
-            window.initCountrySelects = initCountrySelects;
+           // ✅ v3.18.0: intl-tel-input pour téléphone international
+function initPhoneInput(inputId, initialNumber = '') {
+    const input = document.getElementById(inputId);
+    if (!input) return null;
+    if (phoneInputInstances[inputId]) phoneInputInstances[inputId].destroy();
+    console.log('📱 Initializing intl-tel-input for:', inputId);
+    const iti = window.intlTelInput(input, {
+        initialCountry: "ae",
+        preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+        separateDialCode: true,
+        countrySearch: true,
+        showFlags: true,
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+    });
+    phoneInputInstances[inputId] = iti;
+    if (initialNumber) iti.setNumber(initialNumber);
+    return iti;
+}
+window.initPhoneInput = initPhoneInput;
 
+function getFullPhoneNumber(inputId) {
+    const iti = phoneInputInstances[inputId];
+    return iti ? iti.getNumber() : (document.getElementById(inputId)?.value || '');
+}
+window.getFullPhoneNumber = getFullPhoneNumber;
             // Fonction de gestion de l'authentification
             function handleAuth(mode) {
                 console.log('🔧 handleAuth called for mode:', mode);
@@ -399,9 +343,9 @@
 
                 console.log('✅ Form found, attaching handler');
                 
-                // ✅ v3.17.0: Initialiser Tom Select pour le signup
+                // ✅ v3.18.0: Initialiser intl-tel-input pour le signup
                 if (mode === 'signup') {
-                    initCountrySelects();
+                    initPhoneInput('phone');
                 }
 
                 form.onsubmit = async (e) => {
@@ -891,8 +835,11 @@
                         // Afficher le dashboard AVEC le modal par-dessus
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
-                        // ✅ v3.17.0: Initialiser Tom Select pour le modal
-                        initCountrySelects();
+                        // ✅ v3.18.0: Initialiser intl-tel-input pour le modal
+                        setTimeout(() => {
+                        const existingPhone = userProfile.phone || '';
+                        initPhoneInput('completionPhone', existingPhone);
+                        }, 200);
                         
                         // ✅ v3.14.0: Attacher le handler du formulaire - FORMAT UAE
                         setTimeout(() => {
