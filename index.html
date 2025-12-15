@@ -263,6 +263,7 @@
             let isRendering = false;
             let lastAuthEvent = null;
             let initialLoadComplete = false;
+            let phoneInputInstances = {};
 
             // Exposer les variables globales
             window.currentUser = null;
@@ -360,12 +361,9 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                         if (mode === 'signup') {
                             console.log('📝 Processing signup with 2FA');
                             const name = document.getElementById('name').value.trim();
-                            const phone = document.getElementById('phone').value.trim();
-                            // ✅ v3.17.0: Récupérer la valeur via Tom Select ou fallback
-                            const countryCodeEl = document.getElementById('countryCode');
-                            const countryCode = countryCodeEl.tomselect ? countryCodeEl.tomselect.getValue() : countryCodeEl.value;
+                            // ✅ v3.18.0: Récupérer le numéro complet via intl-tel-input
+                            const fullPhone = getFullPhoneNumber('phone');
                             const confirmPassword = document.getElementById('confirmPassword').value;
-                            const fullPhone = countryCode + phone;
 
                             if (!VALIDATION.validateName(name)) throw new Error('Nom invalide');
                             if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Numéro de téléphone invalide');
@@ -862,22 +860,19 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                                         // ✅ v3.14.0: Format UAE - Récupérer les champs
                                         const nameEl = document.getElementById('completionName');
                                         const emailEl = document.getElementById('completionEmail');
-                                        const countryCodeEl = document.getElementById('completionCountryCode');
-                                        const phoneEl = document.getElementById('completionPhone');
                                         const addressEl = document.getElementById('completionAddress');
                                         const areaEl = document.getElementById('completionArea');
                                         const emirateEl = document.getElementById('completionEmirate');
-                                        
+
                                         const name = nameEl?.value?.trim() || '';
                                         const email = emailEl?.value?.trim() || '';
-                                        // ✅ v3.17.0: Récupérer via Tom Select
-                                        const countryCode = countryCodeEl.tomselect ? countryCodeEl.tomselect.getValue() : (countryCodeEl?.value || '+971');
-                                        const phone = phoneEl?.value?.trim() || '';
+                                        // ✅ v3.18.0: Récupérer le numéro complet via intl-tel-input
+                                        const fullPhone = getFullPhoneNumber('completionPhone');
                                         const address = addressEl?.value?.trim() || '';
                                         const area = areaEl?.value?.trim() || '';
                                         const emirate = emirateEl?.value || '';
                                         
-                                        console.log('📋 Form values:', { name, email, phone, countryCode, address, area, emirate });
+                                        console.log('📋 Form values:', { name, email, fullPhone, address, area, emirate });
                                         
                                         // Validations
                                         if (!name || name.length < 2) {
