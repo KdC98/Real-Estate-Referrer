@@ -178,18 +178,6 @@ export function renderProfileCompletionModal() {
     const existingPhone = profile.phone || '';
     const isAppleRelay = existingEmail.includes('privaterelay.appleid.com');
     
-    let existingCountryCode = '+971';
-    let existingPhoneNumber = '';
-    if (existingPhone) {
-        const match = existingPhone.match(/^(\+\d{1,4})(.*)$/);
-        if (match) {
-            existingCountryCode = match[1];
-            existingPhoneNumber = match[2].replace(/^0/, '').replace(/\D/g, '');
-        } else {
-            existingPhoneNumber = existingPhone.replace(/^0/, '').replace(/\D/g, '');
-        }
-    }
-    
     const emirates = [
         { code: 'Dubai', name: 'Dubai / دبي' },
         { code: 'Abu Dhabi', name: 'Abu Dhabi / أبوظبي' },
@@ -200,7 +188,6 @@ export function renderProfileCompletionModal() {
         { code: 'Fujairah', name: 'Fujairah / الفجيرة' }
     ];
     const emirateOptions = emirates.map(e => `<option value="${e.code}" ${e.code === 'Dubai' ? 'selected' : ''}>${e.name}</option>`).join('');
-    const countryOptions = generateCountryOptions(existingCountryCode);
 
     return `
         <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100] overflow-y-auto">
@@ -226,10 +213,7 @@ export function renderProfileCompletionModal() {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.phone_label} *</label>
-                        <div class="flex gap-2">
-                            <select id="completionCountryCode" class="w-48 px-2 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none text-sm">${countryOptions}</select>
-                            <input type="tel" id="completionPhone" value="${existingPhoneNumber}" required placeholder="${t.phone_placeholder}" inputmode="numeric" maxlength="15" class="flex-1 px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^0+/, '')">
-                        </div>
+                        <input type="tel" id="completionPhone" required placeholder="${t.phone_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                         <p class="text-xs text-blue-300 mt-1">📱 ${t.phone_help}</p>
                     </div>
                     <div>
@@ -400,8 +384,6 @@ export function renderAuthPage(mode) {
     const phoneHelpTranslations = { fr: "Numéro sans le 0 initial", en: "Number without leading 0", ar: "الرقم بدون الصفر الأول", ru: "Номер без начального 0", hi: "0 के बिना नंबर", ur: "0 کے بغیر نمبر", zh: "不带前导0的号码", tl: "Numero na walang 0 sa unahan" };
     const phoneHelp = phoneHelpTranslations[currentLang] || phoneHelpTranslations['en'];
     
-    const countryOptions = generateCountryOptions('+971');
-    
     if (mode === 'login') {
         title = t('auth:login_title'); buttonText = t('auth:login_button'); linkText = t('auth:no_account'); linkAction = 'showSignup()';
     } else if (mode === 'signup') {
@@ -473,10 +455,7 @@ export function renderAuthPage(mode) {
                         </div>
                         <div>
                             <label class="block mb-2 font-medium text-blue-100">${t('auth:phone_label')}</label>
-                            <div class="flex gap-2">
-                                <select id="countryCode" class="w-48 px-3 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white text-sm">${countryOptions}</select>
-                                <input type="tel" id="phone" required placeholder="${t('auth:phone_placeholder')}" inputmode="numeric" maxlength="15" class="flex-1 px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^0+/, ''); validatePhone()">
-                            </div>
+                            <input type="tel" id="phone" required placeholder="${t('auth:phone_placeholder')}" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50">
                             <p class="text-xs text-blue-300 mt-1">📱 ${phoneHelp}</p>
                             <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                 <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
