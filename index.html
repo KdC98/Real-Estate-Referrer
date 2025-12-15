@@ -12,71 +12,72 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
     
-    <!-- Tom Select pour dropdown pays searchable -->
     <!-- intl-tel-input pour téléphone international -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.17.0 - Tom Select dropdown pays searchable -->
+    <!-- Version: 3.18.3 - intl-tel-input fix auto-open -->
     
     <style>
-/* intl-tel-input - Thème sombre Dubai v3.18.1 */
+/* intl-tel-input - Thème sombre Dubai v3.18.3 */
 .iti { width: 100% !important; }
-.iti__tel-input {
+.iti input[type="tel"] {
     width: 100% !important;
-    padding: 0.75rem 1rem 0.75rem 90px !important;
+    padding: 0.75rem 1rem 0.75rem 52px !important;
     background: rgba(51, 65, 85, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 0.5rem !important;
     color: white !important;
 }
-.iti__tel-input:focus {
+.iti input[type="tel"]:focus {
     border-color: #eab308 !important;
     box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3) !important;
     outline: none !important;
 }
-.iti__tel-input::placeholder { color: rgba(191, 219, 254, 0.5) !important; }
-.iti__selected-country {
+.iti input[type="tel"]::placeholder { color: rgba(191, 219, 254, 0.5) !important; }
+.iti__flag-container {
+    padding: 0 !important;
+}
+.iti__selected-flag {
     background: rgba(51, 65, 85, 0.8) !important;
     border-radius: 0.5rem 0 0 0.5rem !important;
+    padding: 0 8px !important;
 }
-.iti__selected-dial-code { color: white !important; }
+.iti__selected-flag:hover {
+    background: rgba(51, 65, 85, 1) !important;
+}
 .iti__arrow { border-top-color: white !important; }
-.iti__dropdown-content {
+.iti__arrow--up { border-bottom-color: white !important; }
+.iti__country-list {
     background: #1e293b !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 0.5rem !important;
-    max-height: 250px !important;
-}
-.iti__country-list {
     max-height: 200px !important;
     overflow-y: auto !important;
+    z-index: 9999 !important;
 }
-.iti__search-input {
-    background: rgba(51, 65, 85, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+.iti__country {
+    padding: 8px 12px !important;
     color: white !important;
-    padding: 8px 12px !important;
-    margin: 8px !important;
-    width: calc(100% - 16px) !important;
-    border-radius: 0.375rem !important;
 }
-.iti__search-input::placeholder { color: rgba(191, 219, 254, 0.5) !important; }
-.iti__country { 
-    color: white !important; 
-    padding: 8px 12px !important;
+.iti__country:hover {
+    background: rgba(234, 179, 8, 0.2) !important;
 }
-.iti__country:hover { background: rgba(234, 179, 8, 0.2) !important; }
-.iti__country--highlight { background: rgba(234, 179, 8, 0.3) !important; }
+.iti__country.iti__highlight {
+    background: rgba(234, 179, 8, 0.3) !important;
+}
 .iti__dial-code { color: #94a3b8 !important; }
 .iti__country-name { color: white !important; }
-.iti--container { 
-    z-index: 9999 !important; 
-    position: absolute !important;
+.iti__divider {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    margin: 4px 0 !important;
 }
-.iti__flag-container { 
-    position: absolute !important;
-    left: 0 !important;
+.iti--separate-dial-code .iti__selected-flag {
+    background: rgba(51, 65, 85, 0.8) !important;
+}
+.iti--separate-dial-code .iti__selected-dial-code {
+    color: white !important;
+    margin-left: 6px !important;
 }
 </style>
 </head>
@@ -97,7 +98,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.17.0...');
+            console.log('🚀 App starting v3.18.3...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -280,7 +281,7 @@
             let tempPhone = null;
             let pendingSignupId = null;
             let globalIsUploading = false;
-            let contractJustSigned = isContractSignedReturn; // ✅ v3.15.0: Détecter depuis URL
+            let contractJustSigned = isContractSignedReturn;
             let isRendering = false;
             let lastAuthEvent = null;
             let initialLoadComplete = false;
@@ -322,33 +323,37 @@
                 window.currentPage = 'auth-signup';
             }
 
-           // ✅ v3.18.0: intl-tel-input pour téléphone international
-function initPhoneInput(inputId, initialNumber = '') {
-    const input = document.getElementById(inputId);
-    if (!input) return null;
-    if (phoneInputInstances[inputId]) phoneInputInstances[inputId].destroy();
-    console.log('📱 Initializing intl-tel-input for:', inputId);
-    const iti = window.intlTelInput(input, {
-    initialCountry: "ae",
-    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
-    separateDialCode: true,
-    countrySearch: true,
-    showFlags: true,
-    dropdownContainer: document.body,
-    useFullscreenPopup: false,
-    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
-});
-    phoneInputInstances[inputId] = iti;
-    if (initialNumber) iti.setNumber(initialNumber);
-    return iti;
-}
-window.initPhoneInput = initPhoneInput;
+            // ✅ v3.18.3: intl-tel-input pour téléphone international - SANS countrySearch pour éviter auto-open
+            function initPhoneInput(inputId, initialNumber = '') {
+                const input = document.getElementById(inputId);
+                if (!input) return null;
+                if (phoneInputInstances[inputId]) {
+                    phoneInputInstances[inputId].destroy();
+                }
+                console.log('📱 Initializing intl-tel-input for:', inputId);
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "ae",
+                    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+                    separateDialCode: true,
+                    nationalMode: false,
+                    autoPlaceholder: "polite",
+                    formatOnDisplay: true,
+                    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+                });
+                phoneInputInstances[inputId] = iti;
+                if (initialNumber) {
+                    iti.setNumber(initialNumber);
+                }
+                return iti;
+            }
+            window.initPhoneInput = initPhoneInput;
 
-function getFullPhoneNumber(inputId) {
-    const iti = phoneInputInstances[inputId];
-    return iti ? iti.getNumber() : (document.getElementById(inputId)?.value || '');
-}
-window.getFullPhoneNumber = getFullPhoneNumber;
+            function getFullPhoneNumber(inputId) {
+                const iti = phoneInputInstances[inputId];
+                return iti ? iti.getNumber() : (document.getElementById(inputId)?.value || '');
+            }
+            window.getFullPhoneNumber = getFullPhoneNumber;
+
             // Fonction de gestion de l'authentification
             function handleAuth(mode) {
                 console.log('🔧 handleAuth called for mode:', mode);
@@ -369,7 +374,9 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                 
                 // ✅ v3.18.0: Initialiser intl-tel-input pour le signup
                 if (mode === 'signup') {
-                    initPhoneInput('phone');
+                    setTimeout(() => {
+                        initPhoneInput('phone');
+                    }, 100);
                 }
 
                 form.onsubmit = async (e) => {
@@ -858,8 +865,8 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                         
                         // ✅ v3.18.0: Initialiser intl-tel-input pour le modal
                         setTimeout(() => {
-                        const existingPhone = userProfile.phone || '';
-                        initPhoneInput('completionPhone', existingPhone);
+                            const existingPhone = userProfile.phone || '';
+                            initPhoneInput('completionPhone', existingPhone);
                         }, 200);
                         
                         // ✅ v3.14.0: Attacher le handler du formulaire - FORMAT UAE
@@ -907,7 +914,7 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                                         if (email.includes('@privaterelay.appleid.com')) {
                                             throw new Error('Veuillez entrer votre vraie adresse email, pas le relay Apple');
                                         }
-                                    if (!fullPhone || fullPhone.length < 8) {
+                                        if (!fullPhone || fullPhone.length < 8) {
                                             throw new Error('Numéro de téléphone invalide');
                                         }
                                         if (!address || address.length < 3) {
@@ -1332,9 +1339,6 @@ window.getFullPhoneNumber = getFullPhoneNumber;
                 initialLoadComplete = true;
                 render();
             }
-            
-            // ✅ v3.15.4: NE PAS intercepter les erreurs - laisser Supabase gérer
-            // L'erreur "Invalid data" est cosmétique et ne doit pas affecter le fonctionnement
             
             // Lancer l'initialisation
             await initializeApp();
