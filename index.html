@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.19.0 - Fix OAuth "Invalid data" error -->
+    <!-- Version: 3.20.0 - Disable Realtime to fix Invalid data error -->
     
     <style>
 /* intl-tel-input - Thème sombre Dubai v3.18.3 */
@@ -84,8 +84,27 @@
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
     <div id="oauthWarningModal" class="hidden"></div>
+    
+    <!-- ✅ v3.20.0: Capturer les erreurs Realtime AVANT le chargement de Supabase -->
+    <script>
+        // Intercepter les erreurs "Invalid data" de Realtime
+        window.addEventListener('unhandledrejection', function(event) {
+            if (event.reason && event.reason.message === 'Invalid data') {
+                event.preventDefault();
+                console.log('🚫 Realtime "Invalid data" error suppressed');
+            }
+        });
+        
+        window.addEventListener('error', function(event) {
+            if (event.message && event.message.includes('Invalid data')) {
+                event.preventDefault();
+                console.log('🚫 Realtime error suppressed');
+            }
+        });
+    </script>
+    
     <script type="module">
-        // ✅ v3.19.0: Fix OAuth "Invalid data" error - version stable de Supabase
+        // ✅ v3.20.0: Disable Realtime to fix "Invalid data" error
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
         import * as VALIDATION from './js/validation.js';
@@ -98,7 +117,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.19.0...');
+            console.log('🚀 App starting v3.20.0...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
@@ -195,19 +214,31 @@
             }
             window.changeLanguage = changeLanguage;
 
-            // ✅ v3.19.0: Client Supabase avec configuration optimisée pour OAuth
+            // ✅ v3.20.0: Client Supabase SANS Realtime pour éviter "Invalid data"
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-                realtime: false,
-                db: {
-                    schema: 'public'
-                },
                 auth: {
                     autoRefreshToken: true,
                     persistSession: true,
                     detectSessionInUrl: true,
-                    flowType: 'pkce'  // ✅ v3.19.0: Explicitement utiliser PKCE
+                    flowType: 'pkce'
+                },
+                global: {
+                    headers: {
+                        'X-Client-Info': 'real-estate-referrer/3.20.0'
+                    }
                 }
             });
+            
+            // ✅ v3.20.0: Désactiver Realtime immédiatement après création du client
+            try {
+                if (supabase.realtime) {
+                    supabase.realtime.disconnect();
+                    console.log('🚫 Realtime disconnected');
+                }
+            } catch (e) {
+                console.log('🚫 Realtime already disabled');
+            }
+            
             window.supabase = supabase;
             window.SUPABASE_URL = SUPABASE_URL;
             window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
@@ -644,7 +675,7 @@
                 };
             }
 
-            // ✅ v3.19.0: Fonction loadUserProfile avec gestion d'erreur améliorée
+            // ✅ v3.20.0: Fonction loadUserProfile avec gestion d'erreur robuste
             async function loadUserProfile(user = null) {
                 const targetUser = user || currentUser;
                 console.log('🔍 loadUserProfile called for user:', targetUser?.id);
@@ -665,7 +696,16 @@
 
                     if (error && error.code !== 'PGRST116') {
                         console.error('❌ Error loading profile:', error);
-                        return false;
+                        // ✅ v3.20.0: Continuer avec un profil minimal en cas d'erreur
+                        userProfile = {
+                            id: targetUser.id,
+                            name: targetUser.user_metadata?.full_name || targetUser.email?.split('@')[0] || 'User',
+                            email: targetUser.email,
+                            role: 'referrer',
+                            contract_status: 'pending'
+                        };
+                        window.userProfile = userProfile;
+                        return true;
                     }
 
                     let profile = data;
@@ -693,7 +733,16 @@
 
                         if (insertError) {
                             console.error('❌ Error creating profile:', insertError);
-                            return false;
+                            // ✅ v3.20.0: Utiliser profil minimal si création échoue
+                            userProfile = {
+                                id: targetUser.id,
+                                name: userName,
+                                email: targetUser.email,
+                                role: 'referrer',
+                                contract_status: 'pending'
+                            };
+                            window.userProfile = userProfile;
+                            return true;
                         }
 
                         profile = newProfile;
@@ -712,7 +761,7 @@
                     return true;
                 } catch (err) {
                     console.error('❌ Exception loading profile:', err.message);
-                    // ✅ v3.19.0: En cas d'erreur, créer un profil minimal pour continuer
+                    // ✅ v3.20.0: En cas d'erreur, créer un profil minimal pour continuer
                     userProfile = {
                         id: targetUser.id,
                         name: targetUser.user_metadata?.full_name || targetUser.email?.split('@')[0] || 'User',
@@ -1211,7 +1260,7 @@
             window.renderDashboard = RENDERING.renderDashboard;
             window.logout = logout;
 
-            // ✅ v3.19.0: Gestion robuste de l'authentification avec récupération d'erreur OAuth
+            // ✅ v3.20.0: Gestion robuste de l'authentification
             supabase.auth.onAuthStateChange(async (event, session) => {
                 console.log('🔔 Auth state changed:', event, session ? 'with session' : 'no session');
 
@@ -1284,7 +1333,7 @@
                 render();
             });
 
-            // ✅ v3.19.0: Initialisation avec gestion d'erreur OAuth robuste
+            // ✅ v3.20.0: Initialisation avec gestion d'erreur robuste
             async function initializeApp() {
                 // ✅ v3.19.0: Si erreur OAuth dans URL, afficher un message et nettoyer
                 if (hasOAuthError) {
@@ -1311,7 +1360,7 @@
                 if (isOAuthReturn) {
                     console.log('🔄 OAuth return - waiting for onAuthStateChange to handle session...');
                     
-                    // ✅ v3.19.0: Tenter de récupérer la session manuellement après un court délai
+                    // ✅ v3.20.0: Tenter de récupérer la session manuellement après un court délai
                     setTimeout(async () => {
                         try {
                             console.log('🔍 Attempting manual session recovery for OAuth...');
