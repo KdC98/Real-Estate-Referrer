@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.18.3 - intl-tel-input fix auto-open -->
+    <!-- Version: 3.19.0 - Fix OAuth "Invalid data" error -->
     
     <style>
 /* intl-tel-input - Thème sombre Dubai v3.18.3 */
@@ -85,7 +85,7 @@
     <div id="app"></div>
     <div id="oauthWarningModal" class="hidden"></div>
     <script type="module">
-        // ✅ v3.15.9: Version spécifique de Supabase pour éviter le bug "Invalid data"
+        // ✅ v3.19.0: Fix OAuth "Invalid data" error - version stable de Supabase
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
         import * as VALIDATION from './js/validation.js';
@@ -98,20 +98,22 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.18.3...');
+            console.log('🚀 App starting v3.19.0...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord (mais ne pas encore modifier les variables)
             const urlParams = new URLSearchParams(window.location.search);
             const isContractSignedReturn = urlParams.get('signed') !== null;
             
-            // ✅ v3.12.0: Détecter retour OAuth de manière robuste
+            // ✅ v3.19.0: Détecter retour OAuth de manière robuste
             const hashParams = window.location.hash;
             const isOAuthReturn = hashParams.includes('access_token') || 
                                   hashParams.includes('error') || 
                                   urlParams.get('code') !== null;
             
+            // ✅ v3.19.0: Détecter erreur OAuth dans l'URL
+            const hasOAuthError = hashParams.includes('error') || urlParams.get('error') !== null;
+            
             // ✅ v3.16.3: Ne nettoyer l'URL que pour le retour contrat, PAS pour OAuth
-            // Supabase a besoin du hash pour récupérer la session OAuth
             if (isContractSignedReturn && !isOAuthReturn) {
                 console.log('🔄 Contract return detected, cleaning URL...');
                 if (window.history && window.history.replaceState) {
@@ -127,8 +129,16 @@
                 console.log('📝 Contract signed return detected');
             }
             
-            // ✅ v3.15.4: Afficher loader SEULEMENT pour OAuth
-            if (isOAuthReturn) {
+            // ✅ v3.19.0: Si erreur OAuth détectée, nettoyer et continuer
+            if (hasOAuthError) {
+                console.error('❌ OAuth error detected in URL, cleaning up...');
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
+            }
+            
+            // ✅ v3.15.4: Afficher loader SEULEMENT pour OAuth (sans erreur)
+            if (isOAuthReturn && !hasOAuthError) {
                 document.getElementById('app').innerHTML = `
                     <div class="min-h-screen flex items-center justify-center">
                         <div class="text-center">
@@ -139,10 +149,10 @@
                     </div>
                 `;
                 
-                // ✅ v3.16.3: Fallback - recharger après 8s si toujours bloqué
+                // ✅ v3.19.0: Fallback plus court - 5s au lieu de 8s
                 setTimeout(() => {
                     if (document.getElementById('app').innerHTML.includes('Connexion en cours')) {
-                        console.log('⏰ OAuth fallback: still on loader after 8s');
+                        console.log('⏰ OAuth fallback: still on loader after 5s, cleaning and reloading');
                         // Nettoyer l'URL et recharger
                         window.history.replaceState(null, '', window.location.pathname);
                         window.location.reload();
@@ -185,7 +195,7 @@
             }
             window.changeLanguage = changeLanguage;
 
-            // ✅ v3.16.1: Client Supabase avec Realtime complètement désactivé
+            // ✅ v3.19.0: Client Supabase avec configuration optimisée pour OAuth
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 realtime: false,
                 db: {
@@ -194,7 +204,8 @@
                 auth: {
                     autoRefreshToken: true,
                     persistSession: true,
-                    detectSessionInUrl: true
+                    detectSessionInUrl: true,
+                    flowType: 'pkce'  // ✅ v3.19.0: Explicitement utiliser PKCE
                 }
             });
             window.supabase = supabase;
@@ -323,7 +334,7 @@
                 window.currentPage = 'auth-signup';
             }
 
-            // ✅ v3.18.3: intl-tel-input pour téléphone international - SANS countrySearch pour éviter auto-open
+            // ✅ v3.18.3: intl-tel-input pour téléphone international
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
                 if (!input) return null;
@@ -391,7 +402,6 @@
                         if (mode === 'signup') {
                             console.log('📝 Processing signup with 2FA');
                             const name = document.getElementById('name').value.trim();
-                            // ✅ v3.18.0: Récupérer le numéro complet via intl-tel-input
                             const fullPhone = getFullPhoneNumber('phone');
                             const confirmPassword = document.getElementById('confirmPassword').value;
 
@@ -634,7 +644,7 @@
                 };
             }
 
-            // ✅ v3.16.2: Fonction loadUserProfile avec timeout pour éviter blocage
+            // ✅ v3.19.0: Fonction loadUserProfile avec gestion d'erreur améliorée
             async function loadUserProfile(user = null) {
                 const targetUser = user || currentUser;
                 console.log('🔍 loadUserProfile called for user:', targetUser?.id);
@@ -644,22 +654,14 @@
                     return false;
                 }
 
-                // ✅ v3.16.2: Timeout de 5 secondes pour éviter blocage
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Profile load timeout')), 5000)
-                );
-
                 try {
                     console.log('🔍 Fetching profile from Supabase for:', targetUser.id);
                     
-                    const queryPromise = supabase
+                    const { data, error } = await supabase
                         .from('profiles')
                         .select('*')
                         .eq('id', targetUser.id)
                         .maybeSingle();
-                    
-                    // Race entre la requête et le timeout
-                    const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
 
                     if (error && error.code !== 'PGRST116') {
                         console.error('❌ Error loading profile:', error);
@@ -675,7 +677,7 @@
                             targetUser.email?.split('@')[0] ||
                             '';
 
-                        const createPromise = supabase
+                        const { data: newProfile, error: insertError } = await supabase
                             .from('profiles')
                             .upsert([{
                                 id: targetUser.id,
@@ -688,8 +690,6 @@
                             }], { onConflict: 'id' })
                             .select()
                             .single();
-
-                        const { data: newProfile, error: insertError } = await Promise.race([createPromise, timeoutPromise]);
 
                         if (insertError) {
                             console.error('❌ Error creating profile:', insertError);
@@ -712,20 +712,17 @@
                     return true;
                 } catch (err) {
                     console.error('❌ Exception loading profile:', err.message);
-                    // ✅ v3.16.2: En cas de timeout, créer un profil minimal
-                    if (err.message === 'Profile load timeout') {
-                        console.log('⚠️ Timeout - creating minimal profile');
-                        userProfile = {
-                            id: targetUser.id,
-                            name: targetUser.user_metadata?.full_name || targetUser.email?.split('@')[0] || 'User',
-                            email: targetUser.email,
-                            role: 'referrer',
-                            contract_status: 'pending'
-                        };
-                        window.userProfile = userProfile;
-                        return true;
-                    }
-                    return false;
+                    // ✅ v3.19.0: En cas d'erreur, créer un profil minimal pour continuer
+                    userProfile = {
+                        id: targetUser.id,
+                        name: targetUser.user_metadata?.full_name || targetUser.email?.split('@')[0] || 'User',
+                        email: targetUser.email,
+                        role: 'referrer',
+                        contract_status: 'pending'
+                    };
+                    window.userProfile = userProfile;
+                    console.log('⚠️ Using minimal profile due to error');
+                    return true;
                 }
             }
             window.loadUserProfile = loadUserProfile;
@@ -743,7 +740,6 @@
                     console.warn('⚠️ SignOut exception:', e);
                 }
                 
-                // Toujours nettoyer, même si signOut échoue
                 console.log('🧹 Cleaning ALL session data...');
                 try { localStorage.clear(); } catch(e) {}
                 try { sessionStorage.clear(); } catch(e) {}
@@ -766,7 +762,6 @@
                 console.log('✅ Local state cleaned');
                 console.log('🔄 Redirecting to home...');
                 
-                // Petit délai pour s'assurer que tout est nettoyé
                 setTimeout(() => {
                     window.location.href = window.location.origin;
                 }, 100);
@@ -845,7 +840,6 @@
                 if (currentUser && userProfile) {
                     console.log('✅ User connected with profile');
                     
-                    // Vérifier si le profil est complet (nom, téléphone, adresse, email)
                     const isComplete = RENDERING.isProfileComplete(userProfile);
                     console.log('📋 Profile complete check:', isComplete, {
                         name: !!userProfile.name,
@@ -854,22 +848,18 @@
                         email: !!userProfile.email
                     });
                     
-                    // Si profil incomplet et pas admin → afficher modal de complétion
                     if (!isComplete && userProfile.role !== 'admin') {
                         console.log('⚠️ Profile incomplete - showing completion modal');
                         currentPage = 'profile-completion';
                         window.currentPage = 'profile-completion';
                         
-                        // Afficher le dashboard AVEC le modal par-dessus
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
-                        // ✅ v3.18.0: Initialiser intl-tel-input pour le modal
                         setTimeout(() => {
                             const existingPhone = userProfile.phone || '';
                             initPhoneInput('completionPhone', existingPhone);
                         }, 200);
                         
-                        // ✅ v3.14.0: Attacher le handler du formulaire - FORMAT UAE
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
                             if (form) {
@@ -887,7 +877,6 @@
                                     errorDiv.classList.add('hidden');
                                     
                                     try {
-                                        // ✅ v3.14.0: Format UAE - Récupérer les champs
                                         const nameEl = document.getElementById('completionName');
                                         const emailEl = document.getElementById('completionEmail');
                                         const addressEl = document.getElementById('completionAddress');
@@ -896,7 +885,6 @@
 
                                         const name = nameEl?.value?.trim() || '';
                                         const email = emailEl?.value?.trim() || '';
-                                        // ✅ v3.18.0: Récupérer le numéro complet via intl-tel-input
                                         const fullPhone = getFullPhoneNumber('completionPhone');
                                         const address = addressEl?.value?.trim() || '';
                                         const area = areaEl?.value?.trim() || '';
@@ -904,7 +892,6 @@
                                         
                                         console.log('📋 Form values:', { name, email, fullPhone, address, area, emirate });
                                         
-                                        // Validations
                                         if (!name || name.length < 2) {
                                             throw new Error('Le nom doit contenir au moins 2 caractères');
                                         }
@@ -927,7 +914,6 @@
                                             throw new Error('Émirat requis');
                                         }
                                           
-                                        // Construire l'adresse complète au format UAE
                                         const fullAddress = `${address}, ${area}, ${emirate}`;
                                         
                                         console.log('💾 Updating profile with:', { name, email, phone: fullPhone, address: fullAddress });
@@ -948,17 +934,14 @@
                                         
                                         console.log('✅ Profile updated successfully');
                                         
-                                        // Recharger le profil
                                         await loadUserProfile(currentUser);
                                         
-                                        // Fermer le modal
                                         const modal = document.getElementById('profileCompletionModal');
                                         if (modal) modal.remove();
                                         
                                         currentPage = 'dashboard';
                                         window.currentPage = 'dashboard';
                                         
-                                        // Notification de succès
                                         const successDiv = document.createElement('div');
                                         successDiv.innerHTML = `
                                             <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce">
@@ -992,14 +975,12 @@
                         return;
                     }
                     
-                    // Profil complet → afficher dashboard normalement
                     console.log('✅ Profile complete, showing dashboard');
                     currentPage = 'dashboard';
                     window.currentPage = 'dashboard';
                     app.innerHTML = RENDERING.renderDashboard();
                     await DASHBOARD.loadDashboardContent();
 
-                    // Gestion du formulaire de contrat pour les referrers
                     if (userProfile.role !== 'admin') {
                         const contractForm = document.getElementById('contractForm');
                         if (contractForm) {
@@ -1081,7 +1062,6 @@
 
                                     console.log('✅ Profile updated successfully with contract_path:', fileName);
 
-                                    // Notification email (optionnel)
                                     try {
                                         console.log('📧 Sending email notification...');
                                         const { data: emailData, error: emailError } = await supabase.functions.invoke('send-email-notification', {
@@ -1119,7 +1099,6 @@
                     return;
 
                 } else if (currentUser && !userProfile) {
-                    // Utilisateur connecté mais profil pas encore chargé
                     profileLoadAttempts++;
                     if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
                         console.error('❌ Failed to load profile after max attempts');
@@ -1232,16 +1211,14 @@
             window.renderDashboard = RENDERING.renderDashboard;
             window.logout = logout;
 
-            // ✅ v3.15.0: Gestion robuste de l'authentification avec récupération d'erreur
+            // ✅ v3.19.0: Gestion robuste de l'authentification avec récupération d'erreur OAuth
             supabase.auth.onAuthStateChange(async (event, session) => {
                 console.log('🔔 Auth state changed:', event, session ? 'with session' : 'no session');
 
-                // ✅ v3.15.8: Pour OAuth, ignorer INITIAL_SESSION seulement si pas de session
-                // Si on a une session dans INITIAL_SESSION, on la traite !
+                // ✅ v3.19.0: Pour OAuth, ignorer INITIAL_SESSION seulement si pas de session
                 if (isOAuthReturn && event === 'INITIAL_SESSION') {
                     if (session) {
                         console.log('✅ OAuth INITIAL_SESSION with session - processing!');
-                        // Continuer le traitement normal
                     } else {
                         console.log('⏳ OAuth return: INITIAL_SESSION without session, waiting for SIGNED_IN...');
                         return;
@@ -1307,10 +1284,73 @@
                 render();
             });
 
-            // ✅ v3.15.4: Chargement initial simple
+            // ✅ v3.19.0: Initialisation avec gestion d'erreur OAuth robuste
             async function initializeApp() {
+                // ✅ v3.19.0: Si erreur OAuth dans URL, afficher un message et nettoyer
+                if (hasOAuthError) {
+                    console.error('❌ OAuth error in URL - showing error and cleaning');
+                    document.getElementById('app').innerHTML = `
+                        <div class="min-h-screen flex items-center justify-center px-4">
+                            <div class="bg-red-500/20 border border-red-500 rounded-2xl p-8 max-w-md text-center">
+                                <div class="text-6xl mb-4">❌</div>
+                                <h2 class="text-2xl font-bold text-red-400 mb-4">Erreur de connexion</h2>
+                                <p class="text-blue-200 mb-6">La connexion avec Google/Apple a échoué. Veuillez réessayer.</p>
+                                <button onclick="window.location.href='/'" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
+                                    Retour à l'accueil
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    // Nettoyer l'URL après 2 secondes
+                    setTimeout(() => {
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }, 100);
+                    return;
+                }
+                
                 if (isOAuthReturn) {
                     console.log('🔄 OAuth return - waiting for onAuthStateChange to handle session...');
+                    
+                    // ✅ v3.19.0: Tenter de récupérer la session manuellement après un court délai
+                    setTimeout(async () => {
+                        try {
+                            console.log('🔍 Attempting manual session recovery for OAuth...');
+                            const { data: { session }, error } = await supabase.auth.getSession();
+                            
+                            if (error) {
+                                console.error('❌ OAuth session recovery error:', error.message);
+                                // Nettoyer et afficher l'erreur
+                                window.history.replaceState(null, '', window.location.pathname);
+                                document.getElementById('app').innerHTML = `
+                                    <div class="min-h-screen flex items-center justify-center px-4">
+                                        <div class="bg-red-500/20 border border-red-500 rounded-2xl p-8 max-w-md text-center">
+                                            <div class="text-6xl mb-4">❌</div>
+                                            <h2 class="text-2xl font-bold text-red-400 mb-4">Erreur de connexion</h2>
+                                            <p class="text-blue-200 mb-4">Une erreur s'est produite lors de la connexion.</p>
+                                            <p class="text-sm text-gray-400 mb-6">${error.message}</p>
+                                            <button onclick="window.location.href='/'" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition">
+                                                Réessayer
+                                            </button>
+                                        </div>
+                                    </div>
+                                `;
+                                return;
+                            }
+                            
+                            if (session) {
+                                console.log('✅ Manual OAuth session recovery successful:', session.user.email);
+                                currentUser = session.user;
+                                window.currentUser = currentUser;
+                                await loadUserProfile(currentUser);
+                                // Nettoyer l'URL
+                                window.history.replaceState(null, '', window.location.pathname);
+                                render();
+                            }
+                        } catch (err) {
+                            console.error('❌ OAuth recovery exception:', err);
+                        }
+                    }, 500);
+                    
                     return;
                 }
                 
@@ -1320,7 +1360,6 @@
                     
                     if (error) {
                         console.warn('⚠️ Session error:', error.message);
-                        // Ne rien faire, laisser continuer
                     }
                     
                     console.log('📋 Session result:', session ? 'User found: ' + session.user.email : 'No user');
@@ -1333,7 +1372,6 @@
                     }
                 } catch (err) {
                     console.error('❌ Session error:', err);
-                    // Ne rien nettoyer, juste continuer
                 }
 
                 initialLoadComplete = true;
