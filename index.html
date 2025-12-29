@@ -345,10 +345,10 @@
                 }
                 console.log('📱 Initializing intl-tel-input for:', inputId);
                 const iti = window.intlTelInput(input, {
-                    initialCountry: "ae",
-                    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
-                    separateDialCode: false,
-                    nationalMode: false,
+                initialCountry: "ae",
+                preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+                separateDialCode: false,
+                nationalMode: true,
                     autoPlaceholder: "polite",
                     formatOnDisplay: true,
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
