@@ -23,7 +23,7 @@
 .iti { width: 100% !important; }
 .iti input[type="tel"] {
     width: 100% !important;
-    padding: 0.75rem 1rem 0.75rem 52px !important;
+    padding: 0.75rem 1rem 0.75rem 95px !important;
     background: rgba(51, 65, 85, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 0.5rem !important;
@@ -956,14 +956,11 @@
                                         if (!address || address.length < 3) {
                                             throw new Error('Adresse trop courte (bâtiment, rue)');
                                         }
-                                        if (!area || area.length < 2) {
-                                            throw new Error('Zone/Quartier requis');
-                                        }
                                         if (!emirate) {
                                             throw new Error('Émirat requis');
                                         }
                                           
-                                        const fullAddress = `${address}, ${area}, ${emirate}`;
+                                        const fullAddress = area ? `${address}, ${area}, ${emirate}` : `${address}, ${emirate}`;
                                         
                                         console.log('💾 Updating profile with:', { name, email, phone: fullPhone, address: fullAddress });
                                         
