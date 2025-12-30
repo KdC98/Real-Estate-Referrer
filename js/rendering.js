@@ -1,8 +1,8 @@
 // ============================================
 // 🎨 MODULE RENDERING.JS
 // ============================================
-// Version: 3.15.0 - Liste complète 120 pays
-// Date: 14 décembre 2025
+// Version: 3.19.3 - Fix intl-tel-input padding (pr-4 instead of px-4)
+// Date: 30 décembre 2025
 // ============================================
 
 // ============================================
@@ -189,6 +189,9 @@ export function renderProfileCompletionModal() {
     ];
     const emirateOptions = emirates.map(e => `<option value="${e.code}" ${e.code === 'Dubai' ? 'selected' : ''}>${e.name}</option>`).join('');
 
+    // ✅ v3.19.3 FIX: Utiliser "py-3 pr-4" au lieu de "px-4 py-3" pour l'input téléphone
+    // px-4 = padding-left + padding-right → écrase le padding-left calculé par intl-tel-input
+    // pr-4 = seulement padding-right → laisse ITI gérer le padding-left
     return `
         <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100] overflow-y-auto">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 md:p-8 max-w-xl w-full border-2 border-yellow-500/50 shadow-2xl my-4 max-h-[95vh] overflow-y-auto">
@@ -213,7 +216,7 @@ export function renderProfileCompletionModal() {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.phone_label} *</label>
-                        <input type="tel" id="completionPhone" required placeholder="${t.phone_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        <input type="tel" id="completionPhone" required placeholder="${t.phone_placeholder}" class="w-full py-3 pr-4 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                         <p class="text-xs text-blue-300 mt-1">📱 ${t.phone_help}</p>
                     </div>
                     <div>
@@ -221,8 +224,8 @@ export function renderProfileCompletionModal() {
                         <input type="text" id="completionAddress" required placeholder="${t.address_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.area_label} *</label>
-                        <input type="text" id="completionArea" required placeholder="${t.area_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.area_label}</label>
+                        <input type="text" id="completionArea" placeholder="${t.area_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.emirate_label} *</label>
@@ -428,6 +431,7 @@ export function renderAuthPage(mode) {
         title = 'Nouveau mot de passe'; buttonText = 'Changer le mot de passe'; linkText = 'Retour à la connexion'; linkAction = 'showLogin()';
     }
     
+    // ✅ v3.19.3 FIX: Pour la page signup, utiliser py-2 pr-4 au lieu de px-4 py-2 pour l'input téléphone
     return `
         <div class="min-h-screen flex items-center justify-center px-4">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
@@ -455,7 +459,7 @@ export function renderAuthPage(mode) {
                         </div>
                         <div>
                             <label class="block mb-2 font-medium text-blue-100">${t('auth:phone_label')}</label>
-                            <input type="tel" id="phone" required placeholder="${t('auth:phone_placeholder')}" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50">
+                            <input type="tel" id="phone" required placeholder="${t('auth:phone_placeholder')}" class="w-full py-2 pr-4 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50">
                             <p class="text-xs text-blue-300 mt-1">📱 ${phoneHelp}</p>
                             <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                 <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
