@@ -16,13 +16,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.18.5 - Fix phone padding 95px -->
+    <!-- Version: 3.19.0 - Fix intl-tel-input modal initialization (init after visible + resize event) -->
     
     <style>
-/* intl-tel-input - Thème sombre Dubai v3.18.5 */
+/* intl-tel-input - Thème sombre Dubai v3.19.0 */
+/* ✅ FIX: Ne PAS définir padding-left, laisser ITI le calculer dynamiquement */
 .iti { width: 100% !important; }
 .iti input[type="tel"] {
     width: 100% !important;
+    /* ✅ Ne PAS mettre padding-left ici - ITI le calcule automatiquement */
     padding-top: 0.75rem !important;
     padding-right: 1rem !important;
     padding-bottom: 0.75rem !important;
@@ -88,7 +90,7 @@
     <div id="oauthWarningModal" class="hidden"></div>
     
     <script type="module">
-        // ✅ v3.18.5: Fix phone padding 95px (basé sur v3.18.3 stable)
+        // ✅ v3.19.0: Fix intl-tel-input modal initialization
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
         import * as VALIDATION from './js/validation.js';
@@ -101,7 +103,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.18.5...');
+            console.log('🚀 App starting v3.19.0...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord
             const urlParams = new URLSearchParams(window.location.search);
@@ -207,7 +209,7 @@
                 },
                 global: {
                     headers: {
-                        'X-Client-Info': 'real-estate-referrer/3.18.5'
+                        'X-Client-Info': 'real-estate-referrer/3.19.0'
                     }
                 }
             });
@@ -338,30 +340,110 @@
                 window.currentPage = 'auth-signup';
             }
 
-            // ✅ v3.18.3: intl-tel-input pour téléphone international
+            // ✅ v3.19.0: intl-tel-input avec support modal (init after visible)
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
-                if (!input) return null;
-                if (phoneInputInstances[inputId]) {
-                    phoneInputInstances[inputId].destroy();
+                if (!input) {
+                    console.warn('📱 Input not found:', inputId);
+                    return null;
                 }
+                
+                // Détruire l'instance précédente si elle existe
+                if (phoneInputInstances[inputId]) {
+                    console.log('📱 Destroying previous instance for:', inputId);
+                    phoneInputInstances[inputId].destroy();
+                    delete phoneInputInstances[inputId];
+                }
+                
                 console.log('📱 Initializing intl-tel-input for:', inputId);
+                
                 const iti = window.intlTelInput(input, {
-                initialCountry: "ae",
-                preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
-                separateDialCode: true,
-                nationalMode: false,
+                    initialCountry: "ae",
+                    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+                    separateDialCode: true,
+                    nationalMode: false,
                     autoPlaceholder: "polite",
                     formatOnDisplay: true,
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
                 });
+                
                 phoneInputInstances[inputId] = iti;
+                
                 if (initialNumber) {
                     iti.setNumber(initialNumber);
                 }
+                
                 return iti;
             }
             window.initPhoneInput = initPhoneInput;
+
+            // ✅ v3.19.0: Fonction spéciale pour initialiser ITI dans un modal
+            // Attend que le modal soit visible puis force le recalcul du padding
+            function initPhoneInputForModal(inputId, initialNumber = '') {
+                console.log('📱 initPhoneInputForModal called for:', inputId);
+                
+                // Détruire l'instance précédente si elle existe
+                if (phoneInputInstances[inputId]) {
+                    console.log('📱 Destroying previous modal instance for:', inputId);
+                    phoneInputInstances[inputId].destroy();
+                    delete phoneInputInstances[inputId];
+                }
+                
+                const input = document.getElementById(inputId);
+                if (!input) {
+                    console.warn('📱 Modal input not found:', inputId);
+                    return null;
+                }
+                
+                // Initialiser ITI
+                console.log('📱 Creating ITI instance for modal...');
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "ae",
+                    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+                    separateDialCode: true,
+                    nationalMode: false,
+                    autoPlaceholder: "polite",
+                    formatOnDisplay: true,
+                    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+                });
+                
+                phoneInputInstances[inputId] = iti;
+                
+                if (initialNumber) {
+                    iti.setNumber(initialNumber);
+                }
+                
+                // ✅ FIX: Forcer le recalcul du padding après que le modal soit visible
+                // Utiliser requestAnimationFrame pour attendre le prochain cycle de rendu
+                requestAnimationFrame(() => {
+                    console.log('📱 requestAnimationFrame: forcing ITI padding recalculation...');
+                    
+                    // Déclencher un événement resize pour forcer ITI à recalculer
+                    window.dispatchEvent(new Event('resize'));
+                    
+                    // Appeler les méthodes internes de ITI pour recalculer le padding
+                    // Ces méthodes sont semi-privées mais couramment utilisées pour ce fix
+                    if (iti._updateInputPadding) {
+                        console.log('📱 Calling _updateInputPadding...');
+                        iti._updateInputPadding();
+                    }
+                    if (iti._handleWindowResize) {
+                        console.log('📱 Calling _handleWindowResize...');
+                        iti._handleWindowResize();
+                    }
+                    
+                    // Double vérification après un court délai
+                    setTimeout(() => {
+                        console.log('📱 Second recalculation pass...');
+                        window.dispatchEvent(new Event('resize'));
+                        if (iti._updateInputPadding) iti._updateInputPadding();
+                    }, 100);
+                });
+                
+                console.log('📱 ITI modal instance created successfully');
+                return iti;
+            }
+            window.initPhoneInputForModal = initPhoneInputForModal;
 
             function getFullPhoneNumber(inputId) {
                 const iti = phoneInputInstances[inputId];
@@ -387,7 +469,7 @@
 
                 console.log('✅ Form found, attaching handler');
                 
-                // Initialiser intl-tel-input pour le signup
+                // Initialiser intl-tel-input pour le signup (page normale, pas modal)
                 if (mode === 'signup') {
                     setTimeout(() => {
                         initPhoneInput('phone');
@@ -547,11 +629,11 @@
             function showOAuthWarning(provider) {
                 const modal = document.getElementById('oauthWarningModal');
                 const providerName = provider === 'google' ? 'Google' : 'Apple';
-                const currentLang = i18next.language || 'fr';
-                const trans = oauthTranslations[currentLang] || oauthTranslations['fr'];
-
+                const currentLang = i18next.language?.split('-')[0] || 'fr';
+                const trans = oauthTranslations[currentLang] || oauthTranslations.fr;
+                
                 modal.innerHTML = `
-                    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
                         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-yellow-500/50">
                             <div class="text-center mb-6">
                                 <div class="text-5xl mb-4">⚠️</div>
@@ -874,10 +956,13 @@
                         
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
+                        // ✅ v3.19.0: Utiliser initPhoneInputForModal avec délai suffisant
+                        // Le modal doit être complètement visible avant d'initialiser ITI
                         setTimeout(() => {
+                            console.log('📱 Modal visible, initializing phone input...');
                             const existingPhone = userProfile.phone || '';
-                            initPhoneInput('completionPhone', existingPhone);
-                        }, 200);
+                            initPhoneInputForModal('completionPhone', existingPhone);
+                        }, 300);
                         
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
