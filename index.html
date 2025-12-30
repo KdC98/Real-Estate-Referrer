@@ -16,14 +16,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.19.0 - Fix intl-tel-input modal initialization (init after visible + resize event) -->
+    <!-- Version: 3.19.1 - Fix intl-tel-input with waitForLayout (robust modal init) -->
     
     <style>
-/* intl-tel-input - Thème sombre Dubai v3.19.0 */
+/* intl-tel-input - Thème sombre Dubai v3.19.1 */
 /* ✅ FIX: Ne PAS définir padding-left, laisser ITI le calculer dynamiquement */
 .iti { width: 100% !important; }
 .iti input[type="tel"] {
     width: 100% !important;
+    box-sizing: border-box !important;
     /* ✅ Ne PAS mettre padding-left ici - ITI le calcule automatiquement */
     padding-top: 0.75rem !important;
     padding-right: 1rem !important;
@@ -103,7 +104,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.19.0...');
+            console.log('🚀 App starting v3.19.1...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord
             const urlParams = new URLSearchParams(window.location.search);
@@ -209,7 +210,7 @@
                 },
                 global: {
                     headers: {
-                        'X-Client-Info': 'real-estate-referrer/3.19.0'
+                        'X-Client-Info': 'real-estate-referrer/3.19.1'
                     }
                 }
             });
@@ -340,7 +341,27 @@
                 window.currentPage = 'auth-signup';
             }
 
-            // ✅ v3.19.0: intl-tel-input avec support modal (init after visible)
+            // ✅ v3.19.1: Helper pour attendre que l'élément soit layouté (largeur > 0)
+            function waitForLayout(el, { timeout = 1500 } = {}) {
+                return new Promise((resolve) => {
+                    const start = performance.now();
+                    const tick = () => {
+                        if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
+                            console.log('📱 waitForLayout: element has dimensions', el.offsetWidth, 'x', el.offsetHeight);
+                            return resolve(true);
+                        }
+                        if (performance.now() - start > timeout) {
+                            console.warn('📱 waitForLayout: timeout reached, element still has no dimensions');
+                            return resolve(false);
+                        }
+                        requestAnimationFrame(tick);
+                    };
+                    requestAnimationFrame(tick);
+                });
+            }
+            window.waitForLayout = waitForLayout;
+
+            // ✅ v3.19.1: intl-tel-input pour pages normales (non-modal)
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
                 if (!input) {
@@ -377,9 +398,9 @@
             }
             window.initPhoneInput = initPhoneInput;
 
-            // ✅ v3.19.0: Fonction spéciale pour initialiser ITI dans un modal
-            // Attend que le modal soit visible puis force le recalcul du padding
-            function initPhoneInputForModal(inputId, initialNumber = '') {
+            // ✅ v3.19.1: Fonction robuste pour initialiser ITI dans un modal
+            // Attend que l'input ait une largeur > 0, puis init, puis recalcul
+            async function initPhoneInputForModal(inputId, initialNumber = '') {
                 console.log('📱 initPhoneInputForModal called for:', inputId);
                 
                 // Détruire l'instance précédente si elle existe
@@ -395,7 +416,14 @@
                     return null;
                 }
                 
-                // Initialiser ITI
+                // ✅ ÉTAPE 1: Attendre que l'input soit réellement affiché (largeur > 0)
+                console.log('📱 Waiting for input to be layouted...');
+                const hasLayout = await waitForLayout(input);
+                if (!hasLayout) {
+                    console.error('📱 Input never got layout dimensions, initializing anyway...');
+                }
+                
+                // ✅ ÉTAPE 2: Initialiser ITI
                 console.log('📱 Creating ITI instance for modal...');
                 const iti = window.intlTelInput(input, {
                     initialCountry: "ae",
@@ -413,31 +441,25 @@
                     iti.setNumber(initialNumber);
                 }
                 
-                // ✅ FIX: Forcer le recalcul du padding après que le modal soit visible
-                // Utiliser requestAnimationFrame pour attendre le prochain cycle de rendu
-                requestAnimationFrame(() => {
-                    console.log('📱 requestAnimationFrame: forcing ITI padding recalculation...');
-                    
-                    // Déclencher un événement resize pour forcer ITI à recalculer
+                // ✅ ÉTAPE 3: Fonction de recalcul du padding
+                const forceRecalc = () => {
+                    console.log('📱 forceRecalc: dispatching resize + calling ITI methods');
                     window.dispatchEvent(new Event('resize'));
-                    
-                    // Appeler les méthodes internes de ITI pour recalculer le padding
-                    // Ces méthodes sont semi-privées mais couramment utilisées pour ce fix
-                    if (iti._updateInputPadding) {
-                        console.log('📱 Calling _updateInputPadding...');
-                        iti._updateInputPadding();
-                    }
-                    if (iti._handleWindowResize) {
-                        console.log('📱 Calling _handleWindowResize...');
-                        iti._handleWindowResize();
-                    }
-                    
-                    // Double vérification après un court délai
-                    setTimeout(() => {
-                        console.log('📱 Second recalculation pass...');
-                        window.dispatchEvent(new Event('resize'));
-                        if (iti._updateInputPadding) iti._updateInputPadding();
-                    }, 100);
+                    if (iti._handleWindowResize) iti._handleWindowResize();
+                    if (iti._updateInputPadding) iti._updateInputPadding();
+                };
+                
+                // ✅ ÉTAPE 4: Attendre utils.js + un paint, puis forcer recalcul
+                const waitPromise = iti.promise ? iti.promise : Promise.resolve();
+                waitPromise.then(() => {
+                    console.log('📱 ITI utils loaded, forcing recalculation...');
+                    requestAnimationFrame(() => {
+                        forceRecalc();
+                        // 2e passe après 50ms (utile sur certains navigateurs)
+                        setTimeout(forceRecalc, 50);
+                        // 3e passe après 150ms (sécurité)
+                        setTimeout(forceRecalc, 150);
+                    });
                 });
                 
                 console.log('📱 ITI modal instance created successfully');
