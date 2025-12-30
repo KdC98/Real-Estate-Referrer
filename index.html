@@ -16,10 +16,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.19.2 - Fix intl-tel-input with setCountry (public API, no private methods) -->
+    <!-- Version: 3.19.3 - Fix intl-tel-input with ResizeObserver (bulletproof modal init) -->
     
     <style>
-/* intl-tel-input - Thème sombre Dubai v3.19.2 */
+/* intl-tel-input - Thème sombre Dubai v3.19.3 */
 /* ✅ IMPORTANT: Ne PAS utiliser padding shorthand, et ne PAS définir padding-left */
 .iti { width: 100% !important; }
 .iti input[type="tel"] {
@@ -105,7 +105,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.19.2...');
+            console.log('🚀 App starting v3.19.3...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord
             const urlParams = new URLSearchParams(window.location.search);
@@ -211,7 +211,7 @@
                 },
                 global: {
                     headers: {
-                        'X-Client-Info': 'real-estate-referrer/3.19.2'
+                        'X-Client-Info': 'real-estate-referrer/3.19.3'
                     }
                 }
             });
@@ -342,7 +342,7 @@
                 window.currentPage = 'auth-signup';
             }
 
-            // ✅ v3.19.2: intl-tel-input pour pages normales (non-modal)
+            // ✅ v3.19.3: intl-tel-input pour pages normales (non-modal)
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
                 if (!input) {
@@ -379,15 +379,15 @@
             }
             window.initPhoneInput = initPhoneInput;
 
-            // ✅ v3.19.2: Fonction robuste pour initialiser ITI dans un modal
-            // Utilise double requestAnimationFrame + setCountry (API publique, pas de méthodes privées)
+            // ✅ v3.19.3: Version "béton" avec ResizeObserver pour modals
+            // Retourne une Promise qui résout quand l'instance est prête
             function initPhoneInputForModal(inputId, initialNumber = '') {
                 console.log('📱 initPhoneInputForModal called for:', inputId);
                 
                 const input = document.getElementById(inputId);
                 if (!input) {
                     console.warn('📱 Modal input not found:', inputId);
-                    return null;
+                    return Promise.resolve(null);
                 }
                 
                 // Détruire l'instance précédente si elle existe
@@ -397,52 +397,72 @@
                     delete phoneInputInstances[inputId];
                 }
                 
-                // ✅ Double requestAnimationFrame = modal visible + layout stable
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        console.log('📱 2 frames passed, creating ITI instance...');
+                // Créer l'instance ITI
+                console.log('📱 Creating ITI instance...');
+                const iti = window.intlTelInput(input, {
+                    initialCountry: "ae",
+                    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+                    separateDialCode: true,
+                    nationalMode: false,
+                    autoPlaceholder: "polite",
+                    formatOnDisplay: true,
+                    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+                });
+                
+                phoneInputInstances[inputId] = iti;
+                
+                if (initialNumber) {
+                    iti.setNumber(initialNumber);
+                }
+                
+                // Attendre utils.js + largeur réelle du conteneur via ResizeObserver
+                const ready = (iti.promise || Promise.resolve()).then(() => {
+                    return new Promise((resolve) => {
+                        const root = input.closest(".iti") || input.parentElement;
                         
-                        const iti = window.intlTelInput(input, {
-                            initialCountry: "ae",
-                            preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
-                            separateDialCode: true,
-                            nationalMode: false,
-                            autoPlaceholder: "polite",
-                            formatOnDisplay: true,
-                            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
-                        });
+                        const forceRecalc = () => {
+                            console.log('📱 forceRecalc: setCountry + resize');
+                            const iso2 = iti.getSelectedCountryData().iso2;
+                            iti.setCountry(iso2);
+                            window.dispatchEvent(new Event("resize"));
+                        };
                         
-                        phoneInputInstances[inputId] = iti;
-                        
-                        if (initialNumber) {
-                            iti.setNumber(initialNumber);
+                        // Si déjà visible (width > 0), on force direct
+                        if (root && root.getBoundingClientRect().width > 0) {
+                            console.log('📱 Container already visible, forcing recalc immediately');
+                            forceRecalc();
+                            resolve(iti);
+                            return;
                         }
                         
-                        // ✅ Attendre utils.js puis forcer recalcul via API publique (setCountry + resize)
-                        (iti.promise || Promise.resolve()).then(() => {
-                            console.log('📱 ITI utils loaded, forcing padding recalculation via setCountry...');
-                            
-                            // setCountry retrigger le calcul du padding interne
-                            const currentCountry = iti.getSelectedCountryData().iso2;
-                            iti.setCountry(currentCountry);
-                            
-                            // Certains navigateurs ne recalculent pas sans resize
-                            window.dispatchEvent(new Event('resize'));
-                            
-                            // 2e passe après 60ms (sécurité)
-                            setTimeout(() => {
-                                console.log('📱 Second recalc pass...');
-                                iti.setCountry(iti.getSelectedCountryData().iso2);
-                                window.dispatchEvent(new Event('resize'));
-                            }, 60);
+                        // Sinon on observe jusqu'à width > 0 avec ResizeObserver
+                        console.log('📱 Container not visible yet, setting up ResizeObserver...');
+                        const ro = new ResizeObserver(() => {
+                            if (root && root.getBoundingClientRect().width > 0) {
+                                console.log('📱 ResizeObserver: container now visible, forcing recalc');
+                                ro.disconnect();
+                                forceRecalc();
+                                // Mini seconde passe de sécurité
+                                setTimeout(forceRecalc, 50);
+                                resolve(iti);
+                            }
                         });
                         
-                        console.log('📱 ITI modal instance created successfully');
+                        if (root) {
+                            ro.observe(root);
+                        } else {
+                            // Fallback si pas de root trouvé
+                            console.log('📱 No root found, using fallback timeout');
+                            setTimeout(() => {
+                                forceRecalc();
+                                resolve(iti);
+                            }, 100);
+                        }
                     });
                 });
                 
-                // Retourner null car l'init est async, utiliser phoneInputInstances[inputId] après
-                return null;
+                console.log('📱 ITI instance created, waiting for ready...');
+                return ready;
             }
             window.initPhoneInputForModal = initPhoneInputForModal;
 
@@ -957,11 +977,15 @@
                         
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
-                        // ✅ v3.19.2: Appeler initPhoneInputForModal (gère le timing en interne)
+                        // ✅ v3.19.3: initPhoneInputForModal retourne une Promise
                         setTimeout(() => {
                             console.log('📱 Calling initPhoneInputForModal...');
                             const existingPhone = userProfile.phone || '';
-                            initPhoneInputForModal('completionPhone', existingPhone);
+                            initPhoneInputForModal('completionPhone', existingPhone).then((iti) => {
+                                if (iti) {
+                                    console.log('📱 ITI instance ready for modal');
+                                }
+                            });
                         }, 50);
                         
                         setTimeout(() => {
