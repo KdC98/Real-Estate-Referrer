@@ -16,10 +16,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.19.3 - Fix intl-tel-input with ResizeObserver (bulletproof modal init) -->
+    <!-- Version: 3.19.4 - Fix intl-tel-input with afterPaint + fonts.ready + afterTransition -->
     
     <style>
-/* intl-tel-input - Thème sombre Dubai v3.19.3 */
+/* intl-tel-input - Thème sombre Dubai v3.19.4 */
 /* ✅ IMPORTANT: Ne PAS utiliser padding shorthand, et ne PAS définir padding-left */
 .iti { width: 100% !important; }
 .iti input[type="tel"] {
@@ -105,7 +105,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.19.3...');
+            console.log('🚀 App starting v3.19.4...');
             
             // ✅ v3.15.6: Détecter les paramètres URL d'abord
             const urlParams = new URLSearchParams(window.location.search);
@@ -211,7 +211,7 @@
                 },
                 global: {
                     headers: {
-                        'X-Client-Info': 'real-estate-referrer/3.19.3'
+                        'X-Client-Info': 'real-estate-referrer/3.19.4'
                     }
                 }
             });
@@ -342,7 +342,30 @@
                 window.currentPage = 'auth-signup';
             }
 
-            // ✅ v3.19.3: intl-tel-input pour pages normales (non-modal)
+            // ✅ v3.19.4: Helpers pour timing stable
+            function afterPaint() {
+                return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+            }
+            
+            function afterTransition(el) {
+                return new Promise(resolve => {
+                    if (!el) return resolve();
+                    const cs = getComputedStyle(el);
+                    const dur = parseFloat(cs.transitionDuration) || 0;
+                    if (!dur) return resolve();
+                    const onEnd = (e) => {
+                        if (e.target === el) {
+                            el.removeEventListener("transitionend", onEnd);
+                            resolve();
+                        }
+                    };
+                    el.addEventListener("transitionend", onEnd);
+                    // Sécurité timeout
+                    setTimeout(resolve, Math.ceil(dur * 1000) + 50);
+                });
+            }
+
+            // ✅ v3.19.4: intl-tel-input pour pages normales (non-modal)
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
                 if (!input) {
@@ -379,15 +402,14 @@
             }
             window.initPhoneInput = initPhoneInput;
 
-            // ✅ v3.19.3: Version "béton" avec ResizeObserver pour modals
-            // Retourne une Promise qui résout quand l'instance est prête
-            function initPhoneInputForModal(inputId, initialNumber = '') {
+            // ✅ v3.19.4: Version STABLE avec afterPaint + fonts.ready + afterTransition
+            async function initPhoneInputForModal(inputId, initialNumber = '') {
                 console.log('📱 initPhoneInputForModal called for:', inputId);
                 
                 const input = document.getElementById(inputId);
                 if (!input) {
                     console.warn('📱 Modal input not found:', inputId);
-                    return Promise.resolve(null);
+                    return null;
                 }
                 
                 // Détruire l'instance précédente si elle existe
@@ -397,7 +419,17 @@
                     delete phoneInputInstances[inputId];
                 }
                 
-                // Créer l'instance ITI
+                // ✅ ÉTAPE 1: Attendre que le modal soit réellement peint (2 rAF)
+                console.log('📱 Waiting for paint...');
+                await afterPaint();
+                
+                // ✅ ÉTAPE 2: Attendre les polices (le dial code dépend de la font)
+                if (document.fonts?.ready) {
+                    console.log('📱 Waiting for fonts...');
+                    await document.fonts.ready;
+                }
+                
+                // ✅ ÉTAPE 3: Créer l'instance ITI
                 console.log('📱 Creating ITI instance...');
                 const iti = window.intlTelInput(input, {
                     initialCountry: "ae",
@@ -415,54 +447,27 @@
                     iti.setNumber(initialNumber);
                 }
                 
-                // Attendre utils.js + largeur réelle du conteneur via ResizeObserver
-                const ready = (iti.promise || Promise.resolve()).then(() => {
-                    return new Promise((resolve) => {
-                        const root = input.closest(".iti") || input.parentElement;
-                        
-                        const forceRecalc = () => {
-                            console.log('📱 forceRecalc: setCountry + resize');
-                            const iso2 = iti.getSelectedCountryData().iso2;
-                            iti.setCountry(iso2);
-                            window.dispatchEvent(new Event("resize"));
-                        };
-                        
-                        // Si déjà visible (width > 0), on force direct
-                        if (root && root.getBoundingClientRect().width > 0) {
-                            console.log('📱 Container already visible, forcing recalc immediately');
-                            forceRecalc();
-                            resolve(iti);
-                            return;
-                        }
-                        
-                        // Sinon on observe jusqu'à width > 0 avec ResizeObserver
-                        console.log('📱 Container not visible yet, setting up ResizeObserver...');
-                        const ro = new ResizeObserver(() => {
-                            if (root && root.getBoundingClientRect().width > 0) {
-                                console.log('📱 ResizeObserver: container now visible, forcing recalc');
-                                ro.disconnect();
-                                forceRecalc();
-                                // Mini seconde passe de sécurité
-                                setTimeout(forceRecalc, 50);
-                                resolve(iti);
-                            }
-                        });
-                        
-                        if (root) {
-                            ro.observe(root);
-                        } else {
-                            // Fallback si pas de root trouvé
-                            console.log('📱 No root found, using fallback timeout');
-                            setTimeout(() => {
-                                forceRecalc();
-                                resolve(iti);
-                            }, 100);
-                        }
-                    });
-                });
+                // ✅ ÉTAPE 4: Attendre la transition du modal card (si elle existe)
+                const modalCard = input.closest("#profileCompletionModal")?.querySelector(".max-w-xl");
+                if (modalCard) {
+                    console.log('📱 Waiting for modal transition...');
+                    await afterTransition(modalCard);
+                }
                 
-                console.log('📱 ITI instance created, waiting for ready...');
-                return ready;
+                // ✅ ÉTAPE 5: Forcer recalc (setCountry + resize) sur 2 frames
+                console.log('📱 Forcing recalc...');
+                const iso2 = iti.getSelectedCountryData().iso2;
+                iti.setCountry(iso2);
+                await afterPaint();
+                window.dispatchEvent(new Event("resize"));
+                
+                // ✅ ÉTAPE 6: Debug - vérifier le résultat
+                const pl = getComputedStyle(input).paddingLeft;
+                const dial = input.closest(".iti")?.querySelector(".iti__selected-dial-code");
+                console.log('📱 DEBUG - padding-left:', pl, 'dial width:', dial?.getBoundingClientRect().width);
+                
+                console.log('📱 ITI modal instance ready');
+                return iti;
             }
             window.initPhoneInputForModal = initPhoneInputForModal;
 
@@ -977,7 +982,7 @@
                         
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
-                        // ✅ v3.19.3: initPhoneInputForModal retourne une Promise
+                        // ✅ v3.19.4: initPhoneInputForModal avec afterPaint + fonts.ready + afterTransition
                         setTimeout(() => {
                             console.log('📱 Calling initPhoneInputForModal...');
                             const existingPhone = userProfile.phone || '';
