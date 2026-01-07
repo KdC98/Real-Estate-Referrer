@@ -1,8 +1,8 @@
 // ============================================
 // 🎨 MODULE RENDERING.JS
 // ============================================
-// Version: 3.19.3 - Fix intl-tel-input padding (pr-4 instead of px-4)
-// Date: 30 décembre 2025
+// Version: 3.19.5 - Fix intl-tel-input padding (pr-4 instead of px-4)
+// Date: 07 janvier 2026
 // ============================================
 
 // ============================================
@@ -189,7 +189,7 @@ export function renderProfileCompletionModal() {
     ];
     const emirateOptions = emirates.map(e => `<option value="${e.code}" ${e.code === 'Dubai' ? 'selected' : ''}>${e.name}</option>`).join('');
 
-    // ✅ v3.19.3 FIX: Utiliser "py-3 pr-4" au lieu de "px-4 py-3" pour l'input téléphone
+    // ✅ v3.19.5 FIX: Utiliser "py-3 pr-4" au lieu de "px-4 py-3" pour l'input téléphone
     // px-4 = padding-left + padding-right → écrase le padding-left calculé par intl-tel-input
     // pr-4 = seulement padding-right → laisse ITI gérer le padding-left
     return `
@@ -431,7 +431,7 @@ export function renderAuthPage(mode) {
         title = 'Nouveau mot de passe'; buttonText = 'Changer le mot de passe'; linkText = 'Retour à la connexion'; linkAction = 'showLogin()';
     }
     
-    // ✅ v3.19.3 FIX: Pour la page signup, utiliser py-2 pr-4 au lieu de px-4 py-2 pour l'input téléphone
+    // ✅ v3.19.5 FIX: Pour la page signup, utiliser py-2 pr-4 au lieu de px-4 py-2 pour l'input téléphone
     return `
         <div class="min-h-screen flex items-center justify-center px-4">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
