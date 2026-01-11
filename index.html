@@ -12,123 +12,37 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
     
-    <!-- intl-tel-input pour téléphone international -->
+    <!-- intl-tel-input -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.20.1 - Fix OAuth callback + téléphone padding -->
+    <!-- Version: 3.20.2 - Fix OAuth robuste + téléphone padding -->
     
 <style>
-/* ============================================
-   intl-tel-input - Thème sombre Dubai v3.20.1
-   FIX: Forcer padding-left à 95px
-   ============================================ */
-
-.iti { 
-    width: 100% !important; 
-    display: block !important;
-}
-
-/* ✅ v3.20.1: Forcer padding-left à 95px pour TOUS les inputs tel */
-.iti input[type="tel"],
-.iti input#phone,
-.iti input#completionPhone,
-.iti input#clientPhone,
-.iti--separate-dial-code input[type="tel"] {
-    width: 100% !important;
-    box-sizing: border-box !important;
+.iti { width: 100% !important; display: block !important; }
+.iti input[type="tel"], .iti input#phone, .iti input#completionPhone, .iti input#clientPhone, .iti--separate-dial-code input[type="tel"] {
+    width: 100% !important; box-sizing: border-box !important;
     padding: 0.75rem 1rem 0.75rem 95px !important;
     background: rgba(51, 65, 85, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 0.5rem !important;
-    color: white !important;
+    border-radius: 0.5rem !important; color: white !important;
 }
-
-/* Variante pour signup */
-.iti input#phone,
-.iti--separate-dial-code input#phone {
-    padding: 0.5rem 1rem 0.5rem 95px !important;
-}
-
-.iti input[type="tel"]:focus,
-.iti input#phone:focus,
-.iti input#completionPhone:focus,
-.iti input#clientPhone:focus {
-    border-color: #eab308 !important;
-    box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3) !important;
-    outline: none !important;
-}
-
-.iti input[type="tel"]::placeholder { 
-    color: rgba(191, 219, 254, 0.5) !important; 
-}
-
-.iti__flag-container {
-    padding: 0 !important;
-}
-
-.iti__selected-flag {
-    background: rgba(51, 65, 85, 0.8) !important;
-    border-radius: 0.5rem 0 0 0.5rem !important;
-    padding: 0 8px !important;
-    height: 100% !important;
-}
-
-.iti__selected-flag:hover {
-    background: rgba(51, 65, 85, 1) !important;
-}
-
-.iti__arrow { 
-    border-top-color: white !important; 
-}
-
-.iti__arrow--up { 
-    border-bottom-color: white !important; 
-}
-
-.iti__country-list {
-    background: #1e293b !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 0.5rem !important;
-    max-height: 200px !important;
-    overflow-y: auto !important;
-    z-index: 9999 !important;
-}
-
-.iti__country {
-    padding: 8px 12px !important;
-    color: white !important;
-}
-
-.iti__country:hover {
-    background: rgba(234, 179, 8, 0.2) !important;
-}
-
-.iti__country.iti__highlight {
-    background: rgba(234, 179, 8, 0.3) !important;
-}
-
-.iti__dial-code { 
-    color: #94a3b8 !important; 
-}
-
-.iti__country-name { 
-    color: white !important; 
-}
-
-.iti__divider {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-    margin: 4px 0 !important;
-}
-
-.iti--separate-dial-code .iti__selected-flag {
-    background: rgba(51, 65, 85, 0.8) !important;
-}
-
-.iti--separate-dial-code .iti__selected-dial-code {
-    color: white !important;
-    margin-left: 6px !important;
-}
+.iti input#phone, .iti--separate-dial-code input#phone { padding: 0.5rem 1rem 0.5rem 95px !important; }
+.iti input[type="tel"]:focus { border-color: #eab308 !important; box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3) !important; outline: none !important; }
+.iti input[type="tel"]::placeholder { color: rgba(191, 219, 254, 0.5) !important; }
+.iti__flag-container { padding: 0 !important; }
+.iti__selected-flag { background: rgba(51, 65, 85, 0.8) !important; border-radius: 0.5rem 0 0 0.5rem !important; padding: 0 8px !important; height: 100% !important; }
+.iti__selected-flag:hover { background: rgba(51, 65, 85, 1) !important; }
+.iti__arrow { border-top-color: white !important; }
+.iti__arrow--up { border-bottom-color: white !important; }
+.iti__country-list { background: #1e293b !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; border-radius: 0.5rem !important; max-height: 200px !important; z-index: 9999 !important; }
+.iti__country { padding: 8px 12px !important; color: white !important; }
+.iti__country:hover { background: rgba(234, 179, 8, 0.2) !important; }
+.iti__country.iti__highlight { background: rgba(234, 179, 8, 0.3) !important; }
+.iti__dial-code { color: #94a3b8 !important; }
+.iti__country-name { color: white !important; }
+.iti--separate-dial-code .iti__selected-flag { background: rgba(51, 65, 85, 0.8) !important; }
+.iti--separate-dial-code .iti__selected-dial-code { color: white !important; margin-left: 6px !important; }
 </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
@@ -137,7 +51,7 @@
     
     <script type="module">
         // ============================================
-        // v3.20.1 - Fix OAuth callback + téléphone
+        // v3.20.2 - OAuth ROBUSTE + téléphone
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -151,83 +65,62 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.20.1...');
+            console.log('🚀 App starting v3.20.2...');
             
-            // Détecter les paramètres URL
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = window.location.hash;
-            
-            // ✅ v3.20.1: Détection OAuth améliorée
             const hasCodeParam = urlParams.get('code') !== null;
             const hasHashToken = hashParams.includes('access_token');
             const hasError = hashParams.includes('error') || urlParams.get('error') !== null;
             const isOAuthReturn = hasCodeParam || hasHashToken;
-            
-            // Contract signed return
             const isContractSignedReturn = urlParams.get('signed') !== null;
             
-            if (isContractSignedReturn && !isOAuthReturn) {
-                console.log('🔄 Contract return detected, cleaning URL...');
+            // ✅ v3.20.2: Nettoyer l'URL IMMÉDIATEMENT pour éviter re-parse
+            if (isOAuthReturn || isContractSignedReturn) {
+                console.log('🧹 Cleaning URL immediately...');
                 window.history.replaceState(null, '', window.location.pathname);
             }
             
-            if (isOAuthReturn) {
-                console.log('🔄 OAuth return detected - code:', hasCodeParam, 'hash:', hasHashToken);
-            }
+            if (isOAuthReturn) console.log('🔄 OAuth return detected');
+            if (hasError) console.error('❌ OAuth error in URL');
             
-            if (hasError) {
-                console.error('❌ OAuth error detected in URL');
-            }
-            
-            // Afficher loader pour OAuth
+            // Loader OAuth
             if (isOAuthReturn && !hasError) {
                 document.getElementById('app').innerHTML = `
                     <div class="min-h-screen flex items-center justify-center">
                         <div class="text-center">
                             <div class="text-6xl mb-4 animate-spin">🔄</div>
                             <div class="text-xl text-blue-200">Connexion en cours...</div>
-                            <div class="text-sm text-blue-300 mt-2">Veuillez patienter</div>
                         </div>
                     </div>
                 `;
             }
 
-            // Initialiser i18next
-            await i18next
-                .use(i18nextHttpBackend)
-                .use(i18nextBrowserLanguageDetector)
-                .init({
-                    fallbackLng: 'fr',
-                    debug: false,
-                    load: 'languageOnly',
-                    ns: ['translation', 'auth', 'dashboard', 'common'],
-                    defaultNS: 'translation',
-                    backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
-                    detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
-                });
+            // i18next
+            await i18next.use(i18nextHttpBackend).use(i18nextBrowserLanguageDetector).init({
+                fallbackLng: 'fr', debug: false, load: 'languageOnly',
+                ns: ['translation', 'auth', 'dashboard', 'common'], defaultNS: 'translation',
+                backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
+                detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
+            });
             console.log('🌐 Loading translations...');
             await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
             console.log('✅ All translations loaded!');
-
             const t = (key) => i18next.t(key);
 
             async function changeLanguage(langCode) {
-                try {
-                    await i18next.changeLanguage(langCode);
-                    localStorage.setItem('i18nextLng', langCode);
-                    window.location.reload();
-                } catch (error) {
-                    console.error('Erreur changement de langue:', error);
-                }
+                await i18next.changeLanguage(langCode);
+                localStorage.setItem('i18nextLng', langCode);
+                window.location.reload();
             }
             window.changeLanguage = changeLanguage;
 
-            // ✅ v3.20.1: Client Supabase avec detectSessionInUrl désactivé pour contrôle manuel
+            // ✅ v3.20.2: Supabase avec detectSessionInUrl: TRUE (laisser Supabase gérer)
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 auth: {
                     autoRefreshToken: true,
                     persistSession: true,
-                    detectSessionInUrl: false,  // ✅ DÉSACTIVÉ - on gère manuellement
+                    detectSessionInUrl: true,
                     flowType: 'pkce'
                 }
             });
@@ -236,19 +129,12 @@
             window.SUPABASE_URL = SUPABASE_URL;
             window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
 
-            // Traductions OAuth
             const oauthTranslations = {
                 fr: { security_info: "Information de sécurité", redirect_message: "Vous allez être redirigé vers notre service d'authentification sécurisé <strong>(Supabase)</strong> pour vous connecter avec", normal_secure: "C'est normal et sécurisé.", will_return: "Vous reviendrez automatiquement sur notre site après connexion.", continue_btn: "Continuer", cancel_btn: "Annuler" },
-                en: { security_info: "Security Information", redirect_message: "You will be redirected to our secure authentication service <strong>(Supabase)</strong> to sign in with", normal_secure: "This is normal and secure.", will_return: "You will automatically return to our site after signing in.", continue_btn: "Continue", cancel_btn: "Cancel" },
-                ar: { security_info: "معلومات الأمان", redirect_message: "سيتم إعادة توجيهك إلى خدمة المصادقة الآمنة <strong>(Supabase)</strong> لتسجيل الدخول باستخدام", normal_secure: "هذا طبيعي وآمن.", will_return: "ستعود تلقائياً إلى موقعنا بعد تسجيل الدخول.", continue_btn: "متابعة", cancel_btn: "إلغاء" },
-                ru: { security_info: "Информация о безопасности", redirect_message: "Вы будете перенаправлены на нашу защищенную службу аутентификации <strong>(Supabase)</strong> для входа через", normal_secure: "Это нормально и безопасно.", will_return: "Вы автоматически вернетесь на наш сайт после входа.", continue_btn: "Продолжить", cancel_btn: "Отмена" },
-                hi: { security_info: "सुरक्षा जानकारी", redirect_message: "आपको हमारी सुरक्षित प्रमाणीकरण सेवा <strong>(Supabase)</strong> पर पुनर्निर्देशित किया जाएगा", normal_secure: "यह सामान्य और सुरक्षित है।", will_return: "साइन इन करने के बाद आप स्वचालित रूप से हमारी साइट पर लौट आएंगे।", continue_btn: "जारी रखें", cancel_btn: "रद्द करें" },
-                ur: { security_info: "سیکیورٹی کی معلومات", redirect_message: "آپ کو ہماری محفوظ تصدیق خدمت <strong>(Supabase)</strong> پر بھیجا جائے گا", normal_secure: "یہ نارمل اور محفوظ ہے۔", will_return: "سائن ان کے بعد آپ خود بخود ہماری سائٹ پر واپس آ جائیں گے۔", continue_btn: "جاری رکھیں", cancel_btn: "منسوخ کریں" },
-                zh: { security_info: "安全信息", redirect_message: "您将被重定向到我们的安全认证服务<strong>(Supabase)</strong>以使用以下方式登录", normal_secure: "这是正常且安全的。", will_return: "登录后您将自动返回我们的网站。", continue_btn: "继续", cancel_btn: "取消" },
-                tl: { security_info: "Impormasyon sa Seguridad", redirect_message: "Ire-redirect ka sa aming secure authentication service <strong>(Supabase)</strong> para mag-sign in gamit ang", normal_secure: "Ito ay normal at secure.", will_return: "Awtomatikong babalik ka sa aming site pagkatapos mag-sign in.", continue_btn: "Magpatuloy", cancel_btn: "Kanselahin" }
+                en: { security_info: "Security Information", redirect_message: "You will be redirected to our secure authentication service <strong>(Supabase)</strong> to sign in with", normal_secure: "This is normal and secure.", will_return: "You will automatically return to our site after signing in.", continue_btn: "Continue", cancel_btn: "Cancel" }
             };
 
-            // Variables d'état
+            // State
             let currentUser = null;
             let userProfile = null;
             let profileLoadAttempts = 0;
@@ -262,12 +148,10 @@
             let globalIsUploading = false;
             let contractJustSigned = isContractSignedReturn;
             let isRendering = false;
-            let lastAuthEvent = null;
             let initialLoadComplete = false;
-            let oauthInProgress = isOAuthReturn;
+            let waitingForOAuth = isOAuthReturn;
             let phoneInputInstances = {};
 
-            // Exposer les variables globales
             window.currentUser = null;
             window.userProfile = null;
             window.currentPage = 'landing';
@@ -280,42 +164,24 @@
             window.setTempPhone = (p) => { tempPhone = p; window.tempPhone = p; };
             window.setPendingSignupId = (id) => { pendingSignupId = id; window.pendingSignupId = id; };
 
-            // Vérifier les paramètres URL pour signup
-            const searchParams = new URLSearchParams(window.location.search);
-            if (searchParams.get('action') === 'signup') {
+            if (urlParams.get('action') === 'signup') {
                 currentPage = 'auth-signup';
                 window.currentPage = 'auth-signup';
             }
 
-            // Helpers timing
-            function wait2Frames() {
-                return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-            }
+            // Helpers
+            function wait2Frames() { return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
+            function waitFonts() { return document.fonts?.ready || Promise.resolve(); }
             
-            function waitFonts() {
-                return document.fonts?.ready || Promise.resolve();
-            }
-            
-            // Phone input functions
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
                 if (!input) return null;
-                
-                if (phoneInputInstances[inputId]) {
-                    phoneInputInstances[inputId].destroy();
-                    delete phoneInputInstances[inputId];
-                }
-                
+                if (phoneInputInstances[inputId]) { phoneInputInstances[inputId].destroy(); delete phoneInputInstances[inputId]; }
                 const iti = window.intlTelInput(input, {
-                    initialCountry: "ae",
-                    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
-                    separateDialCode: true,
-                    nationalMode: false,
-                    autoPlaceholder: "polite",
-                    formatOnDisplay: true,
+                    initialCountry: "ae", preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+                    separateDialCode: true, nationalMode: false, autoPlaceholder: "polite", formatOnDisplay: true,
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
                 });
-                
                 phoneInputInstances[inputId] = iti;
                 if (initialNumber) iti.setNumber(initialNumber);
                 return iti;
@@ -323,41 +189,20 @@
             window.initPhoneInput = initPhoneInput;
 
             async function initPhoneInputForModal(inputId, initialNumber = '') {
-                console.log('📱 initPhoneInputForModal for:', inputId);
                 const input = document.getElementById(inputId);
                 if (!input) return null;
-                
-                if (phoneInputInstances[inputId]) {
-                    phoneInputInstances[inputId].destroy();
-                    delete phoneInputInstances[inputId];
-                }
-                
+                if (phoneInputInstances[inputId]) { phoneInputInstances[inputId].destroy(); delete phoneInputInstances[inputId]; }
                 const iti = window.intlTelInput(input, {
-                    initialCountry: "ae",
-                    preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
-                    separateDialCode: true,
-                    nationalMode: false,
-                    autoPlaceholder: "polite",
-                    formatOnDisplay: true,
+                    initialCountry: "ae", preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
+                    separateDialCode: true, nationalMode: false, autoPlaceholder: "polite", formatOnDisplay: true,
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
                 });
-                
                 phoneInputInstances[inputId] = iti;
                 if (initialNumber) iti.setNumber(initialNumber);
-                
                 if (iti.promise) await iti.promise;
-                await wait2Frames();
-                await waitFonts();
-                
-                const forceRecalc = () => {
-                    const iso2 = iti.getSelectedCountryData().iso2;
-                    iti.setCountry(iso2);
-                    window.dispatchEvent(new Event("resize"));
-                };
-                forceRecalc();
-                await new Promise(r => setTimeout(r, 50));
-                forceRecalc();
-                
+                await wait2Frames(); await waitFonts();
+                const forceRecalc = () => { iti.setCountry(iti.getSelectedCountryData().iso2); window.dispatchEvent(new Event("resize")); };
+                forceRecalc(); await new Promise(r => setTimeout(r, 50)); forceRecalc();
                 return iti;
             }
             window.initPhoneInputForModal = initPhoneInputForModal;
@@ -374,10 +219,7 @@
                 const errorDiv = document.getElementById('authError');
                 if (errorDiv) { errorDiv.textContent = ''; errorDiv.classList.add('hidden'); }
                 if (!form) return;
-
-                if (mode === 'signup') {
-                    setTimeout(() => initPhoneInput('phone'), 100);
-                }
+                if (mode === 'signup') setTimeout(() => initPhoneInput('phone'), 100);
 
                 form.onsubmit = async (e) => {
                     e.preventDefault();
@@ -390,55 +232,35 @@
                             const name = document.getElementById('name').value.trim();
                             const fullPhone = getFullPhoneNumber('phone');
                             const confirmPassword = document.getElementById('confirmPassword').value;
-
                             if (!VALIDATION.validateName(name)) throw new Error('Nom invalide');
-                            if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Numéro de téléphone invalide');
+                            if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Téléphone invalide');
                             if (!VALIDATION.validateEmail(email)) throw new Error('Email invalide');
                             if (!VALIDATION.validatePassword(password)) throw new Error('Mot de passe invalide');
                             if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
 
                             const phoneCheck = await TFA.checkPhoneExists(fullPhone);
-                            if (phoneCheck.exists) {
-                                errorDiv.textContent = 'Ce numéro de téléphone est déjà utilisé';
-                                errorDiv.classList.remove('hidden');
-                                return;
-                            }
+                            if (phoneCheck.exists) { errorDiv.textContent = 'Numéro déjà utilisé'; errorDiv.classList.remove('hidden'); return; }
 
                             const submitButton = document.getElementById('submitButton');
                             submitButton.disabled = true;
-                            submitButton.innerHTML = '<svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-gray-900 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Envoi du code SMS...';
+                            submitButton.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Envoi SMS...';
 
                             isSignupInProgress = true;
-                            const currentLang = i18next.language || 'fr';
-                            const emailOptIn = document.getElementById('emailOptIn')?.checked || false;
-                            const pendingSignupData = { email, password, name, phone: fullPhone, email_opt_in: emailOptIn };
-
-                            const smsResult = await TFA.send2FACode(fullPhone, currentLang, pendingSignupData);
-                            if (!smsResult.success) throw new Error('Erreur lors de l\'envoi du SMS');
-
-                            tempPhone = fullPhone;
-                            window.tempPhone = fullPhone;
-                            is2FAMode = true;
-                            window.is2FAMode = true;
+                            const smsResult = await TFA.send2FACode(fullPhone, i18next.language || 'fr', { email, password, name, phone: fullPhone, email_opt_in: document.getElementById('emailOptIn')?.checked || false });
+                            if (!smsResult.success) throw new Error('Erreur SMS');
+                            tempPhone = fullPhone; window.tempPhone = fullPhone;
+                            is2FAMode = true; window.is2FAMode = true;
                             isSignupInProgress = false;
                             render();
                         } else if (mode === 'login') {
-                            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                            const { error } = await supabase.auth.signInWithPassword({ email, password });
                             if (error) throw error;
                         }
                     } catch (error) {
-                        console.error('❌ Auth error:', error);
-                        let errorMessage = error.message;
-                        if (error.message.includes('Invalid login credentials')) errorMessage = 'Email ou mot de passe incorrect';
-                        else if (error.message.includes('Email not confirmed')) errorMessage = 'Veuillez confirmer votre email';
-                        else if (error.message.includes('User already registered')) errorMessage = 'Cet email est déjà utilisé';
-                        errorDiv.textContent = errorMessage;
-                        errorDiv.classList.remove('hidden');
-                        if (mode === 'signup') {
-                            const submitButton = document.getElementById('submitButton');
-                            submitButton.disabled = false;
-                            submitButton.textContent = t('auth:signup_button');
-                        }
+                        let msg = error.message;
+                        if (msg.includes('Invalid login')) msg = 'Email ou mot de passe incorrect';
+                        errorDiv.textContent = msg; errorDiv.classList.remove('hidden');
+                        if (mode === 'signup') { document.getElementById('submitButton').disabled = false; document.getElementById('submitButton').textContent = t('auth:signup_button'); }
                     }
                 };
             }
@@ -447,67 +269,38 @@
                 const form = document.getElementById('authForm');
                 const errorDiv = document.getElementById('authError');
                 form.onsubmit = async (e) => {
-                    e.preventDefault();
-                    errorDiv.classList.add('hidden');
-                    const email = document.getElementById('email').value;
+                    e.preventDefault(); errorDiv.classList.add('hidden');
                     try {
-                        const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+                        const { error } = await supabase.auth.resetPasswordForEmail(document.getElementById('email').value, { redirectTo: window.location.origin });
                         if (error) throw error;
-                        alert(t('auth:reset_email_sent'));
-                        UTILS.showLogin();
-                    } catch (error) {
-                        errorDiv.textContent = error.message;
-                        errorDiv.classList.remove('hidden');
-                    }
+                        alert(t('auth:reset_email_sent')); UTILS.showLogin();
+                    } catch (error) { errorDiv.textContent = error.message; errorDiv.classList.remove('hidden'); }
                 };
             }
 
             function showOAuthWarning(provider) {
                 const modal = document.getElementById('oauthWarningModal');
-                const providerName = provider === 'google' ? 'Google' : 'Apple';
-                const currentLang = i18next.language?.split('-')[0] || 'fr';
-                const trans = oauthTranslations[currentLang] || oauthTranslations.fr;
-                
+                const trans = oauthTranslations[i18next.language?.split('-')[0]] || oauthTranslations.fr;
                 modal.innerHTML = `
                     <div class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
                         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-yellow-500/50">
-                            <div class="text-center mb-6">
-                                <div class="text-5xl mb-4">⚠️</div>
-                                <h3 class="text-2xl font-bold mb-4 text-yellow-400">${trans.security_info}</h3>
-                            </div>
-                            <p class="text-blue-200 mb-6 leading-relaxed">${trans.redirect_message} ${providerName}.</p>
+                            <div class="text-center mb-6"><div class="text-5xl mb-4">⚠️</div><h3 class="text-2xl font-bold text-yellow-400">${trans.security_info}</h3></div>
+                            <p class="text-blue-200 mb-6">${trans.redirect_message} ${provider === 'google' ? 'Google' : 'Apple'}.</p>
                             <p class="text-blue-200 mb-6"><span class="text-green-400 font-semibold">✓ ${trans.normal_secure}</span><br>${trans.will_return}</p>
                             <div class="flex gap-4">
-                                <button onclick="proceedWithOAuth('${provider}')" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">${trans.continue_btn}</button>
-                                <button onclick="closeOAuthWarning()" class="flex-1 bg-white/20 hover:bg-white/30 text-white font-bold py-3 rounded-lg transition border border-white/20">${trans.cancel_btn}</button>
+                                <button onclick="proceedWithOAuth('${provider}')" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg">${trans.continue_btn}</button>
+                                <button onclick="closeOAuthWarning()" class="flex-1 bg-white/20 hover:bg-white/30 text-white font-bold py-3 rounded-lg border border-white/20">${trans.cancel_btn}</button>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 modal.classList.remove('hidden');
             }
-
-            function closeOAuthWarning() {
-                const modal = document.getElementById('oauthWarningModal');
-                modal.classList.add('hidden');
-                modal.innerHTML = '';
-            }
-
+            function closeOAuthWarning() { const m = document.getElementById('oauthWarningModal'); m.classList.add('hidden'); m.innerHTML = ''; }
             async function proceedWithOAuth(provider) {
                 closeOAuthWarning();
-                try {
-                    console.log('🔐 Starting ' + provider + ' Sign In...');
-                    const { data, error } = await supabase.auth.signInWithOAuth({
-                        provider: provider,
-                        options: { redirectTo: window.location.origin, skipBrowserRedirect: false }
-                    });
-                    if (error) throw error;
-                } catch (error) {
-                    console.error('❌ OAuth error:', error);
-                    alert('Erreur: ' + error.message);
-                }
+                const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: window.location.origin } });
+                if (error) alert('Erreur: ' + error.message);
             }
-
             async function signInWithGoogle() { showOAuthWarning('google'); }
             async function signInWithApple() { showOAuthWarning('apple'); }
 
@@ -515,211 +308,169 @@
                 const form = document.getElementById('authForm');
                 const errorDiv = document.getElementById('authError');
                 form.onsubmit = async (e) => {
-                    e.preventDefault();
-                    errorDiv.classList.add('hidden');
-                    const newPassword = document.getElementById('newPassword').value;
-                    const confirmPassword = document.getElementById('confirmNewPassword').value;
-                    if (newPassword !== confirmPassword) { errorDiv.textContent = 'Les mots de passe ne correspondent pas'; errorDiv.classList.remove('hidden'); return; }
-                    if (newPassword.length < 8) { errorDiv.textContent = 'Minimum 8 caractères'; errorDiv.classList.remove('hidden'); return; }
+                    e.preventDefault(); errorDiv.classList.add('hidden');
+                    const np = document.getElementById('newPassword').value;
+                    const cp = document.getElementById('confirmNewPassword').value;
+                    if (np !== cp) { errorDiv.textContent = 'Mots de passe différents'; errorDiv.classList.remove('hidden'); return; }
+                    if (np.length < 8) { errorDiv.textContent = 'Min 8 caractères'; errorDiv.classList.remove('hidden'); return; }
                     try {
-                        const { error } = await supabase.auth.updateUser({ password: newPassword });
+                        const { error } = await supabase.auth.updateUser({ password: np });
                         if (error) throw error;
-                        isPasswordRecoveryMode = false;
-                        alert('✅ Mot de passe changé !');
-                        await supabase.auth.signOut();
-                        UTILS.showLogin();
-                    } catch (error) {
-                        errorDiv.textContent = error.message;
-                        errorDiv.classList.remove('hidden');
-                    }
+                        isPasswordRecoveryMode = false; alert('✅ Mot de passe changé !');
+                        await supabase.auth.signOut(); UTILS.showLogin();
+                    } catch (error) { errorDiv.textContent = error.message; errorDiv.classList.remove('hidden'); }
                 };
             }
 
-            // Load user profile
+            // Load profile
             async function loadUserProfile(user = null) {
-                const targetUser = user || currentUser;
-                console.log('🔍 loadUserProfile for:', targetUser?.id);
-                if (!targetUser?.id) return false;
+                const u = user || currentUser;
+                console.log('🔍 loadUserProfile for:', u?.id);
+                if (!u?.id) { console.warn('⚠️ No user for loadUserProfile'); return false; }
 
                 try {
-                    const { data, error } = await supabase.from('profiles').select('*').eq('id', targetUser.id).maybeSingle();
+                    const { data, error } = await supabase.from('profiles').select('*').eq('id', u.id).maybeSingle();
                     
                     if (error && error.code !== 'PGRST116') {
-                        console.error('❌ Profile error:', error);
-                        userProfile = { id: targetUser.id, name: targetUser.user_metadata?.full_name || targetUser.email?.split('@')[0] || 'User', email: targetUser.email, role: 'referrer', contract_status: 'pending' };
+                        console.error('❌ Profile DB error:', error);
+                        userProfile = { id: u.id, name: u.user_metadata?.full_name || u.email?.split('@')[0] || 'User', email: u.email, role: 'referrer', contract_status: 'pending' };
                         window.userProfile = userProfile;
                         return true;
                     }
 
-                    let profile = data;
-                    if (!profile) {
-                        console.log('📝 Creating profile...');
-                        const userName = targetUser.user_metadata?.full_name || targetUser.user_metadata?.name || targetUser.email?.split('@')[0] || '';
-                        const { data: newProfile, error: insertError } = await supabase.from('profiles').upsert([{
-                            id: targetUser.id, name: userName, phone: targetUser.user_metadata?.phone || '',
-                            email: targetUser.email, role: 'referrer', contract_status: 'pending', phone_verified: false
+                    if (!data) {
+                        console.log('📝 Creating new profile...');
+                        const name = u.user_metadata?.full_name || u.user_metadata?.name || u.email?.split('@')[0] || '';
+                        const { data: newProfile, error: insertErr } = await supabase.from('profiles').upsert([{
+                            id: u.id, name, phone: u.user_metadata?.phone || '', email: u.email, role: 'referrer', contract_status: 'pending', phone_verified: false
                         }], { onConflict: 'id' }).select().single();
                         
-                        if (insertError) {
-                            userProfile = { id: targetUser.id, name: userName, email: targetUser.email, role: 'referrer', contract_status: 'pending' };
-                            window.userProfile = userProfile;
-                            return true;
+                        if (insertErr) {
+                            console.error('❌ Insert error:', insertErr);
+                            userProfile = { id: u.id, name, email: u.email, role: 'referrer', contract_status: 'pending' };
+                        } else {
+                            userProfile = newProfile;
                         }
-                        profile = newProfile;
+                    } else {
+                        userProfile = data;
+                        if (userProfile.contract_status) userProfile.contract_status = userProfile.contract_status.trim().replace(/\*+/g, '');
                     }
-
-                    if (profile?.contract_status) {
-                        profile.contract_status = profile.contract_status.trim().replace(/\*+/g, '');
-                    }
-                    userProfile = profile;
-                    window.userProfile = profile;
-                    console.log('✅ Profile loaded:', profile.name);
+                    
+                    window.userProfile = userProfile;
+                    console.log('✅ Profile ready:', userProfile.name);
                     return true;
                 } catch (err) {
-                    console.error('❌ Exception:', err);
-                    userProfile = { id: targetUser.id, name: targetUser.user_metadata?.full_name || 'User', email: targetUser.email, role: 'referrer', contract_status: 'pending' };
+                    console.error('❌ loadUserProfile exception:', err);
+                    userProfile = { id: u.id, name: u.user_metadata?.full_name || 'User', email: u.email, role: 'referrer', contract_status: 'pending' };
                     window.userProfile = userProfile;
                     return true;
                 }
             }
             window.loadUserProfile = loadUserProfile;
 
-            // Logout
             async function logout() {
-                console.log('🚪 Logout');
                 try { await supabase.auth.signOut(); } catch(e) {}
                 try { localStorage.clear(); sessionStorage.clear(); } catch(e) {}
                 currentUser = null; userProfile = null; currentPage = 'landing';
-                isPasswordRecoveryMode = false; is2FAMode = false; tempPhone = null; pendingSignupId = null;
                 window.currentUser = null; window.userProfile = null; window.currentPage = 'landing';
                 setTimeout(() => { window.location.href = window.location.origin; }, 100);
             }
             window.logout = logout;
 
-            // Render function
+            // Render
             async function render() {
-                if (isRendering) return;
+                if (isRendering) { console.log('⏳ Render in progress, skipping'); return; }
+                
+                // ✅ v3.20.2: Ne pas render si on attend OAuth
+                if (waitingForOAuth && !currentUser) {
+                    console.log('⏳ Waiting for OAuth, not rendering yet...');
+                    return;
+                }
+                
                 isRendering = true;
                 console.log('🎨 RENDER - user:', !!currentUser, 'profile:', !!userProfile, 'page:', currentPage);
 
+                const app = document.getElementById('app');
+
                 if (contractJustSigned && currentUser && userProfile) {
-                    contractJustSigned = false;
-                    window.contractJustSigned = false;
+                    contractJustSigned = false; window.contractJustSigned = false;
                     await loadUserProfile(currentUser);
                     setTimeout(() => {
-                        const div = document.createElement('div');
-                        div.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce"><div class="flex items-center gap-3"><span class="text-3xl">✅</span><div><div class="font-bold">Contrat signé !</div></div></div></div>`;
-                        document.body.appendChild(div);
-                        setTimeout(() => div.remove(), 5000);
+                        const d = document.createElement('div');
+                        d.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce"><span class="text-3xl mr-2">✅</span><strong>Contrat signé !</strong></div>`;
+                        document.body.appendChild(d); setTimeout(() => d.remove(), 5000);
                     }, 500);
                 }
 
-                const app = document.getElementById('app');
-
                 if (is2FAMode) {
                     app.innerHTML = RENDERING.renderAuthPage('2fa');
-                    const form2FA = document.getElementById('form2FA');
-                    if (form2FA) form2FA.onsubmit = TFA.handle2FASubmit;
+                    document.getElementById('form2FA').onsubmit = TFA.handle2FASubmit;
                     document.getElementById('code2fa')?.focus();
-                    isRendering = false;
-                    return;
+                    isRendering = false; return;
                 }
 
                 if (isPasswordRecoveryMode && currentPage === 'change-password') {
                     app.innerHTML = RENDERING.renderAuthPage('change-password');
                     setTimeout(() => handleChangePassword(), 500);
-                    isRendering = false;
-                    return;
+                    isRendering = false; return;
                 }
 
                 if (currentUser && userProfile) {
                     const isComplete = RENDERING.isProfileComplete(userProfile);
                     
                     if (!isComplete && userProfile.role !== 'admin') {
-                        currentPage = 'profile-completion';
-                        window.currentPage = 'profile-completion';
+                        currentPage = 'profile-completion'; window.currentPage = 'profile-completion';
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
-                        setTimeout(async () => {
-                            const iti = await initPhoneInputForModal('completionPhone', userProfile.phone || '');
-                            if (iti) console.log('📱 ✅ Phone ready');
-                        }, 100);
+                        setTimeout(async () => { await initPhoneInputForModal('completionPhone', userProfile.phone || ''); }, 100);
                         
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
                             if (form) {
                                 form.onsubmit = async (e) => {
                                     e.preventDefault();
-                                    const submitBtn = document.getElementById('completionSubmitBtn');
-                                    const errorDiv = document.getElementById('completionError');
-                                    submitBtn.disabled = true;
-                                    submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 inline-block mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Enregistrement...';
-                                    errorDiv.classList.add('hidden');
-                                    
+                                    const btn = document.getElementById('completionSubmitBtn');
+                                    const err = document.getElementById('completionError');
+                                    btn.disabled = true; btn.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>...';
+                                    err.classList.add('hidden');
                                     try {
                                         const name = document.getElementById('completionName')?.value?.trim() || '';
                                         const email = document.getElementById('completionEmail')?.value?.trim() || '';
-                                        const fullPhone = getFullPhoneNumber('completionPhone');
+                                        const phone = getFullPhoneNumber('completionPhone');
                                         const address = document.getElementById('completionAddress')?.value?.trim() || '';
                                         const area = document.getElementById('completionArea')?.value?.trim() || '';
                                         const emirate = document.getElementById('completionEmirate')?.value || '';
-                                        
-                                        if (!name || name.length < 2) throw new Error('Nom requis (min 2 car.)');
-                                        if (!email || !email.includes('@')) throw new Error('Email invalide');
-                                        if (email.includes('@privaterelay.appleid.com')) throw new Error('Entrez votre vraie adresse email');
-                                        if (!fullPhone || fullPhone.length < 8) throw new Error('Téléphone invalide');
-                                        if (!address || address.length < 3) throw new Error('Adresse requise');
+                                        if (!name || name.length < 2) throw new Error('Nom requis');
+                                        if (!email || !email.includes('@') || email.includes('privaterelay')) throw new Error('Email valide requis');
+                                        if (!phone || phone.length < 8) throw new Error('Téléphone requis');
+                                        if (!address) throw new Error('Adresse requise');
                                         if (!emirate) throw new Error('Émirat requis');
-                                        
-                                        const fullAddress = area ? `${address}, ${area}, ${emirate}` : `${address}, ${emirate}`;
-                                        
-                                        const { error } = await supabase.from('profiles').update({ name, email, phone: fullPhone, address: fullAddress }).eq('id', currentUser.id);
+                                        const fullAddr = area ? `${address}, ${area}, ${emirate}` : `${address}, ${emirate}`;
+                                        const { error } = await supabase.from('profiles').update({ name, email, phone, address: fullAddr }).eq('id', currentUser.id);
                                         if (error) throw error;
-                                        
                                         await loadUserProfile(currentUser);
                                         document.getElementById('profileCompletionModal')?.remove();
-                                        currentPage = 'dashboard';
-                                        window.currentPage = 'dashboard';
-                                        
-                                        const success = document.createElement('div');
-                                        success.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50"><div class="flex items-center gap-3"><span class="text-3xl">✅</span><div class="font-bold">Profil complété !</div></div></div>`;
-                                        document.body.appendChild(success);
-                                        setTimeout(() => success.remove(), 4000);
-                                        
-                                        isRendering = false;
-                                        render();
-                                    } catch (err) {
-                                        errorDiv.textContent = err.message;
-                                        errorDiv.classList.remove('hidden');
-                                        submitBtn.disabled = false;
-                                        submitBtn.textContent = 'Enregistrer et continuer →';
-                                    }
+                                        currentPage = 'dashboard'; window.currentPage = 'dashboard';
+                                        isRendering = false; render();
+                                    } catch (ex) { err.textContent = ex.message; err.classList.remove('hidden'); btn.disabled = false; btn.textContent = 'Enregistrer →'; }
                                 };
                             }
                         }, 150);
-                        
-                        isRendering = false;
-                        return;
+                        isRendering = false; return;
                     }
                     
-                    currentPage = 'dashboard';
-                    window.currentPage = 'dashboard';
+                    currentPage = 'dashboard'; window.currentPage = 'dashboard';
                     app.innerHTML = RENDERING.renderDashboard();
                     await DASHBOARD.loadDashboardContent();
-                    isRendering = false;
-                    return;
+                    isRendering = false; return;
 
                 } else if (currentUser && !userProfile) {
                     profileLoadAttempts++;
                     if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
                         profileLoadAttempts = 0;
                         await supabase.auth.signOut();
-                        currentUser = null;
-                        window.currentUser = null;
-                        currentPage = 'landing';
-                        isRendering = false;
-                        render();
-                        return;
+                        currentUser = null; window.currentUser = null; currentPage = 'landing';
+                        isRendering = false; render(); return;
                     }
                     app.innerHTML = `<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement... (${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})</div></div></div>`;
                     isRendering = false;
@@ -741,11 +492,10 @@
                 } else {
                     app.innerHTML = RENDERING.renderLandingPage();
                 }
-
                 isRendering = false;
             }
 
-            // Expose functions
+            // Expose
             window.showAddLeadForm = LEADS.showAddLeadForm;
             window.closeAddLeadModal = LEADS.closeAddLeadModal;
             window.addLead = LEADS.addLead;
@@ -777,149 +527,110 @@
             window.showSignup = UTILS.showSignup;
             window.showReset = UTILS.showReset;
             window.backToHome = UTILS.backToHome;
-            window.backTo2FASignup = function() {
-                is2FAMode = false; window.is2FAMode = false;
-                tempPhone = null; window.tempPhone = null;
-                pendingSignupId = null; window.pendingSignupId = null;
-                currentPage = 'auth-signup'; window.currentPage = 'auth-signup';
-                render();
-            };
+            window.backTo2FASignup = function() { is2FAMode = false; tempPhone = null; pendingSignupId = null; currentPage = 'auth-signup'; window.currentPage = 'auth-signup'; render(); };
             window.renderLandingPage = RENDERING.renderLandingPage;
             window.renderAuthPage = RENDERING.renderAuthPage;
             window.renderDashboard = RENDERING.renderDashboard;
             window.logout = logout;
 
             // ============================================
-            // ✅ v3.20.1: AUTH STATE CHANGE HANDLER
+            // ✅ v3.20.2: AUTH STATE - UNIQUE HANDLER
             // ============================================
             supabase.auth.onAuthStateChange(async (event, session) => {
-                console.log('🔔 Auth state changed:', event, session ? 'for ' + session.user?.email : 'no session');
+                console.log('🔔 Auth:', event, session?.user?.email || 'no session');
 
+                // Ignorer pendant signup 2FA
                 if (isSignupInProgress && event !== 'SIGNED_IN') return;
-                if (event === lastAuthEvent && event === 'TOKEN_REFRESHED') return;
-                lastAuthEvent = event;
 
+                // Password recovery
                 if (event === 'PASSWORD_RECOVERY') {
                     isPasswordRecoveryMode = true;
-                    currentPage = 'change-password';
-                    window.currentPage = 'change-password';
-                    currentUser = session?.user || null;
+                    currentPage = 'change-password'; window.currentPage = 'change-password';
+                    currentUser = session?.user || null; window.currentUser = currentUser;
+                    render(); return;
+                }
+                if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') return;
+
+                // ✅ v3.20.2: Gérer SIGNED_IN
+                if (event === 'SIGNED_IN' && session?.user) {
+                    console.log('✅ SIGNED_IN - loading profile...');
+                    currentUser = session.user;
                     window.currentUser = currentUser;
+                    
+                    // Charger le profil
+                    await loadUserProfile(currentUser);
+                    
+                    // Fin de l'attente OAuth
+                    waitingForOAuth = false;
+                    initialLoadComplete = true;
+                    
+                    // Render maintenant
                     render();
                     return;
                 }
-
-                if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') return;
-
-                currentUser = session?.user || null;
-                window.currentUser = currentUser;
-
-                if (currentUser) {
-                    console.log('👤 User authenticated:', currentUser.email);
-                    await loadUserProfile(currentUser);
-                    
-                    // ✅ v3.20.1: Nettoyer l'URL après OAuth
-                    if (oauthInProgress) {
-                        console.log('✅ OAuth complete, cleaning URL');
-                        window.history.replaceState(null, '', window.location.pathname);
-                        oauthInProgress = false;
-                    }
-                }
-
-                initialLoadComplete = true;
-                render();
-            });
-
-            // ============================================
-            // ✅ v3.20.1: INITIALISATION - GESTION OAUTH MANUELLE
-            // ============================================
-            async function initializeApp() {
-                console.log('🔧 initializeApp - OAuth return:', isOAuthReturn);
                 
-                // Gérer erreur OAuth
-                if (hasError) {
-                    document.getElementById('app').innerHTML = `
-                        <div class="min-h-screen flex items-center justify-center px-4">
-                            <div class="bg-red-500/20 border border-red-500 rounded-2xl p-8 max-w-md text-center">
-                                <div class="text-6xl mb-4">❌</div>
-                                <h2 class="text-2xl font-bold text-red-400 mb-4">Erreur de connexion</h2>
-                                <p class="text-blue-200 mb-6">La connexion a échoué.</p>
-                                <button onclick="window.location.href='/'" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg">Retour</button>
-                            </div>
-                        </div>
-                    `;
-                    window.history.replaceState(null, '', window.location.pathname);
+                // SIGNED_OUT
+                if (event === 'SIGNED_OUT') {
+                    currentUser = null; userProfile = null;
+                    window.currentUser = null; window.userProfile = null;
+                    currentPage = 'landing'; window.currentPage = 'landing';
+                    waitingForOAuth = false;
+                    render();
                     return;
                 }
                 
-                // ✅ v3.20.1: Si retour OAuth avec code, échanger manuellement
-                if (hasCodeParam) {
-                    console.log('🔄 OAuth code detected, exchanging...');
-                    try {
-                        const { data, error } = await supabase.auth.exchangeCodeForSession(urlParams.get('code'));
-                        if (error) {
-                            console.error('❌ Code exchange error:', error);
-                            // L'erreur "Invalid data" peut arriver si le code a déjà été utilisé
-                            // On essaie de récupérer la session existante
-                            const { data: sessionData } = await supabase.auth.getSession();
-                            if (sessionData?.session) {
-                                console.log('✅ Found existing session');
-                                currentUser = sessionData.session.user;
-                                window.currentUser = currentUser;
-                                await loadUserProfile(currentUser);
-                                window.history.replaceState(null, '', window.location.pathname);
-                                oauthInProgress = false;
-                                initialLoadComplete = true;
-                                render();
-                                return;
-                            }
-                        } else if (data?.session) {
-                            console.log('✅ Code exchanged successfully');
-                            currentUser = data.session.user;
-                            window.currentUser = currentUser;
-                            await loadUserProfile(currentUser);
-                            window.history.replaceState(null, '', window.location.pathname);
-                            oauthInProgress = false;
-                            initialLoadComplete = true;
-                            render();
-                            return;
-                        }
-                    } catch (err) {
-                        console.error('❌ Exchange exception:', err);
-                    }
-                    
-                    // Fallback: essayer getSession
-                    const { data: sessionData } = await supabase.auth.getSession();
-                    if (sessionData?.session) {
-                        currentUser = sessionData.session.user;
+                // INITIAL_SESSION (au chargement)
+                if (event === 'INITIAL_SESSION') {
+                    if (session?.user) {
+                        console.log('✅ INITIAL_SESSION with user');
+                        currentUser = session.user;
                         window.currentUser = currentUser;
                         await loadUserProfile(currentUser);
-                        window.history.replaceState(null, '', window.location.pathname);
-                        oauthInProgress = false;
+                        waitingForOAuth = false;
+                    } else {
+                        console.log('ℹ️ INITIAL_SESSION no user');
+                        // Si on attendait OAuth mais pas de session, arrêter d'attendre après 3s
+                        if (waitingForOAuth) {
+                            setTimeout(() => {
+                                if (waitingForOAuth && !currentUser) {
+                                    console.log('⏰ OAuth timeout, showing landing');
+                                    waitingForOAuth = false;
+                                    render();
+                                }
+                            }, 3000);
+                        }
                     }
                     initialLoadComplete = true;
                     render();
                     return;
                 }
                 
-                // Pas de retour OAuth - charger session normale
-                console.log('🔍 Getting existing session...');
-                try {
-                    const { data: { session } } = await supabase.auth.getSession();
-                    currentUser = session?.user || null;
-                    window.currentUser = currentUser;
-                    if (currentUser) {
-                        await loadUserProfile(currentUser);
-                    }
-                } catch (err) {
-                    console.error('❌ Session error:', err);
-                }
-
-                initialLoadComplete = true;
+                // TOKEN_REFRESHED - ignorer
+                if (event === 'TOKEN_REFRESHED') return;
+                
+                // Autres événements
+                currentUser = session?.user || null;
+                window.currentUser = currentUser;
+                if (currentUser && !userProfile) await loadUserProfile(currentUser);
                 render();
-            }
+            });
+
+            // ============================================
+            // ✅ v3.20.2: INIT - NE PAS APPELER getSession
+            // Laisser onAuthStateChange tout gérer
+            // ============================================
+            console.log('🔧 Waiting for onAuthStateChange...');
             
-            await initializeApp();
+            // Si pas de retour OAuth, et après 2s toujours pas de session, afficher landing
+            if (!isOAuthReturn) {
+                setTimeout(() => {
+                    if (!initialLoadComplete) {
+                        console.log('⏰ Timeout - no auth event, showing landing');
+                        initialLoadComplete = true;
+                        render();
+                    }
+                }, 2000);
+            }
 
         })();
     </script>
