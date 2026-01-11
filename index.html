@@ -16,15 +16,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.19.5 - SOLUTION DÉFINITIVE intl-tel-input modal -->
+    <!-- Version: 3.20.0 - Fix intl-tel-input padding + OAuth callback -->
     
-    <style>
+<style>
 /* ============================================
-   intl-tel-input - Thème sombre Dubai v3.19.5
-   ============================================
-   RÈGLE CRITIQUE: Ne JAMAIS utiliser padding shorthand ou padding-left
-   sur .iti input[type="tel"] car ITI calcule dynamiquement le padding-left
-   en inline style basé sur la largeur du dial code.
+   intl-tel-input - Thème sombre Dubai v3.20.0
+   FIX: Forcer padding-left à 90px
    ============================================ */
 
 .iti { 
@@ -32,21 +29,29 @@
     display: block !important;
 }
 
-.iti input[type="tel"] {
+/* ✅ v3.20.0: Forcer padding-left à 90px pour drapeau + dial code */
+.iti input[type="tel"],
+.iti input#phone,
+.iti input#completionPhone,
+.iti input#clientPhone {
     width: 100% !important;
     box-sizing: border-box !important;
-    /* ✅ SÉPARER les paddings - NE PAS utiliser padding shorthand */
-    padding-top: 0.75rem !important;
-    padding-right: 1rem !important;
-    padding-bottom: 0.75rem !important;
-    /* ❌ NE PAS METTRE padding-left - ITI le gère en inline style */
+    padding: 0.75rem 1rem 0.75rem 90px !important;
     background: rgba(51, 65, 85, 0.5) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
     border-radius: 0.5rem !important;
     color: white !important;
 }
 
-.iti input[type="tel"]:focus {
+/* Variante plus petite pour signup */
+.iti input#phone {
+    padding: 0.5rem 1rem 0.5rem 90px !important;
+}
+
+.iti input[type="tel"]:focus,
+.iti input#phone:focus,
+.iti input#completionPhone:focus,
+.iti input#clientPhone:focus {
     border-color: #eab308 !important;
     box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.3) !important;
     outline: none !important;
@@ -64,6 +69,7 @@
     background: rgba(51, 65, 85, 0.8) !important;
     border-radius: 0.5rem 0 0 0.5rem !important;
     padding: 0 8px !important;
+    height: 100% !important;
 }
 
 .iti__selected-flag:hover {
@@ -129,7 +135,7 @@
     
     <script type="module">
         // ============================================
-        // v3.19.5 - SOLUTION DÉFINITIVE intl-tel-input
+        // v3.20.0 - Fix intl-tel-input + OAuth
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -143,7 +149,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.19.5...');
+            console.log('🚀 App starting v3.20.0...');
             
             // Détecter les paramètres URL
             const urlParams = new URLSearchParams(window.location.search);
@@ -151,7 +157,7 @@
             
             // Détecter retour OAuth
             const hashParams = window.location.hash;
-            const isOAuthReturn = hashParams.includes('access_token') || 
+            let isOAuthReturn = hashParams.includes('access_token') || 
                                   hashParams.includes('error') || 
                                   urlParams.get('code') !== null;
             
@@ -166,14 +172,11 @@
             }
             
             if (isOAuthReturn) {
-                console.log('🔄 OAuth return detected - keeping hash for Supabase');
+                console.log('🔄 OAuth return detected');
             }
             
             if (hasOAuthError) {
-                console.error('❌ OAuth error detected in URL, cleaning up...');
-                if (window.history && window.history.replaceState) {
-                    window.history.replaceState(null, '', window.location.pathname);
-                }
+                console.error('❌ OAuth error detected in URL');
             }
             
             // Afficher loader pour OAuth
@@ -187,14 +190,6 @@
                         </div>
                     </div>
                 `;
-                
-                setTimeout(() => {
-                    if (document.getElementById('app').innerHTML.includes('Connexion en cours')) {
-                        console.log('⏰ OAuth fallback: still on loader after 5s, cleaning and reloading');
-                        window.history.replaceState(null, '', window.location.pathname);
-                        window.location.reload();
-                    }
-                }, 5000);
             }
 
             // Initialiser i18next
@@ -242,7 +237,7 @@
                 },
                 global: {
                     headers: {
-                        'X-Client-Info': 'real-estate-referrer/3.19.5'
+                        'X-Client-Info': 'real-estate-referrer/3.20.0'
                     }
                 }
             });
@@ -317,10 +312,9 @@
             }
 
             // ============================================
-            // ✅ v3.19.5: HELPERS POUR TIMING STABLE
+            // ✅ v3.20.0: HELPERS POUR TIMING STABLE
             // ============================================
             
-            // Attendre 2 frames (DOM vraiment peint)
             function wait2Frames() {
                 return new Promise(resolve => 
                     requestAnimationFrame(() => 
@@ -329,14 +323,12 @@
                 );
             }
             
-            // Attendre les webfonts
             function waitFonts() {
                 return document.fonts?.ready || Promise.resolve();
             }
             
             // ============================================
-            // ✅ v3.19.5: initPhoneInput pour pages NORMALES
-            // (inscription, pas de modal)
+            // ✅ v3.20.0: initPhoneInput pour pages NORMALES
             // ============================================
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
@@ -345,13 +337,12 @@
                     return null;
                 }
                 
-                // Détruire l'instance précédente
                 if (phoneInputInstances[inputId]) {
                     phoneInputInstances[inputId].destroy();
                     delete phoneInputInstances[inputId];
                 }
                 
-                console.log('📱 initPhoneInput (normal) for:', inputId);
+                console.log('📱 initPhoneInput for:', inputId);
                 
                 const iti = window.intlTelInput(input, {
                     initialCountry: "ae",
@@ -374,11 +365,10 @@
             window.initPhoneInput = initPhoneInput;
 
             // ============================================
-            // ✅ v3.19.5: initPhoneInputForModal - SOLUTION DÉFINITIVE
-            // Basée sur les conseils de l'expert
+            // ✅ v3.20.0: initPhoneInputForModal
             // ============================================
             async function initPhoneInputForModal(inputId, initialNumber = '') {
-                console.log('📱 initPhoneInputForModal v3.19.5 for:', inputId);
+                console.log('📱 initPhoneInputForModal v3.20.0 for:', inputId);
                 
                 const input = document.getElementById(inputId);
                 if (!input) {
@@ -386,15 +376,11 @@
                     return null;
                 }
                 
-                // Détruire l'instance précédente
                 if (phoneInputInstances[inputId]) {
-                    console.log('📱 Destroying previous instance');
                     phoneInputInstances[inputId].destroy();
                     delete phoneInputInstances[inputId];
                 }
                 
-                // ✅ ÉTAPE 1: Créer l'instance ITI IMMÉDIATEMENT
-                console.log('📱 Step 1: Creating ITI instance...');
                 const iti = window.intlTelInput(input, {
                     initialCountry: "ae",
                     preferredCountries: ["ae", "in", "pk", "ph", "gb", "fr", "ru", "cn", "sa", "eg", "us", "ca", "de", "lb", "jo"],
@@ -411,22 +397,13 @@
                     iti.setNumber(initialNumber);
                 }
                 
-                // ✅ ÉTAPE 2: Attendre utils.js (si chargé)
-                console.log('📱 Step 2: Waiting for utils.js...');
                 if (iti.promise) {
                     await iti.promise;
                 }
                 
-                // ✅ ÉTAPE 3: Attendre 2 frames (DOM peint)
-                console.log('📱 Step 3: Waiting 2 frames...');
                 await wait2Frames();
-                
-                // ✅ ÉTAPE 4: Attendre les webfonts
-                console.log('📱 Step 4: Waiting for fonts...');
                 await waitFonts();
                 
-                // ✅ ÉTAPE 5: Forcer recalcul du padding
-                console.log('📱 Step 5: Forcing recalc...');
                 const forceRecalc = () => {
                     const iso2 = iti.getSelectedCountryData().iso2;
                     iti.setCountry(iso2);
@@ -434,23 +411,8 @@
                 };
                 
                 forceRecalc();
-                
-                // ✅ ÉTAPE 6: Deuxième passe après 50ms (sécurité)
                 await new Promise(resolve => setTimeout(resolve, 50));
                 forceRecalc();
-                
-                // ✅ ÉTAPE 7: Debug - afficher le résultat
-                const pl = getComputedStyle(input).paddingLeft;
-                const dial = input.closest(".iti")?.querySelector(".iti__selected-dial-code");
-                const dialWidth = dial?.getBoundingClientRect().width || 0;
-                console.log('📱 DEBUG - padding-left:', pl, 'dial-code width:', dialWidth);
-                
-                if (dialWidth === 0) {
-                    console.warn('⚠️ dial-code width is 0 - CSS may not be loaded');
-                }
-                if (pl === '0px' || pl === '12px') {
-                    console.warn('⚠️ padding-left may be overridden by CSS');
-                }
                 
                 console.log('📱 ✅ ITI modal instance ready');
                 return iti;
@@ -479,7 +441,6 @@
                     return;
                 }
 
-                // Initialiser intl-tel-input pour le signup (page normale, pas modal)
                 if (mode === 'signup') {
                     setTimeout(() => {
                         initPhoneInput('phone');
@@ -909,8 +870,6 @@
                         
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
                         
-                        // ✅ v3.19.5: Initialiser ITI pour le modal APRÈS le rendu
-                        // Utiliser un setTimeout de 100ms pour s'assurer que le DOM est prêt
                         setTimeout(async () => {
                             console.log('📱 Modal rendered, calling initPhoneInputForModal...');
                             const existingPhone = userProfile.phone || '';
@@ -922,7 +881,6 @@
                             }
                         }, 100);
                         
-                        // Attacher le handler du formulaire
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
                             if (form) {
@@ -1192,15 +1150,39 @@
             window.renderDashboard = RENDERING.renderDashboard;
             window.logout = logout;
 
-            // Gestion auth state changes
+            // ============================================
+            // ✅ v3.20.0: GESTION AUTH STATE - FIX OAUTH
+            // ============================================
             supabase.auth.onAuthStateChange(async (event, session) => {
-                console.log('🔔 Auth state changed:', event, session ? 'with session' : 'no session');
+                console.log('🔔 Auth state changed:', event, session ? 'with session for ' + session.user?.email : 'no session');
 
-                if (isOAuthReturn && event === 'INITIAL_SESSION') {
-                    if (session) {
-                        console.log('✅ OAuth INITIAL_SESSION with session');
-                    } else {
-                        console.log('⏳ OAuth return without session, waiting...');
+                // ✅ v3.20.0: Gérer le retour OAuth proprement
+                if (isOAuthReturn) {
+                    if (event === 'SIGNED_IN' && session) {
+                        console.log('✅ OAuth SIGNED_IN success!');
+                        window.history.replaceState(null, '', window.location.pathname);
+                        currentUser = session.user;
+                        window.currentUser = currentUser;
+                        await loadUserProfile(currentUser);
+                        initialLoadComplete = true;
+                        isOAuthReturn = false;
+                        render();
+                        return;
+                    }
+                    
+                    if (event === 'INITIAL_SESSION') {
+                        if (session) {
+                            console.log('✅ OAuth INITIAL_SESSION with session');
+                            currentUser = session.user;
+                            window.currentUser = currentUser;
+                            await loadUserProfile(currentUser);
+                            window.history.replaceState(null, '', window.location.pathname);
+                            initialLoadComplete = true;
+                            isOAuthReturn = false;
+                            render();
+                        } else {
+                            console.log('⏳ OAuth INITIAL_SESSION without session, waiting...');
+                        }
                         return;
                     }
                 }
@@ -1240,7 +1222,6 @@
                     }
                 }
 
-                // Nettoyer URL
                 if (window.location.hash && (window.location.hash.includes('access_token') || window.location.hash.includes('error'))) {
                     window.history.replaceState(null, '', window.location.pathname);
                 }
@@ -1252,7 +1233,9 @@
                 render();
             });
 
-            // Initialisation
+            // ============================================
+            // ✅ v3.20.0: INITIALISATION - FIX OAUTH
+            // ============================================
             async function initializeApp() {
                 if (hasOAuthError) {
                     document.getElementById('app').innerHTML = `
@@ -1271,36 +1254,13 @@
                     return;
                 }
                 
+                // ✅ v3.20.0 FIX: Pour OAuth return, laisser onAuthStateChange gérer
                 if (isOAuthReturn) {
-                    console.log('🔄 OAuth return - waiting for session...');
-                    
-                    setTimeout(async () => {
-                        try {
-                            const { data: { session }, error } = await supabase.auth.getSession();
-                            
-                            if (error) {
-                                console.error('❌ OAuth error:', error.message);
-                                window.history.replaceState(null, '', window.location.pathname);
-                                return;
-                            }
-                            
-                            if (session) {
-                                console.log('✅ OAuth session found:', session.user.email);
-                                currentUser = session.user;
-                                window.currentUser = currentUser;
-                                await loadUserProfile(currentUser);
-                                window.history.replaceState(null, '', window.location.pathname);
-                                render();
-                            }
-                        } catch (err) {
-                            console.error('❌ OAuth exception:', err);
-                        }
-                    }, 500);
-                    
+                    console.log('🔄 OAuth return - letting Supabase handle via onAuthStateChange...');
                     return;
                 }
                 
-                console.log('🔍 Getting session...');
+                console.log('🔍 Getting session (non-OAuth)...');
                 try {
                     const { data: { session }, error } = await supabase.auth.getSession();
                     
