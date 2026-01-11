@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.20.2 - Fix OAuth robuste + téléphone padding -->
+    <!-- Version: 3.20.3 - Fix OAuth: ne pas nettoyer URL avant Supabase -->
     
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -51,7 +51,7 @@
     
     <script type="module">
         // ============================================
-        // v3.20.2 - OAuth ROBUSTE + téléphone
+        // v3.20.3 - OAuth: laisser Supabase parser l'URL
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -65,7 +65,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.20.2...');
+            console.log('🚀 App starting v3.20.3...');
             
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = window.location.hash;
@@ -75,14 +75,16 @@
             const isOAuthReturn = hasCodeParam || hasHashToken;
             const isContractSignedReturn = urlParams.get('signed') !== null;
             
-            // ✅ v3.20.2: Nettoyer l'URL IMMÉDIATEMENT pour éviter re-parse
-            if (isOAuthReturn || isContractSignedReturn) {
-                console.log('🧹 Cleaning URL immediately...');
+            // ✅ v3.20.3: NE PAS nettoyer l'URL ici - Supabase en a besoin !
+            // On nettoiera APRÈS le SIGNED_IN
+            
+            if (isOAuthReturn) console.log('🔄 OAuth return detected - code in URL, letting Supabase handle it');
+            if (hasError) console.error('❌ OAuth error in URL');
+            
+            // Nettoyer seulement contract signed (pas OAuth)
+            if (isContractSignedReturn && !isOAuthReturn) {
                 window.history.replaceState(null, '', window.location.pathname);
             }
-            
-            if (isOAuthReturn) console.log('🔄 OAuth return detected');
-            if (hasError) console.error('❌ OAuth error in URL');
             
             // Loader OAuth
             if (isOAuthReturn && !hasError) {
@@ -115,12 +117,13 @@
             }
             window.changeLanguage = changeLanguage;
 
-            // ✅ v3.20.2: Supabase avec detectSessionInUrl: TRUE (laisser Supabase gérer)
+            // ✅ v3.20.3: Supabase avec detectSessionInUrl: TRUE
+            // Supabase va automatiquement parser le ?code= et échanger pour une session
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 auth: {
                     autoRefreshToken: true,
                     persistSession: true,
-                    detectSessionInUrl: true,
+                    detectSessionInUrl: true,  // ✅ IMPORTANT: Supabase parse l'URL
                     flowType: 'pkce'
                 }
             });
@@ -145,11 +148,11 @@
             let isSignupInProgress = false;
             let tempPhone = null;
             let pendingSignupId = null;
-            let globalIsUploading = false;
             let contractJustSigned = isContractSignedReturn;
             let isRendering = false;
             let initialLoadComplete = false;
             let waitingForOAuth = isOAuthReturn;
+            let oauthHandled = false;  // ✅ v3.20.3: tracker si OAuth déjà traité
             let phoneInputInstances = {};
 
             window.currentUser = null;
@@ -379,11 +382,11 @@
 
             // Render
             async function render() {
-                if (isRendering) { console.log('⏳ Render in progress, skipping'); return; }
+                if (isRendering) { console.log('⏳ Render already in progress'); return; }
                 
-                // ✅ v3.20.2: Ne pas render si on attend OAuth
+                // ✅ v3.20.3: Ne pas render si on attend OAuth et pas encore de user
                 if (waitingForOAuth && !currentUser) {
-                    console.log('⏳ Waiting for OAuth, not rendering yet...');
+                    console.log('⏳ Waiting for OAuth session...');
                     return;
                 }
                 
@@ -534,10 +537,10 @@
             window.logout = logout;
 
             // ============================================
-            // ✅ v3.20.2: AUTH STATE - UNIQUE HANDLER
+            // ✅ v3.20.3: AUTH STATE HANDLER
             // ============================================
             supabase.auth.onAuthStateChange(async (event, session) => {
-                console.log('🔔 Auth:', event, session?.user?.email || 'no session');
+                console.log('🔔 Auth event:', event, session?.user?.email || 'no session');
 
                 // Ignorer pendant signup 2FA
                 if (isSignupInProgress && event !== 'SIGNED_IN') return;
@@ -551,20 +554,26 @@
                 }
                 if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') return;
 
-                // ✅ v3.20.2: Gérer SIGNED_IN
+                // ✅ v3.20.3: SIGNED_IN - OAuth réussi !
                 if (event === 'SIGNED_IN' && session?.user) {
-                    console.log('✅ SIGNED_IN - loading profile...');
+                    console.log('✅ SIGNED_IN received for:', session.user.email);
                     currentUser = session.user;
                     window.currentUser = currentUser;
                     
                     // Charger le profil
                     await loadUserProfile(currentUser);
                     
+                    // ✅ v3.20.3: Nettoyer l'URL MAINTENANT (après que Supabase a fini)
+                    if (window.location.search.includes('code=') || window.location.hash.includes('access_token')) {
+                        console.log('🧹 Cleaning URL after successful OAuth');
+                        window.history.replaceState(null, '', window.location.pathname);
+                    }
+                    
                     // Fin de l'attente OAuth
                     waitingForOAuth = false;
+                    oauthHandled = true;
                     initialLoadComplete = true;
                     
-                    // Render maintenant
                     render();
                     return;
                 }
@@ -579,58 +588,57 @@
                     return;
                 }
                 
-                // INITIAL_SESSION (au chargement)
+                // INITIAL_SESSION
                 if (event === 'INITIAL_SESSION') {
+                    console.log('📋 INITIAL_SESSION - session:', !!session?.user);
+                    
                     if (session?.user) {
-                        console.log('✅ INITIAL_SESSION with user');
                         currentUser = session.user;
                         window.currentUser = currentUser;
                         await loadUserProfile(currentUser);
                         waitingForOAuth = false;
+                        initialLoadComplete = true;
+                        render();
+                    } else if (waitingForOAuth) {
+                        // ✅ v3.20.3: Si on attend OAuth, attendre un peu plus
+                        // car SIGNED_IN peut arriver après INITIAL_SESSION
+                        console.log('⏳ No session yet, but waiting for OAuth SIGNED_IN...');
+                        // Ne pas render, attendre SIGNED_IN
+                        // Timeout de secours après 5s
+                        setTimeout(() => {
+                            if (waitingForOAuth && !currentUser) {
+                                console.log('⏰ OAuth timeout after 5s, showing landing');
+                                waitingForOAuth = false;
+                                initialLoadComplete = true;
+                                render();
+                            }
+                        }, 5000);
                     } else {
-                        console.log('ℹ️ INITIAL_SESSION no user');
-                        // Si on attendait OAuth mais pas de session, arrêter d'attendre après 3s
-                        if (waitingForOAuth) {
-                            setTimeout(() => {
-                                if (waitingForOAuth && !currentUser) {
-                                    console.log('⏰ OAuth timeout, showing landing');
-                                    waitingForOAuth = false;
-                                    render();
-                                }
-                            }, 3000);
-                        }
+                        // Pas de session, pas d'attente OAuth
+                        initialLoadComplete = true;
+                        render();
                     }
-                    initialLoadComplete = true;
-                    render();
                     return;
                 }
                 
                 // TOKEN_REFRESHED - ignorer
                 if (event === 'TOKEN_REFRESHED') return;
-                
-                // Autres événements
-                currentUser = session?.user || null;
-                window.currentUser = currentUser;
-                if (currentUser && !userProfile) await loadUserProfile(currentUser);
-                render();
             });
 
             // ============================================
-            // ✅ v3.20.2: INIT - NE PAS APPELER getSession
-            // Laisser onAuthStateChange tout gérer
+            // ✅ v3.20.3: Pas d'init supplémentaire
+            // onAuthStateChange va tout gérer
             // ============================================
-            console.log('🔧 Waiting for onAuthStateChange...');
+            console.log('🔧 Waiting for onAuthStateChange to fire...');
             
-            // Si pas de retour OAuth, et après 2s toujours pas de session, afficher landing
-            if (!isOAuthReturn) {
-                setTimeout(() => {
-                    if (!initialLoadComplete) {
-                        console.log('⏰ Timeout - no auth event, showing landing');
-                        initialLoadComplete = true;
-                        render();
-                    }
-                }, 2000);
-            }
+            // Timeout de secours si aucun événement auth ne se déclenche
+            setTimeout(() => {
+                if (!initialLoadComplete && !waitingForOAuth) {
+                    console.log('⏰ No auth event received, showing landing');
+                    initialLoadComplete = true;
+                    render();
+                }
+            }, 3000);
 
         })();
     </script>
