@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.20.3 - Fix OAuth: ne pas nettoyer URL avant Supabase -->
+    <!-- Version: 3.20.4 - Timeout loadUserProfile + fallback profil -->
     
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -51,7 +51,7 @@
     
     <script type="module">
         // ============================================
-        // v3.20.3 - OAuth: laisser Supabase parser l'URL
+        // v3.20.4 - Timeout loadUserProfile + fallback
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -65,7 +65,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.20.3...');
+            console.log('🚀 App starting v3.20.4...');
             
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = window.location.hash;
@@ -75,18 +75,13 @@
             const isOAuthReturn = hasCodeParam || hasHashToken;
             const isContractSignedReturn = urlParams.get('signed') !== null;
             
-            // ✅ v3.20.3: NE PAS nettoyer l'URL ici - Supabase en a besoin !
-            // On nettoiera APRÈS le SIGNED_IN
-            
-            if (isOAuthReturn) console.log('🔄 OAuth return detected - code in URL, letting Supabase handle it');
+            if (isOAuthReturn) console.log('🔄 OAuth return detected');
             if (hasError) console.error('❌ OAuth error in URL');
             
-            // Nettoyer seulement contract signed (pas OAuth)
             if (isContractSignedReturn && !isOAuthReturn) {
                 window.history.replaceState(null, '', window.location.pathname);
             }
             
-            // Loader OAuth
             if (isOAuthReturn && !hasError) {
                 document.getElementById('app').innerHTML = `
                     <div class="min-h-screen flex items-center justify-center">
@@ -108,7 +103,7 @@
             console.log('🌐 Loading translations...');
             await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
             console.log('✅ All translations loaded!');
-            const t = (key) => i18next.t(key);
+            const t = (key) => window.i18next.t(key);
 
             async function changeLanguage(langCode) {
                 await i18next.changeLanguage(langCode);
@@ -117,13 +112,12 @@
             }
             window.changeLanguage = changeLanguage;
 
-            // ✅ v3.20.3: Supabase avec detectSessionInUrl: TRUE
-            // Supabase va automatiquement parser le ?code= et échanger pour une session
+            // Supabase
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
                 auth: {
                     autoRefreshToken: true,
                     persistSession: true,
-                    detectSessionInUrl: true,  // ✅ IMPORTANT: Supabase parse l'URL
+                    detectSessionInUrl: true,
                     flowType: 'pkce'
                 }
             });
@@ -141,7 +135,7 @@
             let currentUser = null;
             let userProfile = null;
             let profileLoadAttempts = 0;
-            const MAX_PROFILE_LOAD_ATTEMPTS = 10;
+            const MAX_PROFILE_LOAD_ATTEMPTS = 3; // Réduit de 10 à 3
             let currentPage = 'landing';
             let isPasswordRecoveryMode = false;
             let is2FAMode = false;
@@ -152,7 +146,6 @@
             let isRendering = false;
             let initialLoadComplete = false;
             let waitingForOAuth = isOAuthReturn;
-            let oauthHandled = false;  // ✅ v3.20.3: tracker si OAuth déjà traité
             let phoneInputInstances = {};
 
             window.currentUser = null;
@@ -175,6 +168,17 @@
             // Helpers
             function wait2Frames() { return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
             function waitFonts() { return document.fonts?.ready || Promise.resolve(); }
+            
+            // ✅ v3.20.4: Promise avec timeout
+            function withTimeout(promise, ms, fallback = null) {
+                return Promise.race([
+                    promise,
+                    new Promise((resolve) => setTimeout(() => {
+                        console.warn(`⏰ Timeout after ${ms}ms`);
+                        resolve(fallback);
+                    }, ms))
+                ]);
+            }
             
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
@@ -325,47 +329,80 @@
                 };
             }
 
-            // Load profile
+            // ✅ v3.20.4: loadUserProfile avec timeout
             async function loadUserProfile(user = null) {
                 const u = user || currentUser;
                 console.log('🔍 loadUserProfile for:', u?.id);
                 if (!u?.id) { console.warn('⚠️ No user for loadUserProfile'); return false; }
 
+                // Créer un profil temporaire immédiatement
+                const tempProfile = {
+                    id: u.id,
+                    name: u.user_metadata?.full_name || u.user_metadata?.name || u.email?.split('@')[0] || 'User',
+                    email: u.email,
+                    phone: u.user_metadata?.phone || '',
+                    role: 'referrer',
+                    contract_status: 'pending',
+                    phone_verified: false
+                };
+
                 try {
-                    const { data, error } = await supabase.from('profiles').select('*').eq('id', u.id).maybeSingle();
+                    console.log('📡 Fetching profile from Supabase...');
                     
-                    if (error && error.code !== 'PGRST116') {
+                    // ✅ v3.20.4: Timeout de 5 secondes
+                    const result = await withTimeout(
+                        supabase.from('profiles').select('*').eq('id', u.id).maybeSingle(),
+                        5000,
+                        { data: null, error: { message: 'Timeout' } }
+                    );
+                    
+                    const { data, error } = result || { data: null, error: null };
+                    
+                    console.log('📡 Supabase response:', { data, error });
+                    
+                    if (error && error.message !== 'Timeout' && error.code !== 'PGRST116') {
                         console.error('❌ Profile DB error:', error);
-                        userProfile = { id: u.id, name: u.user_metadata?.full_name || u.email?.split('@')[0] || 'User', email: u.email, role: 'referrer', contract_status: 'pending' };
+                        // Utiliser le profil temporaire
+                        userProfile = tempProfile;
                         window.userProfile = userProfile;
+                        console.log('⚠️ Using temp profile due to error');
                         return true;
                     }
 
                     if (!data) {
-                        console.log('📝 Creating new profile...');
-                        const name = u.user_metadata?.full_name || u.user_metadata?.name || u.email?.split('@')[0] || '';
-                        const { data: newProfile, error: insertErr } = await supabase.from('profiles').upsert([{
-                            id: u.id, name, phone: u.user_metadata?.phone || '', email: u.email, role: 'referrer', contract_status: 'pending', phone_verified: false
-                        }], { onConflict: 'id' }).select().single();
+                        console.log('📝 No profile found, creating...');
                         
-                        if (insertErr) {
-                            console.error('❌ Insert error:', insertErr);
-                            userProfile = { id: u.id, name, email: u.email, role: 'referrer', contract_status: 'pending' };
+                        // Essayer de créer avec timeout
+                        const insertResult = await withTimeout(
+                            supabase.from('profiles').upsert([tempProfile], { onConflict: 'id' }).select().single(),
+                            5000,
+                            { data: null, error: { message: 'Insert timeout' } }
+                        );
+                        
+                        if (insertResult?.data) {
+                            userProfile = insertResult.data;
+                            console.log('✅ Profile created:', userProfile.name);
                         } else {
-                            userProfile = newProfile;
+                            console.warn('⚠️ Insert failed, using temp profile');
+                            userProfile = tempProfile;
                         }
                     } else {
                         userProfile = data;
-                        if (userProfile.contract_status) userProfile.contract_status = userProfile.contract_status.trim().replace(/\*+/g, '');
+                        if (userProfile.contract_status) {
+                            userProfile.contract_status = userProfile.contract_status.trim().replace(/\*+/g, '');
+                        }
+                        console.log('✅ Profile loaded:', userProfile.name);
                     }
                     
                     window.userProfile = userProfile;
-                    console.log('✅ Profile ready:', userProfile.name);
                     return true;
+                    
                 } catch (err) {
                     console.error('❌ loadUserProfile exception:', err);
-                    userProfile = { id: u.id, name: u.user_metadata?.full_name || 'User', email: u.email, role: 'referrer', contract_status: 'pending' };
+                    // Fallback au profil temporaire
+                    userProfile = tempProfile;
                     window.userProfile = userProfile;
+                    console.log('⚠️ Using temp profile due to exception');
                     return true;
                 }
             }
@@ -384,7 +421,6 @@
             async function render() {
                 if (isRendering) { console.log('⏳ Render already in progress'); return; }
                 
-                // ✅ v3.20.3: Ne pas render si on attend OAuth et pas encore de user
                 if (waitingForOAuth && !currentUser) {
                     console.log('⏳ Waiting for OAuth session...');
                     return;
@@ -468,16 +504,31 @@
                     isRendering = false; return;
 
                 } else if (currentUser && !userProfile) {
+                    // ✅ v3.20.4: Réduit à 3 tentatives max
                     profileLoadAttempts++;
+                    console.log(`⏳ Profile retry ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS}`);
+                    
                     if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
+                        console.log('⚠️ Max attempts reached, creating fallback profile');
+                        // Créer un profil en mémoire et continuer
+                        userProfile = {
+                            id: currentUser.id,
+                            name: currentUser.user_metadata?.full_name || currentUser.email?.split('@')[0] || 'User',
+                            email: currentUser.email,
+                            phone: '',
+                            role: 'referrer',
+                            contract_status: 'pending'
+                        };
+                        window.userProfile = userProfile;
                         profileLoadAttempts = 0;
-                        await supabase.auth.signOut();
-                        currentUser = null; window.currentUser = null; currentPage = 'landing';
-                        isRendering = false; render(); return;
+                        isRendering = false;
+                        render();
+                        return;
                     }
+                    
                     app.innerHTML = `<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement... (${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})</div></div></div>`;
                     isRendering = false;
-                    setTimeout(() => loadUserProfile().then(() => render()), profileLoadAttempts * 1000);
+                    setTimeout(() => loadUserProfile().then(() => render()), 2000);
                     return;
 
                 } else if (currentPage === 'auth-login') {
@@ -498,7 +549,7 @@
                 isRendering = false;
             }
 
-            // Expose
+            // Expose functions
             window.showAddLeadForm = LEADS.showAddLeadForm;
             window.closeAddLeadModal = LEADS.closeAddLeadModal;
             window.addLead = LEADS.addLead;
@@ -536,16 +587,12 @@
             window.renderDashboard = RENDERING.renderDashboard;
             window.logout = logout;
 
-            // ============================================
-            // ✅ v3.20.3: AUTH STATE HANDLER
-            // ============================================
+            // Auth state handler
             supabase.auth.onAuthStateChange(async (event, session) => {
                 console.log('🔔 Auth event:', event, session?.user?.email || 'no session');
 
-                // Ignorer pendant signup 2FA
                 if (isSignupInProgress && event !== 'SIGNED_IN') return;
 
-                // Password recovery
                 if (event === 'PASSWORD_RECOVERY') {
                     isPasswordRecoveryMode = true;
                     currentPage = 'change-password'; window.currentPage = 'change-password';
@@ -554,31 +601,24 @@
                 }
                 if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') return;
 
-                // ✅ v3.20.3: SIGNED_IN - OAuth réussi !
                 if (event === 'SIGNED_IN' && session?.user) {
                     console.log('✅ SIGNED_IN received for:', session.user.email);
                     currentUser = session.user;
                     window.currentUser = currentUser;
                     
-                    // Charger le profil
                     await loadUserProfile(currentUser);
                     
-                    // ✅ v3.20.3: Nettoyer l'URL MAINTENANT (après que Supabase a fini)
                     if (window.location.search.includes('code=') || window.location.hash.includes('access_token')) {
-                        console.log('🧹 Cleaning URL after successful OAuth');
+                        console.log('🧹 Cleaning URL after OAuth');
                         window.history.replaceState(null, '', window.location.pathname);
                     }
                     
-                    // Fin de l'attente OAuth
                     waitingForOAuth = false;
-                    oauthHandled = true;
                     initialLoadComplete = true;
-                    
                     render();
                     return;
                 }
                 
-                // SIGNED_OUT
                 if (event === 'SIGNED_OUT') {
                     currentUser = null; userProfile = null;
                     window.currentUser = null; window.userProfile = null;
@@ -588,7 +628,6 @@
                     return;
                 }
                 
-                // INITIAL_SESSION
                 if (event === 'INITIAL_SESSION') {
                     console.log('📋 INITIAL_SESSION - session:', !!session?.user);
                     
@@ -600,41 +639,30 @@
                         initialLoadComplete = true;
                         render();
                     } else if (waitingForOAuth) {
-                        // ✅ v3.20.3: Si on attend OAuth, attendre un peu plus
-                        // car SIGNED_IN peut arriver après INITIAL_SESSION
-                        console.log('⏳ No session yet, but waiting for OAuth SIGNED_IN...');
-                        // Ne pas render, attendre SIGNED_IN
-                        // Timeout de secours après 5s
+                        console.log('⏳ Waiting for OAuth SIGNED_IN...');
                         setTimeout(() => {
                             if (waitingForOAuth && !currentUser) {
-                                console.log('⏰ OAuth timeout after 5s, showing landing');
+                                console.log('⏰ OAuth timeout, showing landing');
                                 waitingForOAuth = false;
                                 initialLoadComplete = true;
                                 render();
                             }
                         }, 5000);
                     } else {
-                        // Pas de session, pas d'attente OAuth
                         initialLoadComplete = true;
                         render();
                     }
                     return;
                 }
                 
-                // TOKEN_REFRESHED - ignorer
                 if (event === 'TOKEN_REFRESHED') return;
             });
 
-            // ============================================
-            // ✅ v3.20.3: Pas d'init supplémentaire
-            // onAuthStateChange va tout gérer
-            // ============================================
-            console.log('🔧 Waiting for onAuthStateChange to fire...');
-            
-            // Timeout de secours si aucun événement auth ne se déclenche
+            // Init timeout
+            console.log('🔧 Waiting for onAuthStateChange...');
             setTimeout(() => {
                 if (!initialLoadComplete && !waitingForOAuth) {
-                    console.log('⏰ No auth event received, showing landing');
+                    console.log('⏰ No auth event, showing landing');
                     initialLoadComplete = true;
                     render();
                 }
