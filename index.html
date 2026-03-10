@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     
-    <!-- Version: 3.20.6 - Fix: ne pas bloquer après signature contrat -->
+    <!-- Version: 3.20.7 - Fix: contract success notification i18n -->
     
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -51,7 +51,7 @@
     
     <script type="module">
         // ============================================
-        // v3.20.6 - Fix: ne pas bloquer après signature contrat
+        // v3.20.7 - Fix: contract success notification i18n
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -65,7 +65,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.20.6...');
+            console.log('🚀 App starting v3.20.7...');
             
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = window.location.hash;
@@ -169,28 +169,13 @@
             function withTimeout(promise, ms, fallbackValue = null) {
                 return new Promise((resolve) => {
                     let settled = false;
-                    
                     const timer = setTimeout(() => {
-                        if (!settled) {
-                            settled = true;
-                            console.warn(`⏰ Timeout after ${ms}ms`);
-                            resolve(fallbackValue);
-                        }
+                        if (!settled) { settled = true; console.warn(`⏰ Timeout after ${ms}ms`); resolve(fallbackValue); }
                     }, ms);
-                    
                     promise.then((result) => {
-                        if (!settled) {
-                            settled = true;
-                            clearTimeout(timer);
-                            resolve(result);
-                        }
+                        if (!settled) { settled = true; clearTimeout(timer); resolve(result); }
                     }).catch((err) => {
-                        if (!settled) {
-                            settled = true;
-                            clearTimeout(timer);
-                            console.warn('⚠️ Promise error:', err.message);
-                            resolve(fallbackValue);
-                        }
+                        if (!settled) { settled = true; clearTimeout(timer); console.warn('⚠️ Promise error:', err.message); resolve(fallbackValue); }
                     });
                 });
             }
@@ -367,37 +352,30 @@
                     
                     const result = await withTimeout(
                         supabase.from('profiles').select('*').eq('id', u.id).maybeSingle(),
-                        5000,
-                        null
+                        5000, null
                     );
                     
                     if (!result) {
                         console.warn('⚠️ Supabase timeout, using temp profile with contract_status:', defaultContractStatus);
-                        userProfile = tempProfile;
-                        window.userProfile = userProfile;
+                        userProfile = tempProfile; window.userProfile = userProfile;
                         return true;
                     }
                     
                     const { data, error } = result;
-                    
                     console.log('📡 Supabase response:', { data, error });
                     
                     if (error && error.code !== 'PGRST116') {
                         console.error('❌ Profile DB error:', error);
-                        userProfile = tempProfile;
-                        window.userProfile = userProfile;
+                        userProfile = tempProfile; window.userProfile = userProfile;
                         return true;
                     }
 
                     if (!data) {
                         console.log('📝 No profile found, creating...');
-                        
                         const insertResult = await withTimeout(
                             supabase.from('profiles').upsert([tempProfile], { onConflict: 'id' }).select().single(),
-                            5000,
-                            null
+                            5000, null
                         );
-                        
                         if (insertResult?.data) {
                             userProfile = insertResult.data;
                             if (contractJustSigned && userProfile.contract_status !== 'signed') {
@@ -426,8 +404,7 @@
                     
                 } catch (err) {
                     console.error('❌ loadUserProfile exception:', err);
-                    userProfile = tempProfile;
-                    window.userProfile = userProfile;
+                    userProfile = tempProfile; window.userProfile = userProfile;
                     return true;
                 }
             }
@@ -458,7 +435,7 @@
 
                 if (contractJustSigned && currentUser && userProfile) {
                     console.log('📝 Contract just signed, showing success notification');
-                    contractJustSigned = false; 
+                    contractJustSigned = false;
                     window.contractJustSigned = false;
                     
                     if (window.location.search.includes('signed=')) {
@@ -466,9 +443,21 @@
                     }
                     
                     setTimeout(() => {
+                        // ✅ v3.20.7 - Contract success notification i18n (8 langues)
+                        const contractSuccessMessages = {
+                            fr: 'Contrat signé avec succès !',
+                            en: 'Contract signed successfully!',
+                            ar: 'تم توقيع العقد بنجاح!',
+                            ru: 'Договор успешно подписан!',
+                            hi: 'अनुबंध सफलतापूर्वक हस्ताक्षरित!',
+                            ur: 'معاہدہ کامیابی سے دستخط ہو گیا!',
+                            zh: '合同签署成功！',
+                            tl: 'Matagumpay na napirmahan ang kontrata!'
+                        };
+                        const contractSuccessMsg = contractSuccessMessages[i18next.language?.substring(0, 2)] || contractSuccessMessages['en'];
                         const d = document.createElement('div');
-                        d.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce"><span class="text-3xl mr-2">✅</span><strong>Contrat signé avec succès !</strong></div>`;
-                        document.body.appendChild(d); 
+                        d.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce"><span class="text-3xl mr-2">✅</span><strong>${contractSuccessMsg}</strong></div>`;
+                        document.body.appendChild(d);
                         setTimeout(() => d.remove(), 5000);
                     }, 500);
                 }
@@ -539,7 +528,6 @@
                         isRendering = false; return;
                     }
                     
-                    // ✅ Profil complet OU contrat signé -> Dashboard
                     currentPage = 'dashboard'; window.currentPage = 'dashboard';
                     app.innerHTML = RENDERING.renderDashboard();
                     await DASHBOARD.loadDashboardContent();
@@ -646,14 +634,11 @@
                     console.log('✅ SIGNED_IN received for:', session.user.email);
                     currentUser = session.user;
                     window.currentUser = currentUser;
-                    
                     await loadUserProfile(currentUser, contractJustSigned);
-                    
                     if (window.location.search.includes('code=') || window.location.hash.includes('access_token')) {
                         console.log('🧹 Cleaning URL after OAuth');
                         window.history.replaceState(null, '', window.location.pathname);
                     }
-                    
                     waitingForOAuth = false;
                     initialLoadComplete = true;
                     render();
