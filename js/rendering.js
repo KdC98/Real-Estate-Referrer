@@ -1,7 +1,7 @@
 // ============================================
 // 🎨 MODULE RENDERING.JS
 // ============================================
-// Version: 3.21.3 - Add: RERA Broker number 94777 in footer
+// Version: 3.21.0 - Fix: country selector English only + dashboard block i18n
 // Date: 11 mars 2026
 // ============================================
 
@@ -385,9 +385,6 @@ export function renderLandingPage() {
                             <ul class="space-y-3 text-blue-200">
                                 <li class="flex items-center gap-2"><span>📧</span><a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a></li>
                                 <li class="flex items-center gap-2"><span>📍</span><span>${t('common:footer.location')}</span></li>
-                                <!-- ✅ v3.21.3 - RERA Broker number -->
-                                <li class="flex items-center gap-2"><span>🏛️</span><span>Solo Gate Real Estate — ORN # 42870</span></li>
-                                <li class="flex items-center gap-2"><span>🪪</span><span>RERA Broker # 94777</span></li>
                             </ul>
                         </div>
                     </div>
