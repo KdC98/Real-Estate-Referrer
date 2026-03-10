@@ -1,8 +1,8 @@
 // ============================================
 // 🎨 MODULE RENDERING.JS
 // ============================================
-// Version: 3.21.0 - Fix: country selector English only + dashboard block i18n
-// Date: 10 mars 2026
+// Version: 3.21.3 - Add: RERA Broker number 94777 in footer
+// Date: 11 mars 2026
 // ============================================
 
 // ============================================
@@ -178,7 +178,6 @@ export function renderProfileCompletionModal() {
     const existingPhone = profile.phone || '';
     const isAppleRelay = existingEmail.includes('privaterelay.appleid.com');
     
-    // ✅ v3.20.0 - UAE Emirates (English only) + key countries
     const locationOptions = `
         <optgroup label="🇦🇪 UAE — Emirates">
             <option value="Dubai" selected>🇦🇪 Dubai</option>
@@ -386,6 +385,9 @@ export function renderLandingPage() {
                             <ul class="space-y-3 text-blue-200">
                                 <li class="flex items-center gap-2"><span>📧</span><a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a></li>
                                 <li class="flex items-center gap-2"><span>📍</span><span>${t('common:footer.location')}</span></li>
+                                <!-- ✅ v3.21.3 - RERA Broker number -->
+                                <li class="flex items-center gap-2"><span>🏛️</span><span>Solo Gate Real Estate — ORN # 42870</span></li>
+                                <li class="flex items-center gap-2"><span>🪪</span><span>RERA Broker # 94777</span></li>
                             </ul>
                         </div>
                     </div>
@@ -553,6 +555,7 @@ export function renderAuthPage(mode) {
         </div>
     `;
 }
+
 export function renderDashboard() {
     const t = (key) => window.i18next.t(key);
     const userProfile = window.userProfile;
@@ -583,7 +586,6 @@ export function renderDashboard() {
     const profileComplete = isProfileComplete(userProfile);
     const canAddLeads = profileComplete && hasValidContract;
     
-    // ✅ v3.21.0 - Dashboard warning block translated in 8 languages
     const dwt = {
         fr: { complete_title: "Complétez votre inscription pour gagner des commissions !", complete_desc: 'Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, vous devez compléter ces 2 étapes :', step1_title: "Étape 1 : Signer le contrat d'apporteur", step1_done: "Contrat signé ✓", step1_todo: "Obligatoire pour recevoir vos paiements", step1_btn: "Signer maintenant →", step2_title: "Étape 2 : Compléter votre profil", step2_done: "Profil complet ✓", step2_todo: "Nom, téléphone et adresse requis pour les paiements", step2_btn: "Compléter →", why_title: "Pourquoi ces étapes ?", why_desc: "Le contrat protège vos commissions et votre profil complet nous permet de vous payer.", locked_btn: "(Complétez les étapes ci-dessus)" },
         en: { complete_title: "Complete your registration to earn commissions!", complete_desc: 'To submit leads and <strong class="text-yellow-400">receive your commissions</strong>, you must complete these 2 steps:', step1_title: "Step 1: Sign the referrer agreement", step1_done: "Contract signed ✓", step1_todo: "Required to receive your payments", step1_btn: "Sign now →", step2_title: "Step 2: Complete your profile", step2_done: "Profile complete ✓", step2_todo: "Name, phone and address required for payments", step2_btn: "Complete →", why_title: "Why these steps?", why_desc: "The contract protects your commissions and your complete profile allows us to pay you.", locked_btn: "(Complete the steps above)" },
