@@ -3,30 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Referrer Agreement - Real Estate Referrer</title>
+    <title>Channel Partner Agreement - Solo Gate Real Estate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @page {
-            margin: 2cm;
-        }
+        @page { margin: 2cm; }
         @media print {
-            body {
-                background: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .contract-wrapper {
-                padding: 0 !important;
-                max-width: 100% !important;
-            }
-            .contract-document {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                margin: 0 !important;
-            }
+            body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none !important; }
+            .contract-wrapper { padding: 0 !important; max-width: 100% !important; }
+            .contract-document { box-shadow: none !important; border-radius: 0 !important; margin: 0 !important; }
         }
         .contract-document {
             font-family: 'Times New Roman', serif;
@@ -42,61 +27,112 @@
         }
         .header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 22px;
             text-transform: uppercase;
-        }
-        .parties {
-            margin: 30px 0;
-        }
-        .party {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f5f5f5;
-        }
-        .article {
-            margin: 25px 0;
-        }
-        .article-title {
             font-weight: bold;
-            font-size: 14px;
-            text-transform: uppercase;
+            text-decoration: underline;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #1a3a6b;
+        }
+        .logo-sub {
+            font-size: 12px;
+            letter-spacing: 6px;
+            color: #1a3a6b;
+        }
+        table.parties-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+        table.parties-table td, table.parties-table th {
+            border: 1px solid #000;
+            padding: 7px 10px;
+        }
+        table.parties-table .section-header {
+            font-weight: bold;
+            background: #f0f0f0;
+        }
+        .recitals {
+            margin: 25px 0;
+            font-style: italic;
+        }
+        .recitals-title {
+            text-align: center;
+            font-weight: bold;
+            font-style: normal;
             margin-bottom: 10px;
         }
+        .now-therefore {
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+        }
+        .article {
+            margin: 18px 0;
+            font-size: 13px;
+        }
+        ol.main-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+        ol.main-list > li {
+            margin-bottom: 14px;
+        }
+        ul.sub-list {
+            list-style: none;
+            margin: 8px 0 0 0;
+            padding-left: 15px;
+        }
+        ul.sub-list li::before {
+            content: "- ";
+        }
+        ul.sub-list li {
+            margin-bottom: 6px;
+        }
+        .disclaimer {
+            font-style: italic;
+            margin: 30px 0 20px 0;
+            font-size: 12px;
+        }
         .signature-section {
-            margin-top: 50px;
-            display: flex;
-            justify-content: space-between;
+            margin-top: 40px;
         }
         .signature-block {
-            width: 45%;
+            margin-bottom: 30px;
         }
         .signature-line {
             border-top: 1px solid #000;
+            margin-top: 50px;
+            padding-top: 8px;
+            width: 60%;
+        }
+        .footer-info {
             margin-top: 60px;
+            text-align: center;
+            font-size: 11px;
+            color: #444;
+            border-top: 1px solid #ccc;
             padding-top: 10px;
         }
-        .contract-document ul {
-            margin: 10px 0;
-            padding-left: 30px;
-        }
-        .important {
-            background: #fff3cd;
-            padding: 10px;
-            border-left: 4px solid #ffc107;
-            margin: 15px 0;
-        }
-        .highlight {
+        .highlight-box {
             background: #d4edda;
-            padding: 10px;
+            padding: 10px 15px;
             border-left: 4px solid #28a745;
-            margin: 15px 0;
+            margin: 12px 0;
         }
     </style>
 </head>
-<!-- ✅ Style unifié : dégradé slate/blue -->
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
-    
-    <!-- ✅ Header avec style unifié (non imprimé) -->
+
+    <!-- Header nav (non imprimé) -->
     <div class="no-print">
         <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
             <div class="max-w-4xl mx-auto px-4 py-4">
@@ -108,12 +144,11 @@
                 </div>
             </div>
         </nav>
-        
-        <!-- ✅ Action bar avec style unifié -->
+
         <div class="max-w-4xl mx-auto px-4 py-6">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-xl font-bold text-yellow-400">Business Referrer Agreement</h2>
+                    <h2 class="text-xl font-bold text-yellow-400">Channel Partner Agreement</h2>
                     <p class="text-blue-200 text-sm">Read the full contract before signing</p>
                 </div>
                 <button onclick="window.print()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition flex items-center gap-2">
@@ -123,269 +158,149 @@
         </div>
     </div>
 
-    <!-- ✅ Contract document (white for printing) -->
+    <!-- Contrat -->
     <div class="contract-wrapper max-w-4xl mx-auto px-4 pb-8">
         <div class="contract-document rounded-2xl shadow-2xl p-8 sm:p-12">
-            
+
+            <!-- Logo Solo Gate -->
+            <div class="logo">
+                <div class="logo-text">SG</div>
+                <div style="font-size:20px; font-weight:bold; color:#1a3a6b; letter-spacing:2px;">SOLO GATE</div>
+                <div class="logo-sub">REAL ESTATE</div>
+            </div>
+
             <div class="header">
-                <h1>Business Referrer Agreement</h1>
-                <p><strong>Real Estate Referral Program</strong></p>
-                <p>Dubai, United Arab Emirates</p>
+                <h1>Channel Partner Agreement</h1>
             </div>
 
-            <div class="parties">
-                <div class="party">
-                    <strong>BETWEEN:</strong><br>
-                    <strong>Solo Gate Real Estate</strong><br>
-                    RERA License No.: <strong>[YOUR LICENSE NUMBER]</strong><br>
-                    Address: Business Bay, 801 Oxford Tower, Dubai - UAE<br>
-                    Email: karyne@sologate.ae<br>
-                    Phone: +971 4 553 7534<br>
-                    Hereinafter referred to as <strong>"THE AGENT"</strong>
-                </div>
-                <div class="party">
-                    <strong>AND:</strong><br>
-                    Name: <strong>_________________________________</strong><br>
-                    Phone: <strong>_________________________________</strong><br>
-                    Email: <strong>_________________________________</strong><br>
-                    Address: <strong>_________________________________</strong><br>
-                    Emirates ID: <strong>_________________________________</strong><br>
-                    Hereinafter referred to as <strong>"THE REFERRER"</strong>
-                </div>
+            <p style="margin-bottom:20px; font-size:13px;">
+                This agreement is entered into as of this <strong>_________________</strong> in <strong>Dubai, UAE</strong> by and between:
+            </p>
+
+            <!-- Tableau parties -->
+            <table class="parties-table">
+                <tr>
+                    <td colspan="4" class="section-header">FIRST PARTY (The "Company"):</td>
+                </tr>
+                <tr>
+                    <td><strong>Company Name</strong></td>
+                    <td><strong>SOLO GATE REAL ESTATE L.L.C</strong></td>
+                    <td>Trade License</td>
+                    <td><strong>1343513</strong> &nbsp; ORN # &nbsp; <strong>42870</strong></td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td><strong>+971 56 555 9040</strong></td>
+                    <td>Email:</td>
+                    <td>karyne@sologate.ae</td>
+                </tr>
+                <tr>
+                    <td colspan="4"><strong>Address:</strong> &nbsp; Office 801, Oxford Tower, Business Bay, Dubai, UAE</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="section-header">SECOND PARTY (The "Referrer"):</td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td>___________________________</td>
+                    <td>Nationality:</td>
+                    <td>___________________________</td>
+                </tr>
+                <tr>
+                    <td>Passport/EID No.:</td>
+                    <td>___________________________</td>
+                    <td>Mobile No.:</td>
+                    <td>___________________________</td>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>___________________________</td>
+                    <td>Email Add:</td>
+                    <td>___________________________</td>
+                </tr>
+            </table>
+
+            <!-- Recitals -->
+            <div class="recitals">
+                <div class="recitals-title">Recitals</div>
+                <p>WHEREAS, the Agency is engaged in the business of real estate brokerage – Selling and Buying of Properties in the UAE.</p>
+                <p style="margin-top:8px;">and,</p>
+                <p style="margin-top:8px;">WHEREAS, External Agent desires to refer potential clients ("Referrals") to the Agency in exchange for a referral fee on any revenue generated by the Agency as a result of such introductions.</p>
             </div>
 
-            <div class="article">
-                <div class="article-title">Article 1 - Purpose of Agreement</div>
-                <p>This agreement defines the terms of collaboration between THE AGENT and THE REFERRER within the framework of a client referral program for real estate transactions in Dubai.</p>
-                <p>THE REFERRER agrees to identify and present to THE AGENT potential clients (hereinafter "Leads") interested in buying, selling, or renting real estate properties.</p>
+            <div class="now-therefore">NOW, THEREFORE, the parties hereto agree as follows:</div>
+
+            <ol class="main-list">
+                <li>
+                    Throughout the duration of this agreement, the External Agent shall be responsible for introducing potential clients to the Agency who are interested in buying, selling, or renting properties in the UAE.
+                </li>
+                <li>
+                    The Agency shall bear no liability for any contracts, obligations, agreements, sales contracts, or legally binding documents entered into between the Referrer and any of its clients.
+                </li>
+                <li>
+                    In the event of a successful conclusion of a deal with the referred client, the Agency has agreed to share a portion of the commission it has earned with the External Agent. The distribution of this commission shall be based on the following terms:
+
+                    <div class="highlight-box" style="margin-top:12px;">
+                        <strong>Commission structure by lead type:</strong>
+                    </div>
+                    <ul class="sub-list">
+                        <li><strong>25%</strong> of the Agent's share of total commission for <strong>Buyer Leads</strong> (client looking to purchase)</li>
+                        <li><strong>20%</strong> of the Agent's share of total commission for <strong>Seller Leads, Landlord Leads, and Tenant Leads</strong></li>
+                        <li>The commission will be calculated based on the total value of the property.</li>
+                        <li>The referral fee owed to the External Agent shall be disbursed through bank transfer within four (4) weeks following the receipt and clearance of the commission by the Agency's bank account. The payment method and details, including account information for bank transfers, shall be agreed between both parties. In the event of any delay or discrepancy in the commission payment, the parties shall promptly communicate and resolve the issue to ensure the timely disbursement of the referral fee to the External Agent.</li>
+                    </ul>
+                </li>
+                <li>
+                    This agreement will not be limited to Direct Selling from Developers; it may cover market reselling should the introduced client(s) be interested in market re-sale.
+                </li>
+                <li>
+                    The Agency reserves the right to make changes to this document or its financial scheme structure at any point of time, if it deems it necessary, by notifying the other party in writing when and if those changes take place.
+                </li>
+                <li>
+                    The terms and conditions of this agreement are confidential between the parties and shall not be disclosed to anyone else. The referrer agrees that this contract is confidential between the Agency and the External Agent.
+                </li>
+                <li>
+                    The duration of this contract is 1 year from the signing of this agreement and can be renewed upon the mutual agreement of both parties. The Agency reserves the right to terminate this agreement by providing one (1) week notice to the External Agent.
+                </li>
+            </ol>
+
+            <div class="disclaimer">
+                <strong>Disclaimer:</strong> The payment of commission by the developer is always subject to changes based on Developer's policies and procedures.
             </div>
 
-            <div class="article">
-                <div class="article-title">Article 2 - Definitions</div>
-                <ul>
-                    <li><strong>Qualified Lead</strong>: Contact of a person genuinely interested in a real estate transaction, with complete and accurate contact details, defined budget, and short/medium-term project (0-6 months).</li>
-                    <li><strong>Successful Transaction</strong>: Signing of a sale contract (Title Deed) or rental contract (Tenancy Contract) following a referred Lead.</li>
-                    <li><strong>Commission</strong>: Payment made to THE REFERRER upon a Successful Transaction.</li>
-                    <li><strong>Lead Types</strong>:
-                        <ul>
-                            <li><strong>Buyer Lead</strong>: Client looking to purchase property</li>
-                            <li><strong>Seller Lead</strong>: Property owner looking to sell</li>
-                            <li><strong>Landlord Lead</strong>: Property owner looking to rent out</li>
-                            <li><strong>Tenant Lead</strong>: Client looking to rent property</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+            <p style="margin-top:30px; font-size:13px;">IN WITNESS WHEREOF, the Parties hereby execute this Agreement on the date set herein above.</p>
 
-            <div class="article">
-                <div class="article-title">Article 3 - Referrer's Obligations</div>
-                <p>THE REFERRER agrees to:</p>
-                <ul>
-                    <li>Refer only Qualified Leads with accurate information</li>
-                    <li>Never present themselves as a real estate agent or representative of THE AGENT</li>
-                    <li>Comply with RERA (Real Estate Regulatory Agency) regulations</li>
-                    <li>Not engage in real estate brokerage activities without a license</li>
-                    <li>Maintain confidentiality of information received</li>
-                    <li>Guarantee the exclusivity of each Lead referred</li>
-                    <li>Not directly contact property owners or developers</li>
-                    <li>Obtain explicit consent from the Lead before submitting their information</li>
-                </ul>
-                
-                <div class="important">
-                    <strong>⚠️ IMPORTANT:</strong> THE REFERRER must NEVER present themselves as a real estate agent, negotiate prices, or sign documents on behalf of THE AGENT. Any violation may result in legal sanctions under RERA law.
-                </div>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 4 - Agent's Obligations</div>
-                <p>THE AGENT agrees to:</p>
-                <ul>
-                    <li>Provide professional follow-up of all referred Leads</li>
-                    <li>Inform THE REFERRER of case progress via the platform</li>
-                    <li>Calculate and pay Commissions according to defined terms</li>
-                    <li>Maintain transparency regarding transactions</li>
-                    <li>Provide secure access to the management platform</li>
-                </ul>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 5 - Commission Structure</div>
-                
-                <div class="highlight">
-                    <strong>🏆 PREMIUM COMMISSION FOR BUYER LEADS:</strong><br>
-                    Buyer Leads receive a higher commission rate (25%) as they represent the most valuable lead type for successful transactions.
-                </div>
-
-                <p><strong>Total commission on real estate transaction:</strong></p>
-                <ul>
-                    <li>Agency: 50%</li>
-                    <li>Agent: 50%</li>
-                </ul>
-                
-                <p><strong>Distribution of Agent's share by Lead Type:</strong></p>
-                <ul>
-                    <li><strong>Buyer Leads (Sale - Buyer):</strong> <strong style="color: #28a745;">25%</strong> of Agent's share</li>
-                    <li><strong>Seller Leads (Sale - Seller):</strong> 20% of Agent's share</li>
-                    <li><strong>Landlord Leads (Rental - Landlord):</strong> 20% of Agent's share</li>
-                    <li><strong>Tenant Leads (Rental - Tenant):</strong> 20% of Agent's share</li>
-                </ul>
-
-                <p><strong>Commission rates by transaction type:</strong></p>
-                <ul>
-                    <li><strong>Sales</strong>: 2% of sale price
-                        <ul>
-                            <li>Buyer Lead Commission = <strong>0.25%</strong> of sale price (25% of agent's 50%)</li>
-                            <li>Seller Lead Commission = <strong>0.20%</strong> of sale price (20% of agent's 50%)</li>
-                        </ul>
-                    </li>
-                    <li><strong>Rentals</strong>: 5% of annual rent
-                        <ul>
-                            <li>Landlord/Tenant Lead Commission = <strong>0.50%</strong> of annual rent (20% of agent's 50%)</li>
-                        </ul>
-                    </li>
-                </ul>
-
-                <p><strong>Concrete examples - BUYER LEADS (25%):</strong></p>
-                <ul>
-                    <li>Apartment sale at 2,000,000 AED → Referrer Commission: <strong>5,000 AED</strong></li>
-                    <li>Villa sale at 5,000,000 AED → Referrer Commission: <strong>12,500 AED</strong></li>
-                    <li>Penthouse sale at 10,000,000 AED → Referrer Commission: <strong>25,000 AED</strong></li>
-                </ul>
-
-                <p><strong>Concrete examples - OTHER LEADS (20%):</strong></p>
-                <ul>
-                    <li>Seller Lead - Villa at 5,000,000 AED → Referrer Commission: <strong>10,000 AED</strong></li>
-                    <li>Rental - Apartment at 120,000 AED/year → Referrer Commission: <strong>1,200 AED</strong></li>
-                    <li>Rental - Villa at 200,000 AED/year → Referrer Commission: <strong>2,000 AED</strong></li>
-                </ul>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 6 - Payment Terms</div>
-                <p><strong>Payment timeline:</strong></p>
-                <ul>
-                    <li><strong>Sales</strong>: Within 45-60 days following Title Deed signing and receipt of funds by THE AGENT</li>
-                    <li><strong>Rentals</strong>: Within 14 days following Tenancy Contract signing and receipt of commission by THE AGENT</li>
-                </ul>
-
-                <p><strong>Payment method:</strong></p>
-                <ul>
-                    <li>Bank transfer (details provided by THE REFERRER)</li>
-                    <li>Or any other method agreed between parties</li>
-                </ul>
-
-                <p><strong>Payment conditions:</strong></p>
-                <ul>
-                    <li>Commission is due only if the transaction is finalized</li>
-                    <li>No Commission in case of transaction cancellation</li>
-                    <li>THE REFERRER must provide complete banking details</li>
-                </ul>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 7 - Management Platform</div>
-                <p>THE AGENT provides THE REFERRER with a secure web platform allowing to:</p>
-                <ul>
-                    <li>Add new Leads (specifying Lead type: Buyer, Seller, Landlord, Tenant)</li>
-                    <li>Track progress of each Lead in real-time</li>
-                    <li>View Commission history and applicable rates</li>
-                    <li>Access personal statistics</li>
-                </ul>
-                <p>THE REFERRER agrees to maintain confidentiality of their login credentials.</p>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 8 - Duration and Termination</div>
-                <p><strong>Duration:</strong> This agreement is concluded for an indefinite period from the date of signature.</p>
-                
-                <p><strong>Termination:</strong></p>
-                <ul>
-                    <li>Either party may terminate the agreement with 30 days notice by email</li>
-                    <li>Immediate termination in case of serious breach of obligations</li>
-                    <li>Leads referred before termination remain valid for Commission calculation</li>
-                </ul>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 9 - Confidentiality</div>
-                <p>THE REFERRER agrees to:</p>
-                <ul>
-                    <li>Not disclose confidential information received</li>
-                    <li>Not use information for purposes other than this agreement</li>
-                    <li>Not transfer platform access to third parties</li>
-                </ul>
-                <p>This obligation remains valid after the end of the agreement.</p>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 10 - Independence</div>
-                <p>THE REFERRER exercises their activity in complete independence. There is no subordination relationship between THE AGENT and THE REFERRER. THE REFERRER is not an employee of THE AGENT and acts independently.</p>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 11 - Liability</div>
-                <p>THE REFERRER is solely responsible for:</p>
-                <ul>
-                    <li>The accuracy of information they communicate</li>
-                    <li>Their declarations to tax authorities</li>
-                    <li>Compliance with RERA legislation</li>
-                    <li>Obtaining consent from Leads before submitting their data (GDPR compliance)</li>
-                </ul>
-                <p>THE AGENT cannot be held liable for THE REFERRER's actions toward clients or third parties.</p>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 12 - Personal Data (GDPR)</div>
-                <p>Personal data collected is used solely for management of the referral program. THE REFERRER has the right to access, rectify, and delete their data in accordance with GDPR.</p>
-                <p>THE REFERRER confirms that any Lead submitted has given explicit consent to be contacted by THE AGENT regarding their real estate project.</p>
-            </div>
-
-            <div class="article">
-                <div class="article-title">Article 13 - Applicable Law and Jurisdiction</div>
-                <p>This agreement is governed by the law of the United Arab Emirates. Any dispute shall be submitted to the exclusive jurisdiction of the courts of Dubai.</p>
-            </div>
-
-            <div class="important" style="margin-top: 40px;">
-                <strong>⚠️ REFERRER'S DECLARATION:</strong><br>
-                I declare that I have read and understood this entire agreement. I confirm that:<br>
-                ✓ I do not possess a RERA real estate agent license<br>
-                ✓ I will never present myself as a real estate agent<br>
-                ✓ I will respect all obligations stated above<br>
-                ✓ I accept the commission calculation and payment terms:<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;• <strong>25%</strong> for Buyer Leads<br>
-                &nbsp;&nbsp;&nbsp;&nbsp;• <strong>20%</strong> for Seller, Landlord, and Tenant Leads<br>
-                ✓ I will obtain consent from Leads before submitting their information
-            </div>
-
+            <!-- Signatures -->
             <div class="signature-section">
                 <div class="signature-block">
-                    <strong>THE AGENT</strong>
+                    <strong>SIGNED by duly authorized representative of SOLO GATE REAL ESTATE L.L.C:</strong>
                     <div class="signature-line">
-                        Name: Karyne de Clercq<br>
-                        Date: ________________<br>
-                        Signature:
+                        Signature: ______________________________<br><br>
+                        <strong>KARYNE DE CLERCQ</strong><br>
+                        Property Advisor<br>
+                        Date: ________________
                     </div>
                 </div>
-                <div class="signature-block">
-                    <strong>THE REFERRER</strong>
+
+                <div class="signature-block" style="margin-top:40px;">
+                    <strong>SIGNED by the External Agent:</strong>
                     <div class="signature-line">
+                        Signature: ______________________________<br><br>
                         Name: ________________<br>
-                        Date: ________________<br>
-                        Signature:
+                        Date: ________________
                     </div>
                 </div>
             </div>
 
-            <div style="margin-top: 50px; text-align: center; font-size: 12px; color: #666;">
-                <p>This document must be signed in two original copies.<br>
-                Each party retains one signed copy.</p>
-                <p>Contract version: 2.0 - November 2025</p>
-                <p>For any questions: contact@real-estate-referrer.com | +971 4 553 7534</p>
+            <div class="footer-info">
+                +971 56 555 9040 &nbsp;|&nbsp; karyne@sologate.ae &nbsp;|&nbsp; www.sologate.ae<br>
+                801, Oxford Tower, Business Bay, Dubai – UAE
             </div>
+
         </div>
     </div>
 
-    <!-- ✅ Footer avec style unifié (non imprimé) -->
+    <!-- Footer (non imprimé) -->
     <footer class="no-print bg-slate-900 border-t border-white/10 mt-8">
         <div class="max-w-4xl mx-auto px-4 py-6 text-center">
             <p class="text-blue-300 text-sm">© 2025 Real Estate Referrer - All rights reserved</p>
@@ -397,7 +312,6 @@
         </div>
     </footer>
 
-<!-- Crisp Chat -->
 <script src="/js/crisp-chat.js"></script>
 </body>
 </html>
