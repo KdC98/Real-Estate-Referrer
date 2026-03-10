@@ -1,8 +1,8 @@
 // ============================================
 // 🎨 MODULE RENDERING.JS
 // ============================================
-// Version: 3.19.5 - Fix intl-tel-input padding (pr-4 instead of px-4)
-// Date: 07 janvier 2026
+// Version: 3.20.0 - Fix: country selector (English only, international)
+// Date: 10 mars 2026
 // ============================================
 
 // ============================================
@@ -160,14 +160,14 @@ export function renderProfileCompletionModal() {
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
     
     const translations = {
-        fr: { title: "Complétez votre profil", subtitle: "Pour recevoir vos commissions, nous avons besoin de quelques informations", name_label: "Nom complet", name_placeholder: "Votre nom complet", email_label: "Email", email_placeholder: "votre@email.com", email_help: "Utilisé pour les notifications et paiements", phone_label: "Numéro de téléphone", phone_placeholder: "501234567", phone_help: "Numéro sans le 0 initial", address_label: "Adresse (Bâtiment, Rue)", address_placeholder: "Ex: Beach Isle, Palm Jumeirah", area_label: "Zone / Quartier", area_placeholder: "Ex: Jumeirah, Downtown, Al Quoz", emirate_label: "Émirat", select_emirate: "-- Sélectionnez --", submit_button: "Enregistrer et continuer", required_notice: "Ces informations sont nécessaires pour recevoir vos commissions" },
-        en: { title: "Complete your profile", subtitle: "To receive your commissions, we need some information", name_label: "Full name", name_placeholder: "Your full name", email_label: "Email", email_placeholder: "your@email.com", email_help: "Used for notifications and payments", phone_label: "Phone number", phone_placeholder: "501234567", phone_help: "Number without leading 0", address_label: "Address (Building, Street)", address_placeholder: "Ex: Beach Isle, Palm Jumeirah", area_label: "Area / District", area_placeholder: "Ex: Jumeirah, Downtown, Al Quoz", emirate_label: "Emirate", select_emirate: "-- Select --", submit_button: "Save and continue", required_notice: "This information is required to receive your commissions" },
-        ar: { title: "أكمل ملفك الشخصي", subtitle: "لتلقي عمولاتك، نحتاج بعض المعلومات", name_label: "الاسم الكامل", name_placeholder: "اسمك الكامل", email_label: "البريد الإلكتروني", email_placeholder: "email@example.com", email_help: "يُستخدم للإشعارات والمدفوعات", phone_label: "رقم الهاتف", phone_placeholder: "501234567", phone_help: "الرقم بدون الصفر الأول", address_label: "العنوان (المبنى، الشارع)", address_placeholder: "مثال: بيتش آيل، نخلة جميرا", area_label: "المنطقة / الحي", area_placeholder: "مثال: جميرا، داون تاون، القوز", emirate_label: "الإمارة", select_emirate: "-- اختر --", submit_button: "حفظ والمتابعة", required_notice: "هذه المعلومات مطلوبة لتلقي عمولاتك" },
-        ru: { title: "Заполните профиль", subtitle: "Для получения комиссий нам нужна информация", name_label: "Полное имя", name_placeholder: "Ваше полное имя", email_label: "Электронная почта", email_placeholder: "your@email.com", email_help: "Для уведомлений и платежей", phone_label: "Номер телефона", phone_placeholder: "501234567", phone_help: "Номер без начального 0", address_label: "Адрес (Здание, Улица)", address_placeholder: "Пример: Beach Isle, Palm Jumeirah", area_label: "Район / Зона", area_placeholder: "Пример: Jumeirah, Downtown, Al Quoz", emirate_label: "Эмират", select_emirate: "-- Выберите --", submit_button: "Сохранить и продолжить", required_notice: "Эта информация необходима для получения комиссий" },
-        hi: { title: "अपनी प्रोफ़ाइल पूरी करें", subtitle: "अपना कमीशन प्राप्त करने के लिए, हमें कुछ जानकारी चाहिए", name_label: "पूरा नाम", name_placeholder: "आपका पूरा नाम", email_label: "ईमेल", email_placeholder: "your@email.com", email_help: "सूचनाओं और भुगतान के लिए", phone_label: "फ़ोन नंबर", phone_placeholder: "501234567", phone_help: "0 के बिना नंबर", address_label: "पता (बिल्डिंग, सड़क)", address_placeholder: "उदा: Beach Isle, Palm Jumeirah", area_label: "क्षेत्र / जिला", area_placeholder: "उदा: Jumeirah, Downtown, Al Quoz", emirate_label: "अमीरात", select_emirate: "-- चुनें --", submit_button: "सहेजें और जारी रखें", required_notice: "अपना कमीशन प्राप्त करने के लिए यह जानकारी आवश्यक है" },
-        ur: { title: "اپنی پروفائل مکمل کریں", subtitle: "اپنا کمیشن حاصل کرنے کے لیے، ہمیں کچھ معلومات چاہیے", name_label: "پورا نام", name_placeholder: "آپ کا پورا نام", email_label: "ای میل", email_placeholder: "your@email.com", email_help: "اطلاعات اور ادائیگیوں کے لیے", phone_label: "فون نمبر", phone_placeholder: "501234567", phone_help: "0 کے بغیر نمبر", address_label: "پتہ (عمارت، گلی)", address_placeholder: "مثال: Beach Isle, Palm Jumeirah", area_label: "علاقہ / ضلع", area_placeholder: "مثال: Jumeirah, Downtown, Al Quoz", emirate_label: "امارات", select_emirate: "-- منتخب کریں --", submit_button: "محفوظ کریں اور جاری رکھیں", required_notice: "اپنا کمیشن حاصل کرنے کے لیے یہ معلومات ضروری ہیں" },
-        zh: { title: "完善您的个人资料", subtitle: "为了接收您的佣金，我们需要一些信息", name_label: "全名", name_placeholder: "您的全名", email_label: "电子邮件", email_placeholder: "your@email.com", email_help: "用于通知和付款", phone_label: "电话号码", phone_placeholder: "501234567", phone_help: "不带前导0的号码", address_label: "地址（建筑物、街道）", address_placeholder: "例如: Beach Isle, Palm Jumeirah", area_label: "区域 / 地区", area_placeholder: "例如: Jumeirah, Downtown, Al Quoz", emirate_label: "酋长国", select_emirate: "-- 选择 --", submit_button: "保存并继续", required_notice: "此信息是接收佣金所必需的" },
-        tl: { title: "Kumpletuhin ang iyong profile", subtitle: "Para matanggap ang iyong mga komisyon, kailangan namin ng ilang impormasyon", name_label: "Buong pangalan", name_placeholder: "Ang iyong buong pangalan", email_label: "Email", email_placeholder: "your@email.com", email_help: "Ginagamit para sa mga notification at bayad", phone_label: "Numero ng telepono", phone_placeholder: "501234567", phone_help: "Numero na walang 0 sa unahan", address_label: "Address (Building, Kalye)", address_placeholder: "Hal: Beach Isle, Palm Jumeirah", area_label: "Lugar / Distrito", area_placeholder: "Hal: Jumeirah, Downtown, Al Quoz", emirate_label: "Emirate", select_emirate: "-- Pumili --", submit_button: "I-save at magpatuloy", required_notice: "Ang impormasyong ito ay kinakailangan para matanggap ang iyong mga komisyon" }
+        fr: { title: "Complétez votre profil", subtitle: "Pour recevoir vos commissions, nous avons besoin de quelques informations", name_label: "Nom complet", name_placeholder: "Votre nom complet", email_label: "Email", email_placeholder: "votre@email.com", email_help: "Utilisé pour les notifications et paiements", phone_label: "Numéro de téléphone", phone_placeholder: "501234567", phone_help: "Numéro sans le 0 initial", address_label: "Adresse (Bâtiment, Rue)", address_placeholder: "Ex: Beach Isle, Palm Jumeirah", area_label: "Zone / Quartier", area_placeholder: "Ex: Jumeirah, Downtown, Marina", location_label: "Pays / Émirat", select_location: "-- Sélectionnez --", submit_button: "Enregistrer et continuer", required_notice: "Ces informations sont nécessaires pour recevoir vos commissions" },
+        en: { title: "Complete your profile", subtitle: "To receive your commissions, we need some information", name_label: "Full name", name_placeholder: "Your full name", email_label: "Email", email_placeholder: "your@email.com", email_help: "Used for notifications and payments", phone_label: "Phone number", phone_placeholder: "501234567", phone_help: "Number without leading 0", address_label: "Address (Building, Street)", address_placeholder: "Ex: Beach Isle, Palm Jumeirah", area_label: "Area / District", area_placeholder: "Ex: Jumeirah, Downtown, Marina", location_label: "Country / Emirate", select_location: "-- Select --", submit_button: "Save and continue", required_notice: "This information is required to receive your commissions" },
+        ar: { title: "أكمل ملفك الشخصي", subtitle: "لتلقي عمولاتك، نحتاج بعض المعلومات", name_label: "الاسم الكامل", name_placeholder: "اسمك الكامل", email_label: "البريد الإلكتروني", email_placeholder: "email@example.com", email_help: "يُستخدم للإشعارات والمدفوعات", phone_label: "رقم الهاتف", phone_placeholder: "501234567", phone_help: "الرقم بدون الصفر الأول", address_label: "العنوان (المبنى، الشارع)", address_placeholder: "مثال: Beach Isle, Palm Jumeirah", area_label: "المنطقة / الحي", area_placeholder: "مثال: Jumeirah, Downtown, Marina", location_label: "الدولة / الإمارة", select_location: "-- اختر --", submit_button: "حفظ والمتابعة", required_notice: "هذه المعلومات مطلوبة لتلقي عمولاتك" },
+        ru: { title: "Заполните профиль", subtitle: "Для получения комиссий нам нужна информация", name_label: "Полное имя", name_placeholder: "Ваше полное имя", email_label: "Электронная почта", email_placeholder: "your@email.com", email_help: "Для уведомлений и платежей", phone_label: "Номер телефона", phone_placeholder: "501234567", phone_help: "Номер без начального 0", address_label: "Адрес (Здание, Улица)", address_placeholder: "Пример: Beach Isle, Palm Jumeirah", area_label: "Район / Зона", area_placeholder: "Пример: Jumeirah, Downtown, Marina", location_label: "Страна / Эмират", select_location: "-- Выберите --", submit_button: "Сохранить и продолжить", required_notice: "Эта информация необходима для получения комиссий" },
+        hi: { title: "अपनी प्रोफ़ाइल पूरी करें", subtitle: "अपना कमीशन प्राप्त करने के लिए, हमें कुछ जानकारी चाहिए", name_label: "पूरा नाम", name_placeholder: "आपका पूरा नाम", email_label: "ईमेल", email_placeholder: "your@email.com", email_help: "सूचनाओं और भुगतान के लिए", phone_label: "फ़ोन नंबर", phone_placeholder: "501234567", phone_help: "0 के बिना नंबर", address_label: "पता (बिल्डिंग, सड़क)", address_placeholder: "उदा: Beach Isle, Palm Jumeirah", area_label: "क्षेत्र / जिला", area_placeholder: "उदा: Jumeirah, Downtown, Marina", location_label: "देश / अमीरात", select_location: "-- चुनें --", submit_button: "सहेजें और जारी रखें", required_notice: "अपना कमीशन प्राप्त करने के लिए यह जानकारी आवश्यक है" },
+        ur: { title: "اپنی پروفائل مکمل کریں", subtitle: "اپنا کمیشن حاصل کرنے کے لیے، ہمیں کچھ معلومات چاہیے", name_label: "پورا نام", name_placeholder: "آپ کا پورا نام", email_label: "ای میل", email_placeholder: "your@email.com", email_help: "اطلاعات اور ادائیگیوں کے لیے", phone_label: "فون نمبر", phone_placeholder: "501234567", phone_help: "0 کے بغیر نمبر", address_label: "پتہ (عمارت، گلی)", address_placeholder: "مثال: Beach Isle, Palm Jumeirah", area_label: "علاقہ / ضلع", area_placeholder: "مثال: Jumeirah, Downtown, Marina", location_label: "ملک / امارات", select_location: "-- منتخب کریں --", submit_button: "محفوظ کریں اور جاری رکھیں", required_notice: "اپنا کمیشن حاصل کرنے کے لیے یہ معلومات ضروری ہیں" },
+        zh: { title: "完善您的个人资料", subtitle: "为了接收您的佣金，我们需要一些信息", name_label: "全名", name_placeholder: "您的全名", email_label: "电子邮件", email_placeholder: "your@email.com", email_help: "用于通知和付款", phone_label: "电话号码", phone_placeholder: "501234567", phone_help: "不带前导0的号码", address_label: "地址（建筑物、街道）", address_placeholder: "例如: Beach Isle, Palm Jumeirah", area_label: "区域 / 地区", area_placeholder: "例如: Jumeirah, Downtown, Marina", location_label: "国家 / 酋长国", select_location: "-- 选择 --", submit_button: "保存并继续", required_notice: "此信息是接收佣金所必需的" },
+        tl: { title: "Kumpletuhin ang iyong profile", subtitle: "Para matanggap ang iyong mga komisyon, kailangan namin ng ilang impormasyon", name_label: "Buong pangalan", name_placeholder: "Ang iyong buong pangalan", email_label: "Email", email_placeholder: "your@email.com", email_help: "Ginagamit para sa mga notification at bayad", phone_label: "Numero ng telepono", phone_placeholder: "501234567", phone_help: "Numero na walang 0 sa unahan", address_label: "Address (Building, Kalye)", address_placeholder: "Hal: Beach Isle, Palm Jumeirah", area_label: "Lugar / Distrito", area_placeholder: "Hal: Jumeirah, Downtown, Marina", location_label: "Bansa / Emirate", select_location: "-- Pumili --", submit_button: "I-save at magpatuloy", required_notice: "Ang impormasyong ito ay kinakailangan para matanggap ang iyong mga komisyon" }
     };
     
     const t = translations[currentLang] || translations['en'];
@@ -178,20 +178,49 @@ export function renderProfileCompletionModal() {
     const existingPhone = profile.phone || '';
     const isAppleRelay = existingEmail.includes('privaterelay.appleid.com');
     
-    const emirates = [
-        { code: 'Dubai', name: 'Dubai / دبي' },
-        { code: 'Abu Dhabi', name: 'Abu Dhabi / أبوظبي' },
-        { code: 'Sharjah', name: 'Sharjah / الشارقة' },
-        { code: 'Ajman', name: 'Ajman / عجمان' },
-        { code: 'Umm Al Quwain', name: 'Umm Al Quwain / أم القيوين' },
-        { code: 'Ras Al Khaimah', name: 'Ras Al Khaimah / رأس الخيمة' },
-        { code: 'Fujairah', name: 'Fujairah / الفجيرة' }
-    ];
-    const emirateOptions = emirates.map(e => `<option value="${e.code}" ${e.code === 'Dubai' ? 'selected' : ''}>${e.name}</option>`).join('');
+    // ✅ v3.20.0 - UAE Emirates (English only) + key countries
+    const locationOptions = `
+        <optgroup label="🇦🇪 UAE — Emirates">
+            <option value="Dubai" selected>🇦🇪 Dubai</option>
+            <option value="Abu Dhabi">🇦🇪 Abu Dhabi</option>
+            <option value="Sharjah">🇦🇪 Sharjah</option>
+            <option value="Ajman">🇦🇪 Ajman</option>
+            <option value="Umm Al Quwain">🇦🇪 Umm Al Quwain</option>
+            <option value="Ras Al Khaimah">🇦🇪 Ras Al Khaimah</option>
+            <option value="Fujairah">🇦🇪 Fujairah</option>
+        </optgroup>
+        <optgroup label="🌍 Other Countries">
+            <option value="France">🇫🇷 France</option>
+            <option value="United Kingdom">🇬🇧 United Kingdom</option>
+            <option value="Germany">🇩🇪 Germany</option>
+            <option value="Switzerland">🇨🇭 Switzerland</option>
+            <option value="Belgium">🇧🇪 Belgium</option>
+            <option value="Luxembourg">🇱🇺 Luxembourg</option>
+            <option value="Russia">🇷🇺 Russia</option>
+            <option value="Ukraine">🇺🇦 Ukraine</option>
+            <option value="India">🇮🇳 India</option>
+            <option value="Pakistan">🇵🇰 Pakistan</option>
+            <option value="Philippines">🇵🇭 Philippines</option>
+            <option value="China">🇨🇳 China</option>
+            <option value="Lebanon">🇱🇧 Lebanon</option>
+            <option value="Egypt">🇪🇬 Egypt</option>
+            <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+            <option value="Qatar">🇶🇦 Qatar</option>
+            <option value="Kuwait">🇰🇼 Kuwait</option>
+            <option value="Oman">🇴🇲 Oman</option>
+            <option value="Bahrain">🇧🇭 Bahrain</option>
+            <option value="Jordan">🇯🇴 Jordan</option>
+            <option value="Morocco">🇲🇦 Morocco</option>
+            <option value="Tunisia">🇹🇳 Tunisia</option>
+            <option value="United States">🇺🇸 United States</option>
+            <option value="Canada">🇨🇦 Canada</option>
+            <option value="Australia">🇦🇺 Australia</option>
+            <option value="Singapore">🇸🇬 Singapore</option>
+            <option value="South Africa">🇿🇦 South Africa</option>
+            <option value="Nigeria">🇳🇬 Nigeria</option>
+        </optgroup>
+    `;
 
-    // ✅ v3.19.5 FIX: Utiliser "py-3 pr-4" au lieu de "px-4 py-3" pour l'input téléphone
-    // px-4 = padding-left + padding-right → écrase le padding-left calculé par intl-tel-input
-    // pr-4 = seulement padding-right → laisse ITI gérer le padding-left
     return `
         <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100] overflow-y-auto">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 md:p-8 max-w-xl w-full border-2 border-yellow-500/50 shadow-2xl my-4 max-h-[95vh] overflow-y-auto">
@@ -228,10 +257,10 @@ export function renderProfileCompletionModal() {
                         <input type="text" id="completionArea" placeholder="${t.area_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.emirate_label} *</label>
+                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.location_label} *</label>
                         <select id="completionEmirate" required class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
-                            <option value="">${t.select_emirate}</option>
-                            ${emirateOptions}
+                            <option value="">${t.select_location}</option>
+                            ${locationOptions}
                         </select>
                     </div>
                     <div id="completionError" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg text-sm"></div>
@@ -241,6 +270,7 @@ export function renderProfileCompletionModal() {
         </div>
     `;
 }
+
 export function renderLandingPage() {
     const t = (key) => window.i18next.t(key);
     
@@ -431,7 +461,6 @@ export function renderAuthPage(mode) {
         title = 'Nouveau mot de passe'; buttonText = 'Changer le mot de passe'; linkText = 'Retour à la connexion'; linkAction = 'showLogin()';
     }
     
-    // ✅ v3.19.5 FIX: Pour la page signup, utiliser py-2 pr-4 au lieu de px-4 py-2 pour l'input téléphone
     return `
         <div class="min-h-screen flex items-center justify-center px-4">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
@@ -652,17 +681,6 @@ export function renderDashboard() {
                 ` : ''}
                 ${hasValidContract && !isAdmin ? `
                     <div id="contractUploaded" class="mb-6 relative overflow-hidden bg-gradient-to-r from-green-900/50 to-blue-900/30 border border-green-500/50 p-6 rounded-2xl shadow-lg">
-                        <div class="absolute bottom-0 left-0 right-0 h-20 opacity-[0.07] pointer-events-none">
-                            <svg viewBox="0 0 1200 100" preserveAspectRatio="none" class="w-full h-full text-white">
-                                <polygon points="600,5 594,100 606,100" fill="currentColor"/>
-                                <rect x="80" y="50" width="35" height="50" fill="currentColor"/>
-                                <rect x="125" y="35" width="28" height="65" fill="currentColor"/>
-                                <rect x="160" y="45" width="40" height="55" fill="currentColor"/>
-                                <rect x="210" y="30" width="25" height="70" fill="currentColor"/>
-                                <rect x="630" y="50" width="30" height="50" fill="currentColor"/>
-                                <rect x="670" y="35" width="35" height="65" fill="currentColor"/>
-                            </svg>
-                        </div>
                         <div class="relative z-10 flex items-center gap-4">
                             <div class="text-4xl flex-shrink-0">✅</div>
                             <div class="flex-1">
