@@ -1,7 +1,7 @@
 // ============================================
 // 🎨 MODULE RENDERING.JS
 // ============================================
-// Version: 3.20.0 - Fix: country selector (English only, international)
+// Version: 3.21.0 - Fix: country selector English only + dashboard block i18n
 // Date: 10 mars 2026
 // ============================================
 
@@ -583,6 +583,19 @@ export function renderDashboard() {
     const profileComplete = isProfileComplete(userProfile);
     const canAddLeads = profileComplete && hasValidContract;
     
+    // ✅ v3.21.0 - Dashboard warning block translated in 8 languages
+    const dwt = {
+        fr: { complete_title: "Complétez votre inscription pour gagner des commissions !", complete_desc: 'Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, vous devez compléter ces 2 étapes :', step1_title: "Étape 1 : Signer le contrat d'apporteur", step1_done: "Contrat signé ✓", step1_todo: "Obligatoire pour recevoir vos paiements", step1_btn: "Signer maintenant →", step2_title: "Étape 2 : Compléter votre profil", step2_done: "Profil complet ✓", step2_todo: "Nom, téléphone et adresse requis pour les paiements", step2_btn: "Compléter →", why_title: "Pourquoi ces étapes ?", why_desc: "Le contrat protège vos commissions et votre profil complet nous permet de vous payer.", locked_btn: "(Complétez les étapes ci-dessus)" },
+        en: { complete_title: "Complete your registration to earn commissions!", complete_desc: 'To submit leads and <strong class="text-yellow-400">receive your commissions</strong>, you must complete these 2 steps:', step1_title: "Step 1: Sign the referrer agreement", step1_done: "Contract signed ✓", step1_todo: "Required to receive your payments", step1_btn: "Sign now →", step2_title: "Step 2: Complete your profile", step2_done: "Profile complete ✓", step2_todo: "Name, phone and address required for payments", step2_btn: "Complete →", why_title: "Why these steps?", why_desc: "The contract protects your commissions and your complete profile allows us to pay you.", locked_btn: "(Complete the steps above)" },
+        ar: { complete_title: "أكمل تسجيلك لكسب العمولات!", complete_desc: 'لتقديم العملاء المحتملين و<strong class="text-yellow-400">استلام عمولاتك</strong>، يجب عليك إكمال هاتين الخطوتين:', step1_title: "الخطوة 1: توقيع عقد الإحالة", step1_done: "العقد موقع ✓", step1_todo: "مطلوب لاستلام مدفوعاتك", step1_btn: "وقّع الآن →", step2_title: "الخطوة 2: أكمل ملفك الشخصي", step2_done: "الملف الشخصي مكتمل ✓", step2_todo: "الاسم والهاتف والعنوان مطلوبة للمدفوعات", step2_btn: "أكمل →", why_title: "لماذا هذه الخطوات؟", why_desc: "العقد يحمي عمولاتك وملفك الشخصي الكامل يسمح لنا بدفعك.", locked_btn: "(أكمل الخطوات أعلاه)" },
+        ru: { complete_title: "Завершите регистрацию для получения комиссий!", complete_desc: 'Для подачи лидов и <strong class="text-yellow-400">получения комиссий</strong> необходимо выполнить 2 шага:', step1_title: "Шаг 1: Подписать реферальный договор", step1_done: "Договор подписан ✓", step1_todo: "Необходимо для получения выплат", step1_btn: "Подписать →", step2_title: "Шаг 2: Заполнить профиль", step2_done: "Профиль заполнен ✓", step2_todo: "Имя, телефон и адрес необходимы для выплат", step2_btn: "Заполнить →", why_title: "Зачем эти шаги?", why_desc: "Договор защищает ваши комиссии, а заполненный профиль позволяет нам вам платить.", locked_btn: "(Выполните шаги выше)" },
+        hi: { complete_title: "कमीशन पाने के लिए पंजीकरण पूरा करें!", complete_desc: 'लीड जमा करने और <strong class="text-yellow-400">कमीशन प्राप्त करने</strong> के लिए, ये 2 चरण पूरे करें:', step1_title: "चरण 1: रेफरर अनुबंध पर हस्ताक्षर करें", step1_done: "अनुबंध हस्ताक्षरित ✓", step1_todo: "भुगतान प्राप्त करने के लिए आवश्यक", step1_btn: "अभी हस्ताक्षर करें →", step2_title: "चरण 2: प्रोफ़ाइल पूरी करें", step2_done: "प्रोफ़ाइल पूर्ण ✓", step2_todo: "भुगतान के लिए नाम, फोन और पता आवश्यक", step2_btn: "पूरा करें →", why_title: "ये चरण क्यों?", why_desc: "अनुबंध आपके कमीशन की रक्षा करता है और पूर्ण प्रोफ़ाइल हमें आपको भुगतान करने देती है।", locked_btn: "(ऊपर के चरण पूरे करें)" },
+        ur: { complete_title: "کمیشن کمانے کے لیے رجسٹریشن مکمل کریں!", complete_desc: 'لیڈز جمع کروانے اور <strong class="text-yellow-400">کمیشن حاصل کرنے</strong> کے لیے، یہ 2 مراحل مکمل کریں:', step1_title: "مرحلہ 1: ریفرر معاہدے پر دستخط کریں", step1_done: "معاہدے پر دستخط ✓", step1_todo: "ادائیگیاں حاصل کرنے کے لیے ضروری", step1_btn: "ابھی دستخط کریں →", step2_title: "مرحلہ 2: پروفائل مکمل کریں", step2_done: "پروفائل مکمل ✓", step2_todo: "ادائیگیوں کے لیے نام، فون اور پتہ ضروری", step2_btn: "مکمل کریں →", why_title: "یہ مراحل کیوں؟", why_desc: "معاہدہ آپ کے کمیشن کی حفاظت کرتا ہے اور مکمل پروفائل ہمیں آپ کو ادائیگی کرنے دیتی ہے۔", locked_btn: "(اوپر کے مراحل مکمل کریں)" },
+        zh: { complete_title: "完成注册以赚取佣金！", complete_desc: '要提交线索并<strong class="text-yellow-400">获得佣金</strong>，请完成以下2个步骤：', step1_title: "步骤1：签署推荐协议", step1_done: "合同已签署 ✓", step1_todo: "接收付款所必需", step1_btn: "立即签署 →", step2_title: "步骤2：完善个人资料", step2_done: "资料已完善 ✓", step2_todo: "付款需要姓名、电话和地址", step2_btn: "完善 →", why_title: "为什么需要这些步骤？", why_desc: "合同保护您的佣金，完整的资料让我们能够向您付款。", locked_btn: "(请完成上述步骤)" },
+        tl: { complete_title: "Kumpletuhin ang iyong registration para kumita ng komisyon!", complete_desc: 'Para magsumite ng leads at <strong class="text-yellow-400">matanggap ang iyong mga komisyon</strong>, kumpletuhin ang 2 hakbang na ito:', step1_title: "Hakbang 1: Pumirma ng referrer agreement", step1_done: "Kontrata napirmahan ✓", step1_todo: "Kailangan para matanggap ang mga bayad", step1_btn: "Pumirma ngayon →", step2_title: "Hakbang 2: Kumpletuhin ang profile", step2_done: "Profile kumpleto ✓", step2_todo: "Pangalan, telepono at address kailangan para sa bayad", step2_btn: "Kumpletuhin →", why_title: "Bakit kailangan ang mga hakbang na ito?", why_desc: "Pinoprotektahan ng kontrata ang iyong mga komisyon at ang kumpletong profile ay nagbibigay-daan sa amin na bayaran ka.", locked_btn: "(Kumpletuhin ang mga hakbang sa itaas)" }
+    };
+    const dw = dwt[currentLang] || dwt['en'];
+
     let addLeadSection = '';
     if (!isAdmin) {
         if (canAddLeads) {
@@ -595,33 +608,33 @@ export function renderDashboard() {
                     <div class="flex items-start gap-4">
                         <div class="text-5xl">🚨</div>
                         <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-orange-400 mb-2">Complétez votre inscription pour gagner des commissions !</h3>
-                            <p class="text-white mb-4">Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, vous devez compléter ces 2 étapes :</p>
+                            <h3 class="text-2xl font-bold text-orange-400 mb-2">${dw.complete_title}</h3>
+                            <p class="text-white mb-4">${dw.complete_desc}</p>
                             <div class="space-y-3">
                                 <div class="flex items-center gap-3 p-3 rounded-lg ${stepContractDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
                                     <div class="text-3xl">${stepContractDone ? '✅' : '❌'}</div>
                                     <div class="flex-1">
-                                        <div class="font-bold ${stepContractDone ? 'text-green-400' : 'text-red-400'}">Étape 1 : Signer le contrat d'apporteur</div>
-                                        <div class="text-sm text-blue-200">${stepContractDone ? 'Contrat signé ✓' : 'Obligatoire pour recevoir vos paiements'}</div>
+                                        <div class="font-bold ${stepContractDone ? 'text-green-400' : 'text-red-400'}">${dw.step1_title}</div>
+                                        <div class="text-sm text-blue-200">${stepContractDone ? dw.step1_done : dw.step1_todo}</div>
                                     </div>
-                                    ${!stepContractDone ? '<a href="/contract-signature.html" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded-lg transition text-sm">Signer maintenant →</a>' : ''}
+                                    ${!stepContractDone ? `<a href="/contract-signature.html" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step1_btn}</a>` : ''}
                                 </div>
                                 <div class="flex items-center gap-3 p-3 rounded-lg ${stepProfileDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
                                     <div class="text-3xl">${stepProfileDone ? '✅' : '❌'}</div>
                                     <div class="flex-1">
-                                        <div class="font-bold ${stepProfileDone ? 'text-green-400' : 'text-red-400'}">Étape 2 : Compléter votre profil</div>
-                                        <div class="text-sm text-blue-200">${stepProfileDone ? 'Profil complet ✓' : 'Nom, téléphone et adresse requis pour les paiements'}</div>
+                                        <div class="font-bold ${stepProfileDone ? 'text-green-400' : 'text-red-400'}">${dw.step2_title}</div>
+                                        <div class="text-sm text-blue-200">${stepProfileDone ? dw.step2_done : dw.step2_todo}</div>
                                     </div>
-                                    ${!stepProfileDone ? '<a href="profile.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">Compléter →</a>' : ''}
+                                    ${!stepProfileDone ? `<a href="profile.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step2_btn}</a>` : ''}
                                 </div>
                             </div>
                             <div class="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg">
-                                <p class="text-yellow-300 text-sm">💡 <strong>Pourquoi ces étapes ?</strong> Le contrat protège vos commissions et votre profil complet nous permet de vous payer.</p>
+                                <p class="text-yellow-300 text-sm">💡 <strong>${dw.why_title}</strong> ${dw.why_desc}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button id="addLeadBtn" disabled class="bg-gray-500 text-gray-300 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60">🔒 ${t('dashboard:add_lead')} (Complétez les étapes ci-dessus)</button>
+                <button id="addLeadBtn" disabled class="bg-gray-500 text-gray-300 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60">🔒 ${t('dashboard:add_lead')} ${dw.locked_btn}</button>
             `;
         }
     }
