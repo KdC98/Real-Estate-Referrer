@@ -134,17 +134,24 @@
                             </div>
                         </div>
                         
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input 
-                                    type="checkbox" 
-                                    id="acceptTerms" 
-                                    onchange="toggleAcceptance()"
-                                    class="mt-1 w-5 h-5 text-yellow-500 bg-slate-700 border-white/30 rounded focus:ring-yellow-500"
-                                />
-                                <span class="text-blue-200">
-                                    <strong class="text-white">${t('contract:accept_terms')}</strong><br>
-                                    <span class="text-sm">${t('contract:accept_terms_text')}</span>
+                        <!-- ✅ v3.21.2 - Checkbox bien visible, obligatoire avant signature -->
+                        <div class="bg-gradient-to-r from-yellow-900/40 to-orange-900/30 rounded-2xl p-6 mb-6 border-2 border-yellow-500 shadow-lg shadow-yellow-500/20">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="text-3xl">⚠️</span>
+                                <p class="text-yellow-300 font-bold text-lg">${t('contract:step_required') || 'Required step before signing'}</p>
+                            </div>
+                            <label class="flex items-start gap-4 cursor-pointer group">
+                                <div class="relative mt-1 flex-shrink-0">
+                                    <input 
+                                        type="checkbox" 
+                                        id="acceptTerms" 
+                                        onchange="toggleAcceptance()"
+                                        class="w-6 h-6 text-yellow-500 bg-slate-700 border-2 border-yellow-400 rounded focus:ring-yellow-500 focus:ring-2 cursor-pointer"
+                                    />
+                                </div>
+                                <span class="text-white">
+                                    <strong class="text-yellow-300 text-base">${t('contract:accept_terms')}</strong><br>
+                                    <span class="text-blue-200 text-sm">${t('contract:accept_terms_text')}</span>
                                 </span>
                             </label>
                         </div>
