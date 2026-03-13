@@ -11,13 +11,13 @@
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
-    
+
     <!-- intl-tel-input -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
-    
-    <!-- Version: 3.20.7 - Fix: contract success notification i18n -->
-    
+
+    <!-- Version: 3.21.1 - Fix: remove chat, remove OAuth popup, remove emojis, address pre-fill -->
+
 <style>
 .iti { width: 100% !important; display: block !important; }
 .iti input[type="tel"], .iti input#phone, .iti input#completionPhone, .iti input#clientPhone, .iti--separate-dial-code input[type="tel"] {
@@ -47,11 +47,11 @@
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
-    <div id="oauthWarningModal" class="hidden"></div>
-    
+    <!-- Fix #5: oauthWarningModal removed entirely -->
+
     <script type="module">
         // ============================================
-        // v3.20.7 - Fix: contract success notification i18n
+        // v3.21.1 - Fix: remove chat, OAuth popup, emojis, address pre-fill
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -65,8 +65,8 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('🚀 App starting v3.20.7...');
-            
+            console.log('App starting v3.21.1...');
+
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = window.location.hash;
             const hasCodeParam = urlParams.get('code') !== null;
@@ -74,20 +74,26 @@
             const hasError = hashParams.includes('error') || urlParams.get('error') !== null;
             const isOAuthReturn = hasCodeParam || hasHashToken;
             const isContractSignedReturn = urlParams.get('signed') !== null;
-            
-            if (isOAuthReturn) console.log('🔄 OAuth return detected');
-            if (hasError) console.error('❌ OAuth error in URL');
-            if (isContractSignedReturn) console.log('📝 Contract signed return detected');
-            
-            if (isOAuthReturn && !hasError) {
-                document.getElementById('app').innerHTML = `
-                    <div class="min-h-screen flex items-center justify-center">
-                        <div class="text-center">
-                            <div class="text-6xl mb-4 animate-spin">🔄</div>
-                            <div class="text-xl text-blue-200">Connexion en cours...</div>
-                        </div>
+
+            if (isOAuthReturn) console.log('OAuth return detected');
+            if (hasError) console.error('OAuth error in URL');
+            if (isContractSignedReturn) console.log('Contract signed return detected');
+
+            // Fix #2: SVG spinner instead of emoji
+            const SPINNER_HTML = `
+                <div class="min-h-screen flex items-center justify-center">
+                    <div class="text-center">
+                        <svg class="animate-spin h-12 w-12 text-yellow-400 mb-4 mx-auto" viewBox="0 0 24 24" fill="none">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                        <div class="text-xl text-blue-200">Connexion en cours...</div>
                     </div>
-                `;
+                </div>
+            `;
+
+            if (isOAuthReturn && !hasError) {
+                document.getElementById('app').innerHTML = SPINNER_HTML;
             }
 
             // i18next
@@ -97,9 +103,7 @@
                 backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
                 detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
             });
-            console.log('🌐 Loading translations...');
             await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
-            console.log('✅ All translations loaded!');
             const t = (key) => window.i18next.t(key);
 
             async function changeLanguage(langCode) {
@@ -118,15 +122,10 @@
                     flowType: 'pkce'
                 }
             });
-            
+
             window.supabase = supabase;
             window.SUPABASE_URL = SUPABASE_URL;
             window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
-
-            const oauthTranslations = {
-                fr: { security_info: "Information de sécurité", redirect_message: "Vous allez être redirigé vers notre service d'authentification sécurisé <strong>(Supabase)</strong> pour vous connecter avec", normal_secure: "C'est normal et sécurisé.", will_return: "Vous reviendrez automatiquement sur notre site après connexion.", continue_btn: "Continuer", cancel_btn: "Annuler" },
-                en: { security_info: "Security Information", redirect_message: "You will be redirected to our secure authentication service <strong>(Supabase)</strong> to sign in with", normal_secure: "This is normal and secure.", will_return: "You will automatically return to our site after signing in.", continue_btn: "Continue", cancel_btn: "Cancel" }
-            };
 
             // State
             let currentUser = null;
@@ -165,21 +164,21 @@
             // Helpers
             function wait2Frames() { return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
             function waitFonts() { return document.fonts?.ready || Promise.resolve(); }
-            
+
             function withTimeout(promise, ms, fallbackValue = null) {
                 return new Promise((resolve) => {
                     let settled = false;
                     const timer = setTimeout(() => {
-                        if (!settled) { settled = true; console.warn(`⏰ Timeout after ${ms}ms`); resolve(fallbackValue); }
+                        if (!settled) { settled = true; console.warn(`Timeout after ${ms}ms`); resolve(fallbackValue); }
                     }, ms);
                     promise.then((result) => {
                         if (!settled) { settled = true; clearTimeout(timer); resolve(result); }
                     }).catch((err) => {
-                        if (!settled) { settled = true; clearTimeout(timer); console.warn('⚠️ Promise error:', err.message); resolve(fallbackValue); }
+                        if (!settled) { settled = true; clearTimeout(timer); console.warn('Promise error:', err.message); resolve(fallbackValue); }
                     });
                 });
             }
-            
+
             function initPhoneInput(inputId, initialNumber = '') {
                 const input = document.getElementById(inputId);
                 if (!input) return null;
@@ -285,31 +284,15 @@
                 };
             }
 
-            function showOAuthWarning(provider) {
-                const modal = document.getElementById('oauthWarningModal');
-                const trans = oauthTranslations[i18next.language?.split('-')[0]] || oauthTranslations.fr;
-                modal.innerHTML = `
-                    <div class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-                        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-md w-full border border-yellow-500/50">
-                            <div class="text-center mb-6"><div class="text-5xl mb-4">⚠️</div><h3 class="text-2xl font-bold text-yellow-400">${trans.security_info}</h3></div>
-                            <p class="text-blue-200 mb-6">${trans.redirect_message} ${provider === 'google' ? 'Google' : 'Apple'}.</p>
-                            <p class="text-blue-200 mb-6"><span class="text-green-400 font-semibold">✓ ${trans.normal_secure}</span><br>${trans.will_return}</p>
-                            <div class="flex gap-4">
-                                <button onclick="proceedWithOAuth('${provider}')" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg">${trans.continue_btn}</button>
-                                <button onclick="closeOAuthWarning()" class="flex-1 bg-white/20 hover:bg-white/30 text-white font-bold py-3 rounded-lg border border-white/20">${trans.cancel_btn}</button>
-                            </div>
-                        </div>
-                    </div>`;
-                modal.classList.remove('hidden');
-            }
-            function closeOAuthWarning() { const m = document.getElementById('oauthWarningModal'); m.classList.add('hidden'); m.innerHTML = ''; }
-            async function proceedWithOAuth(provider) {
-                closeOAuthWarning();
-                const { error } = await supabase.auth.signInWithOAuth({ provider, options: { redirectTo: window.location.origin } });
+            // Fix #5 — signInWithGoogle/Apple go directly to OAuth, no popup
+            async function signInWithGoogle() {
+                const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
                 if (error) alert('Erreur: ' + error.message);
             }
-            async function signInWithGoogle() { showOAuthWarning('google'); }
-            async function signInWithApple() { showOAuthWarning('apple'); }
+            async function signInWithApple() {
+                const { error } = await supabase.auth.signInWithOAuth({ provider: 'apple', options: { redirectTo: window.location.origin } });
+                if (error) alert('Erreur: ' + error.message);
+            }
 
             async function handleChangePassword() {
                 const form = document.getElementById('authForm');
@@ -323,7 +306,7 @@
                     try {
                         const { error } = await supabase.auth.updateUser({ password: np });
                         if (error) throw error;
-                        isPasswordRecoveryMode = false; alert('✅ Mot de passe changé !');
+                        isPasswordRecoveryMode = false; alert('Mot de passe changé avec succès.');
                         await supabase.auth.signOut(); UTILS.showLogin();
                     } catch (error) { errorDiv.textContent = error.message; errorDiv.classList.remove('hidden'); }
                 };
@@ -331,11 +314,10 @@
 
             async function loadUserProfile(user = null, forceRefresh = false) {
                 const u = user || currentUser;
-                console.log('🔍 loadUserProfile for:', u?.id, forceRefresh ? '(force refresh)' : '');
-                if (!u?.id) { console.warn('⚠️ No user for loadUserProfile'); return false; }
+                console.log('loadUserProfile for:', u?.id, forceRefresh ? '(force refresh)' : '');
+                if (!u?.id) { console.warn('No user for loadUserProfile'); return false; }
 
                 const defaultContractStatus = contractJustSigned ? 'signed' : 'pending';
-                console.log('📝 Default contract status:', defaultContractStatus);
 
                 const tempProfile = {
                     id: u.id,
@@ -348,30 +330,27 @@
                 };
 
                 try {
-                    console.log('📡 Fetching profile from Supabase...');
-                    
                     const result = await withTimeout(
                         supabase.from('profiles').select('*').eq('id', u.id).maybeSingle(),
                         5000, null
                     );
-                    
+
                     if (!result) {
-                        console.warn('⚠️ Supabase timeout, using temp profile with contract_status:', defaultContractStatus);
+                        console.warn('Supabase timeout, using temp profile');
                         userProfile = tempProfile; window.userProfile = userProfile;
                         return true;
                     }
-                    
+
                     const { data, error } = result;
-                    console.log('📡 Supabase response:', { data, error });
-                    
+
                     if (error && error.code !== 'PGRST116') {
-                        console.error('❌ Profile DB error:', error);
+                        console.error('Profile DB error:', error);
                         userProfile = tempProfile; window.userProfile = userProfile;
                         return true;
                     }
 
                     if (!data) {
-                        console.log('📝 No profile found, creating...');
+                        console.log('No profile found, creating...');
                         const insertResult = await withTimeout(
                             supabase.from('profiles').upsert([tempProfile], { onConflict: 'id' }).select().single(),
                             5000, null
@@ -379,12 +358,9 @@
                         if (insertResult?.data) {
                             userProfile = insertResult.data;
                             if (contractJustSigned && userProfile.contract_status !== 'signed') {
-                                console.log('📝 Forcing contract_status to signed');
                                 userProfile.contract_status = 'signed';
                             }
-                            console.log('✅ Profile created:', userProfile.name, 'contract:', userProfile.contract_status);
                         } else {
-                            console.warn('⚠️ Insert failed, using temp profile');
                             userProfile = tempProfile;
                         }
                     } else {
@@ -393,17 +369,15 @@
                             userProfile.contract_status = userProfile.contract_status.trim().replace(/\*+/g, '');
                         }
                         if (contractJustSigned && userProfile.contract_status === 'pending') {
-                            console.log('📝 DB has pending but contract was just signed, forcing signed');
                             userProfile.contract_status = 'signed';
                         }
-                        console.log('✅ Profile loaded:', userProfile.name, 'contract:', userProfile.contract_status);
                     }
-                    
+
                     window.userProfile = userProfile;
                     return true;
-                    
+
                 } catch (err) {
-                    console.error('❌ loadUserProfile exception:', err);
+                    console.error('loadUserProfile exception:', err);
                     userProfile = tempProfile; window.userProfile = userProfile;
                     return true;
                 }
@@ -421,42 +395,41 @@
 
             // Render
             async function render() {
-                if (isRendering) { console.log('⏳ Render already in progress'); return; }
-                
+                if (isRendering) { console.log('Render already in progress'); return; }
+
                 if (waitingForOAuth && !currentUser) {
-                    console.log('⏳ Waiting for OAuth session...');
+                    console.log('Waiting for OAuth session...');
                     return;
                 }
-                
+
                 isRendering = true;
-                console.log('🎨 RENDER - user:', !!currentUser, 'profile:', !!userProfile, 'page:', currentPage, 'contractJustSigned:', contractJustSigned);
+                console.log('RENDER - user:', !!currentUser, 'profile:', !!userProfile, 'page:', currentPage);
 
                 const app = document.getElementById('app');
 
                 if (contractJustSigned && currentUser && userProfile) {
-                    console.log('📝 Contract just signed, showing success notification');
                     contractJustSigned = false;
                     window.contractJustSigned = false;
-                    
+
                     if (window.location.search.includes('signed=')) {
                         window.history.replaceState(null, '', window.location.pathname);
                     }
-                    
+
                     setTimeout(() => {
-                        // ✅ v3.20.7 - Contract success notification i18n (8 langues)
+                        // Fix #2: no emoji in notification
                         const contractSuccessMessages = {
-                            fr: 'Contrat signé avec succès !',
-                            en: 'Contract signed successfully!',
-                            ar: 'تم توقيع العقد بنجاح!',
-                            ru: 'Договор успешно подписан!',
-                            hi: 'अनुबंध सफलतापूर्वक हस्ताक्षरित!',
-                            ur: 'معاہدہ کامیابی سے دستخط ہو گیا!',
-                            zh: '合同签署成功！',
-                            tl: 'Matagumpay na napirmahan ang kontrata!'
+                            fr: 'Contrat signé avec succès.',
+                            en: 'Contract signed successfully.',
+                            ar: 'تم توقيع العقد بنجاح.',
+                            ru: 'Договор успешно подписан.',
+                            hi: 'अनुबंध सफलतापूर्वक हस्ताक्षरित।',
+                            ur: 'معاہدہ کامیابی سے دستخط ہو گیا۔',
+                            zh: '合同签署成功。',
+                            tl: 'Matagumpay na napirmahan ang kontrata.'
                         };
-                        const contractSuccessMsg = contractSuccessMessages[i18next.language?.substring(0, 2)] || contractSuccessMessages['en'];
+                        const msg = contractSuccessMessages[i18next.language?.substring(0, 2)] || contractSuccessMessages['en'];
                         const d = document.createElement('div');
-                        d.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-bounce"><span class="text-3xl mr-2">✅</span><strong>${contractSuccessMsg}</strong></div>`;
+                        d.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50"><strong>${msg}</strong></div>`;
                         document.body.appendChild(d);
                         setTimeout(() => d.remove(), 5000);
                     }, 500);
@@ -477,22 +450,20 @@
 
                 if (currentUser && userProfile) {
                     const isComplete = RENDERING.isProfileComplete(userProfile);
-                    
-                    // ✅ v3.20.6: Vérifier si contrat signé pour ne pas bloquer
-                    const hasSignedContract = userProfile.contract_status === 'signed' || 
-                                              userProfile.contract_path || 
+
+                    const hasSignedContract = userProfile.contract_status === 'signed' ||
+                                              userProfile.contract_path ||
                                               userProfile.contract_file_url ||
                                               ['signed', 'validated', 'approved'].includes(userProfile.contract_status);
-                    
-                    console.log('📋 Profile check - isComplete:', isComplete, 'hasSignedContract:', hasSignedContract, 'contract_status:', userProfile.contract_status, 'role:', userProfile.role);
-                    
-                    // ✅ v3.20.6: Ne bloquer avec modal QUE si pas de contrat signé
+
+                    console.log('Profile check - isComplete:', isComplete, 'hasSignedContract:', hasSignedContract);
+
                     if (!isComplete && userProfile.role !== 'admin' && !hasSignedContract) {
                         currentPage = 'profile-completion'; window.currentPage = 'profile-completion';
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
-                        
+
                         setTimeout(async () => { await initPhoneInputForModal('completionPhone', userProfile.phone || ''); }, 100);
-                        
+
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
                             if (form) {
@@ -513,7 +484,7 @@
                                         if (!email || !email.includes('@') || email.includes('privaterelay')) throw new Error('Email valide requis');
                                         if (!phone || phone.length < 8) throw new Error('Téléphone requis');
                                         if (!address) throw new Error('Adresse requise');
-                                        if (!emirate) throw new Error('Émirat requis');
+                                        if (!emirate) throw new Error('Pays / Émirat requis');
                                         const fullAddr = area ? `${address}, ${area}, ${emirate}` : `${address}, ${emirate}`;
                                         const { error } = await supabase.from('profiles').update({ name, email, phone, address: fullAddr }).eq('id', currentUser.id);
                                         if (error) throw error;
@@ -521,13 +492,13 @@
                                         document.getElementById('profileCompletionModal')?.remove();
                                         currentPage = 'dashboard'; window.currentPage = 'dashboard';
                                         isRendering = false; render();
-                                    } catch (ex) { err.textContent = ex.message; err.classList.remove('hidden'); btn.disabled = false; btn.textContent = 'Enregistrer →'; }
+                                    } catch (ex) { err.textContent = ex.message; err.classList.remove('hidden'); btn.disabled = false; btn.textContent = 'Enregistrer'; }
                                 };
                             }
                         }, 150);
                         isRendering = false; return;
                     }
-                    
+
                     currentPage = 'dashboard'; window.currentPage = 'dashboard';
                     app.innerHTML = RENDERING.renderDashboard();
                     await DASHBOARD.loadDashboardContent();
@@ -535,10 +506,10 @@
 
                 } else if (currentUser && !userProfile) {
                     profileLoadAttempts++;
-                    console.log(`⏳ Profile retry ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS}`);
-                    
+                    console.log(`Profile retry ${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS}`);
+
                     if (profileLoadAttempts >= MAX_PROFILE_LOAD_ATTEMPTS) {
-                        console.log('⚠️ Max attempts reached, creating fallback profile');
+                        console.log('Max attempts reached, creating fallback profile');
                         const defaultStatus = contractJustSigned ? 'signed' : 'pending';
                         userProfile = {
                             id: currentUser.id,
@@ -554,8 +525,18 @@
                         render();
                         return;
                     }
-                    
-                    app.innerHTML = `<div class="min-h-screen flex items-center justify-center"><div class="text-center"><div class="text-6xl mb-4">⏳</div><div class="text-xl text-blue-200">Chargement... (${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})</div></div></div>`;
+
+                    // Fix #2: SVG spinner instead of emoji
+                    app.innerHTML = `
+                        <div class="min-h-screen flex items-center justify-center">
+                            <div class="text-center">
+                                <svg class="animate-spin h-12 w-12 text-yellow-400 mb-4 mx-auto" viewBox="0 0 24 24" fill="none">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                                </svg>
+                                <div class="text-xl text-blue-200">Chargement... (${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})</div>
+                            </div>
+                        </div>`;
                     isRendering = false;
                     setTimeout(() => loadUserProfile().then(() => render()), 2000);
                     return;
@@ -602,9 +583,7 @@
             window.resend2FACode = TFA.resend2FACode;
             window.signInWithGoogle = signInWithGoogle;
             window.signInWithApple = signInWithApple;
-            window.showOAuthWarning = showOAuthWarning;
-            window.closeOAuthWarning = closeOAuthWarning;
-            window.proceedWithOAuth = proceedWithOAuth;
+            // Fix #5: showOAuthWarning / closeOAuthWarning removed
             window.toggleMobileMenu = UTILS.toggleMobileMenu;
             window.showLogin = UTILS.showLogin;
             window.showSignup = UTILS.showSignup;
@@ -618,7 +597,7 @@
 
             // Auth state handler
             supabase.auth.onAuthStateChange(async (event, session) => {
-                console.log('🔔 Auth event:', event, session?.user?.email || 'no session');
+                console.log('Auth event:', event, session?.user?.email || 'no session');
 
                 if (isSignupInProgress && event !== 'SIGNED_IN') return;
 
@@ -631,12 +610,10 @@
                 if (isPasswordRecoveryMode && event !== 'PASSWORD_RECOVERY') return;
 
                 if (event === 'SIGNED_IN' && session?.user) {
-                    console.log('✅ SIGNED_IN received for:', session.user.email);
                     currentUser = session.user;
                     window.currentUser = currentUser;
                     await loadUserProfile(currentUser, contractJustSigned);
                     if (window.location.search.includes('code=') || window.location.hash.includes('access_token')) {
-                        console.log('🧹 Cleaning URL after OAuth');
                         window.history.replaceState(null, '', window.location.pathname);
                     }
                     waitingForOAuth = false;
@@ -644,7 +621,7 @@
                     render();
                     return;
                 }
-                
+
                 if (event === 'SIGNED_OUT') {
                     currentUser = null; userProfile = null;
                     window.currentUser = null; window.userProfile = null;
@@ -653,10 +630,8 @@
                     render();
                     return;
                 }
-                
+
                 if (event === 'INITIAL_SESSION') {
-                    console.log('📋 INITIAL_SESSION - session:', !!session?.user, 'contractJustSigned:', contractJustSigned);
-                    
                     if (session?.user) {
                         currentUser = session.user;
                         window.currentUser = currentUser;
@@ -665,10 +640,10 @@
                         initialLoadComplete = true;
                         render();
                     } else if (waitingForOAuth) {
-                        console.log('⏳ Waiting for OAuth SIGNED_IN...');
+                        console.log('Waiting for OAuth SIGNED_IN...');
                         setTimeout(() => {
                             if (waitingForOAuth && !currentUser) {
-                                console.log('⏰ OAuth timeout, showing landing');
+                                console.log('OAuth timeout, showing landing');
                                 waitingForOAuth = false;
                                 initialLoadComplete = true;
                                 render();
@@ -680,15 +655,13 @@
                     }
                     return;
                 }
-                
+
                 if (event === 'TOKEN_REFRESHED') return;
             });
 
             // Init timeout
-            console.log('🔧 Waiting for onAuthStateChange...');
             setTimeout(() => {
                 if (!initialLoadComplete && !waitingForOAuth) {
-                    console.log('⏰ No auth event, showing landing');
                     initialLoadComplete = true;
                     render();
                 }
@@ -696,6 +669,6 @@
 
         })();
     </script>
-    <script src="./js/crisp-chat.js"></script>
+    <!-- Fix #1: crisp-chat.js removed -->
 </body>
 </html>
