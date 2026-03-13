@@ -1,96 +1,70 @@
 // ============================================
 // GESTION DU DASHBOARD
 // Real Estate Referrer - Dubai
-// Version: 3.4.0 - Ajout colonne Apporteur
+// Version: 3.4.1 - Fix: remove emojis
 // ============================================
 
 import { STATUS_COLORS } from './config.js';
 
-// Charger le contenu du dashboard
 export async function loadDashboardContent() {
     const supabase = window.supabase;
     const i18next = window.i18next;
     const userProfile = window.userProfile;
     const currentUser = window.currentUser;
-    
+
     if (!userProfile) {
-        console.log('⚠️ No userProfile, skipping dashboard content load');
+        console.log('No userProfile, skipping dashboard content load');
         return;
     }
-    
-    console.log('📊 Loading dashboard content for:', userProfile.role);
-    
+
+    console.log('Loading dashboard content for:', userProfile.role);
     const isAdmin = userProfile.role === 'admin';
-    
+
     try {
-        // Charger les leads
-        let query = supabase
-            .from('leads')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (!isAdmin) {
-            query = query.eq('referrer_id', currentUser.id);
-        }
-        
+        let query = supabase.from('leads').select('*').order('created_at', { ascending: false });
+        if (!isAdmin) query = query.eq('referrer_id', currentUser.id);
+
         const { data: leads, error } = await query;
-        
+
         if (error) {
-            console.error('❌ Error loading leads:', error);
-            document.getElementById('leadsTable').innerHTML = `
-                <div class="text-red-400 p-4">
-                    Erreur: ${error.message}
-                </div>
-            `;
+            console.error('Error loading leads:', error);
+            document.getElementById('leadsTable').innerHTML = `<div class="text-red-400 p-4">Erreur: ${error.message}</div>`;
             return;
         }
-        
-        console.log('✅ Leads loaded:', leads?.length || 0);
-        
-        // Si admin, charger les noms des apporteurs
+
+        console.log('Leads loaded:', leads?.length || 0);
+
         let referrerNames = {};
         if (isAdmin && leads && leads.length > 0) {
             const referrerIds = [...new Set(leads.map(l => l.referrer_id).filter(Boolean))];
-            
             if (referrerIds.length > 0) {
                 const { data: profiles, error: profilesError } = await supabase
-                    .from('profiles')
-                    .select('id, name, email')
-                    .in('id', referrerIds);
-                
+                    .from('profiles').select('id, name, email').in('id', referrerIds);
                 if (!profilesError && profiles) {
-                    profiles.forEach(p => {
-                        referrerNames[p.id] = p.name || p.email || 'Unknown';
-                    });
+                    profiles.forEach(p => { referrerNames[p.id] = p.name || p.email || 'Unknown'; });
                 }
             }
         }
-        
-        // Calculer les statistiques
+
         const totalEarnings = (leads || [])
             .filter(l => l.status === 'vendu')
             .reduce((sum, l) => sum + (l.referrer_commission || 0), 0);
         const activeLeads = (leads || []).filter(l => l.status !== 'vendu').length;
         const closedSales = (leads || []).filter(l => l.status === 'vendu').length;
-        
-        // Afficher les stats
+
         renderStats(isAdmin, (leads || []).length, totalEarnings, activeLeads, closedSales);
-        
-        // Afficher le tableau des leads
         renderLeadsTable(isAdmin, leads || [], referrerNames);
-        
+
     } catch (err) {
-        console.error('❌ Exception loading dashboard:', err);
+        console.error('Exception loading dashboard:', err);
     }
 }
 
-// Afficher les statistiques
 function renderStats(isAdmin, totalLeads, totalEarnings, activeLeads, closedSales) {
     const i18next = window.i18next;
     const statsDiv = document.getElementById('stats');
-    
     if (!statsDiv) return;
-    
+
     statsDiv.innerHTML = `
         ${isAdmin ? `
             <div class="bg-gray-800 bg-opacity-50 backdrop-blur-md rounded-xl p-6">
@@ -120,20 +94,18 @@ function renderStats(isAdmin, totalLeads, totalEarnings, activeLeads, closedSale
     `;
 }
 
-// Afficher le tableau des leads
 function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
     const i18next = window.i18next;
     const tableDiv = document.getElementById('leadsTable');
-    
     if (!tableDiv) return;
-    
+
     const STATUS_COLORS = {
         'nouveau': 'bg-blue-500',
         'visite': 'bg-purple-500',
         'offre': 'bg-orange-500',
         'vendu': 'bg-green-500'
     };
-    
+
     tableDiv.innerHTML = `
         <table class="w-full">
             <thead>
@@ -161,7 +133,7 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                     const commissionRate = lead.commission_rate ? (lead.commission_rate * 100) + '%' : '20%';
                     const statusColor = STATUS_COLORS[lead.status] || 'bg-gray-500';
                     const referrerName = referrerNames[lead.referrer_id] || '-';
-                    
+
                     return `
                     <tr class="border-b border-gray-700 hover:bg-gray-700/30">
                         <td class="py-3 px-4">
@@ -174,8 +146,8 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                             </td>
                         ` : ''}
                         <td class="py-3 px-4">
-                            <span class="${leadTypeKey === 'sale_buyer' ? 'text-yellow-400 font-bold' : 'text-gray-300'}">
-                                ${leadTypeKey === 'sale_buyer' ? '🏆 ' : ''}${leadTypeLabel}
+                            <span class="${leadTypeKey === 'sale_buyer' ? 'text-yellow-400 font-semibold' : 'text-gray-300'}">
+                                ${leadTypeLabel}
                             </span>
                             <span class="text-xs text-gray-500 ml-1">(${commissionRate})</span>
                         </td>
@@ -203,7 +175,7 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                                     <button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">
                                         ${i18next.t('dashboard:mark_sold')}
                                     </button>
-                                ` : '✅'}
+                                ` : '<span class="text-green-400 text-sm font-medium">Vendu</span>'}
                             </td>
                         ` : ''}
                     </tr>
@@ -213,5 +185,4 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
     `;
 }
 
-// Exposer globalement
 window.loadDashboardContent = loadDashboardContent;
