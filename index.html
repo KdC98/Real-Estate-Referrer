@@ -98,7 +98,7 @@
 
             // i18next
             await i18next.use(i18nextHttpBackend).use(i18nextBrowserLanguageDetector).init({
-                fallbackLng: 'fr', debug: false, load: 'languageOnly',
+                fallbackLng: 'en', debug: false, load: 'languageOnly',
                 ns: ['translation', 'auth', 'dashboard', 'common'], defaultNS: 'translation',
                 backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
                 detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
@@ -374,6 +374,17 @@
                     }
 
                     window.userProfile = userProfile;
+
+                    // Sync langue depuis le profil Supabase
+                    if (userProfile?.preferred_language) {
+                        const profileLang = userProfile.preferred_language;
+                        const storedLang = localStorage.getItem('i18nextLng');
+                        if (profileLang !== storedLang) {
+                            localStorage.setItem('i18nextLng', profileLang);
+                            await i18next.changeLanguage(profileLang);
+                        }
+                    }
+
                     return true;
 
                 } catch (err) {
@@ -386,7 +397,12 @@
 
             async function logout() {
                 try { await supabase.auth.signOut(); } catch(e) {}
-                try { localStorage.clear(); sessionStorage.clear(); } catch(e) {}
+                try {
+                    const savedLang = localStorage.getItem('i18nextLng');
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    if (savedLang) localStorage.setItem('i18nextLng', savedLang);
+                } catch(e) {}
                 currentUser = null; userProfile = null; currentPage = 'landing';
                 window.currentUser = null; window.userProfile = null; window.currentPage = 'landing';
                 setTimeout(() => { window.location.href = window.location.origin; }, 100);
