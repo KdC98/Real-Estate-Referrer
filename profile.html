@@ -18,8 +18,9 @@
             <svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
             </svg>
+            <!-- Fix #2: emoji ⚠️ supprimé du texte -->
             <span class="font-bold text-center" data-i18n="profile.incomplete_banner">
-                ⚠️ Veuillez compléter votre profil pour pouvoir soumettre des leads et recevoir vos commissions
+                Veuillez compléter votre profil pour pouvoir soumettre des leads et recevoir vos commissions
             </span>
         </div>
     </div>
@@ -32,10 +33,9 @@
                     <a href="index.html" class="text-white text-xl font-bold">Real Estate Referrer</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <!-- Sélecteur de langue -->
                     <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="fr">🇫🇷 Français</option>
                         <option value="en">🇬🇧 English</option>
+                        <option value="fr">🇫🇷 Français</option>
                         <option value="ar">🇦🇪 العربية</option>
                         <option value="ru">🇷🇺 Русский</option>
                         <option value="hi">🇮🇳 हिंदी</option>
@@ -43,7 +43,8 @@
                         <option value="zh">🇨🇳 中文</option>
                         <option value="tl">🇵🇭 Tagalog</option>
                     </select>
-                    <button id="backToDashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.back_dashboard">Retour au dashboard</button>
+                    <!-- Fix #6: bouton → lien <a>, jamais bloqué -->
+                    <a href="index.html" id="backToDashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.back_dashboard">Retour au dashboard</a>
                 </div>
             </div>
         </div>
@@ -52,7 +53,6 @@
     <!-- Main Content -->
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
-        <!-- Titre -->
         <div class="text-center mb-10">
             <h1 class="text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="profile.title">
                 Mon Profil
@@ -62,104 +62,70 @@
             </p>
         </div>
 
-        <!-- Message obligatoire -->
         <div id="requiredFieldsInfo" class="hidden mb-6 p-4 rounded-xl bg-blue-500/20 text-blue-200 text-center">
             <span data-i18n="profile.required_fields_info">
                 Les champs marqués d'un * sont obligatoires pour recevoir vos commissions
             </span>
         </div>
 
-        <!-- Message de succès/erreur -->
         <div id="messageContainer" class="hidden mb-6 p-4 rounded-xl text-center"></div>
 
-        <!-- Formulaire -->
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
             <form id="profileForm" class="space-y-6">
                 
-                <!-- Nom -->
                 <div>
                     <label for="name" class="block text-white font-semibold mb-2">
                         <span data-i18n="profile.name">Nom complet</span>
                         <span class="text-yellow-400 ml-1">*</span>
                     </label>
-                    <input 
-                        type="text" 
-                        id="name" 
-                        name="name"
-                        required
+                    <input type="text" id="name" name="name" required
                         class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Votre nom"
-                        data-i18n-placeholder="profile.name_placeholder"
-                    >
+                        placeholder="Votre nom" data-i18n-placeholder="profile.name_placeholder">
                 </div>
 
-                <!-- Email -->
                 <div>
-                    <label for="email" class="block text-white font-semibold mb-2" data-i18n="profile.email">
-                        Email
-                    </label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email"
-                        readonly
+                    <label for="email" class="block text-white font-semibold mb-2" data-i18n="profile.email">Email</label>
+                    <input type="email" id="email" name="email" readonly
                         class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/70 cursor-not-allowed"
-                        placeholder="votre@email.com"
-                    >
+                        placeholder="votre@email.com">
+                    <!-- Fix #2: emoji ℹ️ supprimé -->
                     <p class="text-blue-300 text-sm mt-2" data-i18n="profile.email_readonly">
-                        ℹ️ L'email ne peut pas être modifié
+                        L'email ne peut pas être modifié
                     </p>
                 </div>
 
-                <!-- Téléphone -->
                 <div>
                     <label for="phone" class="block text-white font-semibold mb-2">
                         <span data-i18n="profile.phone">Téléphone</span>
                         <span class="text-yellow-400 ml-1">*</span>
                     </label>
-                    <input 
-                        type="tel" 
-                        id="phone" 
-                        name="phone"
-                        required
+                    <input type="tel" id="phone" name="phone" required
                         class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="+971 50 123 4567"
-                        data-i18n-placeholder="profile.phone_placeholder"
-                    >
+                        placeholder="+971 50 123 4567" data-i18n-placeholder="profile.phone_placeholder">
                 </div>
 
-                <!-- Adresse -->
                 <div>
                     <label for="address" class="block text-white font-semibold mb-2">
                         <span data-i18n="profile.address">Adresse</span>
                         <span class="text-yellow-400 ml-1">*</span>
                     </label>
-                    <textarea 
-                        id="address" 
-                        name="address"
-                        rows="2"
-                        required
+                    <textarea id="address" name="address" rows="2" required
                         class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                        placeholder="Votre adresse complète"
-                        data-i18n-placeholder="profile.address_placeholder"
-                    ></textarea>
+                        placeholder="Votre adresse complète" data-i18n-placeholder="profile.address_placeholder"></textarea>
+                    <!-- Fix #2: emoji ℹ️ supprimé -->
                     <p class="text-blue-300 text-sm mt-2" data-i18n="profile.address_info">
-                        ℹ️ Obligatoire pour le versement de vos commissions
+                        Obligatoire pour le versement de vos commissions
                     </p>
                 </div>
 
-                <!-- Langue préférée -->
                 <div>
                     <label for="preferredLanguage" class="block text-white font-semibold mb-2" data-i18n="profile.preferred_language">
                         Langue préférée pour les emails
                     </label>
-                    <select 
-                        id="preferredLanguage" 
-                        name="preferred_language"
-                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    >
-                        <option value="fr">🇫🇷 Français</option>
+                    <select id="preferredLanguage" name="preferred_language"
+                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="en">🇬🇧 English</option>
+                        <option value="fr">🇫🇷 Français</option>
                         <option value="ar">🇦🇪 العربية</option>
                         <option value="ru">🇷🇺 Русский</option>
                         <option value="hi">🇮🇳 हिंदी</option>
@@ -169,13 +135,9 @@
                     </select>
                 </div>
 
-                <!-- Bouton sauvegarder -->
                 <div class="pt-4">
-                    <button 
-                        type="submit" 
-                        id="saveButton"
-                        class="w-full bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-900 font-bold py-4 px-6 rounded-xl hover:from-yellow-400 hover:to-yellow-300 transition duration-300 flex items-center justify-center"
-                    >
+                    <button type="submit" id="saveButton"
+                        class="w-full bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-900 font-bold py-4 px-6 rounded-xl hover:from-yellow-400 hover:to-yellow-300 transition duration-300 flex items-center justify-center">
                         <span id="saveButtonText" data-i18n="profile.save_button">Sauvegarder</span>
                         <svg id="saveSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -187,18 +149,13 @@
             </form>
         </div>
 
-        <!-- Section notifications -->
         <div class="mt-8 bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10">
             <h3 class="text-white font-semibold mb-4" data-i18n="profile.notifications_title">
                 Notifications par email
             </h3>
             <label class="flex items-center cursor-pointer">
-                <input 
-                    type="checkbox" 
-                    id="emailSubscribed" 
-                    class="w-5 h-5 rounded bg-white/10 border-white/20 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
-                    checked
-                >
+                <input type="checkbox" id="emailSubscribed" 
+                    class="w-5 h-5 rounded bg-white/10 border-white/20 text-blue-500 focus:ring-blue-500 focus:ring-offset-0" checked>
                 <span class="ml-3 text-blue-200" data-i18n="profile.receive_emails">
                     Recevoir les emails de suivi et notifications
                 </span>
@@ -207,7 +164,6 @@
 
     </div>
 
-    <!-- Footer -->
     <footer class="bg-slate-900 border-t border-white/10 py-8 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-blue-300">
@@ -221,181 +177,101 @@
     </footer>
 
     <script>
-        // ✅ CONFIGURATION SUPABASE
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
-        
-        // Initialize Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let currentUser = null;
         let currentProfile = null;
         let isProfileComplete = false;
 
-        // Vérifier si le profil est complet
         function checkProfileComplete(profile) {
-            const name = profile?.name?.trim();
-            const phone = profile?.phone?.trim();
-            const address = profile?.address?.trim();
-            
-            return !!(name && phone && address);
+            return !!(profile?.name?.trim() && profile?.phone?.trim() && profile?.address?.trim());
         }
 
-        // Mettre à jour l'affichage selon l'état du profil
         function updateProfileUI() {
             const banner = document.getElementById('incompleteProfileBanner');
             const requiredInfo = document.getElementById('requiredFieldsInfo');
-            const backButton = document.getElementById('backToDashboard');
-            
+            // Fix #6: plus de gestion opacity/cursor sur le bouton retour
             if (isProfileComplete) {
                 banner.classList.add('hidden');
                 requiredInfo.classList.add('hidden');
-                backButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                backButton.classList.add('hover:bg-blue-700');
             } else {
                 banner.classList.remove('hidden');
                 requiredInfo.classList.remove('hidden');
-                backButton.classList.add('opacity-50', 'cursor-not-allowed');
-                backButton.classList.remove('hover:bg-blue-700');
             }
         }
 
-        // Vérifier l'authentification au chargement
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
-            
-            if (!session) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
+            if (!session) { window.location.href = 'index.html'; return; }
             currentUser = session.user;
             await loadProfile();
         }
 
-        // Charger le profil
         async function loadProfile() {
             try {
                 const { data: profile, error } = await supabase
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', currentUser.id)
-                    .single();
-                
-                if (error) {
-                    console.error('Error loading profile:', error);
-                    showMessage(i18next.t('profile.load_error') || 'Erreur lors du chargement du profil', 'error');
-                    return;
-                }
-                
+                    .from('profiles').select('*').eq('id', currentUser.id).single();
+                if (error) { showMessage(i18next.t('profile.load_error') || 'Erreur lors du chargement du profil', 'error'); return; }
                 currentProfile = profile;
                 isProfileComplete = checkProfileComplete(profile);
-                
-                // Remplir le formulaire
                 document.getElementById('name').value = profile.name || '';
                 document.getElementById('email').value = currentUser.email || '';
                 document.getElementById('phone').value = profile.phone || '';
                 document.getElementById('address').value = profile.address || '';
-                document.getElementById('preferredLanguage').value = profile.preferred_language || 'fr';
+                document.getElementById('preferredLanguage').value = profile.preferred_language || 'en';
                 document.getElementById('emailSubscribed').checked = !profile.email_unsubscribed;
-                
-                // Mettre à jour l'UI
                 updateProfileUI();
-                
             } catch (err) {
-                console.error('Error:', err);
                 showMessage('Erreur de connexion', 'error');
             }
         }
 
-        // Gérer le bouton retour au dashboard
-        document.getElementById('backToDashboard').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Vérifier à nouveau avec les valeurs actuelles du formulaire
-            const currentName = document.getElementById('name').value.trim();
-            const currentPhone = document.getElementById('phone').value.trim();
-            const currentAddress = document.getElementById('address').value.trim();
-            
-            if (!currentName || !currentPhone || !currentAddress) {
-                showMessage(i18next.t('profile.complete_before_leaving') || '⚠️ Veuillez compléter tous les champs obligatoires (*) avant de continuer', 'error');
-                
-                // Highlight les champs vides
-                if (!currentName) document.getElementById('name').classList.add('ring-2', 'ring-red-500');
-                if (!currentPhone) document.getElementById('phone').classList.add('ring-2', 'ring-red-500');
-                if (!currentAddress) document.getElementById('address').classList.add('ring-2', 'ring-red-500');
-                
-                return;
-            }
-            
-            window.location.href = 'index.html';
-        });
-
-        // Retirer le highlight rouge quand on tape
+        // Fix #6: le lien <a href="index.html"> navigue toujours sans JS.
+        // On retire le highlight rouge quand on tape.
         ['name', 'phone', 'address'].forEach(function(fieldId) {
             document.getElementById(fieldId).addEventListener('input', function() {
                 this.classList.remove('ring-2', 'ring-red-500');
             });
         });
 
-        // Sauvegarder le profil
         document.getElementById('profileForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const saveButton = document.getElementById('saveButton');
             const saveButtonText = document.getElementById('saveButtonText');
             const saveSpinner = document.getElementById('saveSpinner');
-            
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
             const preferredLanguage = document.getElementById('preferredLanguage').value;
             const emailSubscribed = document.getElementById('emailSubscribed').checked;
-            
-            // Validation des champs obligatoires
             if (!name || !phone || !address) {
                 showMessage(i18next.t('profile.fill_required') || 'Veuillez remplir tous les champs obligatoires (*)', 'error');
+                if (!name) document.getElementById('name').classList.add('ring-2', 'ring-red-500');
+                if (!phone) document.getElementById('phone').classList.add('ring-2', 'ring-red-500');
+                if (!address) document.getElementById('address').classList.add('ring-2', 'ring-red-500');
                 return;
             }
-            
-            // Afficher le spinner
             saveButton.disabled = true;
             saveButtonText.textContent = i18next.t('profile.saving') || 'Sauvegarde...';
             saveSpinner.classList.remove('hidden');
-            
             try {
-                // Mettre à jour le profil
-                const { error: profileError } = await supabase
-                    .from('profiles')
-                    .update({
-                        name: name,
-                        phone: phone,
-                        address: address,
-                        preferred_language: preferredLanguage,
-                        email_unsubscribed: !emailSubscribed
-                    })
+                const { error: profileError } = await supabase.from('profiles')
+                    .update({ name, phone, address, preferred_language: preferredLanguage, email_unsubscribed: !emailSubscribed })
                     .eq('id', currentUser.id);
-                
-                if (profileError) {
-                    throw profileError;
-                }
-                
-                // Mettre à jour l'état
+                if (profileError) throw profileError;
                 isProfileComplete = true;
                 updateProfileUI();
-                
-                showMessage(i18next.t('profile.save_success') || '✅ Profil mis à jour avec succès !', 'success');
-                
-                // Mettre à jour la langue du site si changée
+                // Fix #2: emoji ✅ supprimé du message succès
+                showMessage(i18next.t('profile.save_success') || 'Profil mis à jour avec succès.', 'success');
                 if (preferredLanguage !== i18next.language) {
                     await i18next.changeLanguage(preferredLanguage);
                     localStorage.setItem('i18nextLng', preferredLanguage);
                     document.getElementById('languageSelector').value = preferredLanguage;
                     updateContent();
                 }
-                
             } catch (error) {
-                console.error('Error saving profile:', error);
                 showMessage(error.message || 'Erreur lors de la sauvegarde', 'error');
             } finally {
                 saveButton.disabled = false;
@@ -404,94 +280,55 @@
             }
         });
 
-        // Afficher un message
         function showMessage(text, type) {
             const container = document.getElementById('messageContainer');
             container.classList.remove('hidden', 'bg-green-500/20', 'bg-red-500/20', 'bg-yellow-500/20', 'text-green-400', 'text-red-400', 'text-yellow-400');
-            
-            if (type === 'success') {
-                container.classList.add('bg-green-500/20', 'text-green-400');
-            } else if (type === 'error') {
-                container.classList.add('bg-red-500/20', 'text-red-400');
-            } else if (type === 'warning') {
-                container.classList.add('bg-yellow-500/20', 'text-yellow-400');
-            }
-            
+            if (type === 'success') container.classList.add('bg-green-500/20', 'text-green-400');
+            else if (type === 'error') container.classList.add('bg-red-500/20', 'text-red-400');
+            else if (type === 'warning') container.classList.add('bg-yellow-500/20', 'text-yellow-400');
             container.textContent = text;
-            
-            setTimeout(function() {
-                container.classList.add('hidden');
-            }, 5000);
+            setTimeout(function() { container.classList.add('hidden'); }, 5000);
         }
 
-        // Fonction pour mettre à jour le contenu i18n
         function updateContent() {
             document.documentElement.lang = i18next.language;
-            
             document.querySelectorAll('[data-i18n]').forEach(function(element) {
                 const key = element.getAttribute('data-i18n');
                 const translation = i18next.t(key);
-                
-                if (translation && translation !== key) {
-                    element.textContent = translation;
-                }
+                if (translation && translation !== key) element.textContent = translation;
             });
-            
             document.querySelectorAll('[data-i18n-placeholder]').forEach(function(element) {
                 const key = element.getAttribute('data-i18n-placeholder');
                 const translation = i18next.t(key);
-                
-                if (translation && translation !== key) {
-                    element.placeholder = translation;
-                }
+                if (translation && translation !== key) element.placeholder = translation;
             });
         }
 
-        // ✅ INITIALISATION
         async function init() {
             try {
-                await i18next
-                    .use(i18nextHttpBackend)
-                    .use(i18nextBrowserLanguageDetector)
-                    .init({
-                        fallbackLng: 'fr',
-                        debug: false,
-                        load: 'languageOnly',
-                        ns: ['profile', 'common'],
-                        defaultNS: 'profile',
-                        backend: {
-                            loadPath: '/locales/{{lng}}/{{ns}}.json'
-                        },
-                        detection: {
-                            order: ['localStorage', 'navigator'],
-                            caches: ['localStorage']
-                        }
-                    });
-                
-                const savedLang = localStorage.getItem('i18nextLng') || 'fr';
+                await i18next.use(i18nextHttpBackend).use(i18nextBrowserLanguageDetector).init({
+                    fallbackLng: 'en', debug: false, load: 'languageOnly',
+                    ns: ['profile', 'common'], defaultNS: 'profile',
+                    backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
+                    detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
+                });
+                const savedLang = localStorage.getItem('i18nextLng') || 'en';
                 document.getElementById('languageSelector').value = savedLang;
-                
                 updateContent();
                 await checkAuth();
-                
             } catch (err) {
-                console.error('Init error:', err);
                 await checkAuth();
             }
         }
 
-        // Changement de langue
         document.getElementById('languageSelector').addEventListener('change', async function(e) {
             await i18next.changeLanguage(e.target.value);
             localStorage.setItem('i18nextLng', e.target.value);
             updateContent();
         });
 
-        // Lancer l'initialisation
         init();
     </script>
-    
-    <!-- Crisp Chat -->
-    <script src="/js/crisp-chat.js"></script>
+    <!-- Fix #1: crisp-chat.js supprimé -->
 </body>
 </html>
