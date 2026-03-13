@@ -502,7 +502,7 @@
                                         if (!address) throw new Error('Adresse requise');
                                         if (!emirate) throw new Error('Pays / Émirat requis');
                                         const fullAddr = area ? `${address}, ${area}, ${emirate}` : `${address}, ${emirate}`;
-                                        const { error } = await supabase.from('profiles').update({ name, email, phone, address: fullAddr }).eq('id', currentUser.id);
+                                        const { error } = await supabase.from('profiles').update({ name, phone, address: fullAddr }).eq('id', currentUser.id);
                                         if (error) throw error;
                                         await loadUserProfile(currentUser, true);
                                         document.getElementById('profileCompletionModal')?.remove();
