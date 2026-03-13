@@ -297,8 +297,8 @@ export function renderLandingPage() {
                         <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
                         <div class="hidden lg:flex items-center gap-3">
                             <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                                <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
                                 <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
+                                <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
                                 <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
                                 <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
                                 <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
@@ -314,8 +314,8 @@ export function renderLandingPage() {
                     </div>
                     <div id="mobileMenu" class="hidden lg:hidden mt-4 bg-white/10 backdrop-blur-md rounded-xl p-4 space-y-3 border border-white/20">
                         <div class="flex flex-wrap gap-2 justify-center pb-3 border-b border-white/20">
-                            <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200">🇫🇷</button>
                             <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200">🇬🇧</button>
+                            <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200">🇫🇷</button>
                             <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200">🇦🇪</button>
                             <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200">🇷🇺</button>
                             <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200">🇮🇳</button>
