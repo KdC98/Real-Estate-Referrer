@@ -161,6 +161,12 @@
                 window.currentPage = 'auth-signup';
             }
 
+            // Fix: ?login=1 depuis l'email de bienvenue ouvre directement la modal de connexion
+            if (urlParams.get('login') === '1') {
+                currentPage = 'auth-login';
+                window.currentPage = 'auth-login';
+            }
+
             // Helpers
             function wait2Frames() { return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
             function waitFonts() { return document.fonts?.ready || Promise.resolve(); }
