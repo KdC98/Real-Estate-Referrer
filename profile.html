@@ -30,7 +30,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center">
-                    <a href="index.html" class="text-white text-xl font-bold">Real Estate Referrer</a>
+                    <a href="/" class="text-white text-xl font-bold">Real Estate Referrer</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -44,7 +44,7 @@
                         <option value="tl">🇵🇭 Tagalog</option>
                     </select>
                     <!-- Fix #6: bouton → lien <a>, jamais bloqué -->
-                    <a href="index.html" id="backToDashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.back_dashboard">Retour au dashboard</a>
+                    <a href="/" id="backToDashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.back_dashboard">Retour au dashboard</a>
                 </div>
             </div>
         </div>
@@ -170,8 +170,8 @@
                 © 2025 Real Estate Referrer Dubai. <span data-i18n="footer.rights">Tous droits réservés.</span>
             </p>
             <div class="mt-4 space-x-4">
-                <a href="index.html" class="text-blue-400 hover:text-blue-300" data-i18n="footer.home">Accueil</a>
-                <a href="how-it-works.html" class="text-blue-400 hover:text-blue-300" data-i18n="footer.how_it_works">Comment ça marche</a>
+                <a href="/" class="text-blue-400 hover:text-blue-300" data-i18n="footer.home">Accueil</a>
+                <a href="/how-it-works" class="text-blue-400 hover:text-blue-300" data-i18n="footer.how_it_works">Comment ça marche</a>
             </div>
         </div>
     </footer>
@@ -204,7 +204,7 @@
 
         async function checkAuth() {
             const { data: { session } } = await supabase.auth.getSession();
-            if (!session) { window.location.href = 'index.html'; return; }
+            if (!session) { window.location.href = '/'; return; }
             currentUser = session.user;
             await loadProfile();
         }
@@ -228,7 +228,7 @@
             }
         }
 
-        // Fix #6: le lien <a href="index.html"> navigue toujours sans JS.
+        // Fix #6: le lien <a href="/"> navigue toujours sans JS.
         // On retire le highlight rouge quand on tape.
         ['name', 'phone', 'address'].forEach(function(fieldId) {
             document.getElementById(fieldId).addEventListener('input', function() {
