@@ -1,13 +1,9 @@
 // ============================================
-// 🎨 MODULE RENDERING.JS
-// ============================================
-// Version: 3.21.0 - Fix: country selector English only + dashboard block i18n
-// Date: 11 mars 2026
+// MODULE RENDERING.JS
+// Version: 3.21.1 - Fix: remove emojis, tone down lead type, address pre-fill
+// Date: 13 mars 2026
 // ============================================
 
-// ============================================
-// 📱 COUNTRY CODES - 120 pays
-// ============================================
 const COUNTRY_CODES = [
     { code: '+93', country: 'Afghanistan', flag: '🇦🇫' },
     { code: '+355', country: 'Albania', flag: '🇦🇱' },
@@ -156,9 +152,23 @@ export function isProfileComplete(profile) {
     return hasName && hasPhone && hasAddress && hasEmail;
 }
 
+// Fix #7 — Pre-fill address fields from stored profile data
+// Address is stored as "Building, Area, Emirate" — we parse it back
+function parseStoredAddress(address) {
+    if (!address) return { building: '', area: '', emirate: '' };
+    const parts = address.split(',').map(s => s.trim()).filter(Boolean);
+    if (parts.length === 1) return { building: parts[0], area: '', emirate: '' };
+    if (parts.length === 2) return { building: parts[0], area: '', emirate: parts[1] };
+    // 3+ parts: last is emirate, second-to-last is area, rest is building
+    const emirate = parts[parts.length - 1];
+    const area = parts[parts.length - 2];
+    const building = parts.slice(0, parts.length - 2).join(', ');
+    return { building, area, emirate };
+}
+
 export function renderProfileCompletionModal() {
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
-    
+
     const translations = {
         fr: { title: "Complétez votre profil", subtitle: "Pour recevoir vos commissions, nous avons besoin de quelques informations", name_label: "Nom complet", name_placeholder: "Votre nom complet", email_label: "Email", email_placeholder: "votre@email.com", email_help: "Utilisé pour les notifications et paiements", phone_label: "Numéro de téléphone", phone_placeholder: "501234567", phone_help: "Numéro sans le 0 initial", address_label: "Adresse (Bâtiment, Rue)", address_placeholder: "Ex: Beach Isle, Palm Jumeirah", area_label: "Zone / Quartier", area_placeholder: "Ex: Jumeirah, Downtown, Marina", location_label: "Pays / Émirat", select_location: "-- Sélectionnez --", submit_button: "Enregistrer et continuer", required_notice: "Ces informations sont nécessaires pour recevoir vos commissions" },
         en: { title: "Complete your profile", subtitle: "To receive your commissions, we need some information", name_label: "Full name", name_placeholder: "Your full name", email_label: "Email", email_placeholder: "your@email.com", email_help: "Used for notifications and payments", phone_label: "Phone number", phone_placeholder: "501234567", phone_help: "Number without leading 0", address_label: "Address (Building, Street)", address_placeholder: "Ex: Beach Isle, Palm Jumeirah", area_label: "Area / District", area_placeholder: "Ex: Jumeirah, Downtown, Marina", location_label: "Country / Emirate", select_location: "-- Select --", submit_button: "Save and continue", required_notice: "This information is required to receive your commissions" },
@@ -169,7 +179,7 @@ export function renderProfileCompletionModal() {
         zh: { title: "完善您的个人资料", subtitle: "为了接收您的佣金，我们需要一些信息", name_label: "全名", name_placeholder: "您的全名", email_label: "电子邮件", email_placeholder: "your@email.com", email_help: "用于通知和付款", phone_label: "电话号码", phone_placeholder: "501234567", phone_help: "不带前导0的号码", address_label: "地址（建筑物、街道）", address_placeholder: "例如: Beach Isle, Palm Jumeirah", area_label: "区域 / 地区", area_placeholder: "例如: Jumeirah, Downtown, Marina", location_label: "国家 / 酋长国", select_location: "-- 选择 --", submit_button: "保存并继续", required_notice: "此信息是接收佣金所必需的" },
         tl: { title: "Kumpletuhin ang iyong profile", subtitle: "Para matanggap ang iyong mga komisyon, kailangan namin ng ilang impormasyon", name_label: "Buong pangalan", name_placeholder: "Ang iyong buong pangalan", email_label: "Email", email_placeholder: "your@email.com", email_help: "Ginagamit para sa mga notification at bayad", phone_label: "Numero ng telepono", phone_placeholder: "501234567", phone_help: "Numero na walang 0 sa unahan", address_label: "Address (Building, Kalye)", address_placeholder: "Hal: Beach Isle, Palm Jumeirah", area_label: "Lugar / Distrito", area_placeholder: "Hal: Jumeirah, Downtown, Marina", location_label: "Bansa / Emirate", select_location: "-- Pumili --", submit_button: "I-save at magpatuloy", required_notice: "Ang impormasyong ito ay kinakailangan para matanggap ang iyong mga komisyon" }
     };
-    
+
     const t = translations[currentLang] || translations['en'];
     const profile = window.userProfile || {};
     const user = window.currentUser || {};
@@ -177,59 +187,65 @@ export function renderProfileCompletionModal() {
     const existingEmail = profile.email || user.email || '';
     const existingPhone = profile.phone || '';
     const isAppleRelay = existingEmail.includes('privaterelay.appleid.com');
-    
+
+    // Fix #7 — Parse stored address back into fields
+    const parsedAddress = parseStoredAddress(profile.address);
+    const existingBuilding = parsedAddress.building;
+    const existingArea = parsedAddress.area;
+    const existingEmirate = parsedAddress.emirate;
+
     const locationOptions = `
-        <optgroup label="🇦🇪 UAE — Emirates">
-            <option value="Dubai" selected>🇦🇪 Dubai</option>
-            <option value="Abu Dhabi">🇦🇪 Abu Dhabi</option>
-            <option value="Sharjah">🇦🇪 Sharjah</option>
-            <option value="Ajman">🇦🇪 Ajman</option>
-            <option value="Umm Al Quwain">🇦🇪 Umm Al Quwain</option>
-            <option value="Ras Al Khaimah">🇦🇪 Ras Al Khaimah</option>
-            <option value="Fujairah">🇦🇪 Fujairah</option>
+        <optgroup label="UAE — Emirates">
+            <option value="Dubai" ${existingEmirate === 'Dubai' ? 'selected' : ''}>🇦🇪 Dubai</option>
+            <option value="Abu Dhabi" ${existingEmirate === 'Abu Dhabi' ? 'selected' : ''}>🇦🇪 Abu Dhabi</option>
+            <option value="Sharjah" ${existingEmirate === 'Sharjah' ? 'selected' : ''}>🇦🇪 Sharjah</option>
+            <option value="Ajman" ${existingEmirate === 'Ajman' ? 'selected' : ''}>🇦🇪 Ajman</option>
+            <option value="Umm Al Quwain" ${existingEmirate === 'Umm Al Quwain' ? 'selected' : ''}>🇦🇪 Umm Al Quwain</option>
+            <option value="Ras Al Khaimah" ${existingEmirate === 'Ras Al Khaimah' ? 'selected' : ''}>🇦🇪 Ras Al Khaimah</option>
+            <option value="Fujairah" ${existingEmirate === 'Fujairah' ? 'selected' : ''}>🇦🇪 Fujairah</option>
         </optgroup>
-        <optgroup label="🌍 Other Countries">
-            <option value="France">🇫🇷 France</option>
-            <option value="United Kingdom">🇬🇧 United Kingdom</option>
-            <option value="Germany">🇩🇪 Germany</option>
-            <option value="Switzerland">🇨🇭 Switzerland</option>
-            <option value="Belgium">🇧🇪 Belgium</option>
-            <option value="Luxembourg">🇱🇺 Luxembourg</option>
-            <option value="Russia">🇷🇺 Russia</option>
-            <option value="Ukraine">🇺🇦 Ukraine</option>
-            <option value="India">🇮🇳 India</option>
-            <option value="Pakistan">🇵🇰 Pakistan</option>
-            <option value="Philippines">🇵🇭 Philippines</option>
-            <option value="China">🇨🇳 China</option>
-            <option value="Lebanon">🇱🇧 Lebanon</option>
-            <option value="Egypt">🇪🇬 Egypt</option>
-            <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
-            <option value="Qatar">🇶🇦 Qatar</option>
-            <option value="Kuwait">🇰🇼 Kuwait</option>
-            <option value="Oman">🇴🇲 Oman</option>
-            <option value="Bahrain">🇧🇭 Bahrain</option>
-            <option value="Jordan">🇯🇴 Jordan</option>
-            <option value="Morocco">🇲🇦 Morocco</option>
-            <option value="Tunisia">🇹🇳 Tunisia</option>
-            <option value="United States">🇺🇸 United States</option>
-            <option value="Canada">🇨🇦 Canada</option>
-            <option value="Australia">🇦🇺 Australia</option>
-            <option value="Singapore">🇸🇬 Singapore</option>
-            <option value="South Africa">🇿🇦 South Africa</option>
-            <option value="Nigeria">🇳🇬 Nigeria</option>
+        <optgroup label="Other Countries">
+            <option value="France" ${existingEmirate === 'France' ? 'selected' : ''}>🇫🇷 France</option>
+            <option value="United Kingdom" ${existingEmirate === 'United Kingdom' ? 'selected' : ''}>🇬🇧 United Kingdom</option>
+            <option value="Germany" ${existingEmirate === 'Germany' ? 'selected' : ''}>🇩🇪 Germany</option>
+            <option value="Switzerland" ${existingEmirate === 'Switzerland' ? 'selected' : ''}>🇨🇭 Switzerland</option>
+            <option value="Belgium" ${existingEmirate === 'Belgium' ? 'selected' : ''}>🇧🇪 Belgium</option>
+            <option value="Luxembourg" ${existingEmirate === 'Luxembourg' ? 'selected' : ''}>🇱🇺 Luxembourg</option>
+            <option value="Russia" ${existingEmirate === 'Russia' ? 'selected' : ''}>🇷🇺 Russia</option>
+            <option value="Ukraine" ${existingEmirate === 'Ukraine' ? 'selected' : ''}>🇺🇦 Ukraine</option>
+            <option value="India" ${existingEmirate === 'India' ? 'selected' : ''}>🇮🇳 India</option>
+            <option value="Pakistan" ${existingEmirate === 'Pakistan' ? 'selected' : ''}>🇵🇰 Pakistan</option>
+            <option value="Philippines" ${existingEmirate === 'Philippines' ? 'selected' : ''}>🇵🇭 Philippines</option>
+            <option value="China" ${existingEmirate === 'China' ? 'selected' : ''}>🇨🇳 China</option>
+            <option value="Lebanon" ${existingEmirate === 'Lebanon' ? 'selected' : ''}>🇱🇧 Lebanon</option>
+            <option value="Egypt" ${existingEmirate === 'Egypt' ? 'selected' : ''}>🇪🇬 Egypt</option>
+            <option value="Saudi Arabia" ${existingEmirate === 'Saudi Arabia' ? 'selected' : ''}>🇸🇦 Saudi Arabia</option>
+            <option value="Qatar" ${existingEmirate === 'Qatar' ? 'selected' : ''}>🇶🇦 Qatar</option>
+            <option value="Kuwait" ${existingEmirate === 'Kuwait' ? 'selected' : ''}>🇰🇼 Kuwait</option>
+            <option value="Oman" ${existingEmirate === 'Oman' ? 'selected' : ''}>🇴🇲 Oman</option>
+            <option value="Bahrain" ${existingEmirate === 'Bahrain' ? 'selected' : ''}>🇧🇭 Bahrain</option>
+            <option value="Jordan" ${existingEmirate === 'Jordan' ? 'selected' : ''}>🇯🇴 Jordan</option>
+            <option value="Morocco" ${existingEmirate === 'Morocco' ? 'selected' : ''}>🇲🇦 Morocco</option>
+            <option value="Tunisia" ${existingEmirate === 'Tunisia' ? 'selected' : ''}>🇹🇳 Tunisia</option>
+            <option value="United States" ${existingEmirate === 'United States' ? 'selected' : ''}>🇺🇸 United States</option>
+            <option value="Canada" ${existingEmirate === 'Canada' ? 'selected' : ''}>🇨🇦 Canada</option>
+            <option value="Australia" ${existingEmirate === 'Australia' ? 'selected' : ''}>🇦🇺 Australia</option>
+            <option value="Singapore" ${existingEmirate === 'Singapore' ? 'selected' : ''}>🇸🇬 Singapore</option>
+            <option value="South Africa" ${existingEmirate === 'South Africa' ? 'selected' : ''}>🇿🇦 South Africa</option>
+            <option value="Nigeria" ${existingEmirate === 'Nigeria' ? 'selected' : ''}>🇳🇬 Nigeria</option>
         </optgroup>
     `;
 
+    // Fix #2 — No emoji in modal content (flag emojis in country options are kept)
     return `
         <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100] overflow-y-auto">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 md:p-8 max-w-xl w-full border-2 border-yellow-500/50 shadow-2xl my-4 max-h-[95vh] overflow-y-auto">
                 <div class="text-center mb-5">
-                    <div class="text-5xl mb-3">👤</div>
                     <h2 class="text-2xl font-bold text-yellow-400 mb-2">${t.title}</h2>
                     <p class="text-blue-200 text-sm">${t.subtitle}</p>
                 </div>
                 <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 mb-5">
-                    <p class="text-yellow-300 text-sm text-center">⚠️ ${t.required_notice}</p>
+                    <p class="text-yellow-300 text-sm text-center">${t.required_notice}</p>
                 </div>
                 <form id="profileCompletionForm" class="space-y-4">
                     <div>
@@ -239,21 +255,21 @@ export function renderProfileCompletionModal() {
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.email_label} *</label>
                         <input type="email" id="completionEmail" value="${isAppleRelay ? '' : existingEmail}" required placeholder="${t.email_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
-                        <p class="text-xs text-blue-300 mt-1">📧 ${t.email_help}</p>
-                        ${isAppleRelay ? '<p class="text-xs text-orange-400 mt-1">⚠️ Votre email Apple masqué ne peut pas recevoir les paiements. Entrez votre vraie adresse email.</p>' : ''}
+                        <p class="text-xs text-blue-300 mt-1">${t.email_help}</p>
+                        ${isAppleRelay ? '<p class="text-xs text-orange-400 mt-1">Votre email Apple masqué ne peut pas recevoir les paiements. Entrez votre vraie adresse email.</p>' : ''}
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.phone_label} *</label>
                         <input type="tel" id="completionPhone" required placeholder="${t.phone_placeholder}" class="w-full py-3 pr-4 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
-                        <p class="text-xs text-blue-300 mt-1">📱 ${t.phone_help}</p>
+                        <p class="text-xs text-blue-300 mt-1">${t.phone_help}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.address_label} *</label>
-                        <input type="text" id="completionAddress" required placeholder="${t.address_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        <input type="text" id="completionAddress" value="${existingBuilding}" required placeholder="${t.address_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.area_label}</label>
-                        <input type="text" id="completionArea" placeholder="${t.area_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        <input type="text" id="completionArea" value="${existingArea}" placeholder="${t.area_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-blue-100 mb-1">${t.location_label} *</label>
@@ -263,7 +279,7 @@ export function renderProfileCompletionModal() {
                         </select>
                     </div>
                     <div id="completionError" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg text-sm"></div>
-                    <button type="submit" id="completionSubmitBtn" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-4 rounded-lg transition transform hover:scale-[1.02] mt-4">${t.submit_button} →</button>
+                    <button type="submit" id="completionSubmitBtn" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-4 rounded-lg transition transform hover:scale-[1.02] mt-4">${t.submit_button}</button>
                 </form>
             </div>
         </div>
@@ -272,7 +288,7 @@ export function renderProfileCompletionModal() {
 
 export function renderLandingPage() {
     const t = (key) => window.i18next.t(key);
-    
+
     return `
         <div class="min-h-screen">
             <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
@@ -383,8 +399,8 @@ export function renderLandingPage() {
                         <div>
                             <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.contact_title')}</h3>
                             <ul class="space-y-3 text-blue-200">
-                                <li class="flex items-center gap-2"><span>📧</span><a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a></li>
-                                <li class="flex items-center gap-2"><span>📍</span><span>${t('common:footer.location')}</span></li>
+                                <li><a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a></li>
+                                <li><span>${t('common:footer.location')}</span></li>
                             </ul>
                         </div>
                     </div>
@@ -395,12 +411,15 @@ export function renderLandingPage() {
     `;
 }
 
+// SVG eye icon for password toggle (reused in template)
+const SVG_EYE = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.957 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.957-9.542-7z"/></svg>`;
+
 export function renderAuthPage(mode) {
     const t = (key) => window.i18next.t(key);
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
-    
+
     let title, buttonText, linkText, linkAction;
-    
+
     const emailOptInTranslations = {
         fr: { label: "J'accepte de recevoir des notifications par email", description: "Mises à jour sur vos leads, commissions et opportunités. Vous pourrez vous désabonner à tout moment." },
         en: { label: "I agree to receive email notifications", description: "Updates about your leads, commissions and opportunities. You can unsubscribe at any time." },
@@ -412,10 +431,10 @@ export function renderAuthPage(mode) {
         tl: { label: "Sumasang-ayon akong tumanggap ng mga email notification", description: "Mga update tungkol sa iyong leads, commissions at opportunities. Maaari kang mag-unsubscribe anumang oras." }
     };
     const emailOptIn = emailOptInTranslations[currentLang] || emailOptInTranslations['en'];
-    
+
     const phoneHelpTranslations = { fr: "Numéro sans le 0 initial", en: "Number without leading 0", ar: "الرقم بدون الصفر الأول", ru: "Номер без начального 0", hi: "0 के बिना नंबर", ur: "0 کے بغیر نمبر", zh: "不带前导0的号码", tl: "Numero na walang 0 sa unahan" };
     const phoneHelp = phoneHelpTranslations[currentLang] || phoneHelpTranslations['en'];
-    
+
     if (mode === 'login') {
         title = t('auth:login_title'); buttonText = t('auth:login_button'); linkText = t('auth:no_account'); linkAction = 'showSignup()';
     } else if (mode === 'signup') {
@@ -459,7 +478,7 @@ export function renderAuthPage(mode) {
     } else if (mode === 'change-password') {
         title = 'Nouveau mot de passe'; buttonText = 'Changer le mot de passe'; linkText = 'Retour à la connexion'; linkAction = 'showLogin()';
     }
-    
+
     return `
         <div class="min-h-screen flex items-center justify-center px-4">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
@@ -488,9 +507,8 @@ export function renderAuthPage(mode) {
                         <div>
                             <label class="block mb-2 font-medium text-blue-100">${t('auth:phone_label')}</label>
                             <input type="tel" id="phone" required placeholder="${t('auth:phone_placeholder')}" class="w-full py-2 pr-4 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50">
-                            <p class="text-xs text-blue-300 mt-1">📱 ${phoneHelp}</p>
-                            <div class="flex items-start gap-2 bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
-                                <span class="text-blue-400 text-lg flex-shrink-0">ℹ️</span>
+                            <p class="text-xs text-blue-300 mt-1">${phoneHelp}</p>
+                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
                                 <p class="text-xs text-blue-200">${t('auth:sms_verification_notice')}</p>
                             </div>
                             <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
@@ -508,7 +526,7 @@ export function renderAuthPage(mode) {
                             <label class="block mb-2 font-medium text-blue-100">${mode === 'change-password' ? 'Nouveau mot de passe' : t('auth:password_label')}</label>
                             <div class="relative">
                                 <input type="password" id="${mode === 'change-password' ? 'newPassword' : 'password'}" required minlength="8" placeholder="••••••••" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-blue-300/50" ${mode === 'signup' || mode === 'change-password' ? 'oninput="validatePassword()"' : ''}>
-                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors"><span class="text-xl">👁️</span></button>
+                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors">${SVG_EYE}</button>
                             </div>
                             ${mode === 'signup' || mode === 'change-password' ? `
                                 <div class="mt-2">
@@ -529,7 +547,7 @@ export function renderAuthPage(mode) {
                             <label class="block mb-2 font-medium text-blue-100">${mode === 'change-password' ? 'Confirmer le nouveau mot de passe' : t('auth:confirm_password_label')}</label>
                             <div class="relative">
                                 <input type="password" id="${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}" required minlength="8" placeholder="••••••••" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-blue-300/50" oninput="validateConfirmPassword()">
-                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors"><span class="text-xl">👁️</span></button>
+                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors">${SVG_EYE}</button>
                             </div>
                             <div id="confirmPasswordError" class="text-red-400 text-sm mt-1 hidden"></div>
                             <div id="confirmPasswordSuccess" class="text-green-400 text-sm mt-1 hidden flex items-center gap-1"><span>✓</span><span>${t('auth:password_validation.passwords_match')}</span></div>
@@ -557,7 +575,8 @@ export function renderDashboard() {
     const t = (key) => window.i18next.t(key);
     const userProfile = window.userProfile;
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
-    
+
+    // Fix #2 — Removed all emoji from badge labels
     const badgeTranslations = {
         fr: { buyers: '25% commission acheteurs', others: '20% autres leads' },
         en: { buyers: '25% commission buyers', others: '20% other leads' },
@@ -569,31 +588,39 @@ export function renderDashboard() {
         tl: { buyers: '25% commission buyers', others: '20% other leads' }
     };
     const badges = badgeTranslations[currentLang] || badgeTranslations['en'];
-    
+
     const profileTranslations = { fr: 'Mon Profil', en: 'My Profile', ar: 'ملفي الشخصي', ru: 'Мой профиль', hi: 'मेरी प्रोफ़ाइल', ur: 'میری پروفائل', zh: '我的资料', tl: 'Aking Profile' };
     const myProfileText = profileTranslations[currentLang] || profileTranslations['en'];
-    
+
     if (!userProfile) {
-        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">⏳ Chargement du profil...</div></div>';
+        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">Chargement du profil...</div></div>';
     }
-    
+
     const isAdmin = userProfile.role === 'admin';
     const hasValidContract = userProfile.contract_path || userProfile.contract_file_url || ['signed', 'validated', 'approved'].includes(userProfile.contract_status);
     const dashboardTitle = isAdmin ? t('dashboard:admin_title') : t('dashboard:referrer_title');
     const profileComplete = isProfileComplete(userProfile);
     const canAddLeads = profileComplete && hasValidContract;
-    
+
+    // Fix #2 — Removed emoji from all translated strings
     const dwt = {
-        fr: { complete_title: "Complétez votre inscription pour gagner des commissions !", complete_desc: 'Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, vous devez compléter ces 2 étapes :', step1_title: "Étape 1 : Signer le contrat d'apporteur", step1_done: "Contrat signé ✓", step1_todo: "Obligatoire pour recevoir vos paiements", step1_btn: "Signer maintenant →", step2_title: "Étape 2 : Compléter votre profil", step2_done: "Profil complet ✓", step2_todo: "Nom, téléphone et adresse requis pour les paiements", step2_btn: "Compléter →", why_title: "Pourquoi ces étapes ?", why_desc: "Le contrat protège vos commissions et votre profil complet nous permet de vous payer.", locked_btn: "(Complétez les étapes ci-dessus)" },
-        en: { complete_title: "Complete your registration to earn commissions!", complete_desc: 'To submit leads and <strong class="text-yellow-400">receive your commissions</strong>, you must complete these 2 steps:', step1_title: "Step 1: Sign the referrer agreement", step1_done: "Contract signed ✓", step1_todo: "Required to receive your payments", step1_btn: "Sign now →", step2_title: "Step 2: Complete your profile", step2_done: "Profile complete ✓", step2_todo: "Name, phone and address required for payments", step2_btn: "Complete →", why_title: "Why these steps?", why_desc: "The contract protects your commissions and your complete profile allows us to pay you.", locked_btn: "(Complete the steps above)" },
-        ar: { complete_title: "أكمل تسجيلك لكسب العمولات!", complete_desc: 'لتقديم العملاء المحتملين و<strong class="text-yellow-400">استلام عمولاتك</strong>، يجب عليك إكمال هاتين الخطوتين:', step1_title: "الخطوة 1: توقيع عقد الإحالة", step1_done: "العقد موقع ✓", step1_todo: "مطلوب لاستلام مدفوعاتك", step1_btn: "وقّع الآن →", step2_title: "الخطوة 2: أكمل ملفك الشخصي", step2_done: "الملف الشخصي مكتمل ✓", step2_todo: "الاسم والهاتف والعنوان مطلوبة للمدفوعات", step2_btn: "أكمل →", why_title: "لماذا هذه الخطوات؟", why_desc: "العقد يحمي عمولاتك وملفك الشخصي الكامل يسمح لنا بدفعك.", locked_btn: "(أكمل الخطوات أعلاه)" },
-        ru: { complete_title: "Завершите регистрацию для получения комиссий!", complete_desc: 'Для подачи лидов и <strong class="text-yellow-400">получения комиссий</strong> необходимо выполнить 2 шага:', step1_title: "Шаг 1: Подписать реферальный договор", step1_done: "Договор подписан ✓", step1_todo: "Необходимо для получения выплат", step1_btn: "Подписать →", step2_title: "Шаг 2: Заполнить профиль", step2_done: "Профиль заполнен ✓", step2_todo: "Имя, телефон и адрес необходимы для выплат", step2_btn: "Заполнить →", why_title: "Зачем эти шаги?", why_desc: "Договор защищает ваши комиссии, а заполненный профиль позволяет нам вам платить.", locked_btn: "(Выполните шаги выше)" },
-        hi: { complete_title: "कमीशन पाने के लिए पंजीकरण पूरा करें!", complete_desc: 'लीड जमा करने और <strong class="text-yellow-400">कमीशन प्राप्त करने</strong> के लिए, ये 2 चरण पूरे करें:', step1_title: "चरण 1: रेफरर अनुबंध पर हस्ताक्षर करें", step1_done: "अनुबंध हस्ताक्षरित ✓", step1_todo: "भुगतान प्राप्त करने के लिए आवश्यक", step1_btn: "अभी हस्ताक्षर करें →", step2_title: "चरण 2: प्रोफ़ाइल पूरी करें", step2_done: "प्रोफ़ाइल पूर्ण ✓", step2_todo: "भुगतान के लिए नाम, फोन और पता आवश्यक", step2_btn: "पूरा करें →", why_title: "ये चरण क्यों?", why_desc: "अनुबंध आपके कमीशन की रक्षा करता है और पूर्ण प्रोफ़ाइल हमें आपको भुगतान करने देती है।", locked_btn: "(ऊपर के चरण पूरे करें)" },
-        ur: { complete_title: "کمیشن کمانے کے لیے رجسٹریشن مکمل کریں!", complete_desc: 'لیڈز جمع کروانے اور <strong class="text-yellow-400">کمیشن حاصل کرنے</strong> کے لیے، یہ 2 مراحل مکمل کریں:', step1_title: "مرحلہ 1: ریفرر معاہدے پر دستخط کریں", step1_done: "معاہدے پر دستخط ✓", step1_todo: "ادائیگیاں حاصل کرنے کے لیے ضروری", step1_btn: "ابھی دستخط کریں →", step2_title: "مرحلہ 2: پروفائل مکمل کریں", step2_done: "پروفائل مکمل ✓", step2_todo: "ادائیگیوں کے لیے نام، فون اور پتہ ضروری", step2_btn: "مکمل کریں →", why_title: "یہ مراحل کیوں؟", why_desc: "معاہدہ آپ کے کمیشن کی حفاظت کرتا ہے اور مکمل پروفائل ہمیں آپ کو ادائیگی کرنے دیتی ہے۔", locked_btn: "(اوپر کے مراحل مکمل کریں)" },
-        zh: { complete_title: "完成注册以赚取佣金！", complete_desc: '要提交线索并<strong class="text-yellow-400">获得佣金</strong>，请完成以下2个步骤：', step1_title: "步骤1：签署推荐协议", step1_done: "合同已签署 ✓", step1_todo: "接收付款所必需", step1_btn: "立即签署 →", step2_title: "步骤2：完善个人资料", step2_done: "资料已完善 ✓", step2_todo: "付款需要姓名、电话和地址", step2_btn: "完善 →", why_title: "为什么需要这些步骤？", why_desc: "合同保护您的佣金，完整的资料让我们能够向您付款。", locked_btn: "(请完成上述步骤)" },
-        tl: { complete_title: "Kumpletuhin ang iyong registration para kumita ng komisyon!", complete_desc: 'Para magsumite ng leads at <strong class="text-yellow-400">matanggap ang iyong mga komisyon</strong>, kumpletuhin ang 2 hakbang na ito:', step1_title: "Hakbang 1: Pumirma ng referrer agreement", step1_done: "Kontrata napirmahan ✓", step1_todo: "Kailangan para matanggap ang mga bayad", step1_btn: "Pumirma ngayon →", step2_title: "Hakbang 2: Kumpletuhin ang profile", step2_done: "Profile kumpleto ✓", step2_todo: "Pangalan, telepono at address kailangan para sa bayad", step2_btn: "Kumpletuhin →", why_title: "Bakit kailangan ang mga hakbang na ito?", why_desc: "Pinoprotektahan ng kontrata ang iyong mga komisyon at ang kumpletong profile ay nagbibigay-daan sa amin na bayaran ka.", locked_btn: "(Kumpletuhin ang mga hakbang sa itaas)" }
+        fr: { complete_title: "Complétez votre inscription pour accéder à toutes les fonctionnalités", complete_desc: 'Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, veuillez compléter ces 2 étapes :', step1_title: "Étape 1 : Signer le contrat d'apporteur", step1_done: "Contrat signé ✓", step1_todo: "Obligatoire pour recevoir vos paiements", step1_btn: "Signer maintenant", step2_title: "Étape 2 : Compléter votre profil", step2_done: "Profil complet ✓", step2_todo: "Nom, téléphone et adresse requis pour les paiements", step2_btn: "Compléter", why_title: "Pourquoi ces étapes ?", why_desc: "Le contrat protège vos commissions et votre profil complet nous permet de vous payer.", locked_btn: "(Complétez les étapes ci-dessus)" },
+        en: { complete_title: "Complete your registration to access all features", complete_desc: 'To submit leads and <strong class="text-yellow-400">receive your commissions</strong>, please complete these 2 steps:', step1_title: "Step 1: Sign the referrer agreement", step1_done: "Contract signed ✓", step1_todo: "Required to receive your payments", step1_btn: "Sign now", step2_title: "Step 2: Complete your profile", step2_done: "Profile complete ✓", step2_todo: "Name, phone and address required for payments", step2_btn: "Complete", why_title: "Why these steps?", why_desc: "The contract protects your commissions and your complete profile allows us to pay you.", locked_btn: "(Complete the steps above)" },
+        ar: { complete_title: "أكمل تسجيلك للوصول إلى جميع الميزات", complete_desc: 'لتقديم العملاء المحتملين و<strong class="text-yellow-400">استلام عمولاتك</strong>، يرجى إكمال هاتين الخطوتين:', step1_title: "الخطوة 1: توقيع عقد الإحالة", step1_done: "العقد موقع ✓", step1_todo: "مطلوب لاستلام مدفوعاتك", step1_btn: "وقّع الآن", step2_title: "الخطوة 2: أكمل ملفك الشخصي", step2_done: "الملف الشخصي مكتمل ✓", step2_todo: "الاسم والهاتف والعنوان مطلوبة للمدفوعات", step2_btn: "أكمل", why_title: "لماذا هذه الخطوات؟", why_desc: "العقد يحمي عمولاتك وملفك الشخصي الكامل يسمح لنا بدفعك.", locked_btn: "(أكمل الخطوات أعلاه)" },
+        ru: { complete_title: "Завершите регистрацию для доступа ко всем функциям", complete_desc: 'Для подачи лидов и <strong class="text-yellow-400">получения комиссий</strong> выполните 2 шага:', step1_title: "Шаг 1: Подписать договор", step1_done: "Договор подписан ✓", step1_todo: "Необходимо для получения выплат", step1_btn: "Подписать", step2_title: "Шаг 2: Заполнить профиль", step2_done: "Профиль заполнен ✓", step2_todo: "Имя, телефон и адрес необходимы для выплат", step2_btn: "Заполнить", why_title: "Зачем?", why_desc: "Договор защищает ваши комиссии, профиль позволяет нам вам платить.", locked_btn: "(Выполните шаги выше)" },
+        hi: { complete_title: "सभी सुविधाओं तक पहुंच के लिए पंजीकरण पूरा करें", complete_desc: 'लीड जमा करने और <strong class="text-yellow-400">कमीशन प्राप्त करने</strong> के लिए ये 2 चरण पूरे करें:', step1_title: "चरण 1: अनुबंध पर हस्ताक्षर करें", step1_done: "अनुबंध हस्ताक्षरित ✓", step1_todo: "भुगतान के लिए आवश्यक", step1_btn: "हस्ताक्षर करें", step2_title: "चरण 2: प्रोफ़ाइल पूरी करें", step2_done: "प्रोफ़ाइल पूर्ण ✓", step2_todo: "नाम, फोन और पता आवश्यक", step2_btn: "पूरा करें", why_title: "क्यों?", why_desc: "अनुबंध कमीशन की रक्षा करता है, प्रोफ़ाइल भुगतान के लिए आवश्यक है।", locked_btn: "(चरण पूरे करें)" },
+        ur: { complete_title: "تمام خصوصیات تک رسائی کے لیے رجسٹریشن مکمل کریں", complete_desc: 'لیڈز جمع کروانے اور <strong class="text-yellow-400">کمیشن حاصل کرنے</strong> کے لیے یہ 2 مراحل مکمل کریں:', step1_title: "مرحلہ 1: معاہدے پر دستخط کریں", step1_done: "معاہدے پر دستخط ✓", step1_todo: "ادائیگیوں کے لیے ضروری", step1_btn: "دستخط کریں", step2_title: "مرحلہ 2: پروفائل مکمل کریں", step2_done: "پروفائل مکمل ✓", step2_todo: "نام، فون اور پتہ ضروری", step2_btn: "مکمل کریں", why_title: "کیوں؟", why_desc: "معاہدہ کمیشن کی حفاظت کرتا ہے، پروفائل ادائیگی کے لیے ضروری ہے۔", locked_btn: "(مراحل مکمل کریں)" },
+        zh: { complete_title: "完成注册以使用所有功能", complete_desc: '要提交线索并<strong class="text-yellow-400">获得佣金</strong>，请完成2个步骤：', step1_title: "步骤1：签署协议", step1_done: "合同已签署 ✓", step1_todo: "接收付款所必需", step1_btn: "立即签署", step2_title: "步骤2：完善资料", step2_done: "资料已完善 ✓", step2_todo: "付款需要姓名、电话和地址", step2_btn: "完善", why_title: "为什么？", why_desc: "合同保护佣金，完整资料让我们能够付款。", locked_btn: "(完成上述步骤)" },
+        tl: { complete_title: "Kumpletuhin ang registration para ma-access ang lahat ng features", complete_desc: 'Para magsumite ng leads at <strong class="text-yellow-400">matanggap ang mga komisyon</strong>, kumpletuhin ang 2 hakbang:', step1_title: "Hakbang 1: Pumirma ng agreement", step1_done: "Kontrata napirmahan ✓", step1_todo: "Kailangan para matanggap ang mga bayad", step1_btn: "Pumirma", step2_title: "Hakbang 2: Kumpletuhin ang profile", step2_done: "Profile kumpleto ✓", step2_todo: "Pangalan, telepono at address kailangan", step2_btn: "Kumpletuhin", why_title: "Bakit?", why_desc: "Pinoprotektahan ng kontrata ang komisyon, kailangan ang profile para sa bayad.", locked_btn: "(Kumpletuhin ang mga hakbang)" }
     };
     const dw = dwt[currentLang] || dwt['en'];
+
+    // Helper: status indicator without emoji
+    const stepIndicator = (done) => `
+        <div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-sm ${done ? 'bg-green-500' : 'bg-red-500'}">
+            ${done ? '✓' : '✗'}
+        </div>
+    `;
 
     let addLeadSection = '';
     if (!isAdmin) {
@@ -602,42 +629,40 @@ export function renderDashboard() {
         } else {
             const stepContractDone = hasValidContract;
             const stepProfileDone = profileComplete;
+            // Fix #2 + Fix #3 — No emoji, no promotional styling
             addLeadSection = `
-                <div class="bg-gradient-to-r from-orange-500/20 to-red-500/20 border-2 border-orange-500 rounded-2xl p-6 mb-6 shadow-lg">
-                    <div class="flex items-start gap-4">
-                        <div class="text-5xl">🚨</div>
-                        <div class="flex-1">
-                            <h3 class="text-2xl font-bold text-orange-400 mb-2">${dw.complete_title}</h3>
-                            <p class="text-white mb-4">${dw.complete_desc}</p>
-                            <div class="space-y-3">
-                                <div class="flex items-center gap-3 p-3 rounded-lg ${stepContractDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
-                                    <div class="text-3xl">${stepContractDone ? '✅' : '❌'}</div>
-                                    <div class="flex-1">
-                                        <div class="font-bold ${stepContractDone ? 'text-green-400' : 'text-red-400'}">${dw.step1_title}</div>
-                                        <div class="text-sm text-blue-200">${stepContractDone ? dw.step1_done : dw.step1_todo}</div>
-                                    </div>
-                                    ${!stepContractDone ? `<a href="/contract-signature.html" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step1_btn}</a>` : ''}
+                <div class="bg-orange-500/10 border border-orange-500/50 rounded-2xl p-6 mb-6">
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold text-orange-300 mb-2">${dw.complete_title}</h3>
+                        <p class="text-white/80 mb-4">${dw.complete_desc}</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3 p-3 rounded-lg ${stepContractDone ? 'bg-green-500/10 border border-green-500/40' : 'bg-red-500/10 border border-red-500/40'}">
+                                ${stepIndicator(stepContractDone)}
+                                <div class="flex-1">
+                                    <div class="font-semibold ${stepContractDone ? 'text-green-300' : 'text-red-300'}">${dw.step1_title}</div>
+                                    <div class="text-sm text-blue-300">${stepContractDone ? dw.step1_done : dw.step1_todo}</div>
                                 </div>
-                                <div class="flex items-center gap-3 p-3 rounded-lg ${stepProfileDone ? 'bg-green-500/20 border border-green-500' : 'bg-red-500/20 border border-red-500'}">
-                                    <div class="text-3xl">${stepProfileDone ? '✅' : '❌'}</div>
-                                    <div class="flex-1">
-                                        <div class="font-bold ${stepProfileDone ? 'text-green-400' : 'text-red-400'}">${dw.step2_title}</div>
-                                        <div class="text-sm text-blue-200">${stepProfileDone ? dw.step2_done : dw.step2_todo}</div>
-                                    </div>
-                                    ${!stepProfileDone ? `<a href="profile.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step2_btn}</a>` : ''}
+                                ${!stepContractDone ? `<a href="/contract-signature.html" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step1_btn}</a>` : ''}
+                            </div>
+                            <div class="flex items-center gap-3 p-3 rounded-lg ${stepProfileDone ? 'bg-green-500/10 border border-green-500/40' : 'bg-red-500/10 border border-red-500/40'}">
+                                ${stepIndicator(stepProfileDone)}
+                                <div class="flex-1">
+                                    <div class="font-semibold ${stepProfileDone ? 'text-green-300' : 'text-red-300'}">${dw.step2_title}</div>
+                                    <div class="text-sm text-blue-300">${stepProfileDone ? dw.step2_done : dw.step2_todo}</div>
                                 </div>
+                                ${!stepProfileDone ? `<a href="profile.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step2_btn}</a>` : ''}
                             </div>
-                            <div class="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/50 rounded-lg">
-                                <p class="text-yellow-300 text-sm">💡 <strong>${dw.why_title}</strong> ${dw.why_desc}</p>
-                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
+                            <p class="text-yellow-200 text-sm"><strong>${dw.why_title}</strong> ${dw.why_desc}</p>
                         </div>
                     </div>
                 </div>
-                <button id="addLeadBtn" disabled class="bg-gray-500 text-gray-300 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60">🔒 ${t('dashboard:add_lead')} ${dw.locked_btn}</button>
+                <button id="addLeadBtn" disabled class="bg-gray-600/50 text-gray-400 font-bold px-6 py-3 rounded-lg cursor-not-allowed opacity-60">${t('dashboard:add_lead')} ${dw.locked_btn}</button>
             `;
         }
     }
-    
+
     return `
         <div class="min-h-screen">
             <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
@@ -654,29 +679,26 @@ export function renderDashboard() {
             </header>
             <main class="container mx-auto px-4 py-8">
                 ${!hasValidContract && !isAdmin ? `
-                    <div id="contractRequirement" class="mb-6 bg-gradient-to-r from-blue-900/50 to-yellow-900/50 border-2 border-yellow-500 p-8 rounded-2xl shadow-2xl">
+                    <div id="contractRequirement" class="mb-6 bg-blue-900/20 border border-yellow-500/50 p-8 rounded-2xl shadow-lg">
                         <div class="flex flex-col lg:flex-row gap-8">
                             <div class="flex-1">
-                                <h3 class="text-2xl font-bold text-yellow-400 mb-4">📝 ${t('dashboard:contract.required')}</h3>
-                                <div class="bg-white/10 rounded-xl p-4 mb-6 border border-white/10">
-                                    <h4 class="font-bold text-white mb-3">❓ ${t('dashboard:contract.what_is_it')}</h4>
+                                <h3 class="text-2xl font-bold text-yellow-400 mb-4">${t('dashboard:contract.required')}</h3>
+                                <div class="bg-white/5 rounded-xl p-4 mb-6 border border-white/10">
+                                    <h4 class="font-bold text-white mb-3">${t('dashboard:contract.what_is_it')}</h4>
                                     <p class="text-blue-200 text-sm mb-3">${t('dashboard:contract.explanation')}</p>
                                     <ul class="space-y-2 text-sm text-blue-200 ml-4">
-                                        <li>✅ <strong>${t('dashboard:contract.benefit1_title')}</strong> ${t('dashboard:contract.benefit1_desc')}</li>
-                                        <li>✅ <strong>${t('dashboard:contract.benefit2_title')}</strong> ${t('dashboard:contract.benefit2_desc')}</li>
-                                        <li>✅ <strong>${t('dashboard:contract.benefit3_title')}</strong> ${t('dashboard:contract.benefit3_desc')}</li>
-                                        <li>✅ <strong>${t('dashboard:contract.benefit4_title')}</strong> ${t('dashboard:contract.benefit4_desc')}</li>
-                                        <li>✅ <strong>${t('dashboard:contract.benefit5_title')}</strong> ${t('dashboard:contract.benefit5_desc')}</li>
+                                        <li>— <strong>${t('dashboard:contract.benefit1_title')}</strong> ${t('dashboard:contract.benefit1_desc')}</li>
+                                        <li>— <strong>${t('dashboard:contract.benefit2_title')}</strong> ${t('dashboard:contract.benefit2_desc')}</li>
+                                        <li>— <strong>${t('dashboard:contract.benefit3_title')}</strong> ${t('dashboard:contract.benefit3_desc')}</li>
+                                        <li>— <strong>${t('dashboard:contract.benefit4_title')}</strong> ${t('dashboard:contract.benefit4_desc')}</li>
+                                        <li>— <strong>${t('dashboard:contract.benefit5_title')}</strong> ${t('dashboard:contract.benefit5_desc')}</li>
                                     </ul>
                                 </div>
                                 <div class="grid md:grid-cols-2 gap-8">
-                                    <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/50 p-6 rounded-xl">
-                                        <div class="flex items-center gap-3 mb-4">
-                                            <span class="text-4xl">✍️</span>
-                                            <div>
-                                                <h4 class="font-bold text-green-300 text-lg">${t('dashboard:contract.electronic_signature')}</h4>
-                                                <p class="text-xs text-blue-300">${t('dashboard:contract.electronic_signature_intro')}</p>
-                                            </div>
+                                    <div class="bg-green-900/20 border border-green-500/40 p-6 rounded-xl">
+                                        <div class="mb-4">
+                                            <h4 class="font-bold text-green-300 text-lg">${t('dashboard:contract.electronic_signature')}</h4>
+                                            <p class="text-xs text-blue-300">${t('dashboard:contract.electronic_signature_intro')}</p>
                                         </div>
                                         <ul class="space-y-2 text-sm text-blue-200 mb-4">
                                             <li class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('dashboard:contract.signature_feature_1')}</span></li>
@@ -684,7 +706,7 @@ export function renderDashboard() {
                                             <li class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('dashboard:contract.signature_feature_3')}</span></li>
                                             <li class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('dashboard:contract.signature_feature_4')}</span></li>
                                         </ul>
-                                        <a href="/contract-signature.html" class="block w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-3 rounded-lg transition text-center">🖊️ ${t('dashboard:contract.sign_now_button')}</a>
+                                        <a href="/contract-signature.html" class="block w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-3 rounded-lg transition text-center">${t('dashboard:contract.sign_now_button')}</a>
                                     </div>
                                 </div>
                             </div>
@@ -692,15 +714,14 @@ export function renderDashboard() {
                     </div>
                 ` : ''}
                 ${hasValidContract && !isAdmin ? `
-                    <div id="contractUploaded" class="mb-6 relative overflow-hidden bg-gradient-to-r from-green-900/50 to-blue-900/30 border border-green-500/50 p-6 rounded-2xl shadow-lg">
-                        <div class="relative z-10 flex items-center gap-4">
-                            <div class="text-4xl flex-shrink-0">✅</div>
+                    <div id="contractUploaded" class="mb-6 bg-green-900/20 border border-green-500/40 p-6 rounded-2xl">
+                        <div class="flex items-center gap-4">
                             <div class="flex-1">
-                                <h3 class="text-2xl font-bold text-green-300 mb-2">${t('dashboard:contract.signed_validated')}</h3>
+                                <h3 class="text-xl font-bold text-green-300 mb-1">${t('dashboard:contract.signed_validated')}</h3>
                                 <p class="text-blue-200 mb-3">${t('dashboard:contract.can_add_leads')}</p>
                                 <div class="flex flex-wrap gap-2">
-                                    <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full">💰 ${badges.buyers}</span>
-                                    <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full">🏠 ${badges.others}</span>
+                                    <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full border border-yellow-500/30">${badges.buyers}</span>
+                                    <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full border border-blue-500/30">${badges.others}</span>
                                 </div>
                             </div>
                         </div>
@@ -737,34 +758,31 @@ export function renderDashboard() {
                         </div>
                         <div class="mt-6">
                             <label class="block text-blue-200 mb-3">${t('dashboard:lead_type')} *</label>
-                            <div class="space-y-3">
-                                <label class="flex items-center p-4 bg-gradient-to-r from-yellow-900/50 to-yellow-700/30 border-2 border-yellow-500 rounded-xl cursor-pointer hover:bg-yellow-900/70 transition">
-                                    <input type="radio" name="leadTypeRadio" value="sale_buyer" onchange="document.getElementById('leadType').value='sale_buyer'" class="w-5 h-5 text-yellow-500 mr-4">
+                            <!-- Fix #3 — Neutral styling, no trophy, no "RECOMMANDÉ" badge -->
+                            <div class="space-y-2">
+                                <label class="flex items-center p-3 bg-slate-700/50 border border-yellow-500/40 rounded-lg cursor-pointer hover:bg-slate-700 transition">
+                                    <input type="radio" name="leadTypeRadio" value="sale_buyer" onchange="document.getElementById('leadType').value='sale_buyer'" class="w-4 h-4 text-yellow-500 mr-3">
                                     <div class="flex-1">
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-2xl">🏆</span>
-                                            <span class="font-bold text-yellow-400 text-lg">${t('dashboard:sale_buyer')}</span>
-                                            <span class="bg-yellow-500 text-gray-900 text-xs font-bold px-2 py-1 rounded-full">${t('dashboard:recommended')}</span>
-                                        </div>
-                                        <p class="text-yellow-300 text-sm mt-1">${t('dashboard:commission')}: <strong>25%</strong> ${t('dashboard:of_agent_commission')}</p>
+                                        <span class="text-white font-semibold">${t('dashboard:sale_buyer')}</span>
+                                        <span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 25% ${t('dashboard:of_agent_commission')}</span>
                                     </div>
                                 </label>
                                 <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
                                     <input type="radio" name="leadTypeRadio" value="sale_seller" onchange="document.getElementById('leadType').value='sale_seller'" class="w-4 h-4 text-yellow-500 mr-3">
-                                    <div class="flex-1"><span class="text-white">${t('dashboard:sale_seller')}</span><span class="text-blue-300 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span></div>
+                                    <div class="flex-1"><span class="text-white">${t('dashboard:sale_seller')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
                                 </label>
                                 <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
                                     <input type="radio" name="leadTypeRadio" value="rental_landlord" onchange="document.getElementById('leadType').value='rental_landlord'" class="w-4 h-4 text-yellow-500 mr-3">
-                                    <div class="flex-1"><span class="text-white">${t('dashboard:rental_landlord')}</span><span class="text-blue-300 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span></div>
+                                    <div class="flex-1"><span class="text-white">${t('dashboard:rental_landlord')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
                                 </label>
                                 <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
                                     <input type="radio" name="leadTypeRadio" value="rental_tenant" onchange="document.getElementById('leadType').value='rental_tenant'" class="w-4 h-4 text-yellow-500 mr-3">
-                                    <div class="flex-1"><span class="text-white">${t('dashboard:rental_tenant')}</span><span class="text-blue-300 text-sm ml-2">- ${t('dashboard:commission')}: 20%</span></div>
+                                    <div class="flex-1"><span class="text-white">${t('dashboard:rental_tenant')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
                                 </label>
                             </div>
                             <input type="hidden" id="leadType" name="leadType" required>
                         </div>
-                        <div class="mt-6 p-4 bg-blue-900/30 border border-blue-500/50 rounded-xl">
+                        <div class="mt-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
                                 <input type="checkbox" id="clientConsent" required class="w-5 h-5 mt-0.5 text-blue-500 rounded border-gray-500 focus:ring-blue-500">
                                 <div>
