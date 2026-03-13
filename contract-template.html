@@ -13,133 +13,42 @@
             .contract-wrapper { padding: 0 !important; max-width: 100% !important; }
             .contract-document { box-shadow: none !important; border-radius: 0 !important; margin: 0 !important; }
         }
-        .contract-document {
-            font-family: 'Times New Roman', serif;
-            line-height: 1.6;
-            color: #000;
-            background: white;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #000;
-            padding-bottom: 20px;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 22px;
-            text-transform: uppercase;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo-text {
-            font-size: 28px;
-            font-weight: bold;
-            letter-spacing: 3px;
-            color: #1a3a6b;
-        }
-        .logo-sub {
-            font-size: 12px;
-            letter-spacing: 6px;
-            color: #1a3a6b;
-        }
-        table.parties-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 13px;
-        }
-        table.parties-table td, table.parties-table th {
-            border: 1px solid #000;
-            padding: 7px 10px;
-        }
-        table.parties-table .section-header {
-            font-weight: bold;
-            background: #f0f0f0;
-        }
-        .recitals {
-            margin: 25px 0;
-            font-style: italic;
-        }
-        .recitals-title {
-            text-align: center;
-            font-weight: bold;
-            font-style: normal;
-            margin-bottom: 10px;
-        }
-        .now-therefore {
-            font-weight: bold;
-            margin: 20px 0 10px 0;
-        }
-        .article {
-            margin: 18px 0;
-            font-size: 13px;
-        }
-        ol.main-list {
-            margin: 0;
-            padding-left: 20px;
-        }
-        ol.main-list > li {
-            margin-bottom: 14px;
-        }
-        ul.sub-list {
-            list-style: none;
-            margin: 8px 0 0 0;
-            padding-left: 15px;
-        }
-        ul.sub-list li::before {
-            content: "- ";
-        }
-        ul.sub-list li {
-            margin-bottom: 6px;
-        }
-        .disclaimer {
-            font-style: italic;
-            margin: 30px 0 20px 0;
-            font-size: 12px;
-        }
-        .signature-section {
-            margin-top: 40px;
-        }
-        .signature-block {
-            margin-bottom: 30px;
-        }
-        .signature-line {
-            border-top: 1px solid #000;
-            margin-top: 50px;
-            padding-top: 8px;
-            width: 60%;
-        }
-        .footer-info {
-            margin-top: 60px;
-            text-align: center;
-            font-size: 11px;
-            color: #444;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-        }
-        .highlight-box {
-            background: #d4edda;
-            padding: 10px 15px;
-            border-left: 4px solid #28a745;
-            margin: 12px 0;
-        }
+        .contract-document { font-family: 'Times New Roman', serif; line-height: 1.6; color: #000; background: white; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 20px; }
+        .header h1 { margin: 0; font-size: 22px; text-transform: uppercase; font-weight: bold; text-decoration: underline; }
+        .logo { text-align: center; margin-bottom: 20px; }
+        .logo-text { font-size: 28px; font-weight: bold; letter-spacing: 3px; color: #1a3a6b; }
+        .logo-sub { font-size: 12px; letter-spacing: 6px; color: #1a3a6b; }
+        table.parties-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+        table.parties-table td, table.parties-table th { border: 1px solid #000; padding: 7px 10px; }
+        table.parties-table .section-header { font-weight: bold; background: #f0f0f0; }
+        .recitals { margin: 25px 0; font-style: italic; }
+        .recitals-title { text-align: center; font-weight: bold; font-style: normal; margin-bottom: 10px; }
+        .now-therefore { font-weight: bold; margin: 20px 0 10px 0; }
+        .article { margin: 18px 0; font-size: 13px; }
+        ol.main-list { margin: 0; padding-left: 20px; }
+        ol.main-list > li { margin-bottom: 14px; }
+        ul.sub-list { list-style: none; margin: 8px 0 0 0; padding-left: 15px; }
+        ul.sub-list li::before { content: "- "; }
+        ul.sub-list li { margin-bottom: 6px; }
+        .disclaimer { font-style: italic; margin: 30px 0 20px 0; font-size: 12px; }
+        .signature-section { margin-top: 40px; }
+        .signature-block { margin-bottom: 30px; }
+        .signature-line { border-top: 1px solid #000; margin-top: 50px; padding-top: 8px; width: 60%; }
+        .footer-info { margin-top: 60px; text-align: center; font-size: 11px; color: #444; border-top: 1px solid #ccc; padding-top: 10px; }
+        .highlight-box { background: #d4edda; padding: 10px 15px; border-left: 4px solid #28a745; margin: 12px 0; }
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
 
-    <!-- Header nav (non imprimé) -->
     <div class="no-print">
         <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
             <div class="max-w-4xl mx-auto px-4 py-4">
                 <div class="flex justify-between items-center">
                     <a href="/" class="text-2xl font-bold text-yellow-400">Real Estate Referrer</a>
-                    <a href="/contract-signature.html" class="text-blue-200 hover:text-white transition flex items-center gap-2">
-                        ← Back to signature
+                    <a href="/contract-signature" class="text-blue-200 hover:text-white transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        Back to signature
                     </a>
                 </div>
             </div>
@@ -151,18 +60,18 @@
                     <h2 class="text-xl font-bold text-yellow-400">Channel Partner Agreement</h2>
                     <p class="text-blue-200 text-sm">Read the full contract before signing</p>
                 </div>
+                <!-- Fix #2: emoji 🖨️ supprimé -->
                 <button onclick="window.print()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-3 rounded-lg transition flex items-center gap-2">
-                    🖨️ Print or Save as PDF
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                    Print or Save as PDF
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Contrat -->
     <div class="contract-wrapper max-w-4xl mx-auto px-4 pb-8">
         <div class="contract-document rounded-2xl shadow-2xl p-8 sm:p-12">
 
-            <!-- Logo Solo Gate -->
             <div class="logo">
                 <div class="logo-text">SG</div>
                 <div style="font-size:20px; font-weight:bold; color:#1a3a6b; letter-spacing:2px;">SOLO GATE</div>
@@ -177,11 +86,8 @@
                 This agreement is entered into as of this <strong>_________________</strong> in <strong>Dubai, UAE</strong> by and between:
             </p>
 
-            <!-- Tableau parties -->
             <table class="parties-table">
-                <tr>
-                    <td colspan="4" class="section-header">FIRST PARTY (The "Company"):</td>
-                </tr>
+                <tr><td colspan="4" class="section-header">FIRST PARTY (The "Company"):</td></tr>
                 <tr>
                     <td><strong>Company Name</strong></td>
                     <td><strong>SOLO GATE REAL ESTATE L.L.C</strong></td>
@@ -192,35 +98,24 @@
                     <td>Phone</td>
                     <td><strong>+971 56 555 9040</strong></td>
                     <td>Email:</td>
-                    <td>info@sologate.ae</td>
+                    <td><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2b42454d446b584447444c4a5f4e054a4e">[email&#160;protected]</a></td>
+                </tr>
+                <tr><td colspan="4"><strong>Address:</strong> &nbsp; Office 801, Oxford Tower, Business Bay, Dubai, UAE</td></tr>
+                <tr><td colspan="4" class="section-header">SECOND PARTY (The "Referrer"):</td></tr>
+                <tr>
+                    <td>Name:</td><td>___________________________</td>
+                    <td>Nationality:</td><td>___________________________</td>
                 </tr>
                 <tr>
-                    <td colspan="4"><strong>Address:</strong> &nbsp; Office 801, Oxford Tower, Business Bay, Dubai, UAE</td>
+                    <td>Passport/EID No.:</td><td>___________________________</td>
+                    <td>Mobile No.:</td><td>___________________________</td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="section-header">SECOND PARTY (The "Referrer"):</td>
-                </tr>
-                <tr>
-                    <td>Name:</td>
-                    <td>___________________________</td>
-                    <td>Nationality:</td>
-                    <td>___________________________</td>
-                </tr>
-                <tr>
-                    <td>Passport/EID No.:</td>
-                    <td>___________________________</td>
-                    <td>Mobile No.:</td>
-                    <td>___________________________</td>
-                </tr>
-                <tr>
-                    <td>Address</td>
-                    <td>___________________________</td>
-                    <td>Email Add:</td>
-                    <td>___________________________</td>
+                    <td>Address</td><td>___________________________</td>
+                    <td>Email Add:</td><td>___________________________</td>
                 </tr>
             </table>
 
-            <!-- Recitals -->
             <div class="recitals">
                 <div class="recitals-title">Recitals</div>
                 <p>WHEREAS, the Agency is engaged in the business of real estate brokerage – Selling and Buying of Properties in the UAE.</p>
@@ -231,18 +126,11 @@
             <div class="now-therefore">NOW, THEREFORE, the parties hereto agree as follows:</div>
 
             <ol class="main-list">
-                <li>
-                    Throughout the duration of this agreement, the External Agent shall be responsible for introducing potential clients to the Agency who are interested in buying, selling, or renting properties in the UAE.
-                </li>
-                <li>
-                    The Agency shall bear no liability for any contracts, obligations, agreements, sales contracts, or legally binding documents entered into between the Referrer and any of its clients.
-                </li>
+                <li>Throughout the duration of this agreement, the External Agent shall be responsible for introducing potential clients to the Agency who are interested in buying, selling, or renting properties in the UAE.</li>
+                <li>The Agency shall bear no liability for any contracts, obligations, agreements, sales contracts, or legally binding documents entered into between the Referrer and any of its clients.</li>
                 <li>
                     In the event of a successful conclusion of a deal with the referred client, the Agency has agreed to share a portion of the commission it has earned with the External Agent. The distribution of this commission shall be based on the following terms:
-
-                    <div class="highlight-box" style="margin-top:12px;">
-                        <strong>Commission structure by lead type:</strong>
-                    </div>
+                    <div class="highlight-box" style="margin-top:12px;"><strong>Commission structure by lead type:</strong></div>
                     <ul class="sub-list">
                         <li><strong>25%</strong> of the Agent's share of total commission for <strong>Buyer Leads</strong> (client looking to purchase)</li>
                         <li><strong>20%</strong> of the Agent's share of total commission for <strong>Seller Leads, Landlord Leads, and Tenant Leads</strong></li>
@@ -250,18 +138,10 @@
                         <li>The referral fee owed to the External Agent shall be disbursed through bank transfer within four (4) weeks following the receipt and clearance of the commission by the Agency's bank account. The payment method and details, including account information for bank transfers, shall be agreed between both parties. In the event of any delay or discrepancy in the commission payment, the parties shall promptly communicate and resolve the issue to ensure the timely disbursement of the referral fee to the External Agent.</li>
                     </ul>
                 </li>
-                <li>
-                    This agreement will not be limited to Direct Selling from Developers; it may cover market reselling should the introduced client(s) be interested in market re-sale.
-                </li>
-                <li>
-                    The Agency reserves the right to make changes to this document or its financial scheme structure at any point of time, if it deems it necessary, by notifying the other party in writing when and if those changes take place.
-                </li>
-                <li>
-                    The terms and conditions of this agreement are confidential between the parties and shall not be disclosed to anyone else. The referrer agrees that this contract is confidential between the Agency and the External Agent.
-                </li>
-                <li>
-                    The duration of this contract is 1 year from the signing of this agreement and can be renewed upon the mutual agreement of both parties. The Agency reserves the right to terminate this agreement by providing one (1) week notice to the External Agent.
-                </li>
+                <li>This agreement will not be limited to Direct Selling from Developers; it may cover market reselling should the introduced client(s) be interested in market re-sale.</li>
+                <li>The Agency reserves the right to make changes to this document or its financial scheme structure at any point of time, if it deems it necessary, by notifying the other party in writing when and if those changes take place.</li>
+                <li>The terms and conditions of this agreement are confidential between the parties and shall not be disclosed to anyone else. The referrer agrees that this contract is confidential between the Agency and the External Agent.</li>
+                <li>The duration of this contract is 1 year from the signing of this agreement and can be renewed upon the mutual agreement of both parties. The Agency reserves the right to terminate this agreement by providing one (1) week notice to the External Agent.</li>
             </ol>
 
             <div class="disclaimer">
@@ -270,7 +150,6 @@
 
             <p style="margin-top:30px; font-size:13px;">IN WITNESS WHEREOF, the Parties hereby execute this Agreement on the date set herein above.</p>
 
-            <!-- Signatures -->
             <div class="signature-section">
                 <div class="signature-block">
                     <strong>SIGNED by duly authorized representative of SOLO GATE REAL ESTATE L.L.C:</strong>
@@ -281,7 +160,6 @@
                         Date: ________________
                     </div>
                 </div>
-
                 <div class="signature-block" style="margin-top:40px;">
                     <strong>SIGNED by the External Agent:</strong>
                     <div class="signature-line">
@@ -293,25 +171,16 @@
             </div>
 
             <div class="footer-info">
-                +971 56 555 9040 &nbsp;|&nbsp; info@sologate.ae &nbsp;|&nbsp; www.sologate.ae<br>
+                +971 56 555 9040 &nbsp;|&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cda4a3aba28dbea2a1a2aaacb9a8e3aca8">[email&#160;protected]</a> &nbsp;|&nbsp; www.sologate.ae<br>
                 801, Oxford Tower, Business Bay, Dubai – UAE
             </div>
 
         </div>
     </div>
 
-    <!-- Footer (non imprimé) -->
     <footer class="no-print bg-slate-900 border-t border-white/10 mt-8">
         <div class="max-w-4xl mx-auto px-4 py-6 text-center">
             <p class="text-blue-300 text-sm">© 2025 Real Estate Referrer - All rights reserved</p>
             <div class="flex justify-center gap-4 mt-3">
-                <a href="/terms.html" class="text-blue-200 hover:text-yellow-400 text-sm transition">Terms & Conditions</a>
-                <a href="/privacy.html" class="text-blue-200 hover:text-yellow-400 text-sm transition">Privacy Policy</a>
-                <a href="/" class="text-blue-200 hover:text-yellow-400 text-sm transition">Home</a>
-            </div>
-        </div>
-    </footer>
-
-<script src="/js/crisp-chat.js"></script>
-</body>
-</html>
+                <a href="/terms" class="text-blue-200 hover:text-yellow-400 text-sm transition">Terms & Conditions</a>
+                <a href="/privacy" class="text-blue-200 hover:text-yellow-400 text-sm tr
