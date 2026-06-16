@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signature du Contrat - Real Estate Referrer</title>
+    <title>Contract Signature - Real Estate Referrer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
@@ -16,7 +16,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
+<body class="bg-slate-950 min-h-screen text-white">
     <div id="app"></div>
     
     <script type="module">
@@ -62,7 +62,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                         </svg>
                         <h1 class="text-2xl font-bold text-red-400 mb-4">${t('contract:access_denied')}</h1>
-                        <p class="text-blue-200 mb-6">${t('contract:must_login')}</p>
+                        <p class="text-slate-300 mb-6">${t('contract:must_login')}</p>
                         <a href="/" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 px-6 rounded-lg inline-block transition">
                             ${t('contract:go_to_login')}
                         </a>
@@ -76,24 +76,24 @@
                 <div class="min-h-screen p-4">
                     <div class="max-w-4xl mx-auto">
                         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
-                            <a href="/" class="text-blue-200 hover:text-white mb-4 inline-flex items-center transition">
+                            <a href="/" class="text-slate-300 hover:text-white mb-4 inline-flex items-center transition">
                                 <!-- Fix #2: ← texte au lieu d'emoji -->
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                                Retour au dashboard
+                                Back to dashboard
                             </a>
                             <h1 class="text-3xl font-bold text-yellow-400 mb-2">${t('contract:header_title')}</h1>
-                            <p class="text-blue-200">${t('contract:header_subtitle')}</p>
+                            <p class="text-slate-300">${t('contract:header_subtitle')}</p>
                         </div>
                         
                         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
                             <div class="flex items-start justify-between mb-4">
                                 <div>
                                     <h2 class="text-xl font-bold text-yellow-400 mb-2">${t('contract:what_is_contract')}</h2>
-                                    <p class="text-blue-200 text-sm">${t('contract:contract_intro')}</p>
+                                    <p class="text-slate-300 text-sm">${t('contract:contract_intro')}</p>
                                 </div>
                             </div>
                             
-                            <div class="space-y-3 text-blue-200 text-sm">
+                            <div class="space-y-3 text-slate-300 text-sm">
                                 <div class="flex items-start gap-2"><span class="text-green-400 text-xl">✓</span><div><strong class="text-white">${t('contract:guarantee_commission')}</strong> ${t('contract:guarantee_commission_text')}</div></div>
                                 <div class="flex items-start gap-2"><span class="text-green-400 text-xl">✓</span><div><strong class="text-white">${t('contract:lead_protection')}</strong> ${t('contract:lead_protection_text')}</div></div>
                                 <div class="flex items-start gap-2"><span class="text-green-400 text-xl">✓</span><div><strong class="text-white">${t('contract:fast_payment')}</strong> ${t('contract:fast_payment_text')}</div></div>
@@ -102,14 +102,14 @@
                             </div>
                             
                             <!-- Fix #2: emoji ℹ️ supprimé -->
-                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-xl p-4 mt-6">
-                                <p class="text-blue-200 text-sm">${t('contract:full_contract_notice')}</p>
+                            <div class="bg-slate-900/40 border border-white/10 rounded-xl p-4 mt-6">
+                                <p class="text-slate-300 text-sm">${t('contract:full_contract_notice')}</p>
                             </div>
                             
                             <div class="border-t border-white/10 pt-4 mt-4">
                                 <!-- Fix #2: emoji 📄 supprimé -->
                                 <a href="/contract-template.html" target="_blank" 
-                                   class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg transition">
+                                   class="inline-flex items-center gap-2 border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-slate-950 font-bold px-6 py-3 rounded-lg transition">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                     ${t('contract:read_full_contract')}
                                 </a>
@@ -120,7 +120,7 @@
                         <div class="bg-gradient-to-r from-yellow-900/40 to-orange-900/30 rounded-2xl p-6 mb-6 border-2 border-yellow-500 shadow-lg shadow-yellow-500/20">
                             <div class="flex items-center gap-3 mb-4">
                                 <svg class="w-7 h-7 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                                <p class="text-yellow-300 font-bold text-lg">${i18next.exists('contract:step_required') ? t('contract:step_required') : 'Étape requise avant de signer'}</p>
+                                <p class="text-yellow-300 font-bold text-lg">${i18next.exists('contract:step_required') ? t('contract:step_required') : 'Required step before signing'}</p>
                             </div>
                             <label class="flex items-start gap-4 cursor-pointer group">
                                 <div class="relative mt-1 flex-shrink-0">
@@ -129,20 +129,20 @@
                                 </div>
                                 <span class="text-white">
                                     <strong class="text-yellow-300 text-base">${t('contract:accept_terms')}</strong><br>
-                                    <span class="text-blue-200 text-sm">${t('contract:accept_terms_text')}</span>
+                                    <span class="text-slate-300 text-sm">${t('contract:accept_terms_text')}</span>
                                 </span>
                             </label>
                         </div>
                         
                         <div id="signatureSection" class="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20 opacity-50 pointer-events-none">
-                            <div class="bg-gradient-to-r from-green-900/30 to-blue-900/30 border-2 border-green-500/30 rounded-xl p-6 mb-6">
+                            <div class="bg-gradient-to-r from-green-900/20 to-slate-900/40 border-2 border-green-500/30 rounded-xl p-6 mb-6">
                                 <div class="flex items-start gap-3">
                                     <!-- Fix #2: emoji ✍️ supprimé, remplacé SVG -->
                                     <svg class="w-10 h-10 text-green-400 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                                     <div>
                                         <h3 class="text-xl font-bold text-green-400 mb-2">${t('contract:electronic_signature')}</h3>
-                                        <p class="text-blue-200 text-sm mb-3">${t('contract:electronic_signature_intro')}</p>
-                                        <div class="space-y-1 text-sm text-blue-200">
+                                        <p class="text-slate-300 text-sm mb-3">${t('contract:electronic_signature_intro')}</p>
+                                        <div class="space-y-1 text-sm text-slate-300">
                                             <div class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('contract:signature_feature_1')}</span></div>
                                             <div class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('contract:signature_feature_2')}</span></div>
                                             <div class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('contract:signature_feature_3')}</span></div>
@@ -153,7 +153,7 @@
                             </div>
                             
                             <h2 class="text-xl font-bold text-yellow-400 mb-4">${t('contract:sign_now')}</h2>
-                            <p class="text-blue-200 mb-4">${t('contract:signature_instruction')}</p>
+                            <p class="text-slate-300 mb-4">${t('contract:signature_instruction')}</p>
                             
                             <div class="bg-white rounded-xl p-4 mb-4 shadow-lg">
                                 <canvas id="signatureCanvas" width="700" height="200" class="w-full rounded-lg"></canvas>
@@ -178,8 +178,8 @@
                         </div>
                         
                         <!-- Fix #2: emoji ℹ️ supprimé -->
-                        <div class="bg-blue-900/30 border border-blue-500/30 rounded-2xl p-6">
-                            <p class="text-xs text-blue-200">${t('contract:legal_notice')}</p>
+                        <div class="bg-slate-900/40 border border-white/10 rounded-2xl p-6">
+                            <p class="text-xs text-slate-300">${t('contract:legal_notice')}</p>
                         </div>
                     </div>
                 </div>
