@@ -1,186 +1,110 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Profil - Real Estate Referrer</title>
+    <title>My Profile - Real Estate Referrer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/i18next-browser-languagedetector@7.2.0/i18nextBrowserLanguageDetector.min.js"></script>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen">
-    
-    <!-- Bannière Profil Incomplet -->
+<body class="bg-slate-950 min-h-screen">
+
+    <!-- Incomplete profile banner -->
     <div id="incompleteProfileBanner" class="hidden bg-gradient-to-r from-yellow-500 to-orange-500 text-slate-900 py-4 px-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-center">
-            <svg class="w-6 h-6 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-            </svg>
-            <!-- Fix #2: emoji ⚠️ supprimé du texte -->
-            <span class="font-bold text-center" data-i18n="profile.incomplete_banner">
-                Veuillez compléter votre profil pour pouvoir soumettre des leads et recevoir vos commissions
-            </span>
+        <div class="max-w-4xl mx-auto text-center">
+            <span class="font-bold">Please complete your profile to receive your commissions.</span>
         </div>
     </div>
 
     <!-- Header -->
-    <nav class="bg-white/10 backdrop-blur-md border-b border-white/20">
+    <nav class="border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <a href="/" class="text-white text-xl font-bold">Real Estate Referrer</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="en">🇬🇧 English</option>
-                        <option value="fr">🇫🇷 Français</option>
-                        <option value="ar">🇦🇪 العربية</option>
-                        <option value="ru">🇷🇺 Русский</option>
-                        <option value="hi">🇮🇳 हिंदी</option>
-                        <option value="ur">🇵🇰 اردو</option>
-                        <option value="zh">🇨🇳 中文</option>
-                        <option value="tl">🇵🇭 Tagalog</option>
-                    </select>
-                    <!-- Fix #6: bouton → lien <a>, jamais bloqué -->
-                    <a href="/" id="backToDashboard" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition duration-300" data-i18n="header.back_dashboard">Retour au dashboard</a>
-                </div>
+                <a href="index.html" class="text-white text-xl font-bold">Real Estate Referrer</a>
+                <a href="/" id="backToDashboard" class="border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-slate-950 font-semibold px-5 py-2 rounded-full transition">Back to dashboard</a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        
-        <div class="text-center mb-10">
-            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4" data-i18n="profile.title">
-                Mon Profil
-            </h1>
-            <p class="text-blue-200" data-i18n="profile.subtitle">
-                Gérez vos informations personnelles
-            </p>
+    <!-- Main -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">My Profile</h1>
+            <p class="text-slate-300">Manage your personal information and notification preferences.</p>
         </div>
 
-        <div id="requiredFieldsInfo" class="hidden mb-6 p-4 rounded-xl bg-blue-500/20 text-blue-200 text-center">
-            <span data-i18n="profile.required_fields_info">
-                Les champs marqués d'un * sont obligatoires pour recevoir vos commissions
-            </span>
+        <div id="requiredFieldsInfo" class="hidden mb-6 p-4 rounded-xl bg-yellow-500/10 text-yellow-300 text-center">
+            Fields marked with * are required to receive your commissions.
         </div>
 
         <div id="messageContainer" class="hidden mb-6 p-4 rounded-xl text-center"></div>
 
-        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+        <div class="bg-white/5 rounded-2xl p-8 border border-white/20">
             <form id="profileForm" class="space-y-6">
-                
                 <div>
-                    <label for="name" class="block text-white font-semibold mb-2">
-                        <span data-i18n="profile.name">Nom complet</span>
-                        <span class="text-yellow-400 ml-1">*</span>
-                    </label>
+                    <label for="name" class="block text-white font-semibold mb-2">Full name *</label>
                     <input type="text" id="name" name="name" required
-                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Votre nom" data-i18n-placeholder="profile.name_placeholder">
+                        class="w-full px-4 py-3 bg-slate-900/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none transition"
+                        placeholder="Your name">
                 </div>
 
                 <div>
-                    <label for="email" class="block text-white font-semibold mb-2" data-i18n="profile.email">Email</label>
+                    <label for="email" class="block text-white font-semibold mb-2">Email</label>
                     <input type="email" id="email" name="email" readonly
-                        class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/70 cursor-not-allowed"
-                        placeholder="votre@email.com">
-                    <!-- Fix #2: emoji ℹ️ supprimé -->
-                    <p class="text-blue-300 text-sm mt-2" data-i18n="profile.email_readonly">
-                        L'email ne peut pas être modifié
-                    </p>
+                        class="w-full px-4 py-3 bg-slate-900/30 border border-white/10 rounded-lg text-slate-300 cursor-not-allowed">
+                    <p class="text-slate-400 text-sm mt-2">Your email cannot be changed here.</p>
                 </div>
 
                 <div>
-                    <label for="phone" class="block text-white font-semibold mb-2">
-                        <span data-i18n="profile.phone">Téléphone</span>
-                        <span class="text-yellow-400 ml-1">*</span>
-                    </label>
+                    <label for="phone" class="block text-white font-semibold mb-2">Phone *</label>
                     <input type="tel" id="phone" name="phone" required
-                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="+971 50 123 4567" data-i18n-placeholder="profile.phone_placeholder">
+                        class="w-full px-4 py-3 bg-slate-900/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none transition"
+                        placeholder="+971 50 123 4567">
                 </div>
 
                 <div>
-                    <label for="address" class="block text-white font-semibold mb-2">
-                        <span data-i18n="profile.address">Adresse</span>
-                        <span class="text-yellow-400 ml-1">*</span>
-                    </label>
+                    <label for="address" class="block text-white font-semibold mb-2">Address *</label>
                     <textarea id="address" name="address" rows="2" required
-                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                        placeholder="Votre adresse complète" data-i18n-placeholder="profile.address_placeholder"></textarea>
-                    <!-- Fix #2: emoji ℹ️ supprimé -->
-                    <p class="text-blue-300 text-sm mt-2" data-i18n="profile.address_info">
-                        Obligatoire pour le versement de vos commissions
-                    </p>
+                        class="w-full px-4 py-3 bg-slate-900/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:outline-none transition"
+                        placeholder="Your full address"></textarea>
+                    <p class="text-slate-400 text-sm mt-2">Used to process your commission payments.</p>
                 </div>
 
-                <div>
-                    <label for="preferredLanguage" class="block text-white font-semibold mb-2" data-i18n="profile.preferred_language">
-                        Langue préférée pour les emails
-                    </label>
-                    <select id="preferredLanguage" name="preferred_language"
-                        class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="en">🇬🇧 English</option>
-                        <option value="fr">🇫🇷 Français</option>
-                        <option value="ar">🇦🇪 العربية</option>
-                        <option value="ru">🇷🇺 Русский</option>
-                        <option value="hi">🇮🇳 हिंदी</option>
-                        <option value="ur">🇵🇰 اردو</option>
-                        <option value="zh">🇨🇳 中文</option>
-                        <option value="tl">🇵🇭 Tagalog</option>
-                    </select>
-                </div>
-
-                <div class="pt-4">
+                <div class="pt-2">
                     <button type="submit" id="saveButton"
-                        class="w-full bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-900 font-bold py-4 px-6 rounded-xl hover:from-yellow-400 hover:to-yellow-300 transition duration-300 flex items-center justify-center">
-                        <span id="saveButtonText" data-i18n="profile.save_button">Sauvegarder</span>
+                        class="w-full flex items-center justify-center bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-slate-900 font-bold py-3 rounded-lg transition transform hover:scale-[1.02]">
+                        <span id="saveButtonText">Save</span>
                         <svg id="saveSpinner" class="hidden animate-spin ml-2 h-5 w-5 text-slate-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                         </svg>
                     </button>
                 </div>
-
             </form>
-        </div>
 
-        <div class="mt-8 bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10">
-            <h3 class="text-white font-semibold mb-4" data-i18n="profile.notifications_title">
-                Notifications par email
-            </h3>
-            <label class="flex items-center cursor-pointer">
-                <input type="checkbox" id="emailSubscribed" 
-                    class="w-5 h-5 rounded bg-white/10 border-white/20 text-blue-500 focus:ring-blue-500 focus:ring-offset-0" checked>
-                <span class="ml-3 text-blue-200" data-i18n="profile.receive_emails">
-                    Recevoir les emails de suivi et notifications
-                </span>
-            </label>
-        </div>
-
-    </div>
-
-    <footer class="bg-slate-900 border-t border-white/10 py-8 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <p class="text-blue-300">
-                © 2025 Real Estate Referrer Dubai. <span data-i18n="footer.rights">Tous droits réservés.</span>
-            </p>
-            <div class="mt-4 space-x-4">
-                <a href="/" class="text-blue-400 hover:text-blue-300" data-i18n="footer.home">Accueil</a>
-                <a href="/how-it-works" class="text-blue-400 hover:text-blue-300" data-i18n="footer.how_it_works">Comment ça marche</a>
+            <div class="mt-8 pt-6 border-t border-white/10">
+                <h3 class="text-white font-semibold mb-4">Notifications</h3>
+                <label class="flex items-center cursor-pointer">
+                    <input type="checkbox" id="emailSubscribed" class="w-5 h-5 text-yellow-500 bg-slate-700 border-gray-500 rounded focus:ring-yellow-500">
+                    <span class="ml-3 text-slate-300">Receive email notifications about my leads and commissions.</span>
+                </label>
             </div>
         </div>
-    </footer>
+
+        <footer class="mt-12 text-center text-slate-400 text-sm">
+            <p>&copy; 2025 Real Estate Referrer Dubai. All rights reserved.</p>
+            <div class="mt-3 space-x-4">
+                <a href="/" class="text-slate-400 hover:text-yellow-400">Home</a>
+                <a href="/how-it-works" class="text-slate-400 hover:text-yellow-400">How It Works</a>
+            </div>
+        </footer>
+    </div>
 
     <script>
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnaXpjZ3dod3hzd3Zvb2RxdmVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA0MzY1NDYsImV4cCI6MjA3NjAxMjU0Nn0.d5PWoeuz6Z322dnvLLKg4LBb6jUhWo4MyxlIGdxA3oc';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
+
         let currentUser = null;
         let currentProfile = null;
         let isProfileComplete = false;
@@ -192,7 +116,6 @@
         function updateProfileUI() {
             const banner = document.getElementById('incompleteProfileBanner');
             const requiredInfo = document.getElementById('requiredFieldsInfo');
-            // Fix #6: plus de gestion opacity/cursor sur le bouton retour
             if (isProfileComplete) {
                 banner.classList.add('hidden');
                 requiredInfo.classList.add('hidden');
@@ -213,23 +136,20 @@
             try {
                 const { data: profile, error } = await supabase
                     .from('profiles').select('*').eq('id', currentUser.id).single();
-                if (error) { showMessage(i18next.t('profile.load_error') || 'Erreur lors du chargement du profil', 'error'); return; }
+                if (error) { showMessage('Error loading profile', 'error'); return; }
                 currentProfile = profile;
                 isProfileComplete = checkProfileComplete(profile);
                 document.getElementById('name').value = profile.name || '';
                 document.getElementById('email').value = currentUser.email || '';
                 document.getElementById('phone').value = profile.phone || '';
                 document.getElementById('address').value = profile.address || '';
-                document.getElementById('preferredLanguage').value = profile.preferred_language || 'en';
                 document.getElementById('emailSubscribed').checked = !profile.email_unsubscribed;
                 updateProfileUI();
             } catch (err) {
-                showMessage('Erreur de connexion', 'error');
+                showMessage('Connection error', 'error');
             }
         }
 
-        // Fix #6: le lien <a href="/"> navigue toujours sans JS.
-        // On retire le highlight rouge quand on tape.
         ['name', 'phone', 'address'].forEach(function(fieldId) {
             document.getElementById(fieldId).addEventListener('input', function() {
                 this.classList.remove('ring-2', 'ring-red-500');
@@ -244,38 +164,30 @@
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const address = document.getElementById('address').value.trim();
-            const preferredLanguage = document.getElementById('preferredLanguage').value;
             const emailSubscribed = document.getElementById('emailSubscribed').checked;
             if (!name || !phone || !address) {
-                showMessage(i18next.t('profile.fill_required') || 'Veuillez remplir tous les champs obligatoires (*)', 'error');
+                showMessage('Please fill in all required fields (*)', 'error');
                 if (!name) document.getElementById('name').classList.add('ring-2', 'ring-red-500');
                 if (!phone) document.getElementById('phone').classList.add('ring-2', 'ring-red-500');
                 if (!address) document.getElementById('address').classList.add('ring-2', 'ring-red-500');
                 return;
             }
             saveButton.disabled = true;
-            saveButtonText.textContent = i18next.t('profile.saving') || 'Sauvegarde...';
+            saveButtonText.textContent = 'Saving...';
             saveSpinner.classList.remove('hidden');
             try {
                 const { error: profileError } = await supabase.from('profiles')
-                    .update({ name, phone, address, preferred_language: preferredLanguage, email_unsubscribed: !emailSubscribed })
+                    .update({ name, phone, address, preferred_language: 'en', email_unsubscribed: !emailSubscribed })
                     .eq('id', currentUser.id);
                 if (profileError) throw profileError;
                 isProfileComplete = true;
                 updateProfileUI();
-                // Fix #2: emoji ✅ supprimé du message succès
-                showMessage(i18next.t('profile.save_success') || 'Profil mis à jour avec succès.', 'success');
-                if (preferredLanguage !== i18next.language) {
-                    await i18next.changeLanguage(preferredLanguage);
-                    localStorage.setItem('i18nextLng', preferredLanguage);
-                    document.getElementById('languageSelector').value = preferredLanguage;
-                    updateContent();
-                }
+                showMessage('Profile updated successfully.', 'success');
             } catch (error) {
-                showMessage(error.message || 'Erreur lors de la sauvegarde', 'error');
+                showMessage(error.message || 'Error while saving', 'error');
             } finally {
                 saveButton.disabled = false;
-                saveButtonText.textContent = i18next.t('profile.save_button') || 'Sauvegarder';
+                saveButtonText.textContent = 'Save';
                 saveSpinner.classList.add('hidden');
             }
         });
@@ -290,45 +202,7 @@
             setTimeout(function() { container.classList.add('hidden'); }, 5000);
         }
 
-        function updateContent() {
-            document.documentElement.lang = i18next.language;
-            document.querySelectorAll('[data-i18n]').forEach(function(element) {
-                const key = element.getAttribute('data-i18n');
-                const translation = i18next.t(key);
-                if (translation && translation !== key) element.textContent = translation;
-            });
-            document.querySelectorAll('[data-i18n-placeholder]').forEach(function(element) {
-                const key = element.getAttribute('data-i18n-placeholder');
-                const translation = i18next.t(key);
-                if (translation && translation !== key) element.placeholder = translation;
-            });
-        }
-
-        async function init() {
-            try {
-                await i18next.use(i18nextHttpBackend).use(i18nextBrowserLanguageDetector).init({
-                    fallbackLng: 'en', debug: false, load: 'languageOnly',
-                    ns: ['profile', 'common'], defaultNS: 'profile',
-                    backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
-                    detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
-                });
-                const savedLang = localStorage.getItem('i18nextLng') || 'en';
-                document.getElementById('languageSelector').value = savedLang;
-                updateContent();
-                await checkAuth();
-            } catch (err) {
-                await checkAuth();
-            }
-        }
-
-        document.getElementById('languageSelector').addEventListener('change', async function(e) {
-            await i18next.changeLanguage(e.target.value);
-            localStorage.setItem('i18nextLng', e.target.value);
-            updateContent();
-        });
-
-        init();
+        checkAuth();
     </script>
-    <!-- Fix #1: crisp-chat.js supprimé -->
 </body>
 </html>
