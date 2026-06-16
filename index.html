@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Karyne de Clercq - Programme Apporteurs Dubai</title>
+    <title>Karyne de Clercq - Dubai Referral Program</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/i18next-http-backend@2.4.2/i18nextHttpBackend.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 
-    <!-- Version: 3.21.1 - Fix: remove chat, remove OAuth popup, remove emojis, address pre-fill -->
+    <!-- Version: 3.23.0 - English only (multilang disabled), forced lang=en -->
 
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -47,11 +47,10 @@
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
     <div id="app"></div>
-    <!-- Fix #5: oauthWarningModal removed entirely -->
 
     <script type="module">
         // ============================================
-        // v3.21.1 - Fix: remove chat, OAuth popup, emojis, address pre-fill
+        // v3.23.0 - English only. Multilang disabled (files kept for future re-enable).
         // ============================================
         import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
         import { SUPABASE_URL, SUPABASE_ANON_KEY } from './js/config.js';
@@ -65,7 +64,7 @@
         import * as RENDERING from './js/rendering.js';
 
         (async () => {
-            console.log('App starting v3.21.1...');
+            console.log('App starting v3.23.0 (English only)...');
 
             const urlParams = new URLSearchParams(window.location.search);
             const hashParams = window.location.hash;
@@ -79,7 +78,6 @@
             if (hasError) console.error('OAuth error in URL');
             if (isContractSignedReturn) console.log('Contract signed return detected');
 
-            // Fix #2: SVG spinner instead of emoji
             const SPINNER_HTML = `
                 <div class="min-h-screen flex items-center justify-center">
                     <div class="text-center">
@@ -87,7 +85,7 @@
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                         </svg>
-                        <div class="text-xl text-blue-200">Connexion en cours...</div>
+                        <div class="text-xl text-blue-200">Signing in...</div>
                     </div>
                 </div>
             `;
@@ -96,20 +94,28 @@
                 document.getElementById('app').innerHTML = SPINNER_HTML;
             }
 
-            // i18next
-            await i18next.use(i18nextHttpBackend).use(i18nextBrowserLanguageDetector).init({
-                fallbackLng: 'en', debug: false, load: 'languageOnly',
+            // ============================================
+            // i18next — ENGLISH ONLY
+            // Detection & localStorage caching disabled so no stale 'fr' can persist.
+            // To re-enable multilang later: restore the detector + caches and the
+            // language flag buttons in rendering.js.
+            // ============================================
+            localStorage.setItem('i18nextLng', 'en');
+            await i18next.use(i18nextHttpBackend).init({
+                lng: 'en', fallbackLng: 'en', debug: false, load: 'languageOnly',
                 ns: ['translation', 'auth', 'dashboard', 'common'], defaultNS: 'translation',
-                backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' },
-                detection: { order: ['localStorage', 'navigator'], caches: ['localStorage'] }
+                backend: { loadPath: '/locales/{{lng}}/{{ns}}.json' }
             });
             await i18next.loadNamespaces(['translation', 'auth', 'dashboard', 'common']);
             const t = (key) => window.i18next.t(key);
 
+            // changeLanguage neutralized: forces English regardless of the requested code.
             async function changeLanguage(langCode) {
-                await i18next.changeLanguage(langCode);
-                localStorage.setItem('i18nextLng', langCode);
-                window.location.reload();
+                if (i18next.language !== 'en') {
+                    await i18next.changeLanguage('en');
+                    localStorage.setItem('i18nextLng', 'en');
+                }
+                // No reload needed — single language.
             }
             window.changeLanguage = changeLanguage;
 
@@ -161,7 +167,7 @@
                 window.currentPage = 'auth-signup';
             }
 
-            // Fix: ?login=1 depuis l'email de bienvenue ouvre directement la modal de connexion
+            // ?login=1 from the welcome email opens the login modal directly
             if (urlParams.get('login') === '1') {
                 currentPage = 'auth-login';
                 window.currentPage = 'auth-login';
@@ -244,22 +250,22 @@
                             const name = document.getElementById('name').value.trim();
                             const fullPhone = getFullPhoneNumber('phone');
                             const confirmPassword = document.getElementById('confirmPassword').value;
-                            if (!VALIDATION.validateName(name)) throw new Error('Nom invalide');
-                            if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Téléphone invalide');
-                            if (!VALIDATION.validateEmail(email)) throw new Error('Email invalide');
-                            if (!VALIDATION.validatePassword(password)) throw new Error('Mot de passe invalide');
+                            if (!VALIDATION.validateName(name)) throw new Error('Invalid name');
+                            if (!VALIDATION.validatePhone(fullPhone)) throw new Error('Invalid phone');
+                            if (!VALIDATION.validateEmail(email)) throw new Error('Invalid email');
+                            if (!VALIDATION.validatePassword(password)) throw new Error('Invalid password');
                             if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
 
                             const phoneCheck = await TFA.checkPhoneExists(fullPhone);
-                            if (phoneCheck.exists) { errorDiv.textContent = 'Numéro déjà utilisé'; errorDiv.classList.remove('hidden'); return; }
+                            if (phoneCheck.exists) { errorDiv.textContent = 'Phone number already in use'; errorDiv.classList.remove('hidden'); return; }
 
                             const submitButton = document.getElementById('submitButton');
                             submitButton.disabled = true;
-                            submitButton.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Envoi SMS...';
+                            submitButton.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Sending SMS...';
 
                             isSignupInProgress = true;
-                            const smsResult = await TFA.send2FACode(fullPhone, i18next.language || 'fr', { email, password, name, phone: fullPhone, email_opt_in: document.getElementById('emailOptIn')?.checked || false });
-                            if (!smsResult.success) throw new Error('Erreur SMS');
+                            const smsResult = await TFA.send2FACode(fullPhone, 'en', { email, password, name, phone: fullPhone, email_opt_in: document.getElementById('emailOptIn')?.checked || false });
+                            if (!smsResult.success) throw new Error('SMS error');
                             tempPhone = fullPhone; window.tempPhone = fullPhone;
                             is2FAMode = true; window.is2FAMode = true;
                             isSignupInProgress = false;
@@ -270,7 +276,7 @@
                         }
                     } catch (error) {
                         let msg = error.message;
-                        if (msg.includes('Invalid login')) msg = 'Email ou mot de passe incorrect';
+                        if (msg.includes('Invalid login')) msg = 'Incorrect email or password';
                         errorDiv.textContent = msg; errorDiv.classList.remove('hidden');
                         if (mode === 'signup') { document.getElementById('submitButton').disabled = false; document.getElementById('submitButton').textContent = t('auth:signup_button'); }
                     }
@@ -290,14 +296,13 @@
                 };
             }
 
-            // Fix #5 — signInWithGoogle/Apple go directly to OAuth, no popup
             async function signInWithGoogle() {
                 const { error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } });
-                if (error) alert('Erreur: ' + error.message);
+                if (error) alert('Error: ' + error.message);
             }
             async function signInWithApple() {
                 const { error } = await supabase.auth.signInWithOAuth({ provider: 'apple', options: { redirectTo: window.location.origin } });
-                if (error) alert('Erreur: ' + error.message);
+                if (error) alert('Error: ' + error.message);
             }
 
             async function handleChangePassword() {
@@ -307,12 +312,12 @@
                     e.preventDefault(); errorDiv.classList.add('hidden');
                     const np = document.getElementById('newPassword').value;
                     const cp = document.getElementById('confirmNewPassword').value;
-                    if (np !== cp) { errorDiv.textContent = 'Mots de passe différents'; errorDiv.classList.remove('hidden'); return; }
-                    if (np.length < 8) { errorDiv.textContent = 'Min 8 caractères'; errorDiv.classList.remove('hidden'); return; }
+                    if (np !== cp) { errorDiv.textContent = 'Passwords do not match'; errorDiv.classList.remove('hidden'); return; }
+                    if (np.length < 8) { errorDiv.textContent = 'Min 8 characters'; errorDiv.classList.remove('hidden'); return; }
                     try {
                         const { error } = await supabase.auth.updateUser({ password: np });
                         if (error) throw error;
-                        isPasswordRecoveryMode = false; alert('Mot de passe changé avec succès.');
+                        isPasswordRecoveryMode = false; alert('Password changed successfully.');
                         await supabase.auth.signOut(); UTILS.showLogin();
                     } catch (error) { errorDiv.textContent = error.message; errorDiv.classList.remove('hidden'); }
                 };
@@ -381,15 +386,7 @@
 
                     window.userProfile = userProfile;
 
-                    // Sync langue depuis le profil Supabase
-                    if (userProfile?.preferred_language) {
-                        const profileLang = userProfile.preferred_language;
-                        const storedLang = localStorage.getItem('i18nextLng');
-                        if (profileLang !== storedLang) {
-                            localStorage.setItem('i18nextLng', profileLang);
-                            await i18next.changeLanguage(profileLang);
-                        }
-                    }
+                    // Language sync removed — single language (English).
 
                     return true;
 
@@ -404,10 +401,9 @@
             async function logout() {
                 try { await supabase.auth.signOut(); } catch(e) {}
                 try {
-                    const savedLang = localStorage.getItem('i18nextLng');
                     localStorage.clear();
                     sessionStorage.clear();
-                    if (savedLang) localStorage.setItem('i18nextLng', savedLang);
+                    localStorage.setItem('i18nextLng', 'en');
                 } catch(e) {}
                 currentUser = null; userProfile = null; currentPage = 'landing';
                 window.currentUser = null; window.userProfile = null; window.currentPage = 'landing';
@@ -438,18 +434,7 @@
                     }
 
                     setTimeout(() => {
-                        // Fix #2: no emoji in notification
-                        const contractSuccessMessages = {
-                            fr: 'Contrat signé avec succès.',
-                            en: 'Contract signed successfully.',
-                            ar: 'تم توقيع العقد بنجاح.',
-                            ru: 'Договор успешно подписан.',
-                            hi: 'अनुबंध सफलतापूर्वक हस्ताक्षरित।',
-                            ur: 'معاہدہ کامیابی سے دستخط ہو گیا۔',
-                            zh: '合同签署成功。',
-                            tl: 'Matagumpay na napirmahan ang kontrata.'
-                        };
-                        const msg = contractSuccessMessages[i18next.language?.substring(0, 2)] || contractSuccessMessages['en'];
+                        const msg = 'Contract signed successfully.';
                         const d = document.createElement('div');
                         d.innerHTML = `<div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50"><strong>${msg}</strong></div>`;
                         document.body.appendChild(d);
@@ -502,11 +487,11 @@
                                         const address = document.getElementById('completionAddress')?.value?.trim() || '';
                                         const area = document.getElementById('completionArea')?.value?.trim() || '';
                                         const emirate = document.getElementById('completionEmirate')?.value || '';
-                                        if (!name || name.length < 2) throw new Error('Nom requis');
-                                        if (!email || !email.includes('@') || email.includes('privaterelay')) throw new Error('Email valide requis');
-                                        if (!phone || phone.length < 8) throw new Error('Téléphone requis');
-                                        if (!address) throw new Error('Adresse requise');
-                                        if (!emirate) throw new Error('Pays / Émirat requis');
+                                        if (!name || name.length < 2) throw new Error('Name required');
+                                        if (!email || !email.includes('@') || email.includes('privaterelay')) throw new Error('Valid email required');
+                                        if (!phone || phone.length < 8) throw new Error('Phone required');
+                                        if (!address) throw new Error('Address required');
+                                        if (!emirate) throw new Error('Country / Emirate required');
                                         const fullAddr = area ? `${address}, ${area}, ${emirate}` : `${address}, ${emirate}`;
                                         const { error } = await supabase.from('profiles').update({ name, phone, address: fullAddr }).eq('id', currentUser.id);
                                         if (error) throw error;
@@ -514,7 +499,7 @@
                                         document.getElementById('profileCompletionModal')?.remove();
                                         currentPage = 'dashboard'; window.currentPage = 'dashboard';
                                         isRendering = false; render();
-                                    } catch (ex) { err.textContent = ex.message; err.classList.remove('hidden'); btn.disabled = false; btn.textContent = 'Enregistrer'; }
+                                    } catch (ex) { err.textContent = ex.message; err.classList.remove('hidden'); btn.disabled = false; btn.textContent = 'Save'; }
                                 };
                             }
                         }, 150);
@@ -548,7 +533,6 @@
                         return;
                     }
 
-                    // Fix #2: SVG spinner instead of emoji
                     app.innerHTML = `
                         <div class="min-h-screen flex items-center justify-center">
                             <div class="text-center">
@@ -556,7 +540,7 @@
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
                                 </svg>
-                                <div class="text-xl text-blue-200">Chargement... (${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})</div>
+                                <div class="text-xl text-blue-200">Loading... (${profileLoadAttempts}/${MAX_PROFILE_LOAD_ATTEMPTS})</div>
                             </div>
                         </div>`;
                     isRendering = false;
@@ -605,7 +589,6 @@
             window.resend2FACode = TFA.resend2FACode;
             window.signInWithGoogle = signInWithGoogle;
             window.signInWithApple = signInWithApple;
-            // Fix #5: showOAuthWarning / closeOAuthWarning removed
             window.toggleMobileMenu = UTILS.toggleMobileMenu;
             window.showLogin = UTILS.showLogin;
             window.showSignup = UTILS.showSignup;
@@ -691,6 +674,5 @@
 
         })();
     </script>
-    <!-- Fix #1: crisp-chat.js removed -->
 </body>
 </html>
