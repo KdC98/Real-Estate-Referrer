@@ -1,7 +1,6 @@
 // ============================================
 // MODULE RENDERING.JS
-// Version: 3.21.1 - Fix: remove emojis, tone down lead type, address pre-fill
-// Date: 13 mars 2026
+// Version: 3.22.0 - Landing "luxe sobre" + focus acheteur (seller/location masqués)
 // ============================================
 
 const COUNTRY_CODES = [
@@ -152,14 +151,13 @@ export function isProfileComplete(profile) {
     return hasName && hasPhone && hasAddress && hasEmail;
 }
 
-// Fix #7 — Pre-fill address fields from stored profile data
+// Pre-fill address fields from stored profile data
 // Address is stored as "Building, Area, Emirate" — we parse it back
 function parseStoredAddress(address) {
     if (!address) return { building: '', area: '', emirate: '' };
     const parts = address.split(',').map(s => s.trim()).filter(Boolean);
     if (parts.length === 1) return { building: parts[0], area: '', emirate: '' };
     if (parts.length === 2) return { building: parts[0], area: '', emirate: parts[1] };
-    // 3+ parts: last is emirate, second-to-last is area, rest is building
     const emirate = parts[parts.length - 1];
     const area = parts[parts.length - 2];
     const building = parts.slice(0, parts.length - 2).join(', ');
@@ -188,7 +186,6 @@ export function renderProfileCompletionModal() {
     const existingPhone = profile.phone || '';
     const isAppleRelay = existingEmail.includes('privaterelay.appleid.com');
 
-    // Fix #7 — Parse stored address back into fields
     const parsedAddress = parseStoredAddress(profile.address);
     const existingBuilding = parsedAddress.building;
     const existingArea = parsedAddress.area;
@@ -236,7 +233,6 @@ export function renderProfileCompletionModal() {
         </optgroup>
     `;
 
-    // Fix #2 — No emoji in modal content (flag emojis in country options are kept)
     return `
         <div id="profileCompletionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-[100] overflow-y-auto">
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 md:p-8 max-w-xl w-full border-2 border-yellow-500/50 shadow-2xl my-4 max-h-[95vh] overflow-y-auto">
@@ -286,125 +282,231 @@ export function renderProfileCompletionModal() {
     `;
 }
 
+// ============================================
+// LANDING PAGE — v3.22.0 "Luxe sobre", focus acheteur
+// Chaque texte tente d'abord la clé i18next ; si vide, fallback intégré (FR/EN…)
+// pour que la page fonctionne sans modifier les JSON. Traduis ensuite à loisir.
+// ============================================
 export function renderLandingPage() {
-    const t = (key) => window.i18next.t(key);
+    const i18n = window.i18next;
+    const currentLang = (i18n?.language || 'fr').substring(0, 2);
+
+    // tt(key, fallback) : utilise la traduction si elle existe, sinon le fallback
+    const tt = (key, fallback) => {
+        if (!i18n) return fallback;
+        const val = i18n.t(key);
+        // i18next renvoie la clé elle-même si absente
+        return (!val || val === key) ? fallback : val;
+    };
+
+    // Textes par défaut (intégrés) — éditables directement ici
+    const L = {
+        fr: {
+            how: 'Comment ça marche', login: 'Connexion', signup: 'Devenir apporteur',
+            hero_kicker: 'Programme apporteurs · Dubaï',
+            hero_title: 'Présentez un acheteur. Touchez 25%.',
+            hero_sub: "Vous connaissez quelqu'un qui veut acheter à Dubaï ? Présentez-le. Nous gérons la vente. Vous percevez 25% de notre commission d'agent — où que vous soyez dans le monde.",
+            hero_cta: 'Commencer maintenant',
+            hero_note: 'Inscription gratuite · Aucune licence requise',
+            ex_label: 'Exemple concret',
+            ex_property: 'Appartement vendu',
+            ex_price: '2 000 000 AED',
+            ex_total: "Commission d'agence (2%)",
+            ex_total_val: '40 000 AED',
+            ex_yours_label: 'Votre commission (25%)',
+            ex_yours_val: '10 000 AED',
+            ex_foot: "Sur la part agent. Plus le bien est cher, plus vous gagnez.",
+            steps_title: 'Trois étapes, c\'est tout',
+            step1_t: 'Présentez un acheteur', step1_d: "Transmettez le contact d'une personne intéressée par un achat à Dubaï.",
+            step2_t: 'Nous concluons la vente', step2_d: 'Notre équipe licenciée RERA accompagne le client jusqu\'à la signature.',
+            step3_t: 'Vous êtes payé', step3_d: 'Dès la transaction finalisée, votre commission de 25% vous est versée.',
+            why_title: "Pourquoi l'acheteur ?",
+            why_d: "C'est là que la valeur est la plus forte. Un acheteur sérieux génère la commission la plus élevée — et c'est le seul type de lead que nous traitons, pour vous garantir le meilleur taux : 25%.",
+            trust_rera: 'Licence RERA', trust_global: 'Apporteurs dans le monde entier', trust_fast: 'Paiement rapide après signature'
+        },
+        en: {
+            how: 'How it works', login: 'Log in', signup: 'Become a referrer',
+            hero_kicker: 'Referral program · Dubai',
+            hero_title: 'Introduce a buyer. Earn 25%.',
+            hero_sub: "Know someone looking to buy in Dubai? Introduce them. We handle the sale. You earn 25% of our agent commission — from anywhere in the world.",
+            hero_cta: 'Get started',
+            hero_note: 'Free signup · No licence required',
+            ex_label: 'Real example',
+            ex_property: 'Apartment sold',
+            ex_price: 'AED 2,000,000',
+            ex_total: 'Agency commission (2%)',
+            ex_total_val: 'AED 40,000',
+            ex_yours_label: 'Your commission (25%)',
+            ex_yours_val: 'AED 10,000',
+            ex_foot: 'On the agent share. The higher the price, the more you earn.',
+            steps_title: 'Three steps, that\'s it',
+            step1_t: 'Introduce a buyer', step1_d: 'Send us the contact of someone interested in buying in Dubai.',
+            step2_t: 'We close the sale', step2_d: 'Our RERA-licensed team guides the client all the way to signing.',
+            step3_t: 'You get paid', step3_d: 'Once the deal is done, your 25% commission is paid to you.',
+            why_title: 'Why buyers?',
+            why_d: "That's where the value is highest. A serious buyer generates the largest commission — and it's the only lead type we handle, so you always get the best rate: 25%.",
+            trust_rera: 'RERA licensed', trust_global: 'Referrers worldwide', trust_fast: 'Fast payment after signing'
+        }
+    };
+    // Pour les autres langues, on retombe sur l'anglais par défaut.
+    const d = L[currentLang] || L['en'];
+
+    // Photo de fond : Palm Jumeirah vue aérienne
+    const HERO_IMG = 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=1600&q=80';
 
     return `
-        <div class="min-h-screen">
-            <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
-                <div class="container mx-auto px-4 py-4">
-                    <div class="flex justify-between items-center">
-                        <h1 class="text-2xl font-bold text-yellow-400">${t('nav.brand')}</h1>
-                        <div class="hidden lg:flex items-center gap-3">
-                            <div class="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                                <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200" title="English">🇬🇧</button>
-                                <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Français">🇫🇷</button>
-                                <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200" title="العربية">🇦🇪</button>
-                                <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Русский">🇷🇺</button>
-                                <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200" title="हिन्दी">🇮🇳</button>
-                                <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200" title="اردو">🇵🇰</button>
-                                <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200" title="中文">🇨🇳</button>
-                                <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200" title="Tagalog">🇵🇭</button>
-                            </div>
-                            <a href="how-it-works.html" class="text-white/70 hover:text-white transition font-medium px-4 py-2">${t('nav.how_it_works')}</a>
-                            <button onclick="showLogin()" class="text-white/70 hover:text-white transition font-medium px-4 py-2">${t('nav.login')}</button>
-                            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-6 py-2 rounded-lg transition">${t('nav.signup')}</button>
+        <div class="min-h-screen bg-slate-950">
+            <!-- NAV -->
+            <nav class="absolute top-0 inset-x-0 z-50">
+                <div class="container mx-auto px-6 py-5 flex justify-between items-center">
+                    <h1 class="text-xl font-semibold tracking-wide text-white">${tt('nav.brand', 'Karyne de Clercq')}</h1>
+                    <div class="hidden lg:flex items-center gap-6">
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeLanguage('en')" class="text-xl hover:scale-110 transition" title="English">🇬🇧</button>
+                            <button onclick="changeLanguage('fr')" class="text-xl hover:scale-110 transition" title="Français">🇫🇷</button>
+                            <button onclick="changeLanguage('ar')" class="text-xl hover:scale-110 transition" title="العربية">🇦🇪</button>
+                            <button onclick="changeLanguage('ru')" class="text-xl hover:scale-110 transition" title="Русский">🇷🇺</button>
+                            <button onclick="changeLanguage('hi')" class="text-xl hover:scale-110 transition" title="हिन्दी">🇮🇳</button>
+                            <button onclick="changeLanguage('ur')" class="text-xl hover:scale-110 transition" title="اردو">🇵🇰</button>
+                            <button onclick="changeLanguage('zh')" class="text-xl hover:scale-110 transition" title="中文">🇨🇳</button>
+                            <button onclick="changeLanguage('tl')" class="text-xl hover:scale-110 transition" title="Tagalog">🇵🇭</button>
                         </div>
-                        <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl"><span id="menuIcon">☰</span></button>
+                        <a href="how-it-works.html" class="text-white/80 hover:text-white transition text-sm font-medium">${tt('nav.how_it_works', d.how)}</a>
+                        <button onclick="showLogin()" class="text-white/80 hover:text-white transition text-sm font-medium">${tt('nav.login', d.login)}</button>
+                        <button onclick="showSignup()" class="border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-slate-950 font-semibold px-5 py-2 rounded-full transition text-sm">${tt('nav.signup', d.signup)}</button>
                     </div>
-                    <div id="mobileMenu" class="hidden lg:hidden mt-4 bg-white/10 backdrop-blur-md rounded-xl p-4 space-y-3 border border-white/20">
-                        <div class="flex flex-wrap gap-2 justify-center pb-3 border-b border-white/20">
-                            <button onclick="changeLanguage('en')" class="text-2xl hover:scale-125 transition-transform duration-200">🇬🇧</button>
-                            <button onclick="changeLanguage('fr')" class="text-2xl hover:scale-125 transition-transform duration-200">🇫🇷</button>
-                            <button onclick="changeLanguage('ar')" class="text-2xl hover:scale-125 transition-transform duration-200">🇦🇪</button>
-                            <button onclick="changeLanguage('ru')" class="text-2xl hover:scale-125 transition-transform duration-200">🇷🇺</button>
-                            <button onclick="changeLanguage('hi')" class="text-2xl hover:scale-125 transition-transform duration-200">🇮🇳</button>
-                            <button onclick="changeLanguage('ur')" class="text-2xl hover:scale-125 transition-transform duration-200">🇵🇰</button>
-                            <button onclick="changeLanguage('zh')" class="text-2xl hover:scale-125 transition-transform duration-200">🇨🇳</button>
-                            <button onclick="changeLanguage('tl')" class="text-2xl hover:scale-125 transition-transform duration-200">🇵🇭</button>
-                        </div>
-                        <a href="how-it-works.html" class="block text-center text-white/70 hover:text-white transition font-medium py-2">${t('nav.how_it_works')}</a>
-                        <button onclick="showLogin(); toggleMobileMenu();" class="w-full text-center text-white/70 hover:text-white transition font-medium py-2">${t('nav.login')}</button>
-                        <button onclick="showSignup(); toggleMobileMenu();" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">${t('nav.signup')}</button>
+                    <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl"><span id="menuIcon">☰</span></button>
+                </div>
+                <div id="mobileMenu" class="hidden lg:hidden mx-6 bg-slate-900/95 backdrop-blur-md rounded-xl p-4 space-y-3 border border-white/10">
+                    <div class="flex flex-wrap gap-2 justify-center pb-3 border-b border-white/10">
+                        <button onclick="changeLanguage('en')" class="text-xl">🇬🇧</button>
+                        <button onclick="changeLanguage('fr')" class="text-xl">🇫🇷</button>
+                        <button onclick="changeLanguage('ar')" class="text-xl">🇦🇪</button>
+                        <button onclick="changeLanguage('ru')" class="text-xl">🇷🇺</button>
+                        <button onclick="changeLanguage('hi')" class="text-xl">🇮🇳</button>
+                        <button onclick="changeLanguage('ur')" class="text-xl">🇵🇰</button>
+                        <button onclick="changeLanguage('zh')" class="text-xl">🇨🇳</button>
+                        <button onclick="changeLanguage('tl')" class="text-xl">🇵🇭</button>
                     </div>
+                    <a href="how-it-works.html" class="block text-center text-white/80 py-2">${tt('nav.how_it_works', d.how)}</a>
+                    <button onclick="showLogin(); toggleMobileMenu();" class="w-full text-center text-white/80 py-2">${tt('nav.login', d.login)}</button>
+                    <button onclick="showSignup(); toggleMobileMenu();" class="w-full bg-yellow-500 text-slate-950 font-semibold py-3 rounded-lg">${tt('nav.signup', d.signup)}</button>
                 </div>
             </nav>
-            <main class="container mx-auto px-4 py-20">
-                <div class="text-center mb-12">
-                    <h2 class="text-5xl md:text-6xl font-bold mb-6 text-yellow-400">${t('hero.title')}</h2>
-                    <p class="text-xl text-blue-200 mb-8">${t('hero.subtitle')}</p>
-                    <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-lg px-8 py-4 rounded-lg transition transform hover:scale-105">${t('hero.cta_button')}</button>
+
+            <!-- HERO plein écran avec photo unique -->
+            <header class="relative min-h-screen flex items-center">
+                <div class="absolute inset-0">
+                    <img src="${HERO_IMG}" alt="Palm Jumeirah, Dubai" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-slate-950/40"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/30"></div>
                 </div>
-                <div class="grid md:grid-cols-3 gap-6 my-16">
-                    <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10"><img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80" alt="Burj Khalifa Dubai" class="w-full h-64 object-cover"></div>
-                    <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10"><img src="https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80" alt="Dubai Marina" class="w-full h-64 object-cover"></div>
-                    <div class="rounded-xl overflow-hidden shadow-2xl border border-white/10"><img src="https://images.unsplash.com/photo-1518684079-3c830dcef090?w=800&q=80" alt="Dubai Skyline" class="w-full h-64 object-cover"></div>
-                </div>
-                <div class="grid md:grid-cols-3 gap-8 mt-20">
-                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20">
-                        <div class="text-4xl font-bold text-yellow-400 mb-2">${t('stats.commission_value')}</div>
-                        <div class="text-blue-200">${t('stats.commission_label')}</div>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20">
-                        <div class="text-4xl font-bold text-yellow-400 mb-2">${t('stats.support_value')}</div>
-                        <div class="text-blue-200">${t('stats.support_label')}</div>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 text-center border border-white/20">
-                        <div class="text-4xl font-bold text-yellow-400 mb-2">${t('stats.timeline_value')}</div>
-                        <div class="text-blue-200">${t('stats.timeline_label')}</div>
-                    </div>
-                </div>
-                <div class="mt-20 bg-white/10 backdrop-blur-md rounded-2xl p-12 border border-white/20">
-                    <h3 class="text-3xl font-bold text-center text-yellow-400 mb-12">${t('gains.title')}</h3>
-                    <div class="grid md:grid-cols-2 gap-8">
-                        <div class="bg-slate-800/50 rounded-xl p-8 border border-white/10">
-                            <div class="text-yellow-400 text-xl font-bold mb-4">${t('gains.sale_title')}</div>
-                            <div class="space-y-3 text-blue-200">
-                                <div class="flex justify-between"><span>${t('gains.sale_example_1_property')}</span><span class="font-bold text-yellow-400">${t('gains.sale_example_1_commission')}</span></div>
-                                <div class="flex justify-between"><span>${t('gains.sale_example_2_property')}</span><span class="font-bold text-yellow-400">${t('gains.sale_example_2_commission')}</span></div>
-                                <div class="flex justify-between"><span>${t('gains.sale_example_3_property')}</span><span class="font-bold text-yellow-400">${t('gains.sale_example_3_commission')}</span></div>
-                            </div>
-                        </div>
-                        <div class="bg-slate-800/50 rounded-xl p-8 border border-white/10">
-                            <div class="text-yellow-400 text-xl font-bold mb-4">${t('gains.rental_title')}</div>
-                            <div class="space-y-3 text-blue-200">
-                                <div class="flex justify-between"><span>${t('gains.rental_example_1_property')}</span><span class="font-bold text-yellow-400">${t('gains.rental_example_1_commission')}</span></div>
-                                <div class="flex justify-between"><span>${t('gains.rental_example_2_property')}</span><span class="font-bold text-yellow-400">${t('gains.rental_example_2_commission')}</span></div>
-                                <div class="flex justify-between"><span>${t('gains.rental_example_3_property')}</span><span class="font-bold text-yellow-400">${t('gains.rental_example_3_commission')}</span></div>
-                            </div>
+
+                <div class="relative container mx-auto px-6 py-32 grid lg:grid-cols-2 gap-12 items-center">
+                    <!-- Colonne texte -->
+                    <div>
+                        <span class="inline-block text-yellow-400 text-sm font-medium tracking-widest uppercase mb-5">${d.hero_kicker}</span>
+                        <h2 class="text-4xl md:text-6xl font-bold text-white leading-tight mb-6">${tt('hero.title', d.hero_title)}</h2>
+                        <p class="text-lg text-slate-300 leading-relaxed mb-8 max-w-xl">${tt('hero.subtitle', d.hero_sub)}</p>
+                        <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                            <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-lg px-8 py-4 rounded-full transition transform hover:scale-105 shadow-xl shadow-yellow-500/20">${tt('hero.cta_button', d.hero_cta)}</button>
+                            <span class="text-slate-400 text-sm">${d.hero_note}</span>
                         </div>
                     </div>
+
+                    <!-- Colonne carte "exemple concret" -->
+                    <div class="lg:justify-self-end w-full max-w-md">
+                        <div class="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-8 shadow-2xl">
+                            <div class="text-xs uppercase tracking-widest text-yellow-400 font-medium mb-6">${d.ex_label}</div>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-baseline">
+                                    <span class="text-slate-400">${d.ex_property}</span>
+                                    <span class="text-white font-semibold text-lg">${d.ex_price}</span>
+                                </div>
+                                <div class="flex justify-between items-baseline">
+                                    <span class="text-slate-400">${d.ex_total}</span>
+                                    <span class="text-slate-300">${d.ex_total_val}</span>
+                                </div>
+                                <div class="h-px bg-white/10 my-2"></div>
+                                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-2xl p-5">
+                                    <div class="text-yellow-300 text-sm mb-1">${d.ex_yours_label}</div>
+                                    <div class="text-yellow-400 font-bold text-4xl">${d.ex_yours_val}</div>
+                                </div>
+                                <p class="text-slate-400 text-xs leading-relaxed pt-2">${d.ex_foot}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </main>
-            <footer class="bg-slate-900 border-t border-white/10 mt-20">
-                <div class="container mx-auto px-4 py-12">
+            </header>
+
+            <!-- COMMENT ÇA MARCHE : 3 étapes -->
+            <section class="py-24 bg-slate-950">
+                <div class="container mx-auto px-6">
+                    <h3 class="text-3xl md:text-4xl font-bold text-center text-white mb-16">${d.steps_title}</h3>
+                    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        <div class="text-center px-4">
+                            <div class="w-14 h-14 rounded-full border border-yellow-500/50 text-yellow-400 text-xl font-bold flex items-center justify-center mx-auto mb-6">1</div>
+                            <h4 class="text-xl font-semibold text-white mb-3">${d.step1_t}</h4>
+                            <p class="text-slate-400 leading-relaxed">${d.step1_d}</p>
+                        </div>
+                        <div class="text-center px-4">
+                            <div class="w-14 h-14 rounded-full border border-yellow-500/50 text-yellow-400 text-xl font-bold flex items-center justify-center mx-auto mb-6">2</div>
+                            <h4 class="text-xl font-semibold text-white mb-3">${d.step2_t}</h4>
+                            <p class="text-slate-400 leading-relaxed">${d.step2_d}</p>
+                        </div>
+                        <div class="text-center px-4">
+                            <div class="w-14 h-14 rounded-full border border-yellow-500/50 text-yellow-400 text-xl font-bold flex items-center justify-center mx-auto mb-6">3</div>
+                            <h4 class="text-xl font-semibold text-white mb-3">${d.step3_t}</h4>
+                            <p class="text-slate-400 leading-relaxed">${d.step3_d}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- POURQUOI L'ACHETEUR -->
+            <section class="py-24 bg-slate-900/50">
+                <div class="container mx-auto px-6 max-w-3xl text-center">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">${d.why_title}</h3>
+                    <p class="text-lg text-slate-300 leading-relaxed mb-10">${d.why_d}</p>
+                    <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-lg px-8 py-4 rounded-full transition transform hover:scale-105">${tt('hero.cta_button', d.hero_cta)}</button>
+                    <div class="flex flex-wrap justify-center gap-x-8 gap-y-3 mt-12 text-sm text-slate-400">
+                        <span class="flex items-center gap-2"><span class="text-yellow-400">•</span>${d.trust_rera}</span>
+                        <span class="flex items-center gap-2"><span class="text-yellow-400">•</span>${d.trust_global}</span>
+                        <span class="flex items-center gap-2"><span class="text-yellow-400">•</span>${d.trust_fast}</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="bg-slate-950 border-t border-white/10">
+                <div class="container mx-auto px-6 py-12">
                     <div class="grid md:grid-cols-3 gap-8 mb-8">
                         <div>
-                            <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.navigation_title')}</h3>
+                            <h3 class="text-lg font-semibold text-white mb-4">${tt('common:footer.navigation_title', 'Navigation')}</h3>
                             <ul class="space-y-2">
-                                <li><button onclick="backToHome()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.home')}</button></li>
-                                <li><a href="how-it-works.html" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.how_it_works')}</a></li>
-                                <li><button onclick="showLogin()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.login')}</button></li>
-                                <li><button onclick="showSignup()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.signup')}</button></li>
+                                <li><button onclick="backToHome()" class="text-slate-400 hover:text-yellow-400 transition">${tt('common:footer.home', 'Accueil')}</button></li>
+                                <li><a href="how-it-works.html" class="text-slate-400 hover:text-yellow-400 transition">${tt('common:footer.how_it_works', d.how)}</a></li>
+                                <li><button onclick="showLogin()" class="text-slate-400 hover:text-yellow-400 transition">${tt('common:footer.login', d.login)}</button></li>
+                                <li><button onclick="showSignup()" class="text-slate-400 hover:text-yellow-400 transition">${tt('common:footer.signup', d.signup)}</button></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.legal_title')}</h3>
+                            <h3 class="text-lg font-semibold text-white mb-4">${tt('common:footer.legal_title', 'Légal')}</h3>
                             <ul class="space-y-2">
-                                <li><a href="terms.html" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.terms')}</a></li>
-                                <li><a href="privacy.html" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.privacy')}</a></li>
-                                <li><button onclick="downloadContractTemplate()" class="text-blue-200 hover:text-yellow-400 transition">${t('common:footer.contract_template')}</button></li>
+                                <li><a href="terms.html" class="text-slate-400 hover:text-yellow-400 transition">${tt('common:footer.terms', 'CGU')}</a></li>
+                                <li><a href="privacy.html" class="text-slate-400 hover:text-yellow-400 transition">${tt('common:footer.privacy', 'Confidentialité')}</a></li>
+                                <li><button onclick="downloadContractTemplate()" class="text-slate-400 hover:text-yellow-400 transition">${tt('common:footer.contract_template', 'Modèle de contrat')}</button></li>
                             </ul>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-yellow-400 mb-4">${t('common:footer.contact_title')}</h3>
-                            <ul class="space-y-3 text-blue-200">
-                                <li><a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${t('common:footer.email')}</a></li>
-                                <li><span>${t('common:footer.location')}</span></li>
+                            <h3 class="text-lg font-semibold text-white mb-4">${tt('common:footer.contact_title', 'Contact')}</h3>
+                            <ul class="space-y-3 text-slate-400">
+                                <li><a href="mailto:contact@real-estate-referrer.com" class="hover:text-yellow-400 transition">${tt('common:footer.email', 'contact@real-estate-referrer.com')}</a></li>
+                                <li><span>${tt('common:footer.location', 'Dubaï, Émirats Arabes Unis')}</span></li>
                             </ul>
                         </div>
                     </div>
-                    <div class="border-t border-white/10 pt-6 text-center text-blue-300">${t('common:footer.copyright')}</div>
+                    <div class="border-t border-white/10 pt-6 text-center text-slate-500 text-sm">${tt('common:footer.copyright', '© Karyne de Clercq — Real Estate Referrer')}</div>
                 </div>
             </footer>
         </div>
@@ -576,7 +678,10 @@ export function renderDashboard() {
     const userProfile = window.userProfile;
     const currentLang = (window.i18next?.language || 'fr').substring(0, 2);
 
-    // Fix #2 — Removed all emoji from badge labels
+    // ── Types de leads activés (doit rester cohérent avec leads.js) ──
+    // Pour réafficher vendeur / location, ajoute leur valeur ici ET dans leads.js
+    const ENABLED_LEAD_TYPES = ['sale_buyer'];
+
     const badgeTranslations = {
         fr: { buyers: '25% commission acheteurs', others: '20% autres leads' },
         en: { buyers: '25% commission buyers', others: '20% other leads' },
@@ -602,7 +707,6 @@ export function renderDashboard() {
     const profileComplete = isProfileComplete(userProfile);
     const canAddLeads = profileComplete && hasValidContract;
 
-    // Fix #2 — Removed emoji from all translated strings
     const dwt = {
         fr: { complete_title: "Complétez votre inscription pour accéder à toutes les fonctionnalités", complete_desc: 'Pour pouvoir soumettre des leads et <strong class="text-yellow-400">recevoir vos commissions</strong>, veuillez compléter ces 2 étapes :', step1_title: "Étape 1 : Signer le contrat d'apporteur", step1_done: "Contrat signé ✓", step1_todo: "Obligatoire pour recevoir vos paiements", step1_btn: "Signer maintenant", step2_title: "Étape 2 : Compléter votre profil", step2_done: "Profil complet ✓", step2_todo: "Nom, téléphone et adresse requis pour les paiements", step2_btn: "Compléter", why_title: "Pourquoi ces étapes ?", why_desc: "Le contrat protège vos commissions et votre profil complet nous permet de vous payer.", locked_btn: "(Complétez les étapes ci-dessus)" },
         en: { complete_title: "Complete your registration to access all features", complete_desc: 'To submit leads and <strong class="text-yellow-400">receive your commissions</strong>, please complete these 2 steps:', step1_title: "Step 1: Sign the referrer agreement", step1_done: "Contract signed ✓", step1_todo: "Required to receive your payments", step1_btn: "Sign now", step2_title: "Step 2: Complete your profile", step2_done: "Profile complete ✓", step2_todo: "Name, phone and address required for payments", step2_btn: "Complete", why_title: "Why these steps?", why_desc: "The contract protects your commissions and your complete profile allows us to pay you.", locked_btn: "(Complete the steps above)" },
@@ -615,7 +719,6 @@ export function renderDashboard() {
     };
     const dw = dwt[currentLang] || dwt['en'];
 
-    // Helper: status indicator without emoji
     const stepIndicator = (done) => `
         <div class="w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center text-white font-bold text-sm ${done ? 'bg-green-500' : 'bg-red-500'}">
             ${done ? '✓' : '✗'}
@@ -629,7 +732,6 @@ export function renderDashboard() {
         } else {
             const stepContractDone = hasValidContract;
             const stepProfileDone = profileComplete;
-            // Fix #2 + Fix #3 — No emoji, no promotional styling
             addLeadSection = `
                 <div class="bg-orange-500/10 border border-orange-500/50 rounded-2xl p-6 mb-6">
                     <div class="flex-1">
@@ -662,6 +764,45 @@ export function renderDashboard() {
             `;
         }
     }
+
+    // ── Badges contrat : on n'affiche "autres leads" que si activé ──
+    const showOtherBadge = ENABLED_LEAD_TYPES.some(x => x !== 'sale_buyer');
+
+    // ── Options du sélecteur de type de lead (modal) ──
+    // Seuls les types activés sont affichés. Le reste est conservé pour réactivation.
+    const buyerLeadOption = ENABLED_LEAD_TYPES.includes('sale_buyer') ? `
+        <label class="flex items-center p-3 bg-slate-700/50 border border-yellow-500/40 rounded-lg cursor-pointer hover:bg-slate-700 transition">
+            <input type="radio" name="leadTypeRadio" value="sale_buyer" onchange="document.getElementById('leadType').value='sale_buyer'" class="w-4 h-4 text-yellow-500 mr-3" checked>
+            <div class="flex-1">
+                <span class="text-white font-semibold">${t('dashboard:sale_buyer')}</span>
+                <span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 25% ${t('dashboard:of_agent_commission')}</span>
+            </div>
+        </label>
+    ` : '';
+
+    const sellerLeadOption = ENABLED_LEAD_TYPES.includes('sale_seller') ? `
+        <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
+            <input type="radio" name="leadTypeRadio" value="sale_seller" onchange="document.getElementById('leadType').value='sale_seller'" class="w-4 h-4 text-yellow-500 mr-3">
+            <div class="flex-1"><span class="text-white">${t('dashboard:sale_seller')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
+        </label>
+    ` : '';
+
+    const landlordLeadOption = ENABLED_LEAD_TYPES.includes('rental_landlord') ? `
+        <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
+            <input type="radio" name="leadTypeRadio" value="rental_landlord" onchange="document.getElementById('leadType').value='rental_landlord'" class="w-4 h-4 text-yellow-500 mr-3">
+            <div class="flex-1"><span class="text-white">${t('dashboard:rental_landlord')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
+        </label>
+    ` : '';
+
+    const tenantLeadOption = ENABLED_LEAD_TYPES.includes('rental_tenant') ? `
+        <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
+            <input type="radio" name="leadTypeRadio" value="rental_tenant" onchange="document.getElementById('leadType').value='rental_tenant'" class="w-4 h-4 text-yellow-500 mr-3">
+            <div class="flex-1"><span class="text-white">${t('dashboard:rental_tenant')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
+        </label>
+    ` : '';
+
+    // Champ caché pré-rempli si un seul type actif
+    const defaultLeadTypeValue = ENABLED_LEAD_TYPES.length === 1 ? ENABLED_LEAD_TYPES[0] : '';
 
     return `
         <div class="min-h-screen">
@@ -721,7 +862,7 @@ export function renderDashboard() {
                                 <p class="text-blue-200 mb-3">${t('dashboard:contract.can_add_leads')}</p>
                                 <div class="flex flex-wrap gap-2">
                                     <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full border border-yellow-500/30">${badges.buyers}</span>
-                                    <span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full border border-blue-500/30">${badges.others}</span>
+                                    ${showOtherBadge ? `<span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full border border-blue-500/30">${badges.others}</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -758,29 +899,13 @@ export function renderDashboard() {
                         </div>
                         <div class="mt-6">
                             <label class="block text-blue-200 mb-3">${t('dashboard:lead_type')} *</label>
-                            <!-- Fix #3 — Neutral styling, no trophy, no "RECOMMANDÉ" badge -->
                             <div class="space-y-2">
-                                <label class="flex items-center p-3 bg-slate-700/50 border border-yellow-500/40 rounded-lg cursor-pointer hover:bg-slate-700 transition">
-                                    <input type="radio" name="leadTypeRadio" value="sale_buyer" onchange="document.getElementById('leadType').value='sale_buyer'" class="w-4 h-4 text-yellow-500 mr-3">
-                                    <div class="flex-1">
-                                        <span class="text-white font-semibold">${t('dashboard:sale_buyer')}</span>
-                                        <span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 25% ${t('dashboard:of_agent_commission')}</span>
-                                    </div>
-                                </label>
-                                <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
-                                    <input type="radio" name="leadTypeRadio" value="sale_seller" onchange="document.getElementById('leadType').value='sale_seller'" class="w-4 h-4 text-yellow-500 mr-3">
-                                    <div class="flex-1"><span class="text-white">${t('dashboard:sale_seller')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
-                                </label>
-                                <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
-                                    <input type="radio" name="leadTypeRadio" value="rental_landlord" onchange="document.getElementById('leadType').value='rental_landlord'" class="w-4 h-4 text-yellow-500 mr-3">
-                                    <div class="flex-1"><span class="text-white">${t('dashboard:rental_landlord')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
-                                </label>
-                                <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
-                                    <input type="radio" name="leadTypeRadio" value="rental_tenant" onchange="document.getElementById('leadType').value='rental_tenant'" class="w-4 h-4 text-yellow-500 mr-3">
-                                    <div class="flex-1"><span class="text-white">${t('dashboard:rental_tenant')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
-                                </label>
+                                ${buyerLeadOption}
+                                ${sellerLeadOption}
+                                ${landlordLeadOption}
+                                ${tenantLeadOption}
                             </div>
-                            <input type="hidden" id="leadType" name="leadType" required>
+                            <input type="hidden" id="leadType" name="leadType" value="${defaultLeadTypeValue}" required>
                         </div>
                         <div class="mt-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
