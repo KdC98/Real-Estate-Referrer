@@ -1,6 +1,6 @@
 // ============================================
 // MODULE RENDERING.JS
-// Version: 3.22.0 - Landing "luxe sobre" + focus acheteur (seller/location masqués)
+// Version: 3.22.1 - Landing "luxe sobre" + focus acheteur + SANS drapeaux de langue dans la nav
 // ============================================
 
 const COUNTRY_CODES = [
@@ -361,16 +361,6 @@ export function renderLandingPage() {
                 <div class="container mx-auto px-6 py-5 flex justify-between items-center">
                     <h1 class="text-xl font-semibold tracking-wide text-white">${tt('nav.brand', 'Karyne de Clercq')}</h1>
                     <div class="hidden lg:flex items-center gap-6">
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeLanguage('en')" class="text-xl hover:scale-110 transition" title="English">🇬🇧</button>
-                            <button onclick="changeLanguage('fr')" class="text-xl hover:scale-110 transition" title="Français">🇫🇷</button>
-                            <button onclick="changeLanguage('ar')" class="text-xl hover:scale-110 transition" title="العربية">🇦🇪</button>
-                            <button onclick="changeLanguage('ru')" class="text-xl hover:scale-110 transition" title="Русский">🇷🇺</button>
-                            <button onclick="changeLanguage('hi')" class="text-xl hover:scale-110 transition" title="हिन्दी">🇮🇳</button>
-                            <button onclick="changeLanguage('ur')" class="text-xl hover:scale-110 transition" title="اردو">🇵🇰</button>
-                            <button onclick="changeLanguage('zh')" class="text-xl hover:scale-110 transition" title="中文">🇨🇳</button>
-                            <button onclick="changeLanguage('tl')" class="text-xl hover:scale-110 transition" title="Tagalog">🇵🇭</button>
-                        </div>
                         <a href="how-it-works.html" class="text-white/80 hover:text-white transition text-sm font-medium">${tt('nav.how_it_works', d.how)}</a>
                         <button onclick="showLogin()" class="text-white/80 hover:text-white transition text-sm font-medium">${tt('nav.login', d.login)}</button>
                         <button onclick="showSignup()" class="border border-yellow-500 text-yellow-400 hover:bg-yellow-500 hover:text-slate-950 font-semibold px-5 py-2 rounded-full transition text-sm">${tt('nav.signup', d.signup)}</button>
@@ -378,16 +368,6 @@ export function renderLandingPage() {
                     <button onclick="toggleMobileMenu()" class="lg:hidden text-white text-3xl"><span id="menuIcon">☰</span></button>
                 </div>
                 <div id="mobileMenu" class="hidden lg:hidden mx-6 bg-slate-900/95 backdrop-blur-md rounded-xl p-4 space-y-3 border border-white/10">
-                    <div class="flex flex-wrap gap-2 justify-center pb-3 border-b border-white/10">
-                        <button onclick="changeLanguage('en')" class="text-xl">🇬🇧</button>
-                        <button onclick="changeLanguage('fr')" class="text-xl">🇫🇷</button>
-                        <button onclick="changeLanguage('ar')" class="text-xl">🇦🇪</button>
-                        <button onclick="changeLanguage('ru')" class="text-xl">🇷🇺</button>
-                        <button onclick="changeLanguage('hi')" class="text-xl">🇮🇳</button>
-                        <button onclick="changeLanguage('ur')" class="text-xl">🇵🇰</button>
-                        <button onclick="changeLanguage('zh')" class="text-xl">🇨🇳</button>
-                        <button onclick="changeLanguage('tl')" class="text-xl">🇵🇭</button>
-                    </div>
                     <a href="how-it-works.html" class="block text-center text-white/80 py-2">${tt('nav.how_it_works', d.how)}</a>
                     <button onclick="showLogin(); toggleMobileMenu();" class="w-full text-center text-white/80 py-2">${tt('nav.login', d.login)}</button>
                     <button onclick="showSignup(); toggleMobileMenu();" class="w-full bg-yellow-500 text-slate-950 font-semibold py-3 rounded-lg">${tt('nav.signup', d.signup)}</button>
