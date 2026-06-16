@@ -1,7 +1,7 @@
 // ============================================
 // GESTION DU DASHBOARD
 // Real Estate Referrer - Dubai
-// Version: 3.4.1 - Fix: remove emojis
+// Version: 3.4.2 - English-only badge label
 // ============================================
 
 import { STATUS_COLORS } from './config.js';
@@ -28,7 +28,7 @@ export async function loadDashboardContent() {
 
         if (error) {
             console.error('Error loading leads:', error);
-            document.getElementById('leadsTable').innerHTML = `<div class="text-red-400 p-4">Erreur: ${error.message}</div>`;
+            document.getElementById('leadsTable').innerHTML = `<div class="text-red-400 p-4">Error: ${error.message}</div>`;
             return;
         }
 
@@ -175,7 +175,7 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                                     <button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">
                                         ${i18next.t('dashboard:mark_sold')}
                                     </button>
-                                ` : '<span class="text-green-400 text-sm font-medium">Vendu</span>'}
+                                ` : `<span class="text-green-400 text-sm font-medium">${i18next.t('dashboard:status_sold')}</span>`}
                             </td>
                         ` : ''}
                     </tr>
