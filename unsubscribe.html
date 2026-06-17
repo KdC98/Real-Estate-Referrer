@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Désabonnement - Real Estate Referrer</title>
+    <title>Unsubscribe - Real Estate Referrer</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+            background: #020617;
             min-height: 100vh;
         }
     </style>
@@ -18,25 +18,25 @@
         <!-- Loading state -->
         <div id="loading">
             <div class="text-6xl mb-5">⏳</div>
-            <h1 class="text-yellow-400 text-2xl font-bold mb-5">Traitement en cours...</h1>
-            <p class="text-blue-200 text-lg">Veuillez patienter</p>
+            <h1 class="text-yellow-400 text-2xl font-bold mb-5">Processing...</h1>
+            <p class="text-slate-300 text-lg">Please wait</p>
         </div>
         
         <!-- Success state (hidden by default) -->
         <div id="success" class="hidden">
             <div class="text-6xl mb-5">✅</div>
-            <h1 class="text-yellow-400 text-2xl font-bold mb-5" id="successTitle">Désabonnement confirmé</h1>
-            <p class="text-blue-200 text-lg mb-5" id="successMessage">Vous ne recevrez plus d'emails de relance de Real Estate Referrer.</p>
-            <p class="text-slate-400 text-sm mb-8" id="successNote">Vous continuerez à recevoir les emails importants concernant vos commissions et votre compte.</p>
-            <a href="https://real-estate-referrer.com" class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-800 font-bold py-4 px-10 rounded-xl text-lg" id="successButton">Retour au site</a>
+            <h1 class="text-yellow-400 text-2xl font-bold mb-5" id="successTitle">Unsubscribe confirmed</h1>
+            <p class="text-slate-300 text-lg mb-5" id="successMessage">You will no longer receive marketing emails from Real Estate Referrer.</p>
+            <p class="text-slate-400 text-sm mb-8" id="successNote">You will still receive important emails about your commissions and your account.</p>
+            <a href="https://real-estate-referrer.com" class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-800 font-bold py-4 px-10 rounded-xl text-lg" id="successButton">Back to site</a>
         </div>
         
         <!-- Error state (hidden by default) -->
         <div id="error" class="hidden">
             <div class="text-6xl mb-5">❌</div>
-            <h1 class="text-red-400 text-2xl font-bold mb-5">Erreur</h1>
-            <p class="text-blue-200 text-lg mb-8" id="errorMessage">Une erreur est survenue.</p>
-            <a href="https://real-estate-referrer.com" class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-800 font-bold py-4 px-10 rounded-xl text-lg">Retour au site</a>
+            <h1 class="text-red-400 text-2xl font-bold mb-5">Error</h1>
+            <p class="text-slate-300 text-lg mb-8" id="errorMessage">An error occurred.</p>
+            <a href="https://real-estate-referrer.com" class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-400 text-slate-800 font-bold py-4 px-10 rounded-xl text-lg">Back to site</a>
         </div>
     </div>
 
@@ -44,13 +44,13 @@
         // Traductions
         const translations = {
             fr: {
-                title: "Désabonnement confirmé",
-                message: "Vous ne recevrez plus d'emails de relance de Real Estate Referrer.",
-                note: "Vous continuerez à recevoir les emails importants concernant vos commissions et votre compte.",
-                button: "Retour au site",
+                title: "Unsubscribe confirmed",
+                message: "You will no longer receive marketing emails from Real Estate Referrer.",
+                note: "You will still receive important emails about your commissions and your account.",
+                button: "Back to site",
                 errorInvalid: "Lien invalide. Paramètres manquants.",
                 errorToken: "Lien invalide ou expiré.",
-                errorGeneric: "Une erreur est survenue. Veuillez réessayer."
+                errorGeneric: "An error occurred. Please try again."
             },
             en: {
                 title: "Unsubscribed successfully",
