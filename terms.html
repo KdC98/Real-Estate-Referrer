@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,7 +51,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 min-h-screen text-white">
+<body class="bg-slate-950 min-h-screen text-white">
     <!-- Header -->
     <nav class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -60,17 +60,6 @@
                     <a href="/" class="text-white text-xl font-bold">Real Estate Referrer</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <!-- Sélecteur de langue -->
-                    <select id="languageSelector" class="bg-white/10 text-white px-3 py-2 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="fr">🇫🇷 Français</option>
-                        <option value="en">🇬🇧 English</option>
-                        <option value="ar">🇦🇪 العربية</option>
-                        <option value="ru">🇷🇺 Русский</option>
-                        <option value="hi">🇮🇳 हिंदी</option>
-                        <option value="ur">🇵🇰 اردو</option>
-                        <option value="zh">🇨🇳 中文</option>
-                        <option value="tl">🇵🇭 Tagalog</option>
-                    </select>
                     <a href="/" class="text-white/70 hover:text-white transition" data-i18n="nav.home">Accueil</a>
                     <a href="/how-it-works.html" class="text-white/70 hover:text-white transition" data-i18n="nav.how">Comment ça marche</a>
                     <a href="/privacy.html" class="text-white/70 hover:text-white transition" data-i18n="nav.privacy">Confidentialité</a>
@@ -87,7 +76,7 @@
                 <h1 class="text-4xl md:text-5xl font-bold mb-4">
                     <span class="text-yellow-400" data-i18n="title">Conditions Générales d'Utilisation</span>
                 </h1>
-                <p class="text-blue-200" data-i18n="last_updated">Dernière mise à jour : 25 novembre 2025</p>
+                <p class="text-slate-300" data-i18n="last_updated">Dernière mise à jour : 25 novembre 2025</p>
             </div>
 
             <!-- Content -->
@@ -97,7 +86,7 @@
 
             <!-- Back to Home -->
             <div class="text-center mt-8">
-                <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg transition duration-300" data-i18n="back_home">
+                <a href="/" class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-8 py-3 rounded-lg transition duration-300" data-i18n="back_home">
                     ← Retour à l'accueil
                 </a>
             </div>
@@ -108,13 +97,13 @@
     <footer class="bg-slate-900 border-t border-white/10 mt-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-blue-200" data-i18n="footer.copyright">
+                <div class="text-slate-300" data-i18n="footer.copyright">
                     © 2025 Real Estate Referrer. Tous droits réservés.
                 </div>
                 <div class="flex gap-6">
                     <a href="/terms.html" class="text-yellow-400 hover:text-yellow-300 transition" data-i18n="footer.terms">CGU</a>
-                    <a href="/privacy.html" class="text-blue-200 hover:text-white transition" data-i18n="footer.privacy">Confidentialité</a>
-                    <a href="/how-it-works.html" class="text-blue-200 hover:text-white transition" data-i18n="footer.how">Comment ça marche</a>
+                    <a href="/privacy.html" class="text-slate-300 hover:text-white transition" data-i18n="footer.privacy">Confidentialité</a>
+                    <a href="/how-it-works.html" class="text-slate-300 hover:text-white transition" data-i18n="footer.how">Comment ça marche</a>
                 </div>
             </div>
         </div>
@@ -125,37 +114,26 @@
         (async () => {
             await i18next
                 .use(i18nextHttpBackend)
-                .use(i18nextBrowserLanguageDetector)
                 .init({
-                    fallbackLng: 'fr',
+                    lng: 'en',
+                    fallbackLng: 'en',
                     debug: false,
                     load: 'languageOnly',
                     ns: ['terms'],
                     defaultNS: 'terms',
                     backend: {
                         loadPath: '/locales/{{lng}}/{{ns}}.json'
-                    },
-                    detection: {
-                        order: ['localStorage', 'navigator'],
-                        caches: ['localStorage']
                     }
                 });
             
             // Mettre à jour le sélecteur avec la langue actuelle
-            const currentLang = localStorage.getItem('i18nextLng') || i18next.language || 'fr';
-            document.getElementById('languageSelector').value = currentLang.split('-')[0];
+            localStorage.setItem('i18nextLng','en');
             
             updateContent();
             loadTermsContent();
         })();
 
-        // Changement de langue
-        document.getElementById('languageSelector').addEventListener('change', async function(e) {
-            await i18next.changeLanguage(e.target.value);
-            localStorage.setItem('i18nextLng', e.target.value);
-            updateContent();
-            loadTermsContent();
-        });
+        
 
         // Mise à jour des éléments avec data-i18n
         function updateContent() {
