@@ -1,6 +1,6 @@
 // ============================================
 // MODULE RENDERING.JS
-// Version: 3.22.1 - Landing "luxe sobre" + focus acheteur + SANS drapeaux de langue dans la nav
+// Version: 3.22.2 - Auth screens harmonisés (noir+or, anglais) + tous bleus retirés
 // ============================================
 
 const COUNTRY_CODES = [
@@ -238,37 +238,37 @@ export function renderProfileCompletionModal() {
             <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 md:p-8 max-w-xl w-full border-2 border-yellow-500/50 shadow-2xl my-4 max-h-[95vh] overflow-y-auto">
                 <div class="text-center mb-5">
                     <h2 class="text-2xl font-bold text-yellow-400 mb-2">${t.title}</h2>
-                    <p class="text-blue-200 text-sm">${t.subtitle}</p>
+                    <p class="text-slate-300 text-sm">${t.subtitle}</p>
                 </div>
                 <div class="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-3 mb-5">
                     <p class="text-yellow-300 text-sm text-center">${t.required_notice}</p>
                 </div>
                 <form id="profileCompletionForm" class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.name_label} *</label>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">${t.name_label} *</label>
                         <input type="text" id="completionName" value="${existingName}" required minlength="2" placeholder="${t.name_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.email_label} *</label>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">${t.email_label} *</label>
                         <input type="email" id="completionEmail" value="${isAppleRelay ? '' : existingEmail}" required placeholder="${t.email_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
-                        <p class="text-xs text-blue-300 mt-1">${t.email_help}</p>
+                        <p class="text-xs text-slate-400 mt-1">${t.email_help}</p>
                         ${isAppleRelay ? '<p class="text-xs text-orange-400 mt-1">Votre email Apple masqué ne peut pas recevoir les paiements. Entrez votre vraie adresse email.</p>' : ''}
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.phone_label} *</label>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">${t.phone_label} *</label>
                         <input type="tel" id="completionPhone" required placeholder="${t.phone_placeholder}" class="w-full py-3 pr-4 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
-                        <p class="text-xs text-blue-300 mt-1">${t.phone_help}</p>
+                        <p class="text-xs text-slate-400 mt-1">${t.phone_help}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.address_label} *</label>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">${t.address_label} *</label>
                         <input type="text" id="completionAddress" value="${existingBuilding}" required placeholder="${t.address_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.area_label}</label>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">${t.area_label}</label>
                         <input type="text" id="completionArea" value="${existingArea}" placeholder="${t.area_placeholder}" class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-blue-100 mb-1">${t.location_label} *</label>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">${t.location_label} *</label>
                         <select id="completionEmirate" required class="w-full px-4 py-3 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                             <option value="">${t.select_location}</option>
                             ${locationOptions}
@@ -527,7 +527,7 @@ export function renderAuthPage(mode) {
         const tempPhone = window.tempPhone || '';
         const maskedPhone = tempPhone ? (tempPhone.slice(0, -4).replace(/\d/g, '*') + tempPhone.slice(-4)) : '***';
         const twoFactorTranslations = {
-            fr: { title: 'Vérification SMS', subtitle: `Code envoyé au ${maskedPhone}`, code_label: 'Code de vérification (6 chiffres)', code_help: 'Entrez le code à 6 chiffres reçu par SMS', verify_button: 'Vérifier', resend_code: 'Renvoyer le code', back_to_signup: '← Retour à l\'inscription', back_button: '← Retour' },
+            fr: { title: 'Vérification SMS', subtitle: `Code envoyé au ${maskedPhone}`, code_label: 'Code de vérification (6 chiffres)', code_help: 'Entrez le code à 6 chiffres reçu par SMS', verify_button: 'Vérifier', resend_code: 'Renvoyer le code', back_to_signup: '← Retour à l\'inscription', back_button: '← Back' },
             en: { title: 'SMS Verification', subtitle: `Code sent to ${maskedPhone}`, code_label: 'Verification code (6 digits)', code_help: 'Enter the 6-digit code received by SMS', verify_button: 'Verify', resend_code: 'Resend code', back_to_signup: '← Back to signup', back_button: '← Back' },
             ar: { title: 'التحقق عبر الرسائل القصيرة', subtitle: `تم إرسال الرمز إلى ${maskedPhone}`, code_label: 'رمز التحقق (6 أرقام)', code_help: 'أدخل الرمز المكون من 6 أرقام', verify_button: 'تحقق', resend_code: 'إعادة إرسال', back_to_signup: '← العودة', back_button: '← رجوع' },
             ru: { title: 'Проверка SMS', subtitle: `Код отправлен на ${maskedPhone}`, code_label: 'Код (6 цифр)', code_help: 'Введите код из SMS', verify_button: 'Подтвердить', resend_code: 'Отправить снова', back_to_signup: '← Назад', back_button: '← Назад' },
@@ -540,31 +540,31 @@ export function renderAuthPage(mode) {
         return `
             <div class="min-h-screen flex items-center justify-center px-4">
                 <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
-                    <button onclick="window.backTo2FASignup()" class="text-blue-200 hover:text-white mb-6 flex items-center">${trans.back_button}</button>
+                    <button onclick="window.backTo2FASignup()" class="text-slate-300 hover:text-white mb-6 flex items-center">${trans.back_button}</button>
                     <h2 class="text-3xl font-bold mb-2 text-center text-yellow-400">${trans.title}</h2>
-                    <p class="text-center text-blue-200 mb-6">${trans.subtitle}</p>
+                    <p class="text-center text-slate-300 mb-6">${trans.subtitle}</p>
                     <form id="form2FA" class="space-y-6">
                         <div>
-                            <label class="block text-sm font-medium mb-2 text-blue-100">${trans.code_label}</label>
+                            <label class="block text-sm font-medium mb-2 text-slate-300">${trans.code_label}</label>
                             <input type="text" id="code2fa" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" class="w-full px-4 py-3 bg-slate-800/50 text-white rounded-lg border border-white/20 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 text-center text-2xl tracking-widest font-mono" required autocomplete="one-time-code">
-                            <p class="mt-2 text-sm text-blue-300">${trans.code_help}</p>
+                            <p class="mt-2 text-sm text-slate-400">${trans.code_help}</p>
                         </div>
                         <div id="error2fa" class="hidden bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 rounded-lg"></div>
                         <button type="submit" id="verify2faBtn" class="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-gray-900 font-bold py-3 rounded-lg transition transform hover:scale-105">${trans.verify_button}</button>
                         <div class="text-center"><button type="button" id="resendBtn" onclick="window.resend2FACode()" class="text-yellow-400 hover:text-yellow-300 text-sm font-medium">${trans.resend_code}</button></div>
-                        <div class="text-center"><button type="button" onclick="window.backTo2FASignup()" class="text-blue-300 hover:text-white text-sm">${trans.back_to_signup}</button></div>
+                        <div class="text-center"><button type="button" onclick="window.backTo2FASignup()" class="text-slate-400 hover:text-white text-sm">${trans.back_to_signup}</button></div>
                     </form>
                 </div>
             </div>
         `;
     } else if (mode === 'change-password') {
-        title = 'Nouveau mot de passe'; buttonText = 'Changer le mot de passe'; linkText = 'Retour à la connexion'; linkAction = 'showLogin()';
+        title = 'New password'; buttonText = 'Change password'; linkText = 'Back to login'; linkAction = 'showLogin()';
     }
 
     return `
         <div class="min-h-screen flex items-center justify-center px-4">
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20">
-                <button onclick="backToHome()" class="text-blue-200 hover:text-white mb-6 flex items-center">← ${t('auth:back_home')}</button>
+                <button onclick="backToHome()" class="text-slate-300 hover:text-white mb-6 flex items-center">← ${t('auth:back_home')}</button>
                 <h2 class="text-3xl font-bold mb-6 text-center text-yellow-400">${title}</h2>
                 ${mode === 'login' || mode === 'signup' ? `
                     <div class="space-y-3 mb-6">
@@ -577,59 +577,59 @@ export function renderAuthPage(mode) {
                             <span class="font-semibold">${t('auth:continue_with_apple')}</span>
                         </button>
                     </div>
-                    <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/20"></div></div><div class="relative flex justify-center text-sm"><span class="px-4 bg-slate-900/50 text-blue-200 rounded">OR</span></div></div>
+                    <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/20"></div></div><div class="relative flex justify-center text-sm"><span class="px-4 bg-slate-900/50 text-slate-300 rounded">OR</span></div></div>
                 ` : ''}
                 <form id="authForm" class="space-y-4">
                     ${mode === 'signup' ? `
                         <div>
-                            <label class="block mb-2 font-medium text-blue-100">${t('auth:name_label')}</label>
-                            <input type="text" id="name" required minlength="2" maxlength="100" placeholder="${t('auth:full_name_placeholder')}" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50" oninput="validateName()">
+                            <label class="block mb-2 font-medium text-slate-300">${t('auth:name_label')}</label>
+                            <input type="text" id="name" required minlength="2" maxlength="100" placeholder="${t('auth:full_name_placeholder')}" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-slate-500" oninput="validateName()">
                             <div id="nameError" class="text-red-400 text-sm mt-1 hidden"></div>
                         </div>
                         <div>
-                            <label class="block mb-2 font-medium text-blue-100">${t('auth:phone_label')}</label>
-                            <input type="tel" id="phone" required placeholder="${t('auth:phone_placeholder')}" class="w-full py-2 pr-4 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50">
-                            <p class="text-xs text-blue-300 mt-1">${phoneHelp}</p>
-                            <div class="bg-blue-900/30 border border-blue-500/30 rounded-lg p-3 mt-2">
-                                <p class="text-xs text-blue-200">${t('auth:sms_verification_notice')}</p>
+                            <label class="block mb-2 font-medium text-slate-300">${t('auth:phone_label')}</label>
+                            <input type="tel" id="phone" required placeholder="${t('auth:phone_placeholder')}" class="w-full py-2 pr-4 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-slate-500">
+                            <p class="text-xs text-slate-400 mt-1">${phoneHelp}</p>
+                            <div class="bg-slate-900/40 border border-white/10 rounded-lg p-3 mt-2">
+                                <p class="text-xs text-slate-300">${t('auth:sms_verification_notice')}</p>
                             </div>
                             <div id="phoneError" class="text-red-400 text-sm mt-1 hidden"></div>
                         </div>
                     ` : ''}
                     ${mode !== 'change-password' ? `
                         <div>
-                            <label class="block mb-2 font-medium text-blue-100">${t('auth:email_label')}</label>
-                            <input type="email" id="email" required placeholder="${t('auth:email_placeholder')}" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-blue-300/50" ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}>
+                            <label class="block mb-2 font-medium text-slate-300">${t('auth:email_label')}</label>
+                            <input type="email" id="email" required placeholder="${t('auth:email_placeholder')}" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none transition-colors text-white placeholder-slate-500" ${mode === 'signup' ? 'oninput="validateEmail()"' : ''}>
                             ${mode === 'signup' ? '<div id="emailError" class="text-red-400 text-sm mt-1 hidden"></div>' : ''}
                         </div>
                     ` : ''}
                     ${mode !== 'reset' ? `
                         <div>
-                            <label class="block mb-2 font-medium text-blue-100">${mode === 'change-password' ? 'Nouveau mot de passe' : t('auth:password_label')}</label>
+                            <label class="block mb-2 font-medium text-slate-300">${mode === 'change-password' ? 'New password' : t('auth:password_label')}</label>
                             <div class="relative">
-                                <input type="password" id="${mode === 'change-password' ? 'newPassword' : 'password'}" required minlength="8" placeholder="••••••••" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-blue-300/50" ${mode === 'signup' || mode === 'change-password' ? 'oninput="validatePassword()"' : ''}>
-                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors">${SVG_EYE}</button>
+                                <input type="password" id="${mode === 'change-password' ? 'newPassword' : 'password'}" required minlength="8" placeholder="••••••••" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-slate-500" ${mode === 'signup' || mode === 'change-password' ? 'oninput="validatePassword()"' : ''}>
+                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'newPassword' : 'password'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors">${SVG_EYE}</button>
                             </div>
                             ${mode === 'signup' || mode === 'change-password' ? `
                                 <div class="mt-2">
-                                    <div class="flex items-center gap-2 text-xs text-blue-300"><div id="passwordStrength" class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300"></div></div><span id="passwordStrengthText" class="min-w-[60px]"></span></div>
-                                    <div class="text-xs text-blue-300 mt-1.5 space-y-0.5">
+                                    <div class="flex items-center gap-2 text-xs text-slate-400"><div id="passwordStrength" class="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden"><div id="passwordStrengthBar" class="h-full w-0 transition-all duration-300"></div></div><span id="passwordStrengthText" class="min-w-[60px]"></span></div>
+                                    <div class="text-xs text-slate-400 mt-1.5 space-y-0.5">
                                         <div id="req-length" class="flex items-center gap-1"><span class="w-3">•</span><span>${t('auth:password_req_length')}</span></div>
                                         <div id="req-letter" class="flex items-center gap-1"><span class="w-3">•</span><span>${t('auth:password_req_letter')}</span></div>
                                         <div id="req-number" class="flex items-center gap-1"><span class="w-3">•</span><span>${t('auth:password_req_number')}</span></div>
                                         <div id="req-special" class="flex items-center gap-1"><span class="w-3">•</span><span>${t('auth:password_req_special')}</span></div>
                                     </div>
                                 </div>
-                            ` : '<div class="text-sm text-blue-300 mt-1">' + t('auth:password_hint') + '</div>'}
+                            ` : '<div class="text-sm text-slate-400 mt-1">' + t('auth:password_hint') + '</div>'}
                             <div id="passwordError" class="text-red-400 text-sm mt-1 hidden"></div>
                         </div>
                     ` : ''}
                     ${mode === 'signup' || mode === 'change-password' ? `
                         <div>
-                            <label class="block mb-2 font-medium text-blue-100">${mode === 'change-password' ? 'Confirmer le nouveau mot de passe' : t('auth:confirm_password_label')}</label>
+                            <label class="block mb-2 font-medium text-slate-300">${mode === 'change-password' ? 'Confirm new password' : t('auth:confirm_password_label')}</label>
                             <div class="relative">
-                                <input type="password" id="${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}" required minlength="8" placeholder="••••••••" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-blue-300/50" oninput="validateConfirmPassword()">
-                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-300 hover:text-white transition-colors">${SVG_EYE}</button>
+                                <input type="password" id="${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}" required minlength="8" placeholder="••••••••" class="w-full px-4 py-2 rounded-lg bg-slate-800/50 border border-white/20 focus:border-yellow-500 focus:outline-none pr-12 transition-colors text-white placeholder-slate-500" oninput="validateConfirmPassword()">
+                                <button type="button" onclick="togglePasswordVisibility('${mode === 'change-password' ? 'confirmNewPassword' : 'confirmPassword'}', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors">${SVG_EYE}</button>
                             </div>
                             <div id="confirmPasswordError" class="text-red-400 text-sm mt-1 hidden"></div>
                             <div id="confirmPasswordSuccess" class="text-green-400 text-sm mt-1 hidden flex items-center gap-1"><span>✓</span><span>${t('auth:password_validation.passwords_match')}</span></div>
@@ -639,7 +639,7 @@ export function renderAuthPage(mode) {
                         <div class="mt-4 p-4 bg-slate-800/30 border border-white/10 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
                                 <input type="checkbox" id="emailOptIn" class="w-5 h-5 mt-0.5 text-yellow-500 bg-slate-700 border-gray-500 rounded focus:ring-yellow-500 focus:ring-2">
-                                <div><span class="text-white font-medium">${emailOptIn.label}</span><p class="text-blue-300 text-sm mt-1">${emailOptIn.description}</p></div>
+                                <div><span class="text-white font-medium">${emailOptIn.label}</span><p class="text-slate-400 text-sm mt-1">${emailOptIn.description}</p></div>
                             </label>
                         </div>
                     ` : ''}
@@ -647,7 +647,7 @@ export function renderAuthPage(mode) {
                     <div id="authError" class="text-red-400 text-sm hidden bg-red-900/20 border border-red-500/50 rounded-lg p-3"></div>
                     <button type="submit" id="submitButton" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" ${mode === 'signup' || mode === 'change-password' ? 'disabled' : ''}>${buttonText}</button>
                 </form>
-                <p class="text-center mt-6 text-blue-200"><button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">${linkText}</button></p>
+                <p class="text-center mt-6 text-slate-300"><button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">${linkText}</button></p>
             </div>
         </div>
     `;
@@ -678,7 +678,7 @@ export function renderDashboard() {
     const myProfileText = profileTranslations[currentLang] || profileTranslations['en'];
 
     if (!userProfile) {
-        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-blue-200">Chargement du profil...</div></div>';
+        return '<div class="min-h-screen flex items-center justify-center"><div class="text-xl text-slate-300">Loading profile...</div></div>';
     }
 
     const isAdmin = userProfile.role === 'admin';
@@ -722,7 +722,7 @@ export function renderDashboard() {
                                 ${stepIndicator(stepContractDone)}
                                 <div class="flex-1">
                                     <div class="font-semibold ${stepContractDone ? 'text-green-300' : 'text-red-300'}">${dw.step1_title}</div>
-                                    <div class="text-sm text-blue-300">${stepContractDone ? dw.step1_done : dw.step1_todo}</div>
+                                    <div class="text-sm text-slate-400">${stepContractDone ? dw.step1_done : dw.step1_todo}</div>
                                 </div>
                                 ${!stepContractDone ? `<a href="/contract-signature.html" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step1_btn}</a>` : ''}
                             </div>
@@ -730,9 +730,9 @@ export function renderDashboard() {
                                 ${stepIndicator(stepProfileDone)}
                                 <div class="flex-1">
                                     <div class="font-semibold ${stepProfileDone ? 'text-green-300' : 'text-red-300'}">${dw.step2_title}</div>
-                                    <div class="text-sm text-blue-300">${stepProfileDone ? dw.step2_done : dw.step2_todo}</div>
+                                    <div class="text-sm text-slate-400">${stepProfileDone ? dw.step2_done : dw.step2_todo}</div>
                                 </div>
-                                ${!stepProfileDone ? `<a href="profile.html" class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step2_btn}</a>` : ''}
+                                ${!stepProfileDone ? `<a href="profile.html" class="bg-slate-700 hover:bg-slate-600 text-white font-bold px-4 py-2 rounded-lg transition text-sm">${dw.step2_btn}</a>` : ''}
                             </div>
                         </div>
                         <div class="mt-4 p-3 bg-yellow-500/10 border border-yellow-500/30 rounded-lg">
@@ -755,7 +755,7 @@ export function renderDashboard() {
             <input type="radio" name="leadTypeRadio" value="sale_buyer" onchange="document.getElementById('leadType').value='sale_buyer'" class="w-4 h-4 text-yellow-500 mr-3" checked>
             <div class="flex-1">
                 <span class="text-white font-semibold">${t('dashboard:sale_buyer')}</span>
-                <span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 25% ${t('dashboard:of_agent_commission')}</span>
+                <span class="text-slate-400 text-sm ml-2">— ${t('dashboard:commission')}: 25% ${t('dashboard:of_agent_commission')}</span>
             </div>
         </label>
     ` : '';
@@ -763,21 +763,21 @@ export function renderDashboard() {
     const sellerLeadOption = ENABLED_LEAD_TYPES.includes('sale_seller') ? `
         <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
             <input type="radio" name="leadTypeRadio" value="sale_seller" onchange="document.getElementById('leadType').value='sale_seller'" class="w-4 h-4 text-yellow-500 mr-3">
-            <div class="flex-1"><span class="text-white">${t('dashboard:sale_seller')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
+            <div class="flex-1"><span class="text-white">${t('dashboard:sale_seller')}</span><span class="text-slate-400 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
         </label>
     ` : '';
 
     const landlordLeadOption = ENABLED_LEAD_TYPES.includes('rental_landlord') ? `
         <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
             <input type="radio" name="leadTypeRadio" value="rental_landlord" onchange="document.getElementById('leadType').value='rental_landlord'" class="w-4 h-4 text-yellow-500 mr-3">
-            <div class="flex-1"><span class="text-white">${t('dashboard:rental_landlord')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
+            <div class="flex-1"><span class="text-white">${t('dashboard:rental_landlord')}</span><span class="text-slate-400 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
         </label>
     ` : '';
 
     const tenantLeadOption = ENABLED_LEAD_TYPES.includes('rental_tenant') ? `
         <label class="flex items-center p-3 bg-slate-700/50 border border-white/20 rounded-lg cursor-pointer hover:bg-slate-700 transition">
             <input type="radio" name="leadTypeRadio" value="rental_tenant" onchange="document.getElementById('leadType').value='rental_tenant'" class="w-4 h-4 text-yellow-500 mr-3">
-            <div class="flex-1"><span class="text-white">${t('dashboard:rental_tenant')}</span><span class="text-blue-300 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
+            <div class="flex-1"><span class="text-white">${t('dashboard:rental_tenant')}</span><span class="text-slate-400 text-sm ml-2">— ${t('dashboard:commission')}: 20%</span></div>
         </label>
     ` : '';
 
@@ -792,7 +792,7 @@ export function renderDashboard() {
                         <h1 class="text-2xl font-bold text-yellow-400">${dashboardTitle}</h1>
                         <div class="flex items-center gap-4">
                             <span class="text-yellow-400 font-medium hidden md:inline">${userProfile.name}</span>
-                            <a href="profile.html" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">${myProfileText}</a>
+                            <a href="profile.html" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition">${myProfileText}</a>
                             <button onclick="logout()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition">${t('dashboard:logout')}</button>
                         </div>
                     </div>
@@ -800,14 +800,14 @@ export function renderDashboard() {
             </header>
             <main class="container mx-auto px-4 py-8">
                 ${!hasValidContract && !isAdmin ? `
-                    <div id="contractRequirement" class="mb-6 bg-blue-900/20 border border-yellow-500/50 p-8 rounded-2xl shadow-lg">
+                    <div id="contractRequirement" class="mb-6 bg-slate-900/40 border border-yellow-500/50 p-8 rounded-2xl shadow-lg">
                         <div class="flex flex-col lg:flex-row gap-8">
                             <div class="flex-1">
                                 <h3 class="text-2xl font-bold text-yellow-400 mb-4">${t('dashboard:contract.required')}</h3>
                                 <div class="bg-white/5 rounded-xl p-4 mb-6 border border-white/10">
                                     <h4 class="font-bold text-white mb-3">${t('dashboard:contract.what_is_it')}</h4>
-                                    <p class="text-blue-200 text-sm mb-3">${t('dashboard:contract.explanation')}</p>
-                                    <ul class="space-y-2 text-sm text-blue-200 ml-4">
+                                    <p class="text-slate-300 text-sm mb-3">${t('dashboard:contract.explanation')}</p>
+                                    <ul class="space-y-2 text-sm text-slate-300 ml-4">
                                         <li>— <strong>${t('dashboard:contract.benefit1_title')}</strong> ${t('dashboard:contract.benefit1_desc')}</li>
                                         <li>— <strong>${t('dashboard:contract.benefit2_title')}</strong> ${t('dashboard:contract.benefit2_desc')}</li>
                                         <li>— <strong>${t('dashboard:contract.benefit3_title')}</strong> ${t('dashboard:contract.benefit3_desc')}</li>
@@ -819,15 +819,15 @@ export function renderDashboard() {
                                     <div class="bg-green-900/20 border border-green-500/40 p-6 rounded-xl">
                                         <div class="mb-4">
                                             <h4 class="font-bold text-green-300 text-lg">${t('dashboard:contract.electronic_signature')}</h4>
-                                            <p class="text-xs text-blue-300">${t('dashboard:contract.electronic_signature_intro')}</p>
+                                            <p class="text-xs text-slate-400">${t('dashboard:contract.electronic_signature_intro')}</p>
                                         </div>
-                                        <ul class="space-y-2 text-sm text-blue-200 mb-4">
+                                        <ul class="space-y-2 text-sm text-slate-300 mb-4">
                                             <li class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('dashboard:contract.signature_feature_1')}</span></li>
                                             <li class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('dashboard:contract.signature_feature_2')}</span></li>
                                             <li class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('dashboard:contract.signature_feature_3')}</span></li>
                                             <li class="flex items-center gap-2"><span class="text-green-400">✓</span><span>${t('dashboard:contract.signature_feature_4')}</span></li>
                                         </ul>
-                                        <a href="/contract-signature.html" class="block w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white font-bold py-3 rounded-lg transition text-center">${t('dashboard:contract.sign_now_button')}</a>
+                                        <a href="/contract-signature.html" class="block w-full bg-gradient-to-r from-green-500 to-yellow-500 hover:from-green-600 hover:to-yellow-600 text-white font-bold py-3 rounded-lg transition text-center">${t('dashboard:contract.sign_now_button')}</a>
                                     </div>
                                 </div>
                             </div>
@@ -839,10 +839,10 @@ export function renderDashboard() {
                         <div class="flex items-center gap-4">
                             <div class="flex-1">
                                 <h3 class="text-xl font-bold text-green-300 mb-1">${t('dashboard:contract.signed_validated')}</h3>
-                                <p class="text-blue-200 mb-3">${t('dashboard:contract.can_add_leads')}</p>
+                                <p class="text-slate-300 mb-3">${t('dashboard:contract.can_add_leads')}</p>
                                 <div class="flex flex-wrap gap-2">
                                     <span class="bg-yellow-500/20 text-yellow-400 text-sm px-3 py-1 rounded-full border border-yellow-500/30">${badges.buyers}</span>
-                                    ${showOtherBadge ? `<span class="bg-blue-500/20 text-blue-400 text-sm px-3 py-1 rounded-full border border-blue-500/30">${badges.others}</span>` : ''}
+                                    ${showOtherBadge ? `<span class="bg-white/10 text-slate-400 text-sm px-3 py-1 rounded-full border border-white/10">${badges.others}</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -861,24 +861,24 @@ export function renderDashboard() {
                     <form id="addLeadForm" onsubmit="event.preventDefault(); window.addLead(event);">
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-blue-200 mb-2">${t('dashboard:client_name')} *</label>
+                                <label class="block text-slate-300 mb-2">${t('dashboard:client_name')} *</label>
                                 <input type="text" id="clientName" required class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block text-blue-200 mb-2">${t('dashboard:client_email')} *</label>
+                                <label class="block text-slate-300 mb-2">${t('dashboard:client_email')} *</label>
                                 <input type="email" id="clientEmail" required class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block text-blue-200 mb-2">${t('dashboard:client_phone')} *</label>
+                                <label class="block text-slate-300 mb-2">${t('dashboard:client_phone')} *</label>
                                 <input type="tel" id="clientPhone" required class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block text-blue-200 mb-2">${t('dashboard:budget')} (AED) *</label>
+                                <label class="block text-slate-300 mb-2">${t('dashboard:budget')} (AED) *</label>
                                 <input type="text" id="budget" required inputmode="numeric" placeholder="1,500,000" class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
                             </div>
                         </div>
                         <div class="mt-6">
-                            <label class="block text-blue-200 mb-3">${t('dashboard:lead_type')} *</label>
+                            <label class="block text-slate-300 mb-3">${t('dashboard:lead_type')} *</label>
                             <div class="space-y-2">
                                 ${buyerLeadOption}
                                 ${sellerLeadOption}
@@ -887,12 +887,12 @@ export function renderDashboard() {
                             </div>
                             <input type="hidden" id="leadType" name="leadType" value="${defaultLeadTypeValue}" required>
                         </div>
-                        <div class="mt-6 p-4 bg-blue-900/20 border border-blue-500/30 rounded-xl">
+                        <div class="mt-6 p-4 bg-slate-900/40 border border-white/10 rounded-xl">
                             <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="clientConsent" required class="w-5 h-5 mt-0.5 text-blue-500 rounded border-gray-500 focus:ring-blue-500">
+                                <input type="checkbox" id="clientConsent" required class="w-5 h-5 mt-0.5 text-yellow-500 rounded border-gray-500 focus:ring-yellow-500">
                                 <div>
                                     <span class="text-white font-medium">${t('dashboard:consent_checkbox_label')} *</span>
-                                    <p class="text-blue-300 text-sm mt-1">${t('dashboard:consent_checkbox_description')}</p>
+                                    <p class="text-slate-400 text-sm mt-1">${t('dashboard:consent_checkbox_description')}</p>
                                 </div>
                             </label>
                         </div>
