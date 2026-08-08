@@ -25,8 +25,11 @@ Application web de gestion d'apporteurs d'affaires immobilier à Dubaï. Permet 
 - **Courtière :** Karyne de Clercq
 - **Agence :** Solo Gate Real Estate (Alliance by EMAAR)
 - **BRN (RERA) :** **94777**
+- **Permis annonceur réseaux sociaux (National Media Authority) :** n° **8159983** — valable jusqu'au **12 mars 2027** (couvre LinkedIn / Facebook / Instagram)
 
-> Le BRN 94777 atteste de l'enregistrement en tant que courtière auprès de la RERA. Pour la publicité et l'exploitation de la plateforme, des permis dédiés (ex. permis publicitaire **Trakheesi**, validation **DREI**) peuvent rester à confirmer — à valider avec un professionnel.
+> Le BRN 94777 atteste de l'enregistrement en tant que courtière auprès de la RERA. Le permis annonceur 8159983 couvre la publicité et le contenu média sur les réseaux sociaux. Pour la publicité de **biens immobiliers précis** (annonces de propriétés), un permis **Trakheesi** (Dubai Land Department) peut rester à confirmer avec un professionnel.
+>
+> *(Les identifiants personnels — Emirates ID, Media File Number, Trade License — ne sont volontairement pas stockés ici, le dépôt étant public.)*
 
 ---
 
@@ -90,7 +93,7 @@ Exemple : appartement vendu 2 000 000 AED → commission agence 2 % = 40 000 AED
 
 ## 🎯 Prochaines étapes
 1. **Délivrabilité email** : ajouter un DMARC + un template d'email de marque (réduire le spam)
-2. **Conformité RERA / Dubaï** : confirmer les permis nécessaires pour la plateforme et la publicité (Trakheesi, DREI)
+2. **Conformité Dubaï** : courtage (BRN 94777) ✅ et publicité réseaux sociaux (permis 8159983, exp. 12/03/2027) ✅ — bien couvert. À confirmer seulement si vous faites de la pub sur des biens précis : permis **Trakheesi** (DLD)
 3. **Sécurité avant ouverture large** : revoir les politiques RLS Supabase, changer le mot de passe admin par défaut
 4. (Optionnel) Régénérer le fichier `.p8` Apple par précaution (il a transité par une conversation)
 
