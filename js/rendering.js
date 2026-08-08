@@ -256,7 +256,7 @@ export function renderProfileCompletionModal() {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">${t.phone_label} *</label>
-                        <input type="tel" id="completionPhone" required placeholder="${t.phone_placeholder}" class="w-full py-3 pr-4 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
+                        <input type="tel" id="completionPhone" value="${existingPhone}" required placeholder="${t.phone_placeholder}" class="w-full py-3 pr-4 bg-slate-700/50 border border-white/20 rounded-lg text-white focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/50 focus:outline-none transition">
                         <p class="text-xs text-slate-400 mt-1">${t.phone_help}</p>
                     </div>
                     <div>
