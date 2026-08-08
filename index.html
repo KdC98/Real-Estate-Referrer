@@ -261,15 +261,20 @@
 
                             const submitButton = document.getElementById('submitButton');
                             submitButton.disabled = true;
-                            submitButton.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Sending SMS...';
+                            submitButton.innerHTML = '<svg class="animate-spin h-5 w-5 inline mr-2" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>Creating account...';
 
-                            isSignupInProgress = true;
-                            const smsResult = await TFA.send2FACode(fullPhone, 'en', { email, password, name, phone: fullPhone, email_opt_in: document.getElementById('emailOptIn')?.checked || false });
-                            if (!smsResult.success) throw new Error('SMS error');
-                            tempPhone = fullPhone; window.tempPhone = fullPhone;
-                            is2FAMode = true; window.is2FAMode = true;
-                            isSignupInProgress = false;
-                            render();
+                            // SMS 2FA removed — account is created directly, email verification handles security.
+                            const { error: signUpError } = await supabase.auth.signUp({
+                                email,
+                                password,
+                                options: {
+                                    data: { name, phone: fullPhone, email_opt_in: document.getElementById('emailOptIn')?.checked || false },
+                                    emailRedirectTo: window.location.origin
+                                }
+                            });
+                            if (signUpError) throw signUpError;
+                            alert('Account created! Please check your email and click the confirmation link to activate your account, then log in.');
+                            UTILS.showLogin();
                         } else if (mode === 'login') {
                             const { error } = await supabase.auth.signInWithPassword({ email, password });
                             if (error) throw error;
@@ -277,6 +282,7 @@
                     } catch (error) {
                         let msg = error.message;
                         if (msg.includes('Invalid login')) msg = 'Incorrect email or password';
+                        else if (msg.toLowerCase().includes('not confirmed')) msg = 'Please confirm your email first — check your inbox for the confirmation link.';
                         errorDiv.textContent = msg; errorDiv.classList.remove('hidden');
                         if (mode === 'signup') { document.getElementById('submitButton').disabled = false; document.getElementById('submitButton').textContent = t('auth:signup_button'); }
                     }
