@@ -269,7 +269,7 @@
                                 password,
                                 options: {
                                     data: { name, phone: fullPhone, email_opt_in: document.getElementById('emailOptIn')?.checked || false },
-                                    emailRedirectTo: window.location.origin
+                                    emailRedirectTo: window.location.origin + '/?login=1'
                                 }
                             });
                             if (signUpError) throw signUpError;
