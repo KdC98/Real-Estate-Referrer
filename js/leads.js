@@ -13,13 +13,17 @@ import { currentUser } from './auth.js';
 const ENABLED_LEAD_TYPES = ['sale_buyer'];
 // ─────────────────────────────────────────────────────────────────
 
-// Taux de commission APPORTEUR selon le type de lead
+// Taux de commission APPORTEUR (en % de la part agent NETTE) selon le type de lead
 const COMMISSION_RATES = {
-    'sale_buyer': 0.25,      // Acheteur : 25% (PREMIUM)
-    'sale_seller': 0.20,     // Vendeur : 20%
-    'rental_landlord': 0.20, // Propriétaire bailleur : 20%
-    'rental_tenant': 0.20    // Locataire : 20%
+    'sale_buyer': 0.25,      // Acheteur : 25% de la part agent
+    'sale_seller': 0.25,     // (non utilisé : vendeur = montant FIXE, voir SELLER_FIXED_REFERRER_AED)
+    'rental_landlord': 0.25, // Propriétaire bailleur : 25%
+    'rental_tenant': 0.25    // Locataire : 25%
 };
+
+// Vendeur : l'apporteur reçoit un montant FIXE (payé uniquement quand le bien est vendu),
+// et non un pourcentage — car côté vendeur la commission n'est pas garantie.
+const SELLER_FIXED_REFERRER_AED = 1000;
 
 // Afficher le formulaire d'ajout de lead
 export function showAddLeadForm() {
@@ -276,9 +280,15 @@ export async function markAsSold(leadId) {
         agentCommission = totalCommission * 0.5; // 50% pour l'agent
     }
 
-    // Calcul commission apporteur (20% ou 25% de la part agent)
-    const referrerRate = lead.commission_rate || COMMISSION_RATES[lead.lead_type] || 0.20;
-    referrerCommission = agentCommission * referrerRate;
+    // Calcul commission apporteur.
+    // Vendeur : montant FIXE (1000 AED). Acheteur / location : % de la part agent nette.
+    let referrerRate = null;
+    if (lead.lead_type === 'sale_seller') {
+        referrerCommission = SELLER_FIXED_REFERRER_AED;
+    } else {
+        referrerRate = lead.commission_rate || COMMISSION_RATES[lead.lead_type] || 0.25;
+        referrerCommission = agentCommission * referrerRate;
+    }
 
     console.log('Marking lead ' + leadId + ' as sold:', {
         type: isRental ? 'RENTAL' : 'SALE',
@@ -305,13 +315,15 @@ export async function markAsSold(leadId) {
 
         console.log('Lead marked as sold');
 
-        const ratePercent = referrerRate * 100;
         const typeLabel = isRental ? 'Rental' : 'Sale';
+        const referrerLine = referrerRate !== null
+            ? '\nReferrer commission (' + (referrerRate * 100) + '%): ' + referrerCommission.toLocaleString() + ' AED'
+            : '\nReferrer bonus (fixed, seller lead): ' + referrerCommission.toLocaleString() + ' AED';
         alert(
             (i18next.t('dashboard:lead_sold_success') || 'Lead completed!') +
             '\n\n' + typeLabel + ': ' + price.toLocaleString() + ' AED' +
             '\nAgent commission: ' + agentCommission.toLocaleString() + ' AED' +
-            '\nReferrer commission (' + ratePercent + '%): ' + referrerCommission.toLocaleString() + ' AED'
+            referrerLine
         );
 
         if (window.loadDashboardContent) {
