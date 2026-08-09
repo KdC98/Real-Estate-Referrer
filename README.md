@@ -68,8 +68,9 @@ La clé secrète Apple est un **JWT qui expire tous les 6 mois maximum**. Si ell
 Rémunération **uniquement au résultat** (transaction conclue). **Base de calcul = la part agent NETTE** de Karyne (≈ 1 % du prix, car Solo Gate prend la moitié des 2 % d'agence).
 
 - **Lead acheteur** → **25 %** de la part agent nette
-- **Lead locataire (location)** → **25 %** de la part agent nette
-- **Lead vendeur** → **montant fixe de 1 000 AED**, versé uniquement quand le bien est vendu (car côté vendeur la commission n'est pas garantie)
+- **Lead bien à vendre (vendeur)** → **montant fixe de 1 000 AED**, versé quand le bien est vendu (côté vendeur la commission n'est pas garantie)
+- **Lead bien à louer (propriétaire bailleur)** → **20 %** de la part agent nette
+- **Lead locataire** → **20 %** de la part agent nette
 
 Exemple (vente à 2 000 000 AED) :
 - Commission agence 2 % = 40 000 AED
@@ -77,7 +78,7 @@ Exemple (vente à 2 000 000 AED) :
 - Apporteur **acheteur** → 25 % de 20 000 = **5 000 AED**
 - Apporteur **vendeur** → **1 000 AED** (fixe)
 
-> ⚠️ Détail technique : seul le type de lead « acheteur » est **activé** actuellement (`ENABLED_LEAD_TYPES = ['sale_buyer']` dans `js/leads.js`). Les règles vendeur (1 000 AED) et location (25 %) sont **codées et prêtes** — il suffit d'ajouter ces types dans `ENABLED_LEAD_TYPES` pour les proposer aux apporteurs.
+> Les **4 types de leads sont activés** (`ENABLED_LEAD_TYPES = ['sale_buyer', 'sale_seller', 'rental_landlord', 'rental_tenant']` dans `js/leads.js`). La page d'accueil présente les 4 profils et leurs récompenses.
 
 ---
 
