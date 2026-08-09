@@ -17,8 +17,8 @@ const ENABLED_LEAD_TYPES = ['sale_buyer'];
 const COMMISSION_RATES = {
     'sale_buyer': 0.25,      // Acheteur : 25% de la part agent
     'sale_seller': 0.25,     // (non utilisé : vendeur = montant FIXE, voir SELLER_FIXED_REFERRER_AED)
-    'rental_landlord': 0.25, // Propriétaire bailleur : 25%
-    'rental_tenant': 0.25    // Locataire : 25%
+    'rental_landlord': 0.20, // Propriétaire bailleur : 20%
+    'rental_tenant': 0.20    // Locataire : 20%
 };
 
 // Vendeur : l'apporteur reçoit un montant FIXE (payé uniquement quand le bien est vendu),
