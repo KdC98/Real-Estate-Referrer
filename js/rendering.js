@@ -304,11 +304,11 @@ export function renderLandingPage() {
         fr: {
             how: 'Comment ça marche', login: 'Connexion', signup: 'Devenir apporteur',
             hero_kicker: 'Programme apporteurs · Dubaï',
-            hero_title: 'Présentez un acheteur. Touchez 25%.',
-            hero_sub: "Vous connaissez quelqu'un qui veut acheter à Dubaï ? Présentez-le. Nous gérons la vente. Vous percevez 25% de notre commission d'agent — où que vous soyez dans le monde.",
+            hero_title: 'Présentez un acheteur, un vendeur ou un locataire. Soyez récompensé.',
+            hero_sub: "Vous connaissez quelqu'un à Dubaï qui veut acheter, vendre ou louer ? Présentez-le. Nous gérons tout, jusqu'à la signature. Vous êtes récompensé sur chaque transaction conclue — où que vous soyez dans le monde.",
             hero_cta: 'Commencer maintenant',
             hero_note: 'Inscription gratuite · Aucune licence requise',
-            ex_label: 'Exemple concret',
+            ex_label: 'Exemple concret — acheteur',
             ex_property: 'Appartement vendu',
             ex_price: '2 000 000 AED',
             ex_total: "Commission agent nette",
@@ -317,21 +317,25 @@ export function renderLandingPage() {
             ex_yours_val: '5 000 AED',
             ex_foot: "25% de la commission agent nette (après les 2% d'agence et le partage 50% avec l'agence). Plus le bien est cher, plus vous gagnez.",
             steps_title: 'Trois étapes, c\'est tout',
-            step1_t: 'Présentez un acheteur', step1_d: "Transmettez le contact d'une personne intéressée par un achat à Dubaï.",
-            step2_t: 'Nous concluons la vente', step2_d: 'Notre équipe licenciée RERA accompagne le client jusqu\'à la signature.',
-            step3_t: 'Vous êtes payé', step3_d: 'Dès la transaction finalisée, votre commission de 25% vous est versée.',
-            why_title: "Pourquoi l'acheteur ?",
-            why_d: "C'est là que la valeur est la plus forte. Un acheteur sérieux génère la commission la plus élevée — et c'est le seul type de lead que nous traitons, pour vous garantir le meilleur taux : 25%.",
+            step1_t: 'Présentez un contact', step1_d: "Transmettez-nous les coordonnées d'un acheteur, vendeur ou locataire que vous connaissez à Dubaï.",
+            step2_t: 'Nous concluons', step2_d: 'Notre équipe licenciée RERA gère la vente ou la location jusqu\'à la signature.',
+            step3_t: 'Vous êtes payé', step3_d: 'Dès la transaction finalisée, votre récompense vous est versée.',
+            rewards_title: 'Ce que vous gagnez',
+            rewards_sub: 'Chaque type de lead est récompensé — pas seulement les acheteurs.',
+            rw_buyer_t: 'Vous présentez un acheteur', rw_buyer_v: 'jusqu\'à 25%', rw_buyer_d: "de notre commission d'agent",
+            rw_seller_t: 'Vous présentez un bien à vendre', rw_seller_v: '1 000 AED', rw_seller_d: 'fixe, versé à la vente',
+            rw_landlord_t: 'Vous présentez un bien à louer', rw_landlord_v: '20%', rw_landlord_d: "de notre commission d'agent",
+            rw_tenant_t: 'Vous présentez un locataire', rw_tenant_v: '20%', rw_tenant_d: "de notre commission d'agent",
             trust_rera: 'Licence RERA', trust_global: 'Apporteurs dans le monde entier', trust_fast: 'Paiement rapide après signature'
         },
         en: {
             how: 'How it works', login: 'Log in', signup: 'Become a referrer',
             hero_kicker: 'Referral program · Dubai',
-            hero_title: 'Introduce a buyer. Earn 25%.',
-            hero_sub: "Know someone looking to buy in Dubai? Introduce them. We handle the sale. You earn 25% of our agent commission — from anywhere in the world.",
+            hero_title: 'Introduce a buyer, seller or tenant. Get rewarded.',
+            hero_sub: "Know someone in Dubai looking to buy, sell or rent? Introduce them. We handle everything, all the way to signing. You earn a reward on every deal we close — from anywhere in the world.",
             hero_cta: 'Get started',
             hero_note: 'Free signup · No licence required',
-            ex_label: 'Real example',
+            ex_label: 'Real example — buyer',
             ex_property: 'Apartment sold',
             ex_price: 'AED 2,000,000',
             ex_total: 'Agent net commission',
@@ -340,11 +344,15 @@ export function renderLandingPage() {
             ex_yours_val: 'AED 5,000',
             ex_foot: '25% of the agent net commission (after the 2% agency fee and the 50% agency split). The higher the price, the more you earn.',
             steps_title: 'Three steps, that\'s it',
-            step1_t: 'Introduce a buyer', step1_d: 'Send us the contact of someone interested in buying in Dubai.',
-            step2_t: 'We close the sale', step2_d: 'Our RERA-licensed team guides the client all the way to signing.',
-            step3_t: 'You get paid', step3_d: 'Once the deal is done, your 25% commission is paid to you.',
-            why_title: 'Why buyers?',
-            why_d: "That's where the value is highest. A serious buyer generates the largest commission — and it's the only lead type we handle, so you always get the best rate: 25%.",
+            step1_t: 'Introduce a contact', step1_d: 'Send us the details of a buyer, seller or tenant you know in Dubai.',
+            step2_t: 'We close the deal', step2_d: 'Our RERA-licensed team handles the sale or rental all the way to signing.',
+            step3_t: 'You get paid', step3_d: 'Once the deal is done, your reward is paid to you.',
+            rewards_title: 'What you earn',
+            rewards_sub: 'Every kind of lead is rewarded — not just buyers.',
+            rw_buyer_t: 'You introduce a buyer', rw_buyer_v: 'up to 25%', rw_buyer_d: 'of our agent commission',
+            rw_seller_t: 'You introduce a property to sell', rw_seller_v: 'AED 1,000', rw_seller_d: 'flat, paid when it sells',
+            rw_landlord_t: 'You introduce a property to rent', rw_landlord_v: '20%', rw_landlord_d: 'of our agent commission',
+            rw_tenant_t: 'You introduce a tenant', rw_tenant_v: '20%', rw_tenant_d: 'of our agent commission',
             trust_rera: 'RERA licensed', trust_global: 'Referrers worldwide', trust_fast: 'Fast payment after signing'
         }
     };
@@ -443,11 +451,33 @@ export function renderLandingPage() {
                 </div>
             </section>
 
-            <!-- POURQUOI L'ACHETEUR -->
+            <!-- CE QUE VOUS GAGNEZ : récompenses par type de lead -->
             <section class="py-24 bg-slate-900/50">
-                <div class="container mx-auto px-6 max-w-3xl text-center">
-                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">${d.why_title}</h3>
-                    <p class="text-lg text-slate-300 leading-relaxed mb-10">${d.why_d}</p>
+                <div class="container mx-auto px-6 max-w-5xl text-center">
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-3">${d.rewards_title}</h3>
+                    <p class="text-lg text-slate-300 leading-relaxed mb-12">${d.rewards_sub}</p>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 text-left">
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <div class="text-yellow-400 font-bold text-3xl mb-1">${d.rw_buyer_v}</div>
+                            <div class="text-slate-400 text-sm mb-4">${d.rw_buyer_d}</div>
+                            <div class="text-white font-medium">${d.rw_buyer_t}</div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <div class="text-yellow-400 font-bold text-3xl mb-1">${d.rw_seller_v}</div>
+                            <div class="text-slate-400 text-sm mb-4">${d.rw_seller_d}</div>
+                            <div class="text-white font-medium">${d.rw_seller_t}</div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <div class="text-yellow-400 font-bold text-3xl mb-1">${d.rw_landlord_v}</div>
+                            <div class="text-slate-400 text-sm mb-4">${d.rw_landlord_d}</div>
+                            <div class="text-white font-medium">${d.rw_landlord_t}</div>
+                        </div>
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                            <div class="text-yellow-400 font-bold text-3xl mb-1">${d.rw_tenant_v}</div>
+                            <div class="text-slate-400 text-sm mb-4">${d.rw_tenant_d}</div>
+                            <div class="text-white font-medium">${d.rw_tenant_t}</div>
+                        </div>
+                    </div>
                     <button onclick="showSignup()" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-lg px-8 py-4 rounded-full transition transform hover:scale-105">${tt('hero.cta_button', d.hero_cta)}</button>
                     <div class="flex flex-wrap justify-center gap-x-8 gap-y-3 mt-12 text-sm text-slate-400">
                         <span class="flex items-center gap-2"><span class="text-yellow-400">•</span>${d.trust_rera}</span>
