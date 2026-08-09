@@ -10,7 +10,7 @@ import { currentUser } from './auth.js';
 // Pour réactiver vendeur / location plus tard, ajoute les valeurs ici :
 // 'sale_seller', 'rental_landlord', 'rental_tenant'
 // Le reste du code (calculs, options) est conservé intact ci-dessous.
-const ENABLED_LEAD_TYPES = ['sale_buyer'];
+const ENABLED_LEAD_TYPES = ['sale_buyer', 'sale_seller', 'rental_landlord', 'rental_tenant'];
 // ─────────────────────────────────────────────────────────────────
 
 // Taux de commission APPORTEUR (en % de la part agent NETTE) selon le type de lead
