@@ -304,8 +304,8 @@ export function renderLandingPage() {
         fr: {
             how: 'Comment ça marche', login: 'Connexion', signup: 'Devenir apporteur',
             hero_kicker: 'Programme apporteurs · Dubaï',
-            hero_title: 'Présentez un acheteur, un vendeur ou un locataire. Soyez récompensé.',
-            hero_sub: "Vous connaissez quelqu'un à Dubaï qui veut acheter, vendre ou louer ? Présentez-le. Nous gérons tout, jusqu'à la signature. Vous êtes récompensé sur chaque transaction conclue — où que vous soyez dans le monde.",
+            hero_title: 'Vous présentez. On conclut. Vous gagnez.',
+            hero_sub: "Présentez un acheteur, un vendeur ou un locataire à Dubaï. Nous concluons — vous êtes récompensé sur chaque transaction, où que vous soyez.",
             hero_cta: 'Commencer maintenant',
             hero_note: 'Inscription gratuite · Aucune licence requise',
             ex_label: 'Exemple concret — acheteur',
@@ -331,8 +331,8 @@ export function renderLandingPage() {
         en: {
             how: 'How it works', login: 'Log in', signup: 'Become a referrer',
             hero_kicker: 'Referral program · Dubai',
-            hero_title: 'Introduce a buyer, seller or tenant. Get rewarded.',
-            hero_sub: "Know someone in Dubai looking to buy, sell or rent? Introduce them. We handle everything, all the way to signing. You earn a reward on every deal we close — from anywhere in the world.",
+            hero_title: 'You refer. We close. You get paid.',
+            hero_sub: "Introduce a buyer, seller or tenant in Dubai. We close the deal — you get rewarded on every one, from anywhere in the world.",
             hero_cta: 'Get started',
             hero_note: 'Free signup · No licence required',
             ex_label: 'Real example — buyer',
@@ -390,7 +390,7 @@ export function renderLandingPage() {
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-slate-950/30"></div>
                 </div>
 
-                <div class="relative container mx-auto px-6 py-32 grid lg:grid-cols-2 gap-12 items-center">
+                <div class="relative container mx-auto px-6 py-20 grid lg:grid-cols-2 gap-10 items-center">
                     <!-- Colonne texte -->
                     <div>
                         <span class="inline-block text-yellow-400 text-sm font-medium tracking-widest uppercase mb-5">${d.hero_kicker}</span>
@@ -428,9 +428,9 @@ export function renderLandingPage() {
             </header>
 
             <!-- COMMENT ÇA MARCHE : 3 étapes -->
-            <section class="py-24 bg-slate-950">
+            <section class="py-16 bg-slate-950">
                 <div class="container mx-auto px-6">
-                    <h3 class="text-3xl md:text-4xl font-bold text-center text-white mb-16">${d.steps_title}</h3>
+                    <h3 class="text-3xl md:text-4xl font-bold text-center text-white mb-12">${d.steps_title}</h3>
                     <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         <div class="text-center px-4">
                             <div class="w-14 h-14 rounded-full border border-yellow-500/50 text-yellow-400 text-xl font-bold flex items-center justify-center mx-auto mb-6">1</div>
@@ -452,7 +452,7 @@ export function renderLandingPage() {
             </section>
 
             <!-- CE QUE VOUS GAGNEZ : récompenses par type de lead -->
-            <section class="py-24 bg-slate-900/50">
+            <section class="py-16 bg-slate-900/50">
                 <div class="container mx-auto px-6 max-w-5xl text-center">
                     <h3 class="text-3xl md:text-4xl font-bold text-white mb-3">${d.rewards_title}</h3>
                     <p class="text-lg text-slate-300 leading-relaxed mb-12">${d.rewards_sub}</p>
