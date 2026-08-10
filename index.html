@@ -19,7 +19,7 @@
     <!-- Cloudflare Turnstile (anti-bot CAPTCHA) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
-    <!-- Version: 3.25.2 - lead form: intl phone + 4 types + budget separators (leads v4) -->
+    <!-- Version: 3.25.4 - fix: single Add Lead modal (4 types, property, budget, intl phone) -->
 
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -64,7 +64,7 @@
         import * as DASHBOARD from './js/dashboard.js?v=2';
         import * as LEADS from './js/leads.js?v=4';
         import * as TFA from './js/2fa.js';
-        import * as RENDERING from './js/rendering.js?v=3400';
+        import * as RENDERING from './js/rendering.js?v=3401';
 
         (async () => {
             console.log('App starting v3.23.0 (English only)...');
@@ -239,6 +239,29 @@
             }
             window.getFullPhoneNumber = getFullPhoneNumber;
 
+            // ===== Jolie fenêtre modale (remplace alert() natif) =====
+            function showNiceModal(message, opts = {}) {
+                const title = opts.title || '';
+                const existing = document.getElementById('niceModal');
+                if (existing) existing.remove();
+                const el = document.createElement('div');
+                el.id = 'niceModal';
+                el.className = 'fixed inset-0 z-[200] flex items-center justify-center p-4';
+                el.style.cssText = 'background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);';
+                el.innerHTML = `
+                    <div style="background:#14161d;border:1px solid rgba(250,204,21,0.3);border-radius:16px;max-width:26rem;width:100%;padding:2rem;text-align:center;box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);">
+                        <div style="width:56px;height:56px;margin:0 auto 1rem;border-radius:9999px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;">
+                            <svg style="width:30px;height:30px;color:#4ade80;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                        ${title ? `<h3 style="color:#fff;font-size:1.25rem;font-weight:bold;margin:0 0 0.5rem;">${title}</h3>` : ''}
+                        <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.6;margin:0 0 1.5rem;">${message}</p>
+                        <button onclick="document.getElementById('niceModal')?.remove()" style="background:#facc15;color:#0b0d12;font-weight:bold;padding:0.75rem 2.5rem;border:none;border-radius:0.5rem;cursor:pointer;font-size:1rem;">OK</button>
+                    </div>`;
+                document.body.appendChild(el);
+                el.addEventListener('click', (e) => { if (e.target === el) el.remove(); });
+            }
+            window.showNiceModal = showNiceModal;
+
             // ===== Cloudflare Turnstile (anti-bot CAPTCHA) =====
             const TURNSTILE_SITE_KEY = '0x4AAAAAAEL_sdyN59YOdeJP';
             window._captchaToken = null;
@@ -319,7 +342,7 @@
                                 }
                             });
                             if (signUpError) throw signUpError;
-                            alert('Account created! Please check your email and click the confirmation link to activate your account, then log in.');
+                            showNiceModal('Please check your email and click the confirmation link to activate your account, then log in.', { title: 'Account created!' });
                             UTILS.showLogin();
                         } else if (mode === 'login') {
                             if (!window._captchaToken) { errorDiv.textContent = 'Please complete the security check below and try again.'; errorDiv.classList.remove('hidden'); resetTurnstile(); return; }
