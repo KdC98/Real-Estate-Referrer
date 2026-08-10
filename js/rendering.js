@@ -675,6 +675,7 @@ export function renderAuthPage(mode) {
                     ` : ''}
                     ${mode === 'login' ? `<div class="text-right"><button type="button" onclick="showReset()" class="text-yellow-400 hover:text-yellow-300 text-sm transition-colors">${t('auth:forgot_password')}</button></div>` : ''}
                     <div id="authError" class="text-red-400 text-sm hidden bg-red-900/20 border border-red-500/50 rounded-lg p-3"></div>
+                    ${mode === 'login' || mode === 'signup' || mode === 'reset' ? `<div id="cfTurnstile" class="flex justify-center my-1"></div>` : ''}
                     <button type="submit" id="submitButton" class="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" ${mode === 'signup' || mode === 'change-password' ? 'disabled' : ''}>${buttonText}</button>
                 </form>
                 <p class="text-center mt-6 text-slate-300"><button onclick="${linkAction}" class="text-yellow-400 hover:text-yellow-300 transition-colors">${linkText}</button></p>
