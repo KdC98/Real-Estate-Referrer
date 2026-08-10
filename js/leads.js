@@ -1,7 +1,7 @@
 // ============================================
 // GESTION DES LEADS
 // Real Estate Referrer - Dubai
-// Version: 3.6.0 - Edit/Delete leads, budget separators, property type/bedrooms/area
+// Version: 3.6.1 - + client phone intl (+971 default), all 4 lead types
 // ============================================
 
 import { currentUser } from './auth.js';
@@ -64,6 +64,9 @@ export function showAddLeadForm() {
     if (modal) {
         modal.classList.remove('hidden');
 
+        // Téléphone international : +971 par défaut, autres pays possibles
+        setTimeout(() => { if (window.initPhoneInput) window.initPhoneInput('clientPhone', ''); }, 130);
+
         if (ENABLED_LEAD_TYPES.length === 1) {
             const onlyType = ENABLED_LEAD_TYPES[0];
             const leadTypeInput = document.getElementById('leadType');
@@ -96,8 +99,9 @@ export async function editLead(leadId) {
     const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
     setVal('clientName', lead.client_name);
     setVal('clientEmail', lead.client_email);
-    setVal('clientPhone', lead.client_phone);
     setVal('budget', lead.budget ? Number(lead.budget).toLocaleString('en-US') : '');
+    // Téléphone international pré-rempli
+    setTimeout(() => { if (window.initPhoneInput) window.initPhoneInput('clientPhone', lead.client_phone || ''); }, 130);
     setVal('leadType', lead.lead_type);
     setVal('propertyType', lead.property_type);
     setVal('bedrooms', lead.bedrooms);
@@ -149,7 +153,7 @@ export async function addLead(event) {
 
     const clientName = document.getElementById('clientName')?.value?.trim();
     const clientEmail = document.getElementById('clientEmail')?.value?.trim();
-    const clientPhone = document.getElementById('clientPhone')?.value?.trim();
+    const clientPhone = (window.getFullPhoneNumber ? window.getFullPhoneNumber('clientPhone') : '') || document.getElementById('clientPhone')?.value?.trim();
     let leadType = document.getElementById('leadType')?.value;
     const budgetValue = document.getElementById('budget')?.value?.replace(/[^0-9]/g, '');
     const budget = budgetValue ? parseFloat(budgetValue) : null;
