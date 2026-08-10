@@ -1,6 +1,6 @@
 // ============================================
 // MODULE RENDERING.JS
-// Version: 3.22.2 - Auth screens harmonisés (noir+or, anglais) + tous bleus retirés
+// Version: 3.23.0 - Removed duplicate Add Lead modal (leads.js is now the single source)
 // ============================================
 
 const COUNTRY_CODES = [
@@ -886,54 +886,9 @@ export function renderDashboard() {
                     <div id="leadsTable" class="overflow-x-auto"></div>
                 </div>
             </main>
-            <div id="addLeadModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div class="bg-slate-800/95 backdrop-blur-md rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/20">
-                    <h3 class="text-2xl font-bold mb-6 text-yellow-400">${t('dashboard:add_lead')}</h3>
-                    <form id="addLeadForm" onsubmit="event.preventDefault(); window.addLead(event);">
-                        <div class="grid md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-slate-300 mb-2">${t('dashboard:client_name')} *</label>
-                                <input type="text" id="clientName" required class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-300 mb-2">${t('dashboard:client_email')} *</label>
-                                <input type="email" id="clientEmail" required class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-300 mb-2">${t('dashboard:client_phone')} *</label>
-                                <input type="tel" id="clientPhone" required class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-slate-300 mb-2">${t('dashboard:budget')} (AED) *</label>
-                                <input type="text" id="budget" required inputmode="numeric" placeholder="1,500,000" class="w-full px-4 py-2 bg-slate-700/50 rounded-lg text-white border border-white/20 focus:border-yellow-500 focus:outline-none">
-                            </div>
-                        </div>
-                        <div class="mt-6">
-                            <label class="block text-slate-300 mb-3">${t('dashboard:lead_type')} *</label>
-                            <div class="space-y-2">
-                                ${buyerLeadOption}
-                                ${sellerLeadOption}
-                                ${landlordLeadOption}
-                                ${tenantLeadOption}
-                            </div>
-                            <input type="hidden" id="leadType" name="leadType" value="${defaultLeadTypeValue}" required>
-                        </div>
-                        <div class="mt-6 p-4 bg-slate-900/40 border border-white/10 rounded-xl">
-                            <label class="flex items-start gap-3 cursor-pointer">
-                                <input type="checkbox" id="clientConsent" required class="w-5 h-5 mt-0.5 text-yellow-500 rounded border-gray-500 focus:ring-yellow-500">
-                                <div>
-                                    <span class="text-white font-medium">${t('dashboard:consent_checkbox_label')} *</span>
-                                    <p class="text-slate-400 text-sm mt-1">${t('dashboard:consent_checkbox_description')}</p>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="flex gap-4 mt-8">
-                            <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">${t('dashboard:add')}</button>
-                            <button type="button" onclick="window.closeAddLeadModal()" class="flex-1 bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 rounded-lg transition border border-white/20">${t('dashboard:cancel')}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <!-- Modal "Add Lead" retiré d'ici : il est désormais construit par leads.js
+                 (renderAddLeadModal) avec les 4 types, le bien, le budget formaté et le
+                 téléphone international. Éviter un doublon qui masquait la bonne version. -->
         </div>
     `;
 }
