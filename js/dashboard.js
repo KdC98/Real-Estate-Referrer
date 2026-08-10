@@ -116,13 +116,13 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:budget')}</th>
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:status')}</th>
                     <th class="text-left py-3 px-4">${i18next.t('dashboard:commission')}</th>
-                    ${isAdmin ? `<th class="text-left py-3 px-4">${i18next.t('dashboard:actions')}</th>` : ''}
+                    <th class="text-left py-3 px-4">${i18next.t('dashboard:actions')}</th>
                 </tr>
             </thead>
             <tbody>
                 ${leads.length === 0 ? `
                     <tr>
-                        <td colspan="${isAdmin ? '7' : '5'}" class="py-8 text-center text-gray-400">
+                        <td colspan="${isAdmin ? '7' : '6'}" class="py-8 text-center text-gray-400">
                             ${i18next.t('dashboard:no_leads')}<br>
                             <span class="text-sm">${i18next.t('dashboard:start_adding')}</span>
                         </td>
@@ -133,6 +133,21 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                     const commissionRate = lead.commission_rate ? (lead.commission_rate * 100) + '%' : '20%';
                     const statusColor = STATUS_COLORS[lead.status] || 'bg-gray-500';
                     const referrerName = referrerNames[lead.referrer_id] || '-';
+
+                    const propBits = [
+                        lead.property_type,
+                        lead.bedrooms ? (lead.bedrooms === 'Studio' ? 'Studio' : lead.bedrooms + ' BR') : null,
+                        lead.location_area
+                    ].filter(Boolean).join(' · ');
+
+                    const canModify = isAdmin || lead.status !== 'vendu';
+                    const editBtn = canModify ? `<button onclick="window.editLead(${lead.id})" class="bg-slate-600 hover:bg-slate-500 px-3 py-1 rounded text-sm transition">Edit</button>` : '';
+                    const deleteBtn = canModify ? `<button onclick="window.deleteLead(${lead.id})" class="bg-red-600 hover:bg-red-500 px-3 py-1 rounded text-sm transition">Delete</button>` : '';
+                    const soldBtn = isAdmin
+                        ? (lead.status !== 'vendu'
+                            ? `<button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">${i18next.t('dashboard:mark_sold')}</button>`
+                            : `<span class="text-green-400 text-sm font-medium">${i18next.t('dashboard:status_sold')}</span>`)
+                        : '';
 
                     return `
                     <tr class="border-b border-gray-700 hover:bg-gray-700/30">
@@ -150,6 +165,7 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                                 ${leadTypeLabel}
                             </span>
                             <span class="text-xs text-gray-500 ml-1">(${commissionRate})</span>
+                            ${propBits ? `<div class="text-xs text-gray-400 mt-1">${propBits}</div>` : ''}
                         </td>
                         <td class="py-3 px-4">${lead.budget?.toLocaleString() || '-'} AED</td>
                         <td class="py-3 px-4">
@@ -169,15 +185,13 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                         <td class="py-3 px-4 font-bold text-yellow-500">
                             ${lead.referrer_commission ? lead.referrer_commission.toLocaleString() + ' AED' : '-'}
                         </td>
-                        ${isAdmin ? `
-                            <td class="py-3 px-4">
-                                ${lead.status !== 'vendu' ? `
-                                    <button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">
-                                        ${i18next.t('dashboard:mark_sold')}
-                                    </button>
-                                ` : `<span class="text-green-400 text-sm font-medium">${i18next.t('dashboard:status_sold')}</span>`}
-                            </td>
-                        ` : ''}
+                        <td class="py-3 px-4">
+                            <div class="flex flex-wrap gap-2">
+                                ${soldBtn}
+                                ${editBtn}
+                                ${deleteBtn}
+                            </div>
+                        </td>
                     </tr>
                 `}).join('')}
             </tbody>
