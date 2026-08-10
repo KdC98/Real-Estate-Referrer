@@ -16,7 +16,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
 
-    <!-- Version: 3.23.2 - cache-bust rendering v3222 (auth screens harmonisés) -->
+    <!-- Cloudflare Turnstile (anti-bot CAPTCHA) -->
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+    <!-- Version: 3.24.0 - Turnstile CAPTCHA on login/signup/reset; rendering v3400 -->
 
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -59,9 +62,9 @@
         import * as UTILS from './js/utils.js';
         import * as AUTH from './js/auth.js';
         import * as DASHBOARD from './js/dashboard.js';
-        import * as LEADS from './js/leads.js';
+        import * as LEADS from './js/leads.js?v=2';
         import * as TFA from './js/2fa.js';
-        import * as RENDERING from './js/rendering.js?v=3222';
+        import * as RENDERING from './js/rendering.js?v=3400';
 
         (async () => {
             console.log('App starting v3.23.0 (English only)...');
@@ -231,6 +234,41 @@
             }
             window.getFullPhoneNumber = getFullPhoneNumber;
 
+            // ===== Cloudflare Turnstile (anti-bot CAPTCHA) =====
+            const TURNSTILE_SITE_KEY = '0x4AAAAAAEL_sdyN59YOdeJP';
+            window._captchaToken = null;
+            window._turnstileWidgetId = null;
+            function renderTurnstile(attempt = 0) {
+                const el = document.getElementById('cfTurnstile');
+                if (!el) return;
+                if (typeof turnstile === 'undefined') {
+                    if (attempt < 40) setTimeout(() => renderTurnstile(attempt + 1), 250);
+                    return;
+                }
+                if (el.dataset.rendered === '1') return;
+                el.dataset.rendered = '1';
+                window._captchaToken = null;
+                try {
+                    window._turnstileWidgetId = turnstile.render('#cfTurnstile', {
+                        sitekey: TURNSTILE_SITE_KEY,
+                        theme: 'dark',
+                        callback: (token) => { window._captchaToken = token; },
+                        'expired-callback': () => { window._captchaToken = null; },
+                        'error-callback': () => { window._captchaToken = null; }
+                    });
+                } catch (e) { console.warn('Turnstile render failed', e); }
+            }
+            function resetTurnstile() {
+                window._captchaToken = null;
+                try {
+                    if (window._turnstileWidgetId !== null && typeof turnstile !== 'undefined') {
+                        turnstile.reset(window._turnstileWidgetId);
+                    }
+                } catch (e) { /* ignore */ }
+            }
+            window.renderTurnstile = renderTurnstile;
+            window.resetTurnstile = resetTurnstile;
+
             // Auth handlers
             function handleAuth(mode) {
                 const form = document.getElementById('authForm');
@@ -256,6 +294,8 @@
                             if (!VALIDATION.validatePassword(password)) throw new Error('Invalid password');
                             if (password !== confirmPassword) throw new Error(t('auth:password_mismatch'));
 
+                            if (!window._captchaToken) { errorDiv.textContent = 'Please complete the security check below and try again.'; errorDiv.classList.remove('hidden'); resetTurnstile(); return; }
+
                             const phoneCheck = await TFA.checkPhoneExists(fullPhone);
                             if (phoneCheck.exists) { errorDiv.textContent = 'Phone number already in use'; errorDiv.classList.remove('hidden'); return; }
 
@@ -268,6 +308,7 @@
                                 email,
                                 password,
                                 options: {
+                                    captchaToken: window._captchaToken,
                                     data: { name, phone: fullPhone, email_opt_in: document.getElementById('emailOptIn')?.checked || false },
                                     emailRedirectTo: window.location.origin + '/?login=1'
                                 }
@@ -276,14 +317,17 @@
                             alert('Account created! Please check your email and click the confirmation link to activate your account, then log in.');
                             UTILS.showLogin();
                         } else if (mode === 'login') {
-                            const { error } = await supabase.auth.signInWithPassword({ email, password });
+                            if (!window._captchaToken) { errorDiv.textContent = 'Please complete the security check below and try again.'; errorDiv.classList.remove('hidden'); resetTurnstile(); return; }
+                            const { error } = await supabase.auth.signInWithPassword({ email, password, options: { captchaToken: window._captchaToken } });
                             if (error) throw error;
                         }
                     } catch (error) {
                         let msg = error.message;
                         if (msg.includes('Invalid login')) msg = 'Incorrect email or password';
                         else if (msg.toLowerCase().includes('not confirmed')) msg = 'Please confirm your email first — check your inbox for the confirmation link.';
+                        else if (msg.toLowerCase().includes('captcha')) msg = 'Security check failed — please try again.';
                         errorDiv.textContent = msg; errorDiv.classList.remove('hidden');
+                        resetTurnstile();
                         if (mode === 'signup') { document.getElementById('submitButton').disabled = false; document.getElementById('submitButton').textContent = t('auth:signup_button'); }
                     }
                 };
@@ -294,11 +338,12 @@
                 const errorDiv = document.getElementById('authError');
                 form.onsubmit = async (e) => {
                     e.preventDefault(); errorDiv.classList.add('hidden');
+                    if (!window._captchaToken) { errorDiv.textContent = 'Please complete the security check below and try again.'; errorDiv.classList.remove('hidden'); resetTurnstile(); return; }
                     try {
-                        const { error } = await supabase.auth.resetPasswordForEmail(document.getElementById('email').value, { redirectTo: window.location.origin });
+                        const { error } = await supabase.auth.resetPasswordForEmail(document.getElementById('email').value, { redirectTo: window.location.origin, captchaToken: window._captchaToken });
                         if (error) throw error;
                         alert(t('auth:reset_email_sent')); UTILS.showLogin();
-                    } catch (error) { errorDiv.textContent = error.message; errorDiv.classList.remove('hidden'); }
+                    } catch (error) { errorDiv.textContent = error.message; errorDiv.classList.remove('hidden'); resetTurnstile(); }
                 };
             }
 
@@ -555,13 +600,13 @@
 
                 } else if (currentPage === 'auth-login') {
                     app.innerHTML = RENDERING.renderAuthPage('login');
-                    setTimeout(() => handleAuth('login'), 500);
+                    setTimeout(() => { handleAuth('login'); renderTurnstile(); }, 500);
                 } else if (currentPage === 'auth-signup') {
                     app.innerHTML = RENDERING.renderAuthPage('signup');
-                    setTimeout(() => { handleAuth('signup'); VALIDATION.attachPasswordValidation?.(); }, 500);
+                    setTimeout(() => { handleAuth('signup'); VALIDATION.attachPasswordValidation?.(); renderTurnstile(); }, 500);
                 } else if (currentPage === 'auth-reset') {
                     app.innerHTML = RENDERING.renderAuthPage('reset');
-                    setTimeout(() => handleReset(), 500);
+                    setTimeout(() => { handleReset(); renderTurnstile(); }, 500);
                 } else if (currentPage === 'change-password') {
                     app.innerHTML = RENDERING.renderAuthPage('change-password');
                     setTimeout(() => handleChangePassword(), 500);
