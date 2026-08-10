@@ -19,7 +19,7 @@
     <!-- Cloudflare Turnstile (anti-bot CAPTCHA) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
-    <!-- Version: 3.24.0 - Turnstile CAPTCHA on login/signup/reset; rendering v3400 -->
+    <!-- Version: 3.24.1 - Turnstile CAPTCHA + email-confirm lands cleanly on login page -->
 
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -74,7 +74,12 @@
             const hasCodeParam = urlParams.get('code') !== null;
             const hasHashToken = hashParams.includes('access_token');
             const hasError = hashParams.includes('error') || urlParams.get('error') !== null;
-            const isOAuthReturn = hasCodeParam || hasHashToken;
+            // Email confirmation links carry ?login=1. The email is already confirmed
+            // server-side by Supabase's verify step, so we DON'T run the OAuth/PKCE
+            // auto-exchange for these (it fails when the link opens in a different
+            // browser than signup). We just land the user cleanly on the login page.
+            const isEmailConfirmReturn = urlParams.get('login') === '1';
+            const isOAuthReturn = (hasCodeParam || hasHashToken) && !isEmailConfirmReturn;
             const isContractSignedReturn = urlParams.get('signed') !== null;
 
             if (isOAuthReturn) console.log('OAuth return detected');
