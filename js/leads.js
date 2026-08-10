@@ -1,7 +1,7 @@
 // ============================================
 // GESTION DES LEADS
 // Real Estate Referrer - Dubai
-// Version: 3.6.1 - + client phone intl (+971 default), all 4 lead types
+// Version: 3.6.2 - fix: leadType default value (Buyer preselected) + radio fallback
 // ============================================
 
 import { currentUser } from './auth.js';
@@ -154,7 +154,8 @@ export async function addLead(event) {
     const clientName = document.getElementById('clientName')?.value?.trim();
     const clientEmail = document.getElementById('clientEmail')?.value?.trim();
     const clientPhone = (window.getFullPhoneNumber ? window.getFullPhoneNumber('clientPhone') : '') || document.getElementById('clientPhone')?.value?.trim();
-    let leadType = document.getElementById('leadType')?.value;
+    let leadType = document.getElementById('leadType')?.value
+        || document.querySelector('input[name="leadTypeRadio"]:checked')?.value;
     const budgetValue = document.getElementById('budget')?.value?.replace(/[^0-9]/g, '');
     const budget = budgetValue ? parseFloat(budgetValue) : null;
     const clientConsent = document.getElementById('clientConsent')?.checked;
@@ -388,7 +389,8 @@ export function renderAddLeadModal() {
         </label>
     ` : '';
 
-    const defaultLeadType = ENABLED_LEAD_TYPES.length === 1 ? ENABLED_LEAD_TYPES[0] : '';
+    // Le premier type (Buyer) est coché par défaut → le champ caché doit refléter ça
+    const defaultLeadType = ENABLED_LEAD_TYPES[0] || '';
 
     const propertyTypeOptions = ['<option value="">— Select —</option>']
         .concat(PROPERTY_TYPES.map(p => `<option value="${p}">${p}</option>`)).join('');
