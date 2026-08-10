@@ -1,7 +1,7 @@
 // ============================================
 // GESTION DES LEADS
 // Real Estate Referrer - Dubai
-// Version: 3.6.2 - fix: leadType default value (Buyer preselected) + radio fallback
+// Version: 3.6.3 - styled success modals (add/update lead)
 // ============================================
 
 import { currentUser } from './auth.js';
@@ -207,7 +207,8 @@ export async function addLead(event) {
                 .eq('id', editingLeadId);
 
             if (error) throw error;
-            alert('Lead updated successfully!');
+            if (window.showNiceModal) window.showNiceModal('Your changes have been saved.', { title: 'Lead updated!' });
+            else alert('Lead updated successfully!');
         } else {
             // ===== CRÉATION =====
             const leadData = {
@@ -226,7 +227,8 @@ export async function addLead(event) {
             };
             const { error } = await supabase.from('leads').insert([leadData]).select();
             if (error) throw error;
-            alert(i18next.t('dashboard:lead_added_success') || 'Lead added successfully!');
+            if (window.showNiceModal) window.showNiceModal('The lead has been added to your dashboard.', { title: 'Lead added!' });
+            else alert(i18next.t('dashboard:lead_added_success') || 'Lead added successfully!');
         }
 
         editingLeadId = null;
