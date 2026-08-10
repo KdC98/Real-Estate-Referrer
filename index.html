@@ -19,7 +19,7 @@
     <!-- Cloudflare Turnstile (anti-bot CAPTCHA) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
-    <!-- Version: 3.25.0 - Lead edit/delete, budget separators, property type/bedrooms/area -->
+    <!-- Version: 3.25.1 - profile completion phone pre-fill from signup metadata -->
 
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -525,7 +525,8 @@
                         currentPage = 'profile-completion'; window.currentPage = 'profile-completion';
                         app.innerHTML = RENDERING.renderDashboard() + RENDERING.renderProfileCompletionModal();
 
-                        setTimeout(async () => { await initPhoneInputForModal('completionPhone', userProfile.phone || ''); }, 100);
+                        const prefillPhone = userProfile.phone || currentUser?.user_metadata?.phone || '';
+                        setTimeout(async () => { await initPhoneInputForModal('completionPhone', prefillPhone); }, 100);
 
                         setTimeout(() => {
                             const form = document.getElementById('profileCompletionForm');
