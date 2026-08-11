@@ -1,7 +1,7 @@
 // ============================================
 // GESTION DES LEADS
 // Real Estate Referrer - Dubai
-// Version: 3.6.3 - styled success modals (add/update lead)
+// Version: 3.7.0 - anti-duplicate lead check (RPC client_already_referred)
 // ============================================
 
 import { currentUser } from './auth.js';
@@ -186,6 +186,24 @@ export async function addLead(event) {
     if (!userId) {
         alert('Error: User not authenticated. Please refresh and try again.');
         return;
+    }
+
+    // Anti-doublon (création uniquement) : vérifie globalement via une fonction
+    // sécurisée côté base. Si la fonction n'existe pas encore, on ne bloque pas.
+    if (!editingLeadId) {
+        try {
+            const { data: isDup } = await supabase.rpc('client_already_referred', {
+                p_email: clientEmail, p_phone: clientPhone
+            });
+            if (isDup) {
+                if (window.showNiceModal) {
+                    window.showNiceModal('This client (email or phone number) has already been referred recently. Please double-check before submitting again.', { title: 'Possible duplicate', type: 'warning' });
+                } else {
+                    alert('This client has already been referred recently.');
+                }
+                return;
+            }
+        } catch (e) { /* fonction absente → on n'empêche pas la création */ }
     }
 
     try {
