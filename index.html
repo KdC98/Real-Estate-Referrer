@@ -19,7 +19,7 @@
     <!-- Cloudflare Turnstile (anti-bot CAPTCHA) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
-    <!-- Version: 3.25.6 - styled success modals for add/update lead -->
+    <!-- Version: 3.26.0 - profile timeout 10s, modal types, anti-duplicate lead -->
 
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -62,7 +62,7 @@
         import * as UTILS from './js/utils.js';
         import * as AUTH from './js/auth.js';
         import * as DASHBOARD from './js/dashboard.js?v=2';
-        import * as LEADS from './js/leads.js?v=6';
+        import * as LEADS from './js/leads.js?v=7';
         import * as TFA from './js/2fa.js';
         import * as RENDERING from './js/rendering.js?v=3401';
 
@@ -242,6 +242,13 @@
             // ===== Jolie fenêtre modale (remplace alert() natif) =====
             function showNiceModal(message, opts = {}) {
                 const title = opts.title || '';
+                const type = opts.type || 'success'; // 'success' | 'warning' | 'error'
+                const icons = {
+                    success: { bg: 'rgba(34,197,94,0.15)', color: '#4ade80', path: 'M5 13l4 4L19 7' },
+                    warning: { bg: 'rgba(250,204,21,0.15)', color: '#facc15', path: 'M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z' },
+                    error:   { bg: 'rgba(239,68,68,0.15)', color: '#f87171', path: 'M6 18L18 6M6 6l12 12' }
+                };
+                const ic = icons[type] || icons.success;
                 const existing = document.getElementById('niceModal');
                 if (existing) existing.remove();
                 const el = document.createElement('div');
@@ -250,8 +257,8 @@
                 el.style.cssText = 'background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);';
                 el.innerHTML = `
                     <div style="background:#14161d;border:1px solid rgba(250,204,21,0.3);border-radius:16px;max-width:26rem;width:100%;padding:2rem;text-align:center;box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);">
-                        <div style="width:56px;height:56px;margin:0 auto 1rem;border-radius:9999px;background:rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;">
-                            <svg style="width:30px;height:30px;color:#4ade80;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                        <div style="width:56px;height:56px;margin:0 auto 1rem;border-radius:9999px;background:${ic.bg};display:flex;align-items:center;justify-content:center;">
+                            <svg style="width:30px;height:30px;color:${ic.color};" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="${ic.path}"/></svg>
                         </div>
                         ${title ? `<h3 style="color:#fff;font-size:1.25rem;font-weight:bold;margin:0 0 0.5rem;">${title}</h3>` : ''}
                         <p style="color:#cbd5e1;font-size:0.95rem;line-height:1.6;margin:0 0 1.5rem;">${message}</p>
@@ -422,7 +429,7 @@
                 try {
                     const result = await withTimeout(
                         supabase.from('profiles').select('*').eq('id', u.id).maybeSingle(),
-                        5000, null
+                        10000, null
                     );
 
                     if (!result) {
@@ -443,7 +450,7 @@
                         console.log('No profile found, creating...');
                         const insertResult = await withTimeout(
                             supabase.from('profiles').upsert([tempProfile], { onConflict: 'id' }).select().single(),
-                            5000, null
+                            10000, null
                         );
                         if (insertResult?.data) {
                             userProfile = insertResult.data;
