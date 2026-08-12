@@ -103,7 +103,7 @@
     <script>
         const SUPABASE_URL = 'https://cgizcgwhwxswvoodqver.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_djUSMqQj2fmuyU20mb5iZg_zvTTqY06';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
         let currentProfile = null;
@@ -126,7 +126,7 @@
         }
 
         async function checkAuth() {
-            const { data: { session } } = await supabase.auth.getSession();
+            const { data: { session } } = await sb.auth.getSession();
             if (!session) { window.location.href = '/'; return; }
             currentUser = session.user;
             await loadProfile();
@@ -139,7 +139,7 @@
             document.getElementById('email').value = currentUser.email || '';
             document.getElementById('name').value = metaName;
             try {
-                const { data: profile } = await supabase
+                const { data: profile } = await sb
                     .from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
                 currentProfile = profile || {};
                 isProfileComplete = checkProfileComplete(currentProfile);
@@ -181,7 +181,7 @@
             saveButtonText.textContent = 'Saving...';
             saveSpinner.classList.remove('hidden');
             try {
-                const { error: profileError } = await supabase.from('profiles')
+                const { error: profileError } = await sb.from('profiles')
                     .upsert({ id: currentUser.id, name, phone, address, preferred_language: 'en', email_unsubscribed: !emailSubscribed }, { onConflict: 'id' });
                 if (profileError) throw profileError;
                 isProfileComplete = true;
