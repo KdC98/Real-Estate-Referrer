@@ -19,7 +19,7 @@
     <!-- Cloudflare Turnstile (anti-bot CAPTCHA) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
-    <!-- Version: 3.26.0 - profile timeout 10s, modal types, anti-duplicate lead -->
+    <!-- Version: 3.26.1 - profile completion + My Profile use upsert (data no longer lost) -->
 
 <style>
 .iti { width: 100% !important; display: block !important; }
@@ -580,7 +580,12 @@
                                         if (!address) throw new Error('Address required');
                                         if (!emirate) throw new Error('Country / Emirate required');
                                         const fullAddr = area ? `${address}, ${area}, ${emirate}` : `${address}, ${emirate}`;
-                                        const { error } = await supabase.from('profiles').update({ name, phone, address: fullAddr }).eq('id', currentUser.id);
+                                        const { error } = await supabase.from('profiles').upsert({
+                                            id: currentUser.id,
+                                            email: email || currentUser.email,
+                                            name, phone, address: fullAddr,
+                                            role: userProfile?.role || 'referrer'
+                                        }, { onConflict: 'id' });
                                         if (error) throw error;
                                         await loadUserProfile(currentUser, true);
                                         document.getElementById('profileCompletionModal')?.remove();
