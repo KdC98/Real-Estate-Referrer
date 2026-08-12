@@ -133,20 +133,25 @@
         }
 
         async function loadProfile() {
+            // L'email et le nom (métadonnées) sont affichés en premier, quoi qu'il arrive
+            const metaName = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || '';
+            const metaPhone = currentUser.user_metadata?.phone || '';
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('name').value = metaName;
             try {
-                const { data: profile, error } = await supabase
-                    .from('profiles').select('*').eq('id', currentUser.id).single();
-                if (error) { showMessage('Error loading profile', 'error'); return; }
-                currentProfile = profile;
-                isProfileComplete = checkProfileComplete(profile);
-                document.getElementById('name').value = profile.name || '';
-                document.getElementById('email').value = currentUser.email || '';
-                document.getElementById('phone').value = profile.phone || '';
-                document.getElementById('address').value = profile.address || '';
-                document.getElementById('emailSubscribed').checked = !profile.email_unsubscribed;
+                const { data: profile } = await supabase
+                    .from('profiles').select('*').eq('id', currentUser.id).maybeSingle();
+                currentProfile = profile || {};
+                isProfileComplete = checkProfileComplete(currentProfile);
+                document.getElementById('name').value = currentProfile.name || metaName || '';
+                document.getElementById('phone').value = currentProfile.phone || metaPhone || '';
+                document.getElementById('address').value = currentProfile.address || '';
+                document.getElementById('emailSubscribed').checked = !currentProfile.email_unsubscribed;
                 updateProfileUI();
             } catch (err) {
-                showMessage('Connection error', 'error');
+                // Même en cas d'erreur, on garde l'email + le nom, et on laisse remplir/enregistrer
+                document.getElementById('phone').value = metaPhone;
+                showMessage('Could not load your saved profile — you can still fill it in and save.', 'warning');
             }
         }
 
@@ -177,8 +182,7 @@
             saveSpinner.classList.remove('hidden');
             try {
                 const { error: profileError } = await supabase.from('profiles')
-                    .update({ name, phone, address, preferred_language: 'en', email_unsubscribed: !emailSubscribed })
-                    .eq('id', currentUser.id);
+                    .upsert({ id: currentUser.id, name, phone, address, preferred_language: 'en', email_unsubscribed: !emailSubscribed }, { onConflict: 'id' });
                 if (profileError) throw profileError;
                 isProfileComplete = true;
                 updateProfileUI();
