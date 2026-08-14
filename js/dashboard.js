@@ -131,6 +131,9 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                     const leadTypeKey = lead.lead_type || 'sale_buyer';
                     const leadTypeLabel = i18next.t('dashboard:' + leadTypeKey) || leadTypeKey;
                     const commissionRate = lead.commission_rate ? (lead.commission_rate * 100) + '%' : '20%';
+                    // Vente ou location : le statut "vendu" s'affiche "Sold" ou "Rented"
+                    const isRentalLead = lead.lead_type === 'rental_landlord' || lead.lead_type === 'rental_tenant';
+                    const closedLabel = isRentalLead ? 'Rented' : 'Sold';
                     const statusColor = STATUS_COLORS[lead.status] || 'bg-gray-500';
                     const referrerName = referrerNames[lead.referrer_id] || '-';
 
@@ -145,7 +148,7 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                     const deleteBtn = canModify ? `<button onclick="window.deleteLead(${lead.id})" class="bg-red-600 hover:bg-red-500 px-3 py-1 rounded text-sm transition">Delete</button>` : '';
                     const soldBtn = isAdmin
                         ? (lead.status !== 'vendu'
-                            ? `<button onclick="window.openCommissionModal(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">${i18next.t('dashboard:mark_sold')}</button>`
+                            ? `<button onclick="window.openCommissionModal(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">Mark as ${closedLabel.toLowerCase()}</button>`
                             : `<button onclick="window.openCommissionModal(${lead.id})" class="bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-semibold px-3 py-1 rounded text-sm transition">Commission</button>`)
                         : '';
 
@@ -174,11 +177,11 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                                     <option value="nouveau" ${lead.status === 'nouveau' ? 'selected' : ''}>${i18next.t('dashboard:status_new')}</option>
                                     <option value="visite" ${lead.status === 'visite' ? 'selected' : ''}>${i18next.t('dashboard:status_visit')}</option>
                                     <option value="offre" ${lead.status === 'offre' ? 'selected' : ''}>${i18next.t('dashboard:status_offer')}</option>
-                                    <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${i18next.t('dashboard:status_sold')}</option>
+                                    <option value="vendu" ${lead.status === 'vendu' ? 'selected' : ''}>${closedLabel}</option>
                                 </select>
                             ` : `
                                 <span class="px-3 py-1 rounded-full ${statusColor} text-gray-900 font-bold text-sm">
-                                    ${i18next.t('dashboard:status_' + lead.status) || lead.status}
+                                    ${lead.status === 'vendu' ? closedLabel : (i18next.t('dashboard:status_' + lead.status) || lead.status)}
                                 </span>
                             `}
                         </td>
