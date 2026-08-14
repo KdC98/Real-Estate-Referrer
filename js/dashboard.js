@@ -145,8 +145,8 @@ function renderLeadsTable(isAdmin, leads, referrerNames = {}) {
                     const deleteBtn = canModify ? `<button onclick="window.deleteLead(${lead.id})" class="bg-red-600 hover:bg-red-500 px-3 py-1 rounded text-sm transition">Delete</button>` : '';
                     const soldBtn = isAdmin
                         ? (lead.status !== 'vendu'
-                            ? `<button onclick="window.markAsSold(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">${i18next.t('dashboard:mark_sold')}</button>`
-                            : `<span class="text-green-400 text-sm font-medium">${i18next.t('dashboard:status_sold')}</span>`)
+                            ? `<button onclick="window.openCommissionModal(${lead.id})" class="bg-green-500 hover:bg-green-600 px-3 py-1 rounded text-sm transition">${i18next.t('dashboard:mark_sold')}</button>`
+                            : `<button onclick="window.openCommissionModal(${lead.id})" class="bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-semibold px-3 py-1 rounded text-sm transition">Commission</button>`)
                         : '';
 
                     return `
