@@ -262,9 +262,17 @@ export async function addLead(event) {
 }
 
 // Mettre à jour le statut d'un lead
+// NB : passer un lead en "vendu" ouvre la fenêtre de commission au lieu
+// d'écrire le statut directement — sinon la commission resterait vide.
 export async function updateLeadStatus(leadId, newStatus) {
     const supabase = window.supabase;
     const i18next = window.i18next;
+
+    if (newStatus === 'vendu') {
+        openCommissionModal(leadId);
+        if (window.loadDashboardContent) await window.loadDashboardContent();
+        return;
+    }
 
     try {
         const { error } = await supabase.from('leads').update({ status: newStatus }).eq('id', leadId);
@@ -276,91 +284,252 @@ export async function updateLeadStatus(leadId, newStatus) {
     }
 }
 
-// Marquer un lead comme vendu - CALCUL VENTE + LOCATION
-export async function markAsSold(leadId) {
-    const supabase = window.supabase;
-    const i18next = window.i18next;
+// ============================================
+// COMMISSION — fenêtre de saisie et de calcul
+// ============================================
 
-    const { data: lead, error: fetchError } = await supabase
+// Taux par défaut de la commission d'agence (sur le prix)
+const DEFAULT_AGENCY_RATE_SALE = 2;    // %
+const DEFAULT_AGENCY_RATE_RENTAL = 5;  // %
+const DEFAULT_AGENCY_SPLIT = 50;       // % de la commission d'agence revenant à l'agent
+
+const num = (v) => {
+    const n = parseFloat(String(v ?? '').replace(/[^0-9.]/g, ''));
+    return isNaN(n) ? 0 : n;
+};
+const aed = (n) => (Math.round(n * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 }) + ' AED';
+
+export function closeCommissionModal() {
+    document.getElementById('commissionModal')?.remove();
+}
+
+// Recalcule et met à jour l'aperçu. Appelée à chaque frappe.
+export function recalcCommission() {
+    const g = (id) => document.getElementById(id);
+    if (!g('commissionModal')) return;
+
+    const isRental = g('cmIsRental').value === '1';
+    const isSeller = g('cmIsSeller').value === '1';
+
+    const price = num(g('cmPrice').value);
+    const agencyRate = num(g('cmAgencyRate').value) / 100;
+    const split = num(g('cmSplit').value) / 100;
+    const referrerRate = num(g('cmReferrerRate')?.value) / 100;
+
+    const totalCommission = price * agencyRate;
+    const agentCommission = totalCommission * split;
+    const computed = isSeller ? SELLER_FIXED_REFERRER_AED : agentCommission * referrerRate;
+
+    g('cmOutTotal').textContent = aed(totalCommission);
+    g('cmOutAgent').textContent = aed(agentCommission);
+    g('cmOutReferrer').textContent = aed(computed);
+
+    // Le champ final n'est écrasé que si l'utilisateur ne l'a pas modifié à la main
+    const finalField = g('cmFinal');
+    if (finalField && finalField.dataset.touched !== '1') {
+        finalField.value = Math.round(computed * 100) / 100;
+    }
+    const label = g('cmPriceLabel');
+    if (label) label.textContent = isRental ? 'Annual rent (AED)' : 'Sale price (AED)';
+}
+
+export function onCommissionOverride() {
+    const f = document.getElementById('cmFinal');
+    if (f) f.dataset.touched = '1';
+    const hint = document.getElementById('cmOverrideHint');
+    if (hint) hint.style.display = '';
+}
+
+export function resetCommissionOverride() {
+    const f = document.getElementById('cmFinal');
+    if (f) f.dataset.touched = '0';
+    const h = document.getElementById('cmOverrideHint');
+    if (h) h.style.display = 'none';
+    recalcCommission();
+}
+
+// Ouvre la fenêtre de commission pour un lead (nouveau closing OU correction)
+export async function openCommissionModal(leadId) {
+    const supabase = window.supabase;
+
+    const { data: lead, error } = await supabase
         .from('leads')
-        .select('lead_type, commission_rate, budget')
+        .select('id, client_name, lead_type, commission_rate, budget, sale_price, agent_commission, referrer_commission, status')
         .eq('id', leadId)
         .single();
 
-    if (fetchError) {
-        console.error('Error fetching lead:', fetchError);
+    if (error || !lead) {
+        console.error('Error fetching lead:', error);
         alert('Error fetching lead details');
         return;
     }
 
     const isRental = lead.lead_type === 'rental_landlord' || lead.lead_type === 'rental_tenant';
+    const isSeller = lead.lead_type === 'sale_seller';
+    const alreadyClosed = lead.status === 'vendu';
 
-    let price, totalCommissionRate, agentCommission, referrerCommission;
+    const typeLabels = {
+        sale_buyer: 'Buyer (sale)',
+        sale_seller: 'Seller (sale)',
+        rental_landlord: 'Landlord (rental)',
+        rental_tenant: 'Tenant (rental)'
+    };
 
-    if (isRental) {
-        const annualRent = prompt((i18next.t('dashboard:enter_annual_rent') || 'Annual rent (AED):'), lead.budget || '');
-        if (!annualRent) return;
-        price = parseFloat(annualRent.replace(/[^0-9]/g, ''));
-        if (isNaN(price) || price <= 0) { alert(i18next.t('dashboard:invalid_price') || 'Invalid amount'); return; }
-        totalCommissionRate = 0.05;
-        const totalCommission = price * totalCommissionRate;
-        agentCommission = totalCommission * 0.5;
-    } else {
-        const salePrice = prompt((i18next.t('dashboard:enter_sale_price') || 'Sale price (AED):'), lead.budget || '');
-        if (!salePrice) return;
-        price = parseFloat(salePrice.replace(/[^0-9]/g, ''));
-        if (isNaN(price) || price <= 0) { alert(i18next.t('dashboard:invalid_price') || 'Invalid price'); return; }
-        const commissionInput = prompt((i18next.t('dashboard:enter_commission_rate') || 'Total commission rate % (default 2%, up to 5% for off-plan):'), '2');
-        if (!commissionInput) return;
-        totalCommissionRate = parseFloat(commissionInput.replace(/[^0-9.]/g, '')) / 100;
-        if (isNaN(totalCommissionRate) || totalCommissionRate <= 0 || totalCommissionRate > 0.10) {
-            alert(i18next.t('dashboard:invalid_commission_rate') || 'Invalid commission rate (must be between 1% and 10%)');
-            return;
-        }
-        const totalCommission = price * totalCommissionRate;
-        agentCommission = totalCommission * 0.5;
+    // Valeurs de départ : on repart de l'existant si le lead est déjà clos
+    const startPrice = lead.sale_price || lead.budget || '';
+    const defaultAgencyRate = isRental ? DEFAULT_AGENCY_RATE_RENTAL : DEFAULT_AGENCY_RATE_SALE;
+    const startReferrerRate = Math.round(((lead.commission_rate ?? COMMISSION_RATES[lead.lead_type] ?? 0.20) * 100) * 100) / 100;
+
+    closeCommissionModal();
+
+    const el = document.createElement('div');
+    el.id = 'commissionModal';
+    el.className = 'fixed inset-0 z-[210] flex items-center justify-center p-4 overflow-y-auto';
+    el.style.cssText = 'background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);';
+
+    const field = (label, id, value, suffix, extra) => `
+        <div>
+            <label class="block text-sm text-slate-300 mb-1" ${id === 'cmPrice' ? 'id="cmPriceLabelWrap"' : ''}>
+                <span ${id === 'cmPrice' ? 'id="cmPriceLabel"' : ''}>${label}</span>
+            </label>
+            <div class="relative">
+                <input id="${id}" type="text" inputmode="decimal" value="${value}"
+                       oninput="window.recalcCommission()" ${extra || ''}
+                       class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-white focus:border-yellow-500 focus:outline-none">
+                ${suffix ? `<span class="absolute right-3 top-2 text-slate-400 text-sm">${suffix}</span>` : ''}
+            </div>
+        </div>`;
+
+    el.innerHTML = `
+      <div style="background:#14161d;border:1px solid rgba(250,204,21,0.3);border-radius:16px;max-width:34rem;width:100%;box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);" class="my-8">
+        <div class="px-6 pt-6 pb-4 border-b border-slate-700">
+            <h3 class="text-xl font-bold text-white">${alreadyClosed ? 'Edit commission' : 'Close deal & set commission'}</h3>
+            <p class="text-slate-400 text-sm mt-1">${lead.client_name} — ${typeLabels[lead.lead_type] || lead.lead_type}</p>
+        </div>
+
+        <div class="px-6 py-5 space-y-4">
+            <input type="hidden" id="cmIsRental" value="${isRental ? '1' : '0'}">
+            <input type="hidden" id="cmIsSeller" value="${isSeller ? '1' : '0'}">
+
+            ${field(isRental ? 'Annual rent (AED)' : 'Sale price (AED)', 'cmPrice', startPrice, 'AED')}
+
+            <div class="grid grid-cols-2 gap-4">
+                ${field('Agency commission', 'cmAgencyRate', defaultAgencyRate, '%')}
+                ${field('Agency / agent split', 'cmSplit', DEFAULT_AGENCY_SPLIT, '%')}
+            </div>
+
+            ${isSeller ? `
+                <div class="bg-slate-800/60 border border-slate-700 rounded-lg p-3 text-sm text-slate-300">
+                    Seller lead — the referrer receives a <strong class="text-yellow-400">fixed AED ${SELLER_FIXED_REFERRER_AED.toLocaleString()}</strong>, not a percentage.
+                </div>
+                <input type="hidden" id="cmReferrerRate" value="0">
+            ` : field('Referrer share of the agent net commission', 'cmReferrerRate', startReferrerRate, '%')}
+
+            <div class="bg-slate-800/60 border border-slate-700 rounded-xl p-4 space-y-2 text-sm">
+                <div class="flex justify-between text-slate-300">
+                    <span>Total agency commission</span><span id="cmOutTotal" class="font-medium text-white">—</span>
+                </div>
+                <div class="flex justify-between text-slate-300">
+                    <span>Agent net share</span><span id="cmOutAgent" class="font-medium text-white">—</span>
+                </div>
+                <div class="flex justify-between text-slate-300 pt-2 border-t border-slate-700">
+                    <span>Referrer commission (calculated)</span><span id="cmOutReferrer" class="font-bold text-yellow-400">—</span>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm text-slate-300 mb-1">Commission actually paid to the referrer</label>
+                <div class="relative">
+                    <input id="cmFinal" type="text" inputmode="decimal" data-touched="0"
+                           oninput="window.onCommissionOverride()"
+                           class="w-full bg-slate-800 border border-yellow-500/50 rounded-lg px-3 py-2 text-white font-bold focus:border-yellow-500 focus:outline-none">
+                    <span class="absolute right-3 top-2 text-slate-400 text-sm">AED</span>
+                </div>
+                <p id="cmOverrideHint" style="display:none" class="text-xs text-yellow-400/80 mt-1">
+                    Manual amount — no longer follows the calculation.
+                    <button type="button" onclick="window.resetCommissionOverride()" class="underline">recalculate</button>
+                </p>
+            </div>
+        </div>
+
+        <div class="px-6 py-4 border-t border-slate-700 flex justify-end gap-3">
+            <button type="button" onclick="window.closeCommissionModal()"
+                    class="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white transition">Cancel</button>
+            <button type="button" onclick="window.saveCommission(${lead.id})"
+                    class="px-5 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-bold transition">
+                ${alreadyClosed ? 'Save' : 'Mark as closed'}
+            </button>
+        </div>
+      </div>`;
+
+    document.body.appendChild(el);
+    el.addEventListener('click', (e) => { if (e.target === el) closeCommissionModal(); });
+
+    // Si le lead est déjà clos avec un montant, on le reprend tel quel
+    if (alreadyClosed && lead.referrer_commission != null) {
+        const f = document.getElementById('cmFinal');
+        f.value = lead.referrer_commission;
+        f.dataset.touched = '1';
+        const h2 = document.getElementById('cmOverrideHint');
+        if (h2) h2.style.display = '';
     }
+    recalcCommission();
+    document.getElementById('cmPrice')?.focus();
+}
 
-    let referrerRate = null;
-    if (lead.lead_type === 'sale_seller') {
-        referrerCommission = SELLER_FIXED_REFERRER_AED;
-    } else {
-        referrerRate = lead.commission_rate || COMMISSION_RATES[lead.lead_type] || 0.25;
-        referrerCommission = agentCommission * referrerRate;
-    }
+// Enregistre la commission et clôture le lead
+export async function saveCommission(leadId) {
+    const supabase = window.supabase;
+    const i18next = window.i18next;
+    const g = (id) => document.getElementById(id);
+
+    const price = num(g('cmPrice').value);
+    const agencyRate = num(g('cmAgencyRate').value) / 100;
+    const split = num(g('cmSplit').value) / 100;
+    const isSeller = g('cmIsSeller').value === '1';
+    const referrerRate = isSeller ? null : num(g('cmReferrerRate').value) / 100;
+    const finalAmount = num(g('cmFinal').value);
+
+    if (price <= 0) { alert('Please enter a valid price.'); g('cmPrice').focus(); return; }
+    if (agencyRate <= 0 || agencyRate > 0.10) { alert('Agency commission must be between 0 and 10%.'); return; }
+    if (split <= 0 || split > 1) { alert('The agency / agent split must be between 0 and 100%.'); return; }
+    if (!isSeller && (referrerRate < 0 || referrerRate > 1)) { alert('The referrer share must be between 0 and 100%.'); return; }
+    if (finalAmount < 0) { alert('The commission cannot be negative.'); return; }
+
+    const agentCommission = price * agencyRate * split;
+
+    const payload = {
+        status: 'vendu',
+        sale_price: price,
+        agent_commission: Math.round(agentCommission * 100) / 100,
+        referrer_commission: Math.round(finalAmount * 100) / 100,
+        closed_at: new Date().toISOString()
+    };
+    if (!isSeller) payload.commission_rate = referrerRate;
 
     try {
-        const { error } = await supabase
-            .from('leads')
-            .update({
-                status: 'vendu',
-                sale_price: price,
-                agent_commission: agentCommission,
-                referrer_commission: referrerCommission,
-                closed_at: new Date().toISOString()
-            })
-            .eq('id', leadId);
-
+        const { error } = await supabase.from('leads').update(payload).eq('id', leadId);
         if (error) throw error;
 
-        const typeLabel = isRental ? 'Rental' : 'Sale';
-        const referrerLine = referrerRate !== null
-            ? '\nReferrer commission (' + (referrerRate * 100) + '%): ' + referrerCommission.toLocaleString() + ' AED'
-            : '\nReferrer bonus (fixed, seller lead): ' + referrerCommission.toLocaleString() + ' AED';
-        alert(
-            (i18next.t('dashboard:lead_sold_success') || 'Lead completed!') +
-            '\n\n' + typeLabel + ': ' + price.toLocaleString() + ' AED' +
-            '\nAgent commission: ' + agentCommission.toLocaleString() + ' AED' +
-            referrerLine
-        );
+        closeCommissionModal();
+        const msg = 'Price: ' + aed(price) +
+                    '<br>Agent net share: ' + aed(agentCommission) +
+                    '<br><strong>Referrer commission: ' + aed(finalAmount) + '</strong>';
+        if (window.showNiceModal) window.showNiceModal(msg, { title: 'Deal closed' });
+        else alert('Deal closed. Referrer commission: ' + aed(finalAmount));
 
         if (window.loadDashboardContent) await window.loadDashboardContent();
-
     } catch (error) {
-        console.error('Error marking as sold:', error);
-        alert(i18next.t('dashboard:error_marking_sold') || 'Error processing transaction');
+        console.error('Error saving commission:', error);
+        alert((i18next?.t('dashboard:error_marking_sold')) || ('Error saving the commission: ' + error.message));
     }
 }
+
+// Compatibilité : l'ancien bouton "Mark as sold" ouvre désormais la fenêtre
+export async function markAsSold(leadId) {
+    return openCommissionModal(leadId);
+}
+
 
 // Générer le HTML du modal d'ajout / édition de lead
 export function renderAddLeadModal() {
@@ -517,3 +686,11 @@ window.closeAddLeadModal = closeAddLeadModal;
 window.showAddLeadForm = showAddLeadForm;
 window.formatThousands = formatThousands;
 window.renderAddLeadModal = renderAddLeadModal;
+window.markAsSold = markAsSold;
+window.updateLeadStatus = updateLeadStatus;
+window.openCommissionModal = openCommissionModal;
+window.saveCommission = saveCommission;
+window.closeCommissionModal = closeCommissionModal;
+window.recalcCommission = recalcCommission;
+window.onCommissionOverride = onCommissionOverride;
+window.resetCommissionOverride = resetCommissionOverride;
